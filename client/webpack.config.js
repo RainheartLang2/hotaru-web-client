@@ -21,6 +21,9 @@ module.exports = (env, argv) => {
                 template: path.resolve(__dirname, 'src/index.html'),
             }),
         ],
+        resolve: {
+            extensions: [".ts", ".tsx", ".js"]
+        },
         module: {
             rules: [
                 {

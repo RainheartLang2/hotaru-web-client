@@ -48,5 +48,8 @@
     "plugins": [
       "@babel/plugin-transform-regenerator"
     ]
+  },
+  "dependencies": {
+    "@types/react-router-dom": "^5.1.3"
   }
 }

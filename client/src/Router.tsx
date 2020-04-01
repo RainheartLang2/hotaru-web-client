@@ -2,7 +2,7 @@ import React from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import NotFoundPage from './notFound/NotFoundPage'
 import Routes from './Routes'
-import {TestComponent} from "./test/TestComponent.tsx";
+import {TestComponent} from "./test/TestComponent";
 
 export default function Router() {
     return (

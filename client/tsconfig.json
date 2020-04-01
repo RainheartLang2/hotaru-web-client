@@ -5,6 +5,7 @@
     "jsx": "react",
     "module": "es6",
     "target": "es5",
+    "moduleResolution": "classic",
 //    "lib": ["es5", "es6", "dom"],
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
