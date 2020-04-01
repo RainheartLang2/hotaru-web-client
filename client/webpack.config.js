@@ -54,6 +54,11 @@ module.exports = (env, argv) => {
                         loader: 'url-loader',
                     },
                 },
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
             ],
         },
     }
