@@ -1,0 +1,29 @@
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 400px;
+    left: calc(50% - 160px);
+    width: 320px;
+    height: 200px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+}
+
+.loginField {
+    margin-top: 30px !important;
+    width: 270px;
+}
+
+.passwordField {
+    margin-top: 15px !important;
+    width: 270px;
+}
+
+.buttonsArea {
+    display: flex;
+    justify-content: center;
+    width: 270px;
+    margin-top: 25px
+}

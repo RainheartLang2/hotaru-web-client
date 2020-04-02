@@ -34,7 +34,12 @@ module.exports = (env, argv) => {
                     },
                 },
                 {
-                    test: /\.less$/,
+                    test: /(.ts|.tsx)$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
+                {
+                    test: /\.css$/,
                     use: [
                         {
                             loader: dev ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -46,9 +51,6 @@ module.exports = (env, argv) => {
                                 localIdentName: '[local]',
                             },
                         },
-                        {
-                            loader: 'less-loader',
-                        },
                     ],
                 },
                 {
@@ -56,11 +58,6 @@ module.exports = (env, argv) => {
                     use: {
                         loader: 'url-loader',
                     },
-                },
-                {
-                    test: /\.tsx?$/,
-                    use: 'ts-loader',
-                    exclude: /node_modules/,
                 },
             ],
         },
