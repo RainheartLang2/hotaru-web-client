@@ -1,0 +1,24 @@
+import * as React from "react";
+
+export default abstract class ApplicationState<K extends PropertyKey> {
+    private properties: Map<K, any>
+    private subscribers: Map<K, React.Component[]>
+
+    public subscribe(propertyKey: K, subscriber: React.Component): void {
+        this.subscribers.get(propertyKey).push(subscriber)
+    }
+
+    protected setProperty<V>(propertyKey: K, newValue: V): void {
+        this.properties.set(propertyKey, newValue)
+        this.postPropertyChange(propertyKey, newValue)
+    }
+
+    protected postPropertyChange<V>(propertyKey: K, newValue: V): void {
+        this.subscribers.get(propertyKey)
+            .forEach(subscriber => subscriber.setState({[propertyKey.toString()]: newValue}))
+    }
+}
+
+interface PropertyKey {
+    toString(): string;
+}

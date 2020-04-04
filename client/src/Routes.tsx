@@ -7,4 +7,8 @@ export default class Routes {
     static test() {
         return `/test`
     }
+
+    static admin() {
+        return `/admin`
+    }
 }
