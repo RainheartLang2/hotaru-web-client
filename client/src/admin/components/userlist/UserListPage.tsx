@@ -1,16 +1,15 @@
 import * as React from "react";
 import {TableBodyCmp, TableCellCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import {plainToClass} from "class-transformer";
-import {sendGetRequestToServer, fetchHttpGet} from "../../../core/utils/HttpUtils";
-import {GET_ALL_EMPLOYEES} from "../../../common/backApplication/ServerAppUrl";
+import {USER_LIST_PROPERTY, USER_LIST_PROPERTY_NAME} from "../AdminApplicationState";
+import AdminAppController from "../../controller/AdminAppController";
 
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
     constructor(props: {}) {
         super(props)
         this.state = {
-            userlist: []
+            [USER_LIST_PROPERTY_NAME]: []
         }
     }
 
@@ -26,7 +25,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
-                        {this.state.userlist.map(user => {
+                        {this.state.userList.map(user => {
                             return (<TableRowCmp key={user.id}>
                                 <TableCellCmp>{user.firstName}</TableCellCmp>
                                 <TableCellCmp>{user.middleName}</TableCellCmp>
@@ -40,16 +39,10 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     }
 
     componentDidMount(): void {
-        sendGetRequestToServer(GET_ALL_EMPLOYEES).then(response => {
-            response.json().then(result => {
-                this.setState({
-                    userlist: plainToClass(Employee, result) as Employee[],
-                })
-            })
-        })
+        AdminAppController.getInstance().subscribe(USER_LIST_PROPERTY, this)
     }
 }
 
 export type UserListPageState = {
-    userlist: Employee[],
+    [USER_LIST_PROPERTY_NAME]: Employee[],
 }
