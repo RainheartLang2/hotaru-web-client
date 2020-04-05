@@ -52,5 +52,7 @@
       "@babel/plugin-transform-regenerator"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "class-transformer": "^0.2.3"
+  }
 }
