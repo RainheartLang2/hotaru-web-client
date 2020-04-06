@@ -1,16 +1,13 @@
-import AppState, {StateProperty} from "../../core/AppState";
+import AppState from "../../core/AppState";
 import {Employee} from "../../common/beans/Employee";
 
-export default class AdminApplicationState extends AppState<AdminAppStateProperty> {
+export default class AdminApplicationState extends AppState {
     private static INSTANCE: AdminApplicationState
 
     private constructor() {
-        const properties: AdminAppStateProperty[] = []
-
-        properties.push(USER_LIST_PROPERTY)
-        properties.push(IS_APPLICATION_LOADING_PROPERTY)
-
-        super(properties)
+        super()
+        this.registerProperty(USER_LIST_PROPERTY, [])
+        this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
     }
 
     public static getInstance(): AdminApplicationState {
@@ -37,27 +34,5 @@ export default class AdminApplicationState extends AppState<AdminAppStatePropert
     }
 }
 
-export class AdminAppStateProperty implements StateProperty {
-    private propertyName: string
-    private defaultValue: any
-
-    constructor(propertyName: string, defaultValue: any) {
-        this.propertyName = propertyName
-        this.defaultValue = defaultValue
-    }
-
-    getPropertyName(): string {
-        return this.propertyName
-    }
-
-    getDefaultValue(): any {
-        return this.defaultValue
-    }
-}
-
-export const USER_LIST_PROPERTY_NAME = "userList"
-export const USER_LIST_PROPERTY = new AdminAppStateProperty(USER_LIST_PROPERTY_NAME, [])
-
-export const IS_APPLICATION_LOADING_PROPERTY_NAME = "isApplicationLoading"
-export const IS_APPLICATION_LOADING_PROPERTY =
-    new AdminAppStateProperty(IS_APPLICATION_LOADING_PROPERTY_NAME, true)
+export const USER_LIST_PROPERTY = "userList"
+export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"

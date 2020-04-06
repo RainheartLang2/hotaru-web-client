@@ -1,4 +1,4 @@
-import AdminApplicationState, {AdminAppStateProperty} from "../components/AdminApplicationState";
+import AdminApplicationState from "../components/AdminApplicationState";
 import {sendGetRequestToServer} from "../../core/utils/HttpUtils";
 import {GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
@@ -28,8 +28,8 @@ export default class AdminAppController {
         })
     }
 
-    public subscribe(property: AdminAppStateProperty, component: React.Component) {
-        this.getApplicationState().subscribe(property, component)
+    public subscribe(property: string, component: React.Component, propertyAlias: string = property) {
+        this.getApplicationState().subscribe(property, component, propertyAlias)
     }
 
     private getApplicationState(): AdminApplicationState {

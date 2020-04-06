@@ -8,7 +8,7 @@ import {
     TableRowCmp
 } from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import {USER_LIST_PROPERTY, USER_LIST_PROPERTY_NAME} from "../AdminApplicationState";
+import {USER_LIST_PROPERTY} from "../AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 
@@ -17,7 +17,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     constructor(props: {}) {
         super(props)
         this.state = {
-            [USER_LIST_PROPERTY_NAME]: []
+            [USER_LIST_PROPERTY]: []
         }
     }
 
@@ -53,5 +53,5 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
 }
 
 export type UserListPageState = {
-    [USER_LIST_PROPERTY_NAME]: Employee[],
+    [USER_LIST_PROPERTY]: Employee[],
 }

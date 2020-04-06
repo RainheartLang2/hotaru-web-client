@@ -1,27 +1,27 @@
 import * as React from "react";
 
-export default abstract class AppState<Property extends StateProperty> {
-    private properties: Map<Property, any> = new Map<Property, any>()
-    private subscribers: Map<Property, React.Component[]> = new Map<Property, React.Component[]>()
+export default abstract class AppState {
+    private properties: Map<string, any> = new Map<string, any>()
+    private subscribers: Map<string, SubscriberData[]> = new Map<string, SubscriberData[]>()
 
-    constructor(properties: Property[]) {
-        properties.forEach(property => {
-            this.properties.set(property, property.getDefaultValue())
-            this.subscribers.set(property, [])
-        })
+    protected registerProperty(property: string, defaultValue: any) {
+        this.properties.set(property, defaultValue)
+        this.subscribers.set(property, [])
     }
 
-    public subscribe(property: Property, subscriber: React.Component): void {
+    public subscribe(property: string,
+                     subscriber: React.Component,
+                     propertyAlias: string = property): void {
         const value = this.subscribers.get(property)
         if (value) {
-            value.push(subscriber)
-            subscriber.setState({[property.getPropertyName()]: this.getPropertyValue(property)})
+            value.push({subscriber, propertyAlias})
+            subscriber.setState({[propertyAlias]: this.getPropertyValue(property)})
         } else {
             this.unregisteredPropertSituationHandle(property)
         }
     }
 
-    protected setPropertyValue<V>(property: Property, newValue: V): void {
+    protected setPropertyValue<V>(property: string, newValue: V): void {
         if (!this.properties.get(property)) {
             this.unregisteredPropertSituationHandle(property)
         }
@@ -29,7 +29,7 @@ export default abstract class AppState<Property extends StateProperty> {
         this.postPropertyChange(property, newValue)
     }
 
-    protected getPropertyValue(property: Property): any {
+    protected getPropertyValue(property: string): any {
         const propertyData = this.properties.get(property)
         if (!propertyData) {
             this.unregisteredPropertSituationHandle(property)
@@ -37,22 +37,30 @@ export default abstract class AppState<Property extends StateProperty> {
         return this.properties.get(property)
     }
 
-    protected postPropertyChange<V>(property: Property, newValue: V): void {
-        const propertySubscribers = this.subscribers.get(property)
-        if (propertySubscribers) {
-            propertySubscribers.forEach(subscriber =>
-                subscriber.setState({[property.getPropertyName()]: newValue}))
+    protected postPropertyChange<V>(property: string, newValue: V): void {
+        const propertySubscriberDataList = this.subscribers.get(property)
+        if (propertySubscriberDataList) {
+            propertySubscriberDataList.forEach(subscriberData => {
+                const subscriber = subscriberData.subscriber
+                const alias = subscriberData.propertyAlias
+                subscriber.setState({[alias]: newValue})
+            })
         } else {
             this.unregisteredPropertSituationHandle(property)
         }
     }
 
-    private unregisteredPropertSituationHandle(property: Property): void {
-        throw new Error("unregistered property " + property.getPropertyName())
+    private unregisteredPropertSituationHandle(property: string): void {
+        throw new Error("unregistered property " + property)
     }
 }
 
 export interface StateProperty {
     getPropertyName(): string
     getDefaultValue(): any
+}
+
+type SubscriberData = {
+    subscriber: React.Component,
+    propertyAlias: string,
 }

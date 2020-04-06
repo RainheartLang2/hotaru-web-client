@@ -6,19 +6,19 @@ import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
 import UserListPage from "./components/userlist/UserListPage";
 import AdminAppController from "./controller/AdminAppController";
-import {
-    IS_APPLICATION_LOADING_PROPERTY,
-    IS_APPLICATION_LOADING_PROPERTY_NAME
-} from "./components/AdminApplicationState";
+import {IS_APPLICATION_LOADING_PROPERTY} from "./components/AdminApplicationState";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 
 export let CURRENT_THEME: Theme = vetTheme;
+const IS_LOADING = "isLoading"
 
 export default class AdminApp extends React.Component<{}, AdminAppComponentState> {
+
+
     constructor(props: {}) {
         super(props);
         this.state = {
-            [IS_APPLICATION_LOADING_PROPERTY_NAME]: true,
+            [IS_LOADING]: true,
         }
     }
 
@@ -31,7 +31,7 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
                 <AppContent>
                     <UserListPage/>
                 </AppContent>
-                <LoadingMoire visible={this.state.isApplicationLoading}/>
+                <LoadingMoire visible={this.state.isLoading}/>
                 <Footer/>
             </MuiThemeProvider>
         )
@@ -39,11 +39,11 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
 
     componentDidMount(): void {
         const controller = AdminAppController.getInstance()
-        controller.subscribe(IS_APPLICATION_LOADING_PROPERTY, this)
+        controller.subscribe(IS_APPLICATION_LOADING_PROPERTY, this, IS_LOADING)
         controller.startApplication()
     }
 }
 
 type AdminAppComponentState = {
-    [IS_APPLICATION_LOADING_PROPERTY_NAME]: boolean,
+    [IS_LOADING]: boolean,
 }
