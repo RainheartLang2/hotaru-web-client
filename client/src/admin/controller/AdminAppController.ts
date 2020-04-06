@@ -7,8 +7,7 @@ import {Employee} from "../../common/beans/Employee";
 export default class AdminAppController {
     private static INSTANCE: AdminAppController = new AdminAppController()
 
-    private constructor() {
-    }
+    private constructor() {}
 
     public static getInstance(): AdminAppController {
         return AdminAppController.INSTANCE

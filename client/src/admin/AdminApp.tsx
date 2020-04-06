@@ -14,7 +14,6 @@ const IS_LOADING = "isLoading"
 
 export default class AdminApp extends React.Component<{}, AdminAppComponentState> {
 
-
     constructor(props: {}) {
         super(props);
         this.state = {

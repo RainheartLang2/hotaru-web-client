@@ -12,7 +12,6 @@ export default class Moire extends React.Component<MoireProps> {
     }
 }
 
-
 type MoireProps = {
     visible: boolean
 }
