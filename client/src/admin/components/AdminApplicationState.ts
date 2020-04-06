@@ -6,7 +6,9 @@ export default class AdminApplicationState extends AppState<AdminAppStatePropert
 
     private constructor() {
         const properties: AdminAppStateProperty[] = []
+
         properties.push(USER_LIST_PROPERTY)
+        properties.push(IS_APPLICATION_LOADING_PROPERTY)
 
         super(properties)
     }
@@ -23,7 +25,15 @@ export default class AdminApplicationState extends AppState<AdminAppStatePropert
     }
 
     public setUserList(userList: Employee[]) {
-        return this.setPropertyValue(USER_LIST_PROPERTY, userList)
+        this.setPropertyValue(USER_LIST_PROPERTY, userList)
+    }
+
+    public isApplicationLoading(): boolean {
+        return this.getPropertyValue(IS_APPLICATION_LOADING_PROPERTY)
+    }
+
+    public setApplicationLoading(applicationLoading: boolean) {
+        this.setPropertyValue(IS_APPLICATION_LOADING_PROPERTY, applicationLoading)
     }
 }
 
@@ -47,3 +57,7 @@ export class AdminAppStateProperty implements StateProperty {
 
 export const USER_LIST_PROPERTY_NAME = "userList"
 export const USER_LIST_PROPERTY = new AdminAppStateProperty(USER_LIST_PROPERTY_NAME, [])
+
+export const IS_APPLICATION_LOADING_PROPERTY_NAME = "isApplicationLoading"
+export const IS_APPLICATION_LOADING_PROPERTY =
+    new AdminAppStateProperty(IS_APPLICATION_LOADING_PROPERTY_NAME, true)

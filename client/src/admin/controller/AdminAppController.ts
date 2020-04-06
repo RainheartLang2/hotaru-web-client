@@ -7,20 +7,23 @@ import {Employee} from "../../common/beans/Employee";
 export default class AdminAppController {
     private static INSTANCE: AdminAppController = new AdminAppController()
 
-    private constructor () {}
+    private constructor() {
+    }
 
     public static getInstance(): AdminAppController {
         return AdminAppController.INSTANCE
     }
 
     public startApplication(): void {
-        this.loadUsersList()
+        this.getApplicationState().setApplicationLoading(true)
+        this.loadUsersList(() => this.getApplicationState().setApplicationLoading(false))
     }
 
-    public loadUsersList(): void {
+    public loadUsersList(callback: Function): void {
         sendGetRequestToServer(GET_ALL_EMPLOYEES).then(response => {
             response.json().then(result => {
                 this.getApplicationState().setUserList(plainToClass(Employee, result) as Employee[])
+                callback()
             })
         })
     }

@@ -4,6 +4,12 @@ import {ButtonComponent} from "../../../core/components";
 var styles = require("./styles.css");
 
 export default class PageHeader extends React.Component<PageHeaderProps> {
+
+    static defaultProps = {
+        hasButton: false,
+        buttonOnClick: () => {},
+    }
+
     render() {
         return (
             <div className={styles.pageHeader}>

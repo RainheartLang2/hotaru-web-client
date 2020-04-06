@@ -2,7 +2,7 @@ import {ColorType} from "./ColorType";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
     AppBar,
-    Button,
+    Button, CircularProgress,
     Paper,
     Tab,
     Table,
@@ -57,3 +57,5 @@ export const TableRowCmp = withStyles({
 })(TableRow)
 export const TableCellCmp = TableCell
 export const TableBodyCmp = TableBody
+
+export const Loader = CircularProgress

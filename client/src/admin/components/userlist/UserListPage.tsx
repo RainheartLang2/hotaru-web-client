@@ -24,7 +24,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     render() {
         return (
             <>
-                <PageHeader label={"Пользователи"} hasButton={true} buttonOnClick={() => {}}/>
+                <PageHeader label={"Пользователи"} hasButton={true}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
