@@ -8,6 +8,7 @@ export default class Footer extends React.Component {
             footer: {
                 background: CURRENT_THEME.palette.primary.main,
                 height: 50,
+                minWidth: 800,
             }
         }
         return (<div style={styles.footer}/>)

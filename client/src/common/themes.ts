@@ -5,6 +5,8 @@ export const vetTheme: Theme = createMuiTheme({
     palette: {
         primary: {
             main: ColorType.AT_BLUE,
+            light: ColorType.DENIM,
+            dark: ColorType.PICTON_BLUE,
             contrastText: ColorType.WHITE,
         },
         secondary: {

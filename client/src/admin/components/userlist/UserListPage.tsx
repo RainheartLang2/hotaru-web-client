@@ -1,8 +1,16 @@
 import * as React from "react";
-import {TableBodyCmp, TableCellCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
+import {
+    ButtonComponent,
+    TableBodyCmp,
+    TableCellCmp,
+    TableCmp,
+    TableHeaderCmp,
+    TableRowCmp
+} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
 import {USER_LIST_PROPERTY, USER_LIST_PROPERTY_NAME} from "../AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
+import PageHeader from "../../../common/components/pageHeader/PageHeader";
 
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
@@ -16,6 +24,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     render() {
         return (
             <>
+                <PageHeader label={"Пользователи"} hasButton={true} buttonOnClick={() => {}}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>

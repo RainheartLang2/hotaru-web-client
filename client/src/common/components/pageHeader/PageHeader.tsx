@@ -1,0 +1,28 @@
+import * as React from "react";
+import {ButtonComponent} from "../../../core/components";
+
+var styles = require("./styles.css");
+
+export default class PageHeader extends React.Component<PageHeaderProps> {
+    render() {
+        return (
+            <div className={styles.pageHeader}>
+                <div className={styles.label}>
+                    {this.props.label}
+                </div>
+                {this.props.hasButton ? (<ButtonComponent variant="contained"
+                                                          color="primary"
+                                                          size="small">
+                        Создать
+                    </ButtonComponent>)
+                    : ''}
+            </div>
+        )
+    }
+}
+
+export type PageHeaderProps = {
+    label: string,
+    hasButton: boolean,
+    buttonOnClick: Function,
+}
