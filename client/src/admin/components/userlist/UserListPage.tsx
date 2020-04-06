@@ -8,7 +8,7 @@ import {
     TableRowCmp
 } from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import {USER_LIST_PROPERTY} from "../AdminApplicationState";
+import {USER_LIST_PROPERTY} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 
@@ -24,7 +24,9 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     render() {
         return (
             <>
-                <PageHeader label={"Пользователи"} hasButton={true}/>
+                <PageHeader label={"Пользователи"}
+                            hasButton={true}
+                            buttonOnClick={() => AdminAppController.getInstance().openCreateEmployeeDialog()}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>

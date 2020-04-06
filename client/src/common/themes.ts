@@ -13,5 +13,20 @@ export const vetTheme: Theme = createMuiTheme({
             main: ColorType.SOLITUDE_BLUE,
             contrastText: ColorType.DENIM,
         },
+    },
+    overrides: {
+        MuiBackdrop: {
+            root: {
+                backgroundColor: ColorType.TRANSPARENT_WHITE,
+            }
+        },
+        MuiDialog: {
+            paper: {
+                minHeight: 340,
+                boxShadow: '0 0 15px 0 rgba(0,0,0,0.4)',
+                padding: 5,
+                borderRadius: 10,
+            }
+        }
     }
 });

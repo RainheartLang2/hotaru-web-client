@@ -2,7 +2,7 @@ import {ColorType} from "./ColorType";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
     AppBar,
-    Button, CircularProgress,
+    Button, CircularProgress, Dialog,
     Paper,
     Tab,
     Table,
@@ -59,3 +59,5 @@ export const TableCellCmp = TableCell
 export const TableBodyCmp = TableBody
 
 export const Loader = CircularProgress
+
+export const Popup = Dialog

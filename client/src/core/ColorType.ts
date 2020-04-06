@@ -1,5 +1,6 @@
 export enum ColorType {
     WHITE                   = "#ffffff",
+    TRANSPARENT_WHITE       = "rgba(125, 125, 125, 0.3)",
     ORANGE                  = "#ffa500",
     RED                     = "#ff0000",
     AT_BLUE                 = "#4d90d6",

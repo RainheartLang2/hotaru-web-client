@@ -1,8 +1,9 @@
-import AdminApplicationState from "../components/AdminApplicationState";
+import AdminApplicationState from "../state/AdminApplicationState";
 import {sendGetRequestToServer} from "../../core/utils/HttpUtils";
 import {GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../common/beans/Employee";
+import {DialogType} from "../state/DialogType";
 
 export default class AdminAppController {
     private static INSTANCE: AdminAppController = new AdminAppController()
@@ -25,6 +26,14 @@ export default class AdminAppController {
                 callback()
             })
         })
+    }
+
+    public openCreateEmployeeDialog(): void {
+        this.getApplicationState().setShowDialog(DialogType.CREATE_EMPLOYEE)
+    }
+
+    public closeCurrentDialog(): void {
+        this.getApplicationState().setShowDialog(DialogType.NONE)
     }
 
     public subscribe(property: string, component: React.Component, propertyAlias: string = property) {

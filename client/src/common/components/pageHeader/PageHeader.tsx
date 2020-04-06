@@ -18,7 +18,8 @@ export default class PageHeader extends React.Component<PageHeaderProps> {
                 </div>
                 {this.props.hasButton ? (<ButtonComponent variant="contained"
                                                           color="primary"
-                                                          size="small">
+                                                          size="small"
+                                                          onClick={() => {this.props.buttonOnClick()}}>
                         Создать
                     </ButtonComponent>)
                     : ''}

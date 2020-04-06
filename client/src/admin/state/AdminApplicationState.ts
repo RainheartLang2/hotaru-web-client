@@ -1,5 +1,6 @@
 import AppState from "../../core/AppState";
 import {Employee} from "../../common/beans/Employee";
+import {DialogType} from "./DialogType";
 
 export default class AdminApplicationState extends AppState {
     private static INSTANCE: AdminApplicationState
@@ -8,6 +9,7 @@ export default class AdminApplicationState extends AppState {
         super()
         this.registerProperty(USER_LIST_PROPERTY, [])
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
+        this.registerProperty(SHOW_DIALOG, DialogType.NONE)
     }
 
     public static getInstance(): AdminApplicationState {
@@ -32,7 +34,16 @@ export default class AdminApplicationState extends AppState {
     public setApplicationLoading(applicationLoading: boolean) {
         this.setPropertyValue(IS_APPLICATION_LOADING_PROPERTY, applicationLoading)
     }
+
+    public getShowDialog(): DialogType {
+        return this.getPropertyValue(SHOW_DIALOG)
+    }
+
+    public setShowDialog(dialogType: DialogType): void {
+        this.setPropertyValue(SHOW_DIALOG, dialogType)
+    }
 }
 
 export const USER_LIST_PROPERTY = "userList"
 export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"
+export const SHOW_DIALOG = "showDialog"

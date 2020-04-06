@@ -6,8 +6,9 @@ import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
 import UserListPage from "./components/userlist/UserListPage";
 import AdminAppController from "./controller/AdminAppController";
-import {IS_APPLICATION_LOADING_PROPERTY} from "./components/AdminApplicationState";
+import {IS_APPLICATION_LOADING_PROPERTY} from "./state/AdminApplicationState";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
+import AdminDialogsContainer from "./containers/AdminDialogsContainer";
 
 export let CURRENT_THEME: Theme = vetTheme;
 const IS_LOADING = "isLoading"
@@ -27,9 +28,10 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
                 <AppHeader position={"static"}>
                     <TabComponent label={"Users list"}/>
                 </AppHeader>
-                <AppContent>
+                <AppContent visible={!this.state.isLoading}>
                     <UserListPage/>
                 </AppContent>
+                <AdminDialogsContainer/>
                 <LoadingMoire visible={this.state.isLoading}/>
                 <Footer/>
             </MuiThemeProvider>
