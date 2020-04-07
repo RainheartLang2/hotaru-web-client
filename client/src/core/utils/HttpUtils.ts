@@ -1,11 +1,11 @@
-import {ServerAppUrl, GetMethod, HttpMethod, PostMethod} from "../http/ServerAppUrl";
+import {ServerAppUrl, GetMethod, HttpMethod, PostMethod, DeleteMethod} from "../http/ServerAppUrl";
 import {httpclient} from "typescript-http-client";
 
 const SERVER_APP_URL = "http://localhost:8080/web"
 const URL_AND_PARAMETERS_SEPARATOR = "?"
 const PARAMETER_SEPARATOR = "&"
 
-export async function fetchHttpGet(url: string, parameters?: string[]): Promise<Response> {
+export async function fetchHttpGet(url: string, parameters?: RequestParameter[]): Promise<Response> {
     return fetch(buildUrlWithParams(url, parameters))
 }
 
@@ -26,7 +26,14 @@ export async function fetchHttpPost(url: string, jsonData: string): Promise<Resp
     )
 }
 
-export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: string[]): Promise<Response> {
+export async function fetchHttpDelete(url: string, parameters?: RequestParameter[]): Promise<Response> {
+    return fetch(buildUrlWithParams(url, parameters),
+        {
+            method: "DELETE",
+        })
+}
+
+export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: RequestParameter[]): Promise<Response> {
     //TODO: function should return Promise with JSON instead of response
     return fetchHttpGet(buildServerAppUrl(url, parameters))
 }
@@ -35,14 +42,26 @@ export async function sendPostRequestToServer(url: ServerAppUrl<PostMethod>, jso
     return fetchHttpPost(buildServerAppUrl(url), json)
 }
 
-function buildServerAppUrl(url: ServerAppUrl<HttpMethod>, parameters?: string[]): string {
+export async function sendDeleteRequestToServer(url: ServerAppUrl<DeleteMethod>, parameters: RequestParameter[]): Promise<Response> {
+    return fetchHttpDelete(buildServerAppUrl(url, parameters))
+}
+
+function buildServerAppUrl(url: ServerAppUrl<HttpMethod>, parameters?: RequestParameter[]): string {
     return buildUrlWithParams(SERVER_APP_URL + url.getUrl(), parameters)
 }
 
-export function buildUrlWithParams(url: string, parameters?: string[]): string {
+export function buildUrlWithParams(url: string, parameters?: RequestParameter[]): string {
     let result: string = url
     if (parameters) {
-        result += URL_AND_PARAMETERS_SEPARATOR + parameters.join(PARAMETER_SEPARATOR)
+        result += URL_AND_PARAMETERS_SEPARATOR
+        result += parameters
+                    .map(parameter => `${parameter.name}=${parameter.value}`)
+                    .join(PARAMETER_SEPARATOR)
     }
     return result
+}
+
+export type RequestParameter = {
+    name: string,
+    value: string | number | boolean,
 }

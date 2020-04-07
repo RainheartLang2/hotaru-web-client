@@ -37,6 +37,11 @@ export default class AdminApplicationState extends AppState {
         this.setPropertyValue(USER_LIST_PROPERTY, users)
     }
 
+    public deleteUser(id: number) {
+        const users = this.getUserList().filter(user => user.id != id)
+        this.setPropertyValue(USER_LIST_PROPERTY, users)
+    }
+
     public isApplicationLoading(): boolean {
         return this.getPropertyValue(IS_APPLICATION_LOADING_PROPERTY)
     }

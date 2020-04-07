@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-    ButtonComponent,
     TableBodyCmp,
     TableCellCmp,
     TableCmp,
@@ -11,6 +10,7 @@ import {Employee} from "../../../common/beans/Employee";
 import {USER_LIST_PROPERTY} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
+import {Button} from "@material-ui/core";
 
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
@@ -33,6 +33,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                             <TableCellCmp>Имя</TableCellCmp>
                             <TableCellCmp>Отчество</TableCellCmp>
                             <TableCellCmp>Фамилия</TableCellCmp>
+                            <TableCellCmp>Действия</TableCellCmp>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
@@ -41,6 +42,20 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                                 <TableCellCmp>{user.firstName}</TableCellCmp>
                                 <TableCellCmp>{user.middleName}</TableCellCmp>
                                 <TableCellCmp>{user.lastName}</TableCellCmp>
+                                <TableCellCmp>
+                                    <Button
+                                        color="primary"
+                                        onClick={() => {
+                                            if (user.id) {
+                                                AdminAppController.getInstance().deleteEmployee(user.id)
+                                            } else {
+                                                throw new Error("user has no id")
+                                            }
+                                        }}
+                                    >
+                                        Удалить
+                                    </Button>
+                                </TableCellCmp>
                             </TableRowCmp>)
                         })}
                     </TableBodyCmp>

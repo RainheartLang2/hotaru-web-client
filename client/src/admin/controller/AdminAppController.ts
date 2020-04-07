@@ -1,6 +1,6 @@
 import AdminApplicationState from "../state/AdminApplicationState";
-import {sendGetRequestToServer, sendPostRequestToServer} from "../../core/utils/HttpUtils";
-import {ADD_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
+import {sendDeleteRequestToServer, sendGetRequestToServer, sendPostRequestToServer} from "../../core/utils/HttpUtils";
+import {ADD_EMPLOYEE, DELETE_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "../state/DialogType";
@@ -62,6 +62,15 @@ export default class AdminAppController {
         sendPostRequestToServer(ADD_EMPLOYEE, JSON.stringify(employee)).then(response => {
             this.getApplicationState().addUser(employee)
             this.getApplicationState().setShowDialog(DialogType.NONE)
+        })
+    }
+
+    public deleteEmployee(id: number): void {
+        sendDeleteRequestToServer(DELETE_EMPLOYEE, [{
+            name: "id",
+            value: id,
+        }]).then(response => {
+            this.getApplicationState().deleteUser(id)
         })
     }
 

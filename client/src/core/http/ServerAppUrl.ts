@@ -15,6 +15,7 @@ export class ServerAppUrl<M extends HttpMethod>{
 export interface HttpMethod {}
 export interface GetMethod extends HttpMethod {}
 export interface PostMethod extends HttpMethod {}
+export interface DeleteMethod extends HttpMethod {}
 
 export class ServerAppService {
     private url: string
