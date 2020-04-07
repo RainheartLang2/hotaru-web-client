@@ -1,4 +1,4 @@
-import {ServerAppUrl, GetMethod, HttpMethod} from "../http/ServerAppUrl";
+import {ServerAppUrl, GetMethod, HttpMethod, PostMethod} from "../http/ServerAppUrl";
 import {httpclient} from "typescript-http-client";
 
 const SERVER_APP_URL = "http://localhost:8080/web"
@@ -9,28 +9,30 @@ export async function fetchHttpGet(url: string, parameters?: string[]): Promise<
     return fetch(buildUrlWithParams(url, parameters))
 }
 
-export async function fetchHttpPost(url: string, jsonData: string) {
-    // const headers: Headers = new Headers()
-    // headers.append("Content-Type", "application/json")
-    // const stream: ReadableStream = new ReadableStream(jsonData)
-    // const request: RequestInfo = {
-    //     url: buildUrlWithParams(url, []),
-    //     method: "POST",
-    //     mode: "cors",
-    //     cache: "no-cache",
-    //     headers: new Headers(),
-    //     redirect: "follow",
-    //     referrerPolicy: "no-referrer",
-    //     body: stringToStream(jsonData),
-    // }
-    //
-    // return fetch(buildUrlWithParams(url, []),
-    //     )
+export async function fetchHttpPost(url: string, jsonData: string): Promise<Response> {
+    const headers: Headers = new Headers()
+    headers.append("Content-Type", "application/json")
+
+    return fetch(buildUrlWithParams(url, []),
+        {
+            method: "POST",
+            body: jsonData,
+            mode: "cors",
+            cache: "no-cache",
+            headers: headers,
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+        }
+    )
 }
 
 export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: string[]): Promise<Response> {
     //TODO: function should return Promise with JSON instead of response
     return fetchHttpGet(buildServerAppUrl(url, parameters))
+}
+
+export async function sendPostRequestToServer(url: ServerAppUrl<PostMethod>, json: string) {
+    return fetchHttpPost(buildServerAppUrl(url), json)
 }
 
 function buildServerAppUrl(url: ServerAppUrl<HttpMethod>, parameters?: string[]): string {

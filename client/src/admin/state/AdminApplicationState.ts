@@ -31,6 +31,12 @@ export default class AdminApplicationState extends AppState {
         this.setPropertyValue(USER_LIST_PROPERTY, userList)
     }
 
+    public addUser(user: Employee) {
+        const users = this.getUserList()
+        users.push(user)
+        this.setPropertyValue(USER_LIST_PROPERTY, users)
+    }
+
     public isApplicationLoading(): boolean {
         return this.getPropertyValue(IS_APPLICATION_LOADING_PROPERTY)
     }

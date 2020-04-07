@@ -7,7 +7,6 @@ import AdminApplicationState, {
     EDITED_EMPLOYEE_LAST_NAME,
     EDITED_EMPLOYEE_MIDDLE_NAME
 } from "../../../state/AdminApplicationState";
-import {ChangeEvent, SyntheticEvent} from "react";
 
 var styles = require("./styles.css");
 
@@ -81,7 +80,9 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                         <div className={styles.footerButton}>
                             <Button variant="contained"
                                     color="primary"
-                                    size="small">
+                                    size="small"
+                                    onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
+                            >
                                 Сохранить
                             </Button>
                         </div>

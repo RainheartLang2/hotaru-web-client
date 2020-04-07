@@ -1,6 +1,6 @@
 import AdminApplicationState from "../state/AdminApplicationState";
-import {sendGetRequestToServer} from "../../core/utils/HttpUtils";
-import {GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
+import {sendGetRequestToServer, sendPostRequestToServer} from "../../core/utils/HttpUtils";
+import {ADD_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "../state/DialogType";
@@ -53,7 +53,16 @@ export default class AdminAppController {
     }
 
     public submitCreateEmployeeForm(): void {
-
+        const state = this.getApplicationState()
+        const employee: Employee = {
+            firstName: state.getEmployeeFirstName(),
+            middleName: state.getEmployeeMiddleName(),
+            lastName: state.getEmployeeLastName(),
+        }
+        sendPostRequestToServer(ADD_EMPLOYEE, JSON.stringify(employee)).then(response => {
+            this.getApplicationState().addUser(employee)
+            this.getApplicationState().setShowDialog(DialogType.NONE)
+        })
     }
 
     private getApplicationState(): AdminApplicationState {
