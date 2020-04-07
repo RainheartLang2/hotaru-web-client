@@ -1,5 +1,5 @@
 import * as React from "react";
-import EditEmployeeDialog from "../components/dialogs/EditEmployeeDialog";
+import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeDialog";
 import {SHOW_DIALOG} from "../state/AdminApplicationState";
 import {DialogType} from "../state/DialogType";
 import AdminAppController from "../controller/AdminAppController";

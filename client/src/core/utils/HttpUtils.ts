@@ -1,4 +1,5 @@
 import {ServerAppUrl, GetMethod, HttpMethod} from "../http/ServerAppUrl";
+import {httpclient} from "typescript-http-client";
 
 const SERVER_APP_URL = "http://localhost:8080/web"
 const URL_AND_PARAMETERS_SEPARATOR = "?"
@@ -6,6 +7,25 @@ const PARAMETER_SEPARATOR = "&"
 
 export async function fetchHttpGet(url: string, parameters?: string[]): Promise<Response> {
     return fetch(buildUrlWithParams(url, parameters))
+}
+
+export async function fetchHttpPost(url: string, jsonData: string) {
+    // const headers: Headers = new Headers()
+    // headers.append("Content-Type", "application/json")
+    // const stream: ReadableStream = new ReadableStream(jsonData)
+    // const request: RequestInfo = {
+    //     url: buildUrlWithParams(url, []),
+    //     method: "POST",
+    //     mode: "cors",
+    //     cache: "no-cache",
+    //     headers: new Headers(),
+    //     redirect: "follow",
+    //     referrerPolicy: "no-referrer",
+    //     body: stringToStream(jsonData),
+    // }
+    //
+    // return fetch(buildUrlWithParams(url, []),
+    //     )
 }
 
 export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: string[]): Promise<Response> {

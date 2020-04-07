@@ -40,6 +40,22 @@ export default class AdminAppController {
         this.getApplicationState().subscribe(property, component, propertyAlias)
     }
 
+    public setEmployeeLastName(value: string): void {
+        this.getApplicationState().setEmployeeLastName(value)
+    }
+
+    public setEmployeeFirstName(value: string): void {
+        this.getApplicationState().setEmployeeFirstName(value)
+    }
+
+    public setEmployeeMiddleName(value: string): void {
+        this.getApplicationState().setEmployeeMiddleName(value)
+    }
+
+    public submitCreateEmployeeForm(): void {
+
+    }
+
     private getApplicationState(): AdminApplicationState {
         return AdminApplicationState.getInstance()
     }

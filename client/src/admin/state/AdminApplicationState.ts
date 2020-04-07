@@ -10,6 +10,10 @@ export default class AdminApplicationState extends AppState {
         this.registerProperty(USER_LIST_PROPERTY, [])
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
         this.registerProperty(SHOW_DIALOG, DialogType.NONE)
+
+        this.registerProperty(EDITED_EMPLOYEE_FIRST_NAME, "")
+        this.registerProperty(EDITED_EMPLOYEE_MIDDLE_NAME, "")
+        this.registerProperty(EDITED_EMPLOYEE_LAST_NAME, "")
     }
 
     public static getInstance(): AdminApplicationState {
@@ -42,8 +46,35 @@ export default class AdminApplicationState extends AppState {
     public setShowDialog(dialogType: DialogType): void {
         this.setPropertyValue(SHOW_DIALOG, dialogType)
     }
+
+    public getEmployeeFirstName(): string {
+        return this.getPropertyValue(EDITED_EMPLOYEE_FIRST_NAME)
+    }
+
+    public setEmployeeFirstName(value: string): void {
+        this.setPropertyValue(EDITED_EMPLOYEE_FIRST_NAME, value)
+    }
+
+    public getEmployeeMiddleName(): string {
+        return this.getPropertyValue(EDITED_EMPLOYEE_MIDDLE_NAME)
+    }
+
+    public setEmployeeMiddleName(value: string): void {
+        this.setPropertyValue(EDITED_EMPLOYEE_MIDDLE_NAME, value)
+    }
+
+    public getEmployeeLastName(): string {
+        return this.getPropertyValue(EDITED_EMPLOYEE_LAST_NAME)
+    }
+
+    public setEmployeeLastName(value: string): void {
+        this.setPropertyValue(EDITED_EMPLOYEE_LAST_NAME, value)
+    }
 }
 
 export const USER_LIST_PROPERTY = "userList"
 export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"
 export const SHOW_DIALOG = "showDialog"
+export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName"
+export const EDITED_EMPLOYEE_MIDDLE_NAME = "editedEmployeeMiddleName"
+export const EDITED_EMPLOYEE_LAST_NAME = "editedEmployeeLastName"

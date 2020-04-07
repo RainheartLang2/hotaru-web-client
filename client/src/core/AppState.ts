@@ -12,9 +12,9 @@ export default abstract class AppState {
     public subscribe(property: string,
                      subscriber: React.Component,
                      propertyAlias: string = property): void {
-        const value = this.subscribers.get(property)
-        if (value) {
-            value.push({subscriber, propertyAlias})
+        const subscribersData = this.subscribers.get(property)
+        if (subscribersData) {
+            subscribersData.push({subscriber, propertyAlias})
             subscriber.setState({[propertyAlias]: this.getPropertyValue(property)})
         } else {
             this.unregisteredPropertSituationHandle(property)
@@ -22,7 +22,7 @@ export default abstract class AppState {
     }
 
     protected setPropertyValue<V>(property: string, newValue: V): void {
-        if (!this.properties.get(property)) {
+        if (this.properties.get(property) === null) {
             this.unregisteredPropertSituationHandle(property)
         }
         this.properties.set(property, newValue)
@@ -30,8 +30,8 @@ export default abstract class AppState {
     }
 
     protected getPropertyValue(property: string): any {
-        const propertyData = this.properties.get(property)
-        if (!propertyData) {
+        const propertyValue = this.properties.get(property)
+        if (propertyValue === null) {
             this.unregisteredPropertSituationHandle(property)
         }
         return this.properties.get(property)

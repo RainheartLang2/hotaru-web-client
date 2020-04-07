@@ -11,6 +11,8 @@ export const vetTheme: Theme = createMuiTheme({
         },
         secondary: {
             main: ColorType.SOLITUDE_BLUE,
+            light: ColorType.DENIM,
+            dark: ColorType.LIGHT_SOLITUDE_BLUE,
             contrastText: ColorType.DENIM,
         },
     },
@@ -22,10 +24,19 @@ export const vetTheme: Theme = createMuiTheme({
         },
         MuiDialog: {
             paper: {
-                minHeight: 340,
                 boxShadow: '0 0 15px 0 rgba(0,0,0,0.4)',
-                padding: 5,
                 borderRadius: 10,
+            }
+        },
+        MuiButton: {
+            root: {
+                textTransform: "none",
+            },
+            contained: {
+                boxShadow: "none",
+                "&:hover": {
+                    boxShadow: "none"
+                },
             }
         }
     }

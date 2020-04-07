@@ -53,6 +53,6 @@
     ]
   },
   "dependencies": {
-    "class-transformer": "^0.2.3"
+    "class-transformer": "^0.2.3",
   }
 }

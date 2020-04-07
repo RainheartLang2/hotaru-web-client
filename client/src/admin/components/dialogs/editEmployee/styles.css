@@ -1,0 +1,30 @@
+.dialogContent {
+    display:flex;
+    justify-content: space-between;
+    min-height: 340px;
+    padding: 0px 5px;
+}
+
+.column {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    width: 400px;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.footerButton {
+    padding-left: 10px;
+}
