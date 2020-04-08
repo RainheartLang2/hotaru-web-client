@@ -29,7 +29,7 @@ export default class PageHeader extends React.Component<PageHeaderProps> {
 }
 
 export type PageHeaderProps = {
-    label: string,
+    label: string | React.ReactNode,
     hasButton: boolean,
     buttonOnClick: Function,
 }

@@ -11,6 +11,7 @@ import {USER_LIST_PROPERTY} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Button} from "@material-ui/core";
+import {Message} from "../../../core/components/Message";
 
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
@@ -24,24 +25,24 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     render() {
         return (
             <>
-                <PageHeader label={"Пользователи"}
+                <PageHeader label={(<Message messageKey={"page.userList.title"}/>)}
                             hasButton={true}
                             buttonOnClick={() => AdminAppController.getInstance().openCreateEmployeeDialog()}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
-                            <TableCellCmp>Имя</TableCellCmp>
-                            <TableCellCmp>Отчество</TableCellCmp>
-                            <TableCellCmp>Фамилия</TableCellCmp>
-                            <TableCellCmp>Действия</TableCellCmp>
+                            <TableCellCmp>
+                                <Message messageKey={"common.employee.name"}/>
+                            </TableCellCmp>
+                            <TableCellCmp>
+                                <Message messageKey={"common.label.actions"}/>
+                            </TableCellCmp>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
                         {this.state.userList.map(user => {
                             return (<TableRowCmp key={user.id}>
-                                <TableCellCmp>{user.firstName}</TableCellCmp>
-                                <TableCellCmp>{user.middleName}</TableCellCmp>
-                                <TableCellCmp>{user.lastName}</TableCellCmp>
+                                <TableCellCmp>{`${user.lastName}, ${user.firstName} ${user.middleName}`}</TableCellCmp>
                                 <TableCellCmp>
                                     <Button
                                         color="primary"
@@ -53,7 +54,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                                             }
                                         }}
                                     >
-                                        Удалить
+                                        <Message messageKey={"common.button.delete"}/>
                                     </Button>
                                 </TableCellCmp>
                             </TableRowCmp>)

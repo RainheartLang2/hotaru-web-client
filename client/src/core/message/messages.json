@@ -1,0 +1,17 @@
+{
+  "ru": {
+    "admin": {
+      "common.button.create": "Создать",
+      "common.button.cancel": "Отменить",
+      "common.button.save": "Сохранить",
+      "common.button.delete": "Удалить",
+      "common.label.actions": "Действия",
+      "common.employee.name": "Имя",
+      "page.userList.title": "Управление сотрудниками",
+      "dialog.employee.create.label": "Создать нового сотрудника",
+      "dialog.employee.field.firstName.label": "Имя",
+      "dialog.employee.field.middleName.label": "Отчество",
+      "dialog.employee.field.lastName.label": "Фамилия"
+    }
+  }
+}

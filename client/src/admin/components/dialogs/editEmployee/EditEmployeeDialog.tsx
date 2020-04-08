@@ -2,11 +2,12 @@ import * as React from "react";
 import {Button, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import AdminAppController from "../../../controller/AdminAppController";
-import AdminApplicationState, {
+import {
     EDITED_EMPLOYEE_FIRST_NAME,
     EDITED_EMPLOYEE_LAST_NAME,
     EDITED_EMPLOYEE_MIDDLE_NAME
 } from "../../../state/AdminApplicationState";
+import {Message} from "../../../../core/components/Message";
 
 var styles = require("./styles.css");
 
@@ -29,13 +30,13 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     onBackdropClick={() => AdminAppController.getInstance().closeCurrentDialog()}
                     onClose={() => AdminAppController.getInstance().closeCurrentDialog()}>
                 <DialogTitle>
-                    Создать нового сотрудника
+                    <Message messageKey={"dialog.employee.create.label"}/>
                 </DialogTitle>
                 <DialogContent>
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
                             <div className={styles.row}>
-                                <TextField label={"Фамилия"}
+                                <TextField label={(<Message messageKey={"dialog.employee.field.lastName.label"}/>)}
                                            required={true}
                                            size="small"
                                            fullWidth={true}
@@ -48,7 +49,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 />
                             </div>
                             <div className={styles.row}>
-                                <TextField label={"Имя"}
+                                <TextField label={(<Message messageKey={"dialog.employee.field.firstName.label"}/>)}
                                            required={true}
                                            size="small"
                                            fullWidth={true}
@@ -61,7 +62,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 />
                             </div>
                             <div className={styles.row}>
-                                <TextField label={"Отчество"}
+                                <TextField label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
                                            size="small"
                                            fullWidth={true}
                                            defaultValue={this.state[LAST_NAME_PROPERTY]}
@@ -83,7 +84,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     size="small"
                                     onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
                             >
-                                Сохранить
+                                <Message messageKey={"common.button.save"}/>
                             </Button>
                         </div>
                         <div className={styles.footerButton}>
@@ -91,7 +92,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     color="secondary"
                                     size="small"
                                     onClick={() => AdminAppController.getInstance().closeCurrentDialog()}>
-                                Отменить
+                                <Message messageKey={"common.button.cancel"}/>
                             </Button>
                         </div>
 
