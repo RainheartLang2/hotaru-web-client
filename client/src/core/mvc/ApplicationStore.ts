@@ -1,4 +1,5 @@
 import * as React from "react";
+import FieldValidator from "./validators/FieldValidator";
 
 export default abstract class ApplicationStore {
     private properties: Map<string, any> = new Map()
@@ -31,6 +32,27 @@ export default abstract class ApplicationStore {
         this.selectors.set(selectorName, selector)
     }
 
+    protected registerField<T>(fieldName: string, defaultValue: string, validators: FieldValidator<T>[]): void {
+        this.registerProperty(fieldName, defaultValue)
+        this.registerSelector(fieldName + ".field", {
+            dependsOn: [fieldName],
+            get: (map: Map<string, any>) => {
+                const errors: string[] = []
+                const value = map.get(fieldName) as T
+                validators.forEach(validator => {
+                    if (!validator.validate(value)) {
+                        errors.push(validator.getErrorMessage())
+                    }
+                })
+                return {
+                    value,
+                    errors,
+                }
+
+            }
+        })
+    }
+
     private checkPropertyNotRegistered(propertyName: string) {
         if (this.properties.get(propertyName)
             || this.selectors.get(propertyName)) {
@@ -54,8 +76,6 @@ export default abstract class ApplicationStore {
         if (this.properties.get(propertyName) === null) {
             this.unregisteredPropertySituationHandle(propertyName)
         }
-        console.log(propertyName)
-        console.log(newValue)
         this.properties.set(propertyName, newValue)
         this.postPropertyChange(propertyName, newValue)
         const propertySelectors = this.dependencies.get(propertyName)
@@ -106,3 +126,10 @@ type Selector = {
     dependsOn: string[]
     get: (map: Map<string, any>) => any
 }
+
+export type FieldType<T> = {
+    value: T,
+    errors: string[],
+}
+
+export const FIELD_POSTFIX = ".field"

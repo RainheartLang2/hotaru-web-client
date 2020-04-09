@@ -1,6 +1,7 @@
-import ApplicationStore from "../../core/mvc/ApplicationStore";
+import ApplicationStore, {FIELD_POSTFIX} from "../../core/mvc/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "./DialogType";
+import RequiredFieldValidator from "../../core/mvc/validators/RequiredFieldValidator";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static INSTANCE: AdminApplicationState
@@ -11,7 +12,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
         this.registerProperty(SHOW_DIALOG, DialogType.NONE)
 
-        this.registerProperty(EDITED_EMPLOYEE_FIRST_NAME, "")
+        this.registerField(EDITED_EMPLOYEE_FIRST_NAME_PRIVATE, "", [new RequiredFieldValidator()])
         this.registerProperty(EDITED_EMPLOYEE_MIDDLE_NAME, "")
         this.registerProperty(EDITED_EMPLOYEE_LAST_NAME, "")
     }
@@ -63,7 +64,7 @@ export default class AdminApplicationState extends ApplicationStore {
     }
 
     public setEmployeeFirstName(value: string): void {
-        this.setPropertyValue(EDITED_EMPLOYEE_FIRST_NAME, value)
+        this.setPropertyValue(EDITED_EMPLOYEE_FIRST_NAME_PRIVATE, value)
     }
 
     public getEmployeeMiddleName(): string {
@@ -86,6 +87,7 @@ export default class AdminApplicationState extends ApplicationStore {
 export const USER_LIST_PROPERTY = "userList"
 export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"
 export const SHOW_DIALOG = "showDialog"
-export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName"
+const EDITED_EMPLOYEE_FIRST_NAME_PRIVATE = "editedEmployeeFirstName"
+export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName" + FIELD_POSTFIX
 export const EDITED_EMPLOYEE_MIDDLE_NAME = "editedEmployeeMiddleName"
 export const EDITED_EMPLOYEE_LAST_NAME = "editedEmployeeLastName"

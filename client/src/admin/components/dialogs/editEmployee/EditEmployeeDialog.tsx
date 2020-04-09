@@ -8,6 +8,7 @@ import {
     EDITED_EMPLOYEE_MIDDLE_NAME
 } from "../../../state/AdminApplicationState";
 import {Message} from "../../../../core/components/Message";
+import {FieldType} from "../../../../core/mvc/ApplicationStore";
 
 var styles = require("./styles.css");
 
@@ -16,7 +17,10 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         super(props);
         this.state = {
             mode: 'create',
-            [FIRST_NAME_PROPERTY]: "",
+            [FIRST_NAME_PROPERTY]: {
+                value: "",
+                errors: []
+            },
             [MIDDLE_NAME_PROPERTY]: "",
             [LAST_NAME_PROPERTY]: "",
         }
@@ -53,7 +57,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                            required={true}
                                            size="small"
                                            fullWidth={true}
-                                           defaultValue={this.state[FIRST_NAME_PROPERTY]}
+                                           defaultValue={this.state[FIRST_NAME_PROPERTY].value}
                                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                AdminAppController
                                                    .getInstance()
@@ -120,7 +124,7 @@ type Properties = {
 
 type State = {
     mode: 'create' | 'edit',
-    [FIRST_NAME_PROPERTY]: string,
+    [FIRST_NAME_PROPERTY]: FieldType<string>,
     [MIDDLE_NAME_PROPERTY]: string,
     [LAST_NAME_PROPERTY]: string,
 }
