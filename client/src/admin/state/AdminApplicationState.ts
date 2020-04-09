@@ -1,8 +1,8 @@
-import AppState from "../../core/AppState";
+import ApplicationStore from "../../core/mvc/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "./DialogType";
 
-export default class AdminApplicationState extends AppState {
+export default class AdminApplicationState extends ApplicationStore {
     private static INSTANCE: AdminApplicationState
 
     private constructor() {
