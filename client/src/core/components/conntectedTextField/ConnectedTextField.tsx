@@ -50,7 +50,6 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                         label={this.props.label}
                         size={this.props.size}
                         fullWidth={this.props.fullWidth}
-                        defaultValue={this.props.defaultValue}
 
                         value={this.state[ALIAS].value}
                         error={this.hasErrors()}

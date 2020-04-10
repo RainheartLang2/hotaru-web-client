@@ -3,6 +3,7 @@ import {Button, DialogContent, DialogTitle, TextField} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import AdminAppController from "../../../controller/AdminAppController";
 import {
+    EDIT_EMPLOYEE_FORM_HAS_ERRORS,
     EDITED_EMPLOYEE_FIRST_NAME,
     EDITED_EMPLOYEE_LAST_NAME,
     EDITED_EMPLOYEE_MIDDLE_NAME
@@ -16,11 +17,13 @@ var styles = require("./styles.css");
 export default class EditEmployeeDialog extends React.Component<Properties, State> {
 
     private controller: ApplicationController
+
     constructor(props: Properties) {
         super(props);
         this.controller = AdminAppController.getInstance()
         this.state = {
             mode: 'create',
+            hasErrors: false,
         }
     }
 
@@ -45,7 +48,6 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     required={true}
                                     size="small"
                                     fullWidth={true}
-                                    defaultValue={""}
                                 />
                             </div>
                             <div className={styles.row}>
@@ -56,7 +58,6 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     required={true}
                                     size="small"
                                     fullWidth={true}
-                                    defaultValue={""}
                                 />
                             </div>
                             <div className={styles.row}>
@@ -66,7 +67,6 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
                                     size="small"
                                     fullWidth={true}
-                                    defaultValue={""}
                                 />
                             </div>
                         </div>
@@ -78,6 +78,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             <Button variant="contained"
                                     color="primary"
                                     size="small"
+                                    disabled={this.state[HAS_ERRORS]}
                                     onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
                             >
                                 <Message messageKey={"common.button.save"}/>
@@ -91,13 +92,18 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 <Message messageKey={"common.button.cancel"}/>
                             </Button>
                         </div>
-
                     </div>
                 </DialogContent>
             </Dialog>
         )
     }
+
+    componentDidMount(): void {
+        this.controller.subscribe(EDIT_EMPLOYEE_FORM_HAS_ERRORS, this, HAS_ERRORS)
+    }
 }
+
+const HAS_ERRORS = 'hasErrors'
 
 type Properties = {
     open: boolean
@@ -105,4 +111,5 @@ type Properties = {
 
 type State = {
     mode: 'create' | 'edit',
+    [HAS_ERRORS]: boolean
 }

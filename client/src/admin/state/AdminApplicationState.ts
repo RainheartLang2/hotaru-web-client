@@ -20,6 +20,18 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerField(EDITED_EMPLOYEE_LAST_NAME, "",
             [new RequiredFieldValidator(),
                 new MaximalLengthValidator(100)])
+        this.registerSelector(EDIT_EMPLOYEE_FORM_HAS_ERRORS,
+            {
+                dependsOn: [EDITED_EMPLOYEE_FIRST_NAME,
+                    EDITED_EMPLOYEE_MIDDLE_NAME,
+                    EDITED_EMPLOYEE_LAST_NAME
+                ],
+                get: (map: Map<string, any>) => {
+                    return this.getPropertyValue<FieldType<string>>(EDITED_EMPLOYEE_FIRST_NAME).errors.length > 0
+                        || this.getPropertyValue<FieldType<string>>(EDITED_EMPLOYEE_MIDDLE_NAME).errors.length > 0
+                        || this.getPropertyValue<FieldType<string>>(EDITED_EMPLOYEE_LAST_NAME).errors.length > 0
+                }
+            })
     }
 
     public static getInstance(): AdminApplicationState {
@@ -95,3 +107,4 @@ export const SHOW_DIALOG = "showDialog"
 export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName"
 export const EDITED_EMPLOYEE_MIDDLE_NAME = "editedEmployeeMiddleName"
 export const EDITED_EMPLOYEE_LAST_NAME = "editedEmployeeLastName"
+export const EDIT_EMPLOYEE_FORM_HAS_ERRORS = "editedEmployeeHasErrors"
