@@ -1,4 +1,7 @@
-import AdminApplicationState from "../state/AdminApplicationState";
+import AdminApplicationState, {
+    EDITED_EMPLOYEE_FIRST_NAME,
+    EDITED_EMPLOYEE_LAST_NAME, EDITED_EMPLOYEE_MIDDLE_NAME
+} from "../state/AdminApplicationState";
 import {sendDeleteRequestToServer, sendGetRequestToServer, sendPostRequestToServer} from "../../core/utils/HttpUtils";
 import {ADD_EMPLOYEE, DELETE_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
@@ -36,6 +39,12 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public openCreateEmployeeDialog(): void {
+        this.getApplicationState().setEmployeeFirstName("")
+        this.toggleFieldValidation(EDITED_EMPLOYEE_FIRST_NAME, false)
+        this.getApplicationState().setEmployeeMiddleName("")
+        this.toggleFieldValidation(EDITED_EMPLOYEE_MIDDLE_NAME, false)
+        this.getApplicationState().setEmployeeLastName("")
+        this.toggleFieldValidation(EDITED_EMPLOYEE_LAST_NAME, false)
         this.getApplicationState().setShowDialog(DialogType.CREATE_EMPLOYEE)
     }
 

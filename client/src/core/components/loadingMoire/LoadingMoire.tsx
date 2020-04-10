@@ -1,12 +1,12 @@
 import * as React from "react";
 import Moire from "../moire/Moire";
-import {Loader} from "../../components";
+import {CircularProgress} from "@material-ui/core";
 
 export default class LoadingMoire extends React.Component<LoadingMoireProps> {
     render() {
         return (
             <Moire visible={this.props.visible}>
-                {this.props.visible ? <Loader color="primary"/> : ""}
+                {this.props.visible ? <CircularProgress color="primary"/> : ""}
             </Moire>
         )
     }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {vetTheme} from "../common/themes";
 import {MuiThemeProvider, Theme} from "../../node_modules/@material-ui/core/styles/index";
-import {AppHeader, TabComponent} from "../core/components";
+import {AppHeader} from "../core/components";
 import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
 import UserListPage from "./components/userlist/UserListPage";
@@ -13,6 +13,7 @@ import {ApplicationType} from "../core/enum/ApplicationType";
 import ApplicationHolder from "../core/utils/ApplicationHolder";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
+import {Tab} from "@material-ui/core";
 
 export let CURRENT_THEME: Theme = vetTheme;
 const IS_LOADING = "isLoading"
@@ -33,7 +34,7 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
         return (
             <MuiThemeProvider theme={CURRENT_THEME}>
                 <AppHeader position={"static"}>
-                    <TabComponent label={"Users list"}/>
+                    <Tab label={"Users list"}/>
                 </AppHeader>
                 <AppContent visible={!this.state.isLoading}>
                     <UserListPage/>

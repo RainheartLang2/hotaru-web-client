@@ -13,10 +13,6 @@ import {
     TextField
 } from "@material-ui/core";
 
-export const InputField = TextField
-
-//TODO: Delete
-export const CommonButton = Button
 export const ButtonComponent = withStyles({
     root: {
         textTransform: "none",
@@ -27,14 +23,12 @@ export const ButtonComponent = withStyles({
     }
 })(Button)
 
-export const PaperComponent = Paper
 export const AppHeader = withStyles({
     root: {
         //TODO: make constant value
         minWidth: 800,
     }
 })(AppBar)
-export const TabComponent = Tab
 
 export const TableCmp = withStyles({
     root: {
@@ -59,5 +53,3 @@ export const TableCellCmp = TableCell
 export const TableBodyCmp = TableBody
 
 export const Loader = CircularProgress
-
-export const Popup = Dialog

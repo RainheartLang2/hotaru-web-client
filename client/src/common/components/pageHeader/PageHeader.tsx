@@ -1,5 +1,6 @@
 import * as React from "react";
 import {ButtonComponent} from "../../../core/components";
+import {Message} from "../../../core/components/Message";
 
 var styles = require("./styles.css");
 
@@ -20,7 +21,7 @@ export default class PageHeader extends React.Component<PageHeaderProps> {
                                                           color="primary"
                                                           size="small"
                                                           onClick={() => {this.props.buttonOnClick()}}>
-                        Создать
+                        <Message messageKey={"common.button.create"}/>
                     </ButtonComponent>)
                     : ''}
             </div>

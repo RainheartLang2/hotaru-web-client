@@ -11,6 +11,7 @@ import {
 import {Message} from "../../../../core/components/Message";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import ApplicationController from "../../../../core/mvc/ApplicationController";
+import {ButtonComponent} from "../../../../core/components";
 
 var styles = require("./styles.css");
 
@@ -75,22 +76,24 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     </div>
                     <div className={styles.footer}>
                         <div className={styles.footerButton}>
-                            <Button variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    disabled={this.state[HAS_ERRORS]}
-                                    onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
+                            <ButtonComponent
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                disabled={this.state[HAS_ERRORS]}
+                                onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
                             >
                                 <Message messageKey={"common.button.save"}/>
-                            </Button>
+                            </ButtonComponent>
                         </div>
                         <div className={styles.footerButton}>
-                            <Button variant="contained"
-                                    color="secondary"
-                                    size="small"
-                                    onClick={() => AdminAppController.getInstance().closeCurrentDialog()}>
+                            <ButtonComponent
+                                variant="contained"
+                                color="secondary"
+                                size="small"
+                                onClick={() => AdminAppController.getInstance().closeCurrentDialog()}>
                                 <Message messageKey={"common.button.cancel"}/>
-                            </Button>
+                            </ButtonComponent>
                         </div>
                     </div>
                 </DialogContent>

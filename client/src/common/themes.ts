@@ -31,13 +31,17 @@ export const vetTheme: Theme = createMuiTheme({
         MuiButton: {
             root: {
                 textTransform: "none",
+                boxShadow: "none",
+                "&:hover": {
+                    boxShadow: "none"
+                },
             },
             contained: {
                 boxShadow: "none",
                 "&:hover": {
                     boxShadow: "none"
                 },
-            }
+            },
         }
     }
 });
