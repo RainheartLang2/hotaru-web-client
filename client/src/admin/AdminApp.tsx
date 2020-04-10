@@ -11,6 +11,8 @@ import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 import AdminDialogsContainer from "./containers/AdminDialogsContainer";
 import {ApplicationType} from "../core/enum/ApplicationType";
 import ApplicationHolder from "../core/utils/ApplicationHolder";
+import LocaleHolder from "../core/utils/LocaleHolder";
+import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 
 export let CURRENT_THEME: Theme = vetTheme;
 const IS_LOADING = "isLoading"
@@ -23,6 +25,8 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
             [IS_LOADING]: true,
         }
         ApplicationHolder.initialize(ApplicationType.ADMIN)
+        //TODO: remove from here
+        LocaleHolder.initialize(DEFAULT_LOCALE)
     }
 
     render() {

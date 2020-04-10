@@ -1,4 +1,4 @@
-import ApplicationStore, {FIELD_POSTFIX} from "../../core/mvc/ApplicationStore";
+import ApplicationStore, {FIELD_BASE_POSTFIX, FieldType} from "../../core/mvc/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "./DialogType";
 import RequiredFieldValidator from "../../core/mvc/validators/RequiredFieldValidator";
@@ -12,9 +12,9 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
         this.registerProperty(SHOW_DIALOG, DialogType.NONE)
 
-        this.registerField(EDITED_EMPLOYEE_FIRST_NAME_PRIVATE, "", [new RequiredFieldValidator()])
-        this.registerProperty(EDITED_EMPLOYEE_MIDDLE_NAME, "")
-        this.registerProperty(EDITED_EMPLOYEE_LAST_NAME, "")
+        this.registerField(EDITED_EMPLOYEE_FIRST_NAME, "", [new RequiredFieldValidator()])
+        this.registerField(EDITED_EMPLOYEE_MIDDLE_NAME, "")
+        this.registerField(EDITED_EMPLOYEE_LAST_NAME,"", [new RequiredFieldValidator()])
     }
 
     public static getInstance(): AdminApplicationState {
@@ -60,34 +60,33 @@ export default class AdminApplicationState extends ApplicationStore {
     }
 
     public getEmployeeFirstName(): string {
-        return this.getPropertyValue(EDITED_EMPLOYEE_FIRST_NAME)
+        return this.getFieldValue<string>(EDITED_EMPLOYEE_FIRST_NAME)
     }
 
     public setEmployeeFirstName(value: string): void {
-        this.setPropertyValue(EDITED_EMPLOYEE_FIRST_NAME_PRIVATE, value)
+        this.setFieldValue(EDITED_EMPLOYEE_FIRST_NAME, value)
     }
 
     public getEmployeeMiddleName(): string {
-        return this.getPropertyValue(EDITED_EMPLOYEE_MIDDLE_NAME)
+        return this.getFieldValue<string>(EDITED_EMPLOYEE_MIDDLE_NAME)
     }
 
     public setEmployeeMiddleName(value: string): void {
-        this.setPropertyValue(EDITED_EMPLOYEE_MIDDLE_NAME, value)
+        this.setFieldValue(EDITED_EMPLOYEE_MIDDLE_NAME, value)
     }
 
     public getEmployeeLastName(): string {
-        return this.getPropertyValue(EDITED_EMPLOYEE_LAST_NAME)
+        return this.getFieldValue<string>(EDITED_EMPLOYEE_LAST_NAME)
     }
 
     public setEmployeeLastName(value: string): void {
-        this.setPropertyValue(EDITED_EMPLOYEE_LAST_NAME, value)
+        this.setFieldValue(EDITED_EMPLOYEE_LAST_NAME, value)
     }
 }
 
 export const USER_LIST_PROPERTY = "userList"
 export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"
 export const SHOW_DIALOG = "showDialog"
-const EDITED_EMPLOYEE_FIRST_NAME_PRIVATE = "editedEmployeeFirstName"
-export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName" + FIELD_POSTFIX
+export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName"
 export const EDITED_EMPLOYEE_MIDDLE_NAME = "editedEmployeeMiddleName"
 export const EDITED_EMPLOYEE_LAST_NAME = "editedEmployeeLastName"

@@ -8,21 +8,19 @@ import {
     EDITED_EMPLOYEE_MIDDLE_NAME
 } from "../../../state/AdminApplicationState";
 import {Message} from "../../../../core/components/Message";
-import {FieldType} from "../../../../core/mvc/ApplicationStore";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
+import ApplicationController from "../../../../core/mvc/ApplicationController";
 
 var styles = require("./styles.css");
 
 export default class EditEmployeeDialog extends React.Component<Properties, State> {
+
+    private controller: ApplicationController
     constructor(props: Properties) {
         super(props);
+        this.controller = AdminAppController.getInstance()
         this.state = {
             mode: 'create',
-            [FIRST_NAME_PROPERTY]: {
-                value: "",
-                errors: []
-            },
-            [MIDDLE_NAME_PROPERTY]: "",
-            [LAST_NAME_PROPERTY]: "",
         }
     }
 
@@ -40,41 +38,35 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
                             <div className={styles.row}>
-                                <TextField label={(<Message messageKey={"dialog.employee.field.lastName.label"}/>)}
-                                           required={true}
-                                           size="small"
-                                           fullWidth={true}
-                                           defaultValue={this.state[LAST_NAME_PROPERTY]}
-                                           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                               AdminAppController
-                                                   .getInstance()
-                                                   .setEmployeeLastName(event.target.value)
-                                           }}
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={EDITED_EMPLOYEE_LAST_NAME}
+                                    label={(<Message messageKey={"dialog.employee.field.lastName.label"}/>)}
+                                    required={true}
+                                    size="small"
+                                    fullWidth={true}
+                                    defaultValue={""}
                                 />
                             </div>
                             <div className={styles.row}>
-                                <TextField label={(<Message messageKey={"dialog.employee.field.firstName.label"}/>)}
-                                           required={true}
-                                           size="small"
-                                           fullWidth={true}
-                                           defaultValue={this.state[FIRST_NAME_PROPERTY].value}
-                                           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                               AdminAppController
-                                                   .getInstance()
-                                                   .setEmployeeFirstName(event.target.value)
-                                           }}
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={EDITED_EMPLOYEE_FIRST_NAME}
+                                    label={(<Message messageKey={"dialog.employee.field.firstName.label"}/>)}
+                                    required={true}
+                                    size="small"
+                                    fullWidth={true}
+                                    defaultValue={""}
                                 />
                             </div>
                             <div className={styles.row}>
-                                <TextField label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
-                                           size="small"
-                                           fullWidth={true}
-                                           defaultValue={this.state[LAST_NAME_PROPERTY]}
-                                           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                               AdminAppController
-                                                   .getInstance()
-                                                   .setEmployeeMiddleName(event.target.value)
-                                           }}
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={EDITED_EMPLOYEE_MIDDLE_NAME}
+                                    label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
+                                    size="small"
+                                    fullWidth={true}
+                                    defaultValue={""}
                                 />
                             </div>
                         </div>
@@ -105,18 +97,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
             </Dialog>
         )
     }
-
-    componentDidMount(): void {
-        const controller = AdminAppController.getInstance()
-        controller.subscribe(EDITED_EMPLOYEE_FIRST_NAME, this, FIRST_NAME_PROPERTY)
-        controller.subscribe(EDITED_EMPLOYEE_MIDDLE_NAME, this, MIDDLE_NAME_PROPERTY)
-        controller.subscribe(EDITED_EMPLOYEE_LAST_NAME, this, LAST_NAME_PROPERTY)
-    }
 }
-
-const FIRST_NAME_PROPERTY = "firstName"
-const MIDDLE_NAME_PROPERTY = "middleName"
-const LAST_NAME_PROPERTY = "lastName"
 
 type Properties = {
     open: boolean
@@ -124,7 +105,4 @@ type Properties = {
 
 type State = {
     mode: 'create' | 'edit',
-    [FIRST_NAME_PROPERTY]: FieldType<string>,
-    [MIDDLE_NAME_PROPERTY]: string,
-    [LAST_NAME_PROPERTY]: string,
 }

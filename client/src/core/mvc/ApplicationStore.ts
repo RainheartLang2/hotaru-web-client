@@ -15,9 +15,12 @@ export default abstract class ApplicationStore {
     }
 
     protected registerSelector(selectorName: string, selector: Selector): void {
-        this.checkPropertyNotRegistered(selectorName)
+        this.registerProperty(selectorName, selector.get(this.properties))
 
         selector.dependsOn.forEach(property => {
+            if (property === selectorName) {
+                throw new Error("selector " + selectorName + " depends on itself")
+            }
             const propertyDependencies = this.dependencies.get(property)
             if (propertyDependencies) {
                 propertyDependencies.push(selectorName)
@@ -25,30 +28,67 @@ export default abstract class ApplicationStore {
                 throw new Error("no dependencies records for property " + property)
             }
         })
-
-        this.properties.set(selectorName, selector.get(this.properties))
-        this.subscribers.set(selectorName, [])
-        this.dependencies.set(selectorName, [])
         this.selectors.set(selectorName, selector)
     }
 
-    protected registerField<T>(fieldName: string, defaultValue: string, validators: FieldValidator<T>[]): void {
-        this.registerProperty(fieldName, defaultValue)
-        this.registerSelector(fieldName + ".field", {
-            dependsOn: [fieldName],
+    private getCurrentValidationActive<T>(fieldName: string): boolean {
+        let validationActive = false
+        const currentValue = this.properties.get(fieldName) as FieldType<T>
+        if (currentValue) {
+            validationActive = currentValue.validationActive
+        }
+        return validationActive
+    }
+
+    public toggleFieldValidation<T>(fieldName: string, validationActive: boolean) {
+        let errors: string[] = []
+        const currentValue = this.properties.get(fieldName) as FieldType<T>
+        if (!currentValue) {
+            throw new Error("Not possible to toggle field validation, if there is no field value in properties map")
+        }
+
+        const value = currentValue.value
+        const validators = currentValue.validators
+        if (validationActive) {
+            errors = this.validateField(currentValue.value, currentValue.validators)
+        }
+
+        this.properties.set(fieldName, {
+            value,
+            errors,
+            validators,
+            validationActive,
+        })
+    }
+
+    private validateField<T>(value: T, validators: FieldValidator<T>[]): string[] {
+        const errors: string[] = []
+        validators.forEach(validator => {
+            if (!validator.validate(value)) {
+                errors.push(validator.getErrorMessage())
+            }
+        })
+        return errors
+    }
+
+    protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
+        const basePropertyName = this.getFieldBasePropertyName(fieldName)
+        this.registerProperty(basePropertyName, defaultValue)
+        this.registerSelector(fieldName, {
+            dependsOn: [basePropertyName],
             get: (map: Map<string, any>) => {
-                const errors: string[] = []
-                const value = map.get(fieldName) as T
-                validators.forEach(validator => {
-                    if (!validator.validate(value)) {
-                        errors.push(validator.getErrorMessage())
-                    }
-                })
+                let errors: string[] = []
+                const value = map.get(basePropertyName) as T
+                const validationActive = this.getCurrentValidationActive(fieldName)
+                if (validationActive) {
+                    errors = this.validateField(value, validators)
+                }
                 return {
                     value,
                     errors,
+                    validators,
+                    validationActive,
                 }
-
             }
         })
     }
@@ -72,6 +112,10 @@ export default abstract class ApplicationStore {
         }
     }
 
+    public setFieldValue<V>(fieldName: string, newValue: V): void {
+        this.setPropertyValue<V>(this.getFieldBasePropertyName(fieldName), newValue)
+    }
+
     protected setPropertyValue<V>(propertyName: string, newValue: V): void {
         if (this.properties.get(propertyName) === null) {
             this.unregisteredPropertySituationHandle(propertyName)
@@ -91,12 +135,16 @@ export default abstract class ApplicationStore {
         }
     }
 
-    protected getPropertyValue(property: string): any {
+    protected getPropertyValue<T>(property: string): T {
         const propertyValue = this.properties.get(property)
         if (propertyValue === null) {
             this.unregisteredPropertySituationHandle(property)
         }
-        return this.properties.get(property)
+        return this.properties.get(property) as T
+    }
+
+    protected getFieldValue<T>(property: string): T {
+        return this.getPropertyValue<FieldType<T>>(property).value
     }
 
     protected postPropertyChange<V>(property: string, newValue: V): void {
@@ -115,6 +163,10 @@ export default abstract class ApplicationStore {
     private unregisteredPropertySituationHandle(property: string): void {
         throw new Error("unregistered property " + property)
     }
+
+    private getFieldBasePropertyName(fieldName: string): string {
+        return fieldName + FIELD_BASE_POSTFIX
+    }
 }
 
 type SubscriberData = {
@@ -130,6 +182,8 @@ type Selector = {
 export type FieldType<T> = {
     value: T,
     errors: string[],
+    validators: FieldValidator[],
+    validationActive: boolean,
 }
 
-export const FIELD_POSTFIX = ".field"
+export const FIELD_BASE_POSTFIX = ".fieldBase"

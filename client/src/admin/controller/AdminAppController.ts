@@ -4,14 +4,21 @@ import {ADD_EMPLOYEE, DELETE_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../common/bac
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "../state/DialogType";
+import ApplicationController from "../../core/mvc/ApplicationController";
 
-export default class AdminAppController {
+export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static INSTANCE: AdminAppController = new AdminAppController()
 
-    private constructor() {}
+    private constructor() {
+        super()
+    }
 
     public static getInstance(): AdminAppController {
         return AdminAppController.INSTANCE
+    }
+
+    public subscribe(property: string, component: React.Component, propertyAlias: string = property) {
+        this.getApplicationState().subscribe(property, component, propertyAlias)
     }
 
     public startApplication(): void {
@@ -34,10 +41,6 @@ export default class AdminAppController {
 
     public closeCurrentDialog(): void {
         this.getApplicationState().setShowDialog(DialogType.NONE)
-    }
-
-    public subscribe(property: string, component: React.Component, propertyAlias: string = property) {
-        this.getApplicationState().subscribe(property, component, propertyAlias)
     }
 
     public setEmployeeLastName(value: string): void {
@@ -74,7 +77,7 @@ export default class AdminAppController {
         })
     }
 
-    private getApplicationState(): AdminApplicationState {
+    protected getApplicationState(): AdminApplicationState {
         return AdminApplicationState.getInstance()
     }
 }

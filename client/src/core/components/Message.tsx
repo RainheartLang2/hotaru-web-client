@@ -1,7 +1,6 @@
 import MessageResource from "../message/MessageResource";
 import * as React from "react";
 import {DEFAULT_LOCALE, LocaleType} from "../enum/LocaleType";
-import ApplicationHolder from "../utils/ApplicationHolder";
 
 export class Message extends React.Component<MessageProps, MessageState> {
 
@@ -14,9 +13,7 @@ export class Message extends React.Component<MessageProps, MessageState> {
 
     render() {
         return (<>
-            {MessageResource.getMessage(this.state.locale,
-                                        ApplicationHolder.getInstance().applicationType,
-                                        this.props.messageKey)}
+            {MessageResource.getMessage(this.props.messageKey, this.state.locale)}
             </>)
     }
 }

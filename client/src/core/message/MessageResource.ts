@@ -1,15 +1,27 @@
 import {LocaleType} from "../enum/LocaleType";
 import {ApplicationType} from "../enum/ApplicationType";
+import LocaleHolder from "../utils/LocaleHolder";
+import ApplicationHolder from "../utils/ApplicationHolder";
 
 const messages = require("./messages.json")
 
 export default class MessageResource {
 
-    public static getMessage(locale: LocaleType, application: ApplicationType, messageKey: string): string {
-        const resultMessage = messages[locale][application][messageKey]
+    public static getMessage(
+                             messageKey: string,
+                             locale: LocaleType = LocaleHolder.getInstance().localeType,
+                             application: ApplicationType = ApplicationHolder.getInstance().applicationType,
+                             args: string[] = []): string {
+        let resultMessage = messages[locale][application][messageKey] as string
         if (!resultMessage) {
-            throw new Error(`no message for key ${locale}.${application}.${messageKey}`)
+            resultMessage = messages[locale]["common"][messageKey] as string
+            if (!resultMessage) {
+                throw new Error(`no message for key ${locale}.${application}.${messageKey}`)
+            }
         }
+        args.forEach((argumentValue, index) => {
+            resultMessage = resultMessage.replace("${" + index + "}", argumentValue)
+        })
         return resultMessage
     }
 }

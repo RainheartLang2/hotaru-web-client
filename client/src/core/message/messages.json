@@ -1,5 +1,8 @@
 {
   "ru": {
+    "common": {
+      "validator.required.message": "Поле является обязательным для заполнения"
+    },
     "admin": {
       "common.button.create": "Создать",
       "common.button.cancel": "Отменить",

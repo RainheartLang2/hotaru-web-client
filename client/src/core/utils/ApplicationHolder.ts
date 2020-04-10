@@ -22,7 +22,4 @@ export default class ApplicationHolder {
         this.INSTANCE._applicationType = applicationType
         this.INITIALIZED = true
     }
-
-
-
 }
