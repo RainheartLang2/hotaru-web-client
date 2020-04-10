@@ -31,7 +31,7 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     }
 
     private hasErrors(): boolean {
-        return this.state[ALIAS].errors.length > 0
+        return this.state[ALIAS].validationActive && this.state[ALIAS].errors.length > 0
     }
 
     render() {
@@ -52,7 +52,8 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                         fullWidth={this.props.fullWidth}
                         defaultValue={this.props.defaultValue}
 
-                        error={this.state[ALIAS].errors.length > 0}
+                        value={this.state[ALIAS].value}
+                        error={this.hasErrors()}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             this.props.controller
                                 .setFieldValue(this.props.fieldPropertyName, event.target.value)

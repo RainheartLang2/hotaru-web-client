@@ -1,4 +1,3 @@
-import AdminApplicationState from "../../admin/state/AdminApplicationState";
 import ApplicationStore from "./ApplicationStore";
 
 export default abstract class ApplicationController<StateType extends ApplicationStore = ApplicationStore> {

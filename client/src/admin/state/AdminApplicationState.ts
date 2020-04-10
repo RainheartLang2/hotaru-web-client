@@ -2,6 +2,7 @@ import ApplicationStore, {FIELD_BASE_POSTFIX, FieldType} from "../../core/mvc/Ap
 import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "./DialogType";
 import RequiredFieldValidator from "../../core/mvc/validators/RequiredFieldValidator";
+import MaximalLengthValidator from "../../core/mvc/validators/MaximalLengthValidator";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static INSTANCE: AdminApplicationState
@@ -12,9 +13,13 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
         this.registerProperty(SHOW_DIALOG, DialogType.NONE)
 
-        this.registerField(EDITED_EMPLOYEE_FIRST_NAME, "", [new RequiredFieldValidator()])
-        this.registerField(EDITED_EMPLOYEE_MIDDLE_NAME, "")
-        this.registerField(EDITED_EMPLOYEE_LAST_NAME,"", [new RequiredFieldValidator()])
+        this.registerField(EDITED_EMPLOYEE_FIRST_NAME, "",
+            [new RequiredFieldValidator(),
+                new MaximalLengthValidator(100)])
+        this.registerField(EDITED_EMPLOYEE_MIDDLE_NAME, "", [new MaximalLengthValidator(100)])
+        this.registerField(EDITED_EMPLOYEE_LAST_NAME, "",
+            [new RequiredFieldValidator(),
+                new MaximalLengthValidator(100)])
     }
 
     public static getInstance(): AdminApplicationState {

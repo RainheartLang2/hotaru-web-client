@@ -17,7 +17,7 @@ export default class Field<T> {
     public setValue(value: T) {
         this.errorMessages = []
         this.validators.forEach((validator) => {
-                const validationResult = validator.validate(value)
+                const validationResult = validator.isValid(value)
                 if (validationResult != null) {
                     // this.errorMessages.push(validationResult)
                 }

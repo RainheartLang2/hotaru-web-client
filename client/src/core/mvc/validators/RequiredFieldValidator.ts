@@ -6,8 +6,11 @@ export default class RequiredFieldValidator extends FieldValidator<string> {
         return MessageResource.getMessage("validator.required.message");
     }
 
-    validate(value: string): boolean {
+    isValid(value: string): boolean {
         return !!value;
     }
 
+    isAbortingValidator(): boolean {
+        return false;
+    }
 }

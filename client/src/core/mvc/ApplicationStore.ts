@@ -41,34 +41,30 @@ export default abstract class ApplicationStore {
     }
 
     public toggleFieldValidation<T>(fieldName: string, validationActive: boolean) {
-        let errors: string[] = []
         const currentValue = this.properties.get(fieldName) as FieldType<T>
         if (!currentValue) {
             throw new Error("Not possible to toggle field validation, if there is no field value in properties map")
         }
 
-        const value = currentValue.value
-        const validators = currentValue.validators
-        if (validationActive) {
-            errors = this.validateField(currentValue.value, currentValue.validators)
-        }
-
         this.properties.set(fieldName, {
-            value,
-            errors,
-            validators,
+            value: currentValue.value,
+            errors: currentValue.errors,
+            validators: currentValue.validators,
             validationActive,
         })
     }
 
-    private validateField<T>(value: T, validators: FieldValidator<T>[]): string[] {
+    private validateField<T>(value: T, validators: FieldValidator<T>[]): ValidationResult {
         const errors: string[] = []
         validators.forEach(validator => {
-            if (!validator.validate(value)) {
+            if (!validator.isValid(value)) {
+                if (validator.isAbortingValidator()) {
+                    throw new AbortError()
+                }
                 errors.push(validator.getErrorMessage())
             }
         })
-        return errors
+        return {errors, abort: false}
     }
 
     protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
@@ -77,17 +73,13 @@ export default abstract class ApplicationStore {
         this.registerSelector(fieldName, {
             dependsOn: [basePropertyName],
             get: (map: Map<string, any>) => {
-                let errors: string[] = []
                 const value = map.get(basePropertyName) as T
-                const validationActive = this.getCurrentValidationActive(fieldName)
-                if (validationActive) {
-                    errors = this.validateField(value, validators)
-                }
+                const validationResult = this.validateField(value, validators)
                 return {
                     value,
-                    errors,
+                    errors: validationResult.errors,
                     validators,
-                    validationActive,
+                    validationActive: this.getCurrentValidationActive(fieldName),
                 }
             }
         })
@@ -117,6 +109,17 @@ export default abstract class ApplicationStore {
     }
 
     protected setPropertyValue<V>(propertyName: string, newValue: V): void {
+        try {
+            this.setPropertyValueInternally(propertyName, newValue)
+        } catch (e) {
+            if (e instanceof AbortError) {
+                const currentValue = this.properties.get(propertyName) as V
+                this.setPropertyValueInternally(propertyName, currentValue)
+            }
+        }
+    }
+
+    private setPropertyValueInternally<V>(propertyName: string, newValue: V): void {
         if (this.properties.get(propertyName) === null) {
             this.unregisteredPropertySituationHandle(propertyName)
         }
@@ -127,7 +130,7 @@ export default abstract class ApplicationStore {
             propertySelectors.forEach(selectorName => {
                 const selector = this.selectors.get(selectorName)
                 if (selector) {
-                    this.setPropertyValue(selectorName, selector.get(this.properties))
+                    this.setPropertyValueInternally(selectorName, selector.get(this.properties))
                 } else {
                     throw new Error("unknown selector " + selectorName)
                 }
@@ -185,5 +188,12 @@ export type FieldType<T> = {
     validators: FieldValidator[],
     validationActive: boolean,
 }
+
+type ValidationResult = {
+    errors: string[],
+    abort: boolean,
+}
+
+class AbortError extends Error {}
 
 export const FIELD_BASE_POSTFIX = ".fieldBase"
