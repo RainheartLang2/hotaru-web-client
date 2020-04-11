@@ -11,14 +11,16 @@ export default abstract class ApplicationStore {
         this.registerProperty(GLOBAL_APPLICATION_ERROR, null)
     }
 
-    protected registerProperty(property: string, defaultValue: any): void {
+    //TODO: hide
+    public registerProperty(property: string, defaultValue: any): void {
         this.checkPropertyNotRegistered(property)
         this.properties.set(property, defaultValue)
         this.subscribers.set(property, [])
         this.dependencies.set(property, [])
     }
 
-    protected registerSelector(selectorName: string, selector: Selector): void {
+    //TODO: hide
+    public registerSelector(selectorName: string, selector: Selector): void {
         this.registerProperty(selectorName, selector.get(this.properties))
 
         selector.dependsOn.forEach(property => {
@@ -35,7 +37,8 @@ export default abstract class ApplicationStore {
         this.selectors.set(selectorName, selector)
     }
 
-    protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
+    //TODO: hide
+    public registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
         const basePropertyName = this.getFieldBasePropertyName(fieldName)
         this.registerProperty(basePropertyName, defaultValue)
         this.registerSelector(fieldName, {
@@ -120,7 +123,8 @@ export default abstract class ApplicationStore {
         this.setPropertyValue<V>(this.getFieldBasePropertyName(fieldName), newValue)
     }
 
-    protected setPropertyValue<V>(propertyName: string, newValue: V): void {
+    //TODO: hide
+    public setPropertyValue<V>(propertyName: string, newValue: V): void {
         try {
             this.setPropertyValueInternally(propertyName, newValue)
         } catch (e) {
@@ -150,7 +154,8 @@ export default abstract class ApplicationStore {
         }
     }
 
-    protected getPropertyValue<T>(property: string): T {
+    //TODO: hide
+    public getPropertyValue<T>(property: string): T {
         const propertyValue = this.properties.get(property)
         if (propertyValue === undefined) {
             this.unregisteredPropertySituationHandle(property)
@@ -158,7 +163,8 @@ export default abstract class ApplicationStore {
         return this.properties.get(property) as T
     }
 
-    protected getFieldValue<T>(property: string): T {
+    //TODO: hide
+    public getFieldValue<T>(property: string): T {
         return this.getPropertyValue<FieldType<T>>(property).value
     }
 

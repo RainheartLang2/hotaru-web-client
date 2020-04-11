@@ -11,7 +11,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     private constructor() {
         super(AdminApplicationState.getInstance())
-        this._employeeActions = new EmployeeActions(this, this.applicationStore)
+        this._employeeActions = new EmployeeActions(this, this.errorHandler, this.applicationStore.employeeNode)
     }
 
     public static getInstance(): AdminAppController {
