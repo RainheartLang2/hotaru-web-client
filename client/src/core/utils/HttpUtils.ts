@@ -1,5 +1,5 @@
 import {ServerAppUrl, GetMethod, HttpMethod, PostMethod, DeleteMethod} from "../http/ServerAppUrl";
-import {httpclient} from "typescript-http-client";
+import HttpTransportError from "../errors/HttpTransportError";
 
 const SERVER_APP_URL = "http://localhost:8080/web"
 const URL_AND_PARAMETERS_SEPARATOR = "?"
@@ -33,17 +33,24 @@ export async function fetchHttpDelete(url: string, parameters?: RequestParameter
         })
 }
 
-export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: RequestParameter[]): Promise<Response> {
-    //TODO: function should return Promise with JSON instead of response
-    return fetchHttpGet(buildServerAppUrl(url, parameters))
+async function parseResponseFromServer(requestResult: Promise<Response>) {
+    const response: Response = await requestResult
+    if (!response.ok) {
+        throw new HttpTransportError(response.status, response.statusText)
+    }
+    return response.json()
 }
 
-export async function sendPostRequestToServer(url: ServerAppUrl<PostMethod>, json: string) {
-    return fetchHttpPost(buildServerAppUrl(url), json)
+export async function sendGetRequestToServer(url: ServerAppUrl<GetMethod>, parameters?: RequestParameter[]): Promise<any> {
+    return parseResponseFromServer(fetchHttpGet(buildServerAppUrl(url, parameters)))
+}
+
+export async function sendPostRequestToServer(url: ServerAppUrl<PostMethod>, json: string): Promise<any> {
+    return parseResponseFromServer(fetchHttpPost(buildServerAppUrl(url), json))
 }
 
 export async function sendDeleteRequestToServer(url: ServerAppUrl<DeleteMethod>, parameters: RequestParameter[]): Promise<Response> {
-    return fetchHttpDelete(buildServerAppUrl(url, parameters))
+    return parseResponseFromServer(fetchHttpDelete(buildServerAppUrl(url, parameters)))
 }
 
 function buildServerAppUrl(url: ServerAppUrl<HttpMethod>, parameters?: RequestParameter[]): string {

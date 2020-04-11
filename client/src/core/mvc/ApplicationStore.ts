@@ -7,6 +7,10 @@ export default abstract class ApplicationStore {
     private dependencies: Map<string, string[]> = new Map()
     private subscribers: Map<string, SubscriberData[]> = new Map()
 
+    constructor() {
+        this.registerProperty(GLOBAL_APPLICATION_ERROR, null)
+    }
+
     protected registerProperty(property: string, defaultValue: any): void {
         this.checkPropertyNotRegistered(property)
         this.properties.set(property, defaultValue)
@@ -29,6 +33,32 @@ export default abstract class ApplicationStore {
             }
         })
         this.selectors.set(selectorName, selector)
+    }
+
+    protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
+        const basePropertyName = this.getFieldBasePropertyName(fieldName)
+        this.registerProperty(basePropertyName, defaultValue)
+        this.registerSelector(fieldName, {
+            dependsOn: [basePropertyName],
+            get: (map: Map<string, any>) => {
+                const value = map.get(basePropertyName) as T
+                const validationResult = this.validateField(value, validators)
+                return {
+                    value,
+                    errors: validationResult.errors,
+                    validators,
+                    validationActive: this.getCurrentValidationActive(fieldName),
+                }
+            }
+        })
+    }
+
+    public setGlobalApplicationError(messageToShow: string) {
+        this.setPropertyValue(GLOBAL_APPLICATION_ERROR, messageToShow)
+    }
+
+    public wipeGlobalApplicationError() {
+        this.setPropertyValue(GLOBAL_APPLICATION_ERROR, null)
     }
 
     private getCurrentValidationActive<T>(fieldName: string): boolean {
@@ -67,24 +97,6 @@ export default abstract class ApplicationStore {
         return {errors, abort: false}
     }
 
-    protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
-        const basePropertyName = this.getFieldBasePropertyName(fieldName)
-        this.registerProperty(basePropertyName, defaultValue)
-        this.registerSelector(fieldName, {
-            dependsOn: [basePropertyName],
-            get: (map: Map<string, any>) => {
-                const value = map.get(basePropertyName) as T
-                const validationResult = this.validateField(value, validators)
-                return {
-                    value,
-                    errors: validationResult.errors,
-                    validators,
-                    validationActive: this.getCurrentValidationActive(fieldName),
-                }
-            }
-        })
-    }
-
     private checkPropertyNotRegistered(propertyName: string) {
         if (this.properties.get(propertyName)
             || this.selectors.get(propertyName)) {
@@ -96,7 +108,7 @@ export default abstract class ApplicationStore {
                      subscriber: React.Component,
                      propertyAlias: string = property): void {
         const subscribersData = this.subscribers.get(property)
-        if (subscribersData) {
+        if (subscribersData !== undefined) {
             subscribersData.push({subscriber, propertyAlias})
             subscriber.setState({[propertyAlias]: this.getPropertyValue(property)})
         } else {
@@ -120,7 +132,7 @@ export default abstract class ApplicationStore {
     }
 
     private setPropertyValueInternally<V>(propertyName: string, newValue: V): void {
-        if (this.properties.get(propertyName) === null) {
+        if (this.properties.get(propertyName) === undefined) {
             this.unregisteredPropertySituationHandle(propertyName)
         }
         this.properties.set(propertyName, newValue)
@@ -140,7 +152,7 @@ export default abstract class ApplicationStore {
 
     protected getPropertyValue<T>(property: string): T {
         const propertyValue = this.properties.get(property)
-        if (propertyValue === null) {
+        if (propertyValue === undefined) {
             this.unregisteredPropertySituationHandle(property)
         }
         return this.properties.get(property) as T
@@ -196,4 +208,5 @@ type ValidationResult = {
 
 class AbortError extends Error {}
 
+export const GLOBAL_APPLICATION_ERROR = "globalError"
 export const FIELD_BASE_POSTFIX = ".fieldBase"

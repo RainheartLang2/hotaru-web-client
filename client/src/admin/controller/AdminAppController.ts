@@ -30,11 +30,11 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public loadUsersList(callback: Function): void {
-        sendGetRequestToServer(GET_ALL_EMPLOYEES).then(response => {
-            response.json().then(result => {
-                this.getApplicationState().setUserList(plainToClass(Employee, result) as Employee[])
-                callback()
-            })
+        sendGetRequestToServer(GET_ALL_EMPLOYEES).then(json => {
+            this.getApplicationState().setUserList(plainToClass(Employee, json) as Employee[])
+            callback()
+        }).catch(e => {
+            this.handleError(e)
         })
     }
 
@@ -71,9 +71,11 @@ export default class AdminAppController extends ApplicationController<AdminAppli
             middleName: state.getEmployeeMiddleName(),
             lastName: state.getEmployeeLastName(),
         }
-        sendPostRequestToServer(ADD_EMPLOYEE, JSON.stringify(employee)).then(response => {
+        sendPostRequestToServer(ADD_EMPLOYEE, JSON.stringify(employee)).then(json => {
             this.getApplicationState().addUser(employee)
             this.getApplicationState().setShowDialog(DialogType.NONE)
+        }).catch(error => {
+            this.handleError(error)
         })
     }
 
@@ -83,6 +85,8 @@ export default class AdminAppController extends ApplicationController<AdminAppli
             value: id,
         }]).then(response => {
             this.getApplicationState().deleteUser(id)
+        }).catch(error => {
+            this.handleError(error)
         })
     }
 

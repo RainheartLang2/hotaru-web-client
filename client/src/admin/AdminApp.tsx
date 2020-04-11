@@ -14,6 +14,7 @@ import ApplicationHolder from "../core/utils/ApplicationHolder";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import {Tab} from "@material-ui/core";
+import ErrorModal from "../core/components/errrorModal/ErrorModal";
 
 export let CURRENT_THEME: Theme = vetTheme;
 const IS_LOADING = "isLoading"
@@ -41,6 +42,7 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
                 </AppContent>
                 <AdminDialogsContainer/>
                 <LoadingMoire visible={this.state.isLoading}/>
+                <ErrorModal controller={AdminAppController.getInstance()}/>
                 <Footer/>
             </MuiThemeProvider>
         )
