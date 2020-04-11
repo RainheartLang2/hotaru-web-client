@@ -12,14 +12,17 @@ import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Button} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
+import EmployeeActions from "../../controller/actions/EmployeeActions";
 
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
+    private actions: EmployeeActions
     constructor(props: {}) {
         super(props)
         this.state = {
             [USER_LIST_PROPERTY]: []
         }
+        this.actions = AdminAppController.getInstance().employeeActions
     }
 
     render() {
@@ -27,7 +30,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
             <>
                 <PageHeader label={(<Message messageKey={"page.userList.title"}/>)}
                             hasButton={true}
-                            buttonOnClick={() => AdminAppController.getInstance().openCreateEmployeeDialog()}/>
+                            buttonOnClick={() => this.actions.openCreateEmployeeDialog()}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
@@ -48,7 +51,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                                         color="primary"
                                         onClick={() => {
                                             if (user.id) {
-                                                AdminAppController.getInstance().deleteEmployee(user.id)
+                                                this.actions.deleteEmployee(user.id)
                                             } else {
                                                 throw new Error("user has no id")
                                             }

@@ -27,6 +27,7 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
             [IS_LOADING]: true,
         }
         ApplicationHolder.initialize(ApplicationType.ADMIN)
+        console.log(1)
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
     }

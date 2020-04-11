@@ -10,18 +10,20 @@ import {
 } from "../../../state/AdminApplicationState";
 import {Message} from "../../../../core/components/Message";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
-import ApplicationController from "../../../../core/mvc/ApplicationController";
 import {ButtonComponent} from "../../../../core/components";
+import EmployeeActions from "../../../controller/actions/EmployeeActions";
 
 var styles = require("./styles.css");
 
 export default class EditEmployeeDialog extends React.Component<Properties, State> {
 
-    private controller: ApplicationController
+    private controller: AdminAppController
+    private actions: EmployeeActions
 
     constructor(props: Properties) {
         super(props);
         this.controller = AdminAppController.getInstance()
+        this.actions = this.controller.employeeActions
         this.state = {
             mode: 'create',
             hasErrors: false,
@@ -81,7 +83,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 color="primary"
                                 size="small"
                                 disabled={this.state[HAS_ERRORS]}
-                                onClick={() => AdminAppController.getInstance().submitCreateEmployeeForm()}
+                                onClick={() => this.actions.submitCreateEmployeeForm()}
                             >
                                 <Message messageKey={"common.button.save"}/>
                             </ButtonComponent>
@@ -91,7 +93,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 variant="contained"
                                 color="secondary"
                                 size="small"
-                                onClick={() => AdminAppController.getInstance().closeCurrentDialog()}>
+                                onClick={() => this.controller.closeCurrentDialog()}>
                                 <Message messageKey={"common.button.cancel"}/>
                             </ButtonComponent>
                         </div>
