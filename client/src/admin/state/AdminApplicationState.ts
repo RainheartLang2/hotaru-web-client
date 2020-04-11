@@ -15,7 +15,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
         this.registerProperty(SHOW_DIALOG, DialogType.NONE)
 
-        this._employeeNode = new EmployeeNode(this)
+        this._employeeNode = new EmployeeNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {

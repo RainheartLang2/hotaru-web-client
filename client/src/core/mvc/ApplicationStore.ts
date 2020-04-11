@@ -1,5 +1,6 @@
 import * as React from "react";
 import FieldValidator from "./validators/FieldValidator";
+import {ApplicationStoreFriend} from "./ApplicationStoreFriend";
 
 export default abstract class ApplicationStore {
     private properties: Map<string, any> = new Map()
@@ -7,20 +8,21 @@ export default abstract class ApplicationStore {
     private dependencies: Map<string, string[]> = new Map()
     private subscribers: Map<string, SubscriberData[]> = new Map()
 
+    protected friend: ApplicationStoreFriend
+
     constructor() {
+        this.friend = this.createFriend()
         this.registerProperty(GLOBAL_APPLICATION_ERROR, null)
     }
 
-    //TODO: hide
-    public registerProperty(property: string, defaultValue: any): void {
+    protected registerProperty(property: string, defaultValue: any): void {
         this.checkPropertyNotRegistered(property)
         this.properties.set(property, defaultValue)
         this.subscribers.set(property, [])
         this.dependencies.set(property, [])
     }
 
-    //TODO: hide
-    public registerSelector(selectorName: string, selector: Selector): void {
+    protected registerSelector(selectorName: string, selector: Selector): void {
         this.registerProperty(selectorName, selector.get(this.properties))
 
         selector.dependsOn.forEach(property => {
@@ -37,8 +39,7 @@ export default abstract class ApplicationStore {
         this.selectors.set(selectorName, selector)
     }
 
-    //TODO: hide
-    public registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
+    protected registerField<T>(fieldName: string, defaultValue: T, validators: FieldValidator<T>[] = []): void {
         const basePropertyName = this.getFieldBasePropertyName(fieldName)
         this.registerProperty(basePropertyName, defaultValue)
         this.registerSelector(fieldName, {
@@ -123,8 +124,7 @@ export default abstract class ApplicationStore {
         this.setPropertyValue<V>(this.getFieldBasePropertyName(fieldName), newValue)
     }
 
-    //TODO: hide
-    public setPropertyValue<V>(propertyName: string, newValue: V): void {
+    protected setPropertyValue<V>(propertyName: string, newValue: V): void {
         try {
             this.setPropertyValueInternally(propertyName, newValue)
         } catch (e) {
@@ -154,8 +154,7 @@ export default abstract class ApplicationStore {
         }
     }
 
-    //TODO: hide
-    public getPropertyValue<T>(property: string): T {
+    protected getPropertyValue<T>(property: string): T {
         const propertyValue = this.properties.get(property)
         if (propertyValue === undefined) {
             this.unregisteredPropertySituationHandle(property)
@@ -163,8 +162,7 @@ export default abstract class ApplicationStore {
         return this.properties.get(property) as T
     }
 
-    //TODO: hide
-    public getFieldValue<T>(property: string): T {
+    protected getFieldValue<T>(property: string): T {
         return this.getPropertyValue<FieldType<T>>(property).value
     }
 
@@ -188,6 +186,39 @@ export default abstract class ApplicationStore {
     private getFieldBasePropertyName(fieldName: string): string {
         return fieldName + FIELD_BASE_POSTFIX
     }
+
+    private createFriend(): ApplicationStoreFriend {
+        const store = this
+        return new class implements ApplicationStoreFriend {
+            getFieldValue<T>(property: string): T {
+                return store.getFieldValue<T>(property);
+            }
+
+            getPropertyValue<T>(property: string): T {
+                return store.getPropertyValue<T>(property);
+            }
+
+            registerField<T>(fieldName: string, defaultValue: T, validators?: FieldValidator<T>[]): void {
+                store.registerField(fieldName, defaultValue, validators)
+            }
+
+            registerProperty(property: string, defaultValue: any): void {
+                store.registerProperty(property, defaultValue)
+            }
+
+            registerSelector(selectorName: string, selector: Selector): void {
+                store.registerSelector(selectorName, selector)
+            }
+
+            setPropertyValue<V>(propertyName: string, newValue: V): void {
+                store.setPropertyValue<V>(propertyName, newValue)
+            }
+
+            setFieldValue<V>(fieldName: string, newValue: V): void {
+                store.setFieldValue(fieldName, newValue)
+            }
+        }
+    }
 }
 
 type SubscriberData = {
@@ -195,7 +226,7 @@ type SubscriberData = {
     propertyAlias: string,
 }
 
-type Selector = {
+export type Selector = {
     dependsOn: string[]
     get: (map: Map<string, any>) => any
 }

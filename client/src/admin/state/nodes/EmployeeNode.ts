@@ -12,11 +12,12 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import {FieldType} from "../../../core/mvc/ApplicationStore";
 import {Employee} from "../../../common/beans/Employee";
+import {ApplicationStoreFriend} from "../../../core/mvc/ApplicationStoreFriend";
 
 export default class EmployeeNode {
-    private store: AdminApplicationState
+    private store: ApplicationStoreFriend
 
-    constructor(store: AdminApplicationState) {
+    constructor(store: ApplicationStoreFriend) {
         this.store = store
 
         this.store.registerProperty(USER_LIST_PROPERTY, [])
