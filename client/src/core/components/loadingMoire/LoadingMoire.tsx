@@ -2,7 +2,7 @@ import * as React from "react";
 import Moire from "../moire/Moire";
 import {CircularProgress} from "@material-ui/core";
 
-export default class LoadingMoire extends React.Component<LoadingMoireProps> {
+export default class LoadingMoire extends React.Component<Properties> {
     render() {
         return (
             <Moire visible={this.props.visible}>
@@ -12,6 +12,6 @@ export default class LoadingMoire extends React.Component<LoadingMoireProps> {
     }
 }
 
-type LoadingMoireProps = {
+type Properties = {
     visible: boolean,
 }

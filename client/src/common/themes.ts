@@ -4,22 +4,22 @@ import {ColorType} from "../core/ColorType";
 export const vetTheme: Theme = createMuiTheme({
     palette: {
         primary: {
-            main: ColorType.AT_BLUE,
-            light: ColorType.DENIM,
-            dark: ColorType.PICTON_BLUE,
-            contrastText: ColorType.WHITE,
+            main: ColorType.AtBlue,
+            light: ColorType.Denim,
+            dark: ColorType.PictonBlue,
+            contrastText: ColorType.White,
         },
         secondary: {
-            main: ColorType.SOLITUDE_BLUE,
-            light: ColorType.DENIM,
-            dark: ColorType.LIGHT_SOLITUDE_BLUE,
-            contrastText: ColorType.DENIM,
+            main: ColorType.SolitudeBlue,
+            light: ColorType.Denim,
+            dark: ColorType.LightSolitudeBlue,
+            contrastText: ColorType.Denim,
         },
     },
     overrides: {
         MuiBackdrop: {
             root: {
-                backgroundColor: ColorType.TRANSPARENT_WHITE,
+                backgroundColor: ColorType.TransparentWhite,
             }
         },
         MuiDialog: {

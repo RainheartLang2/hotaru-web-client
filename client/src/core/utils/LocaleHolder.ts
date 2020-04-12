@@ -2,8 +2,8 @@ import {DEFAULT_LOCALE, LocaleType} from "../enum/LocaleType";
 
 //TODO: implement subscription to state
 export default class LocaleHolder {
-    private static INSTANCE = new LocaleHolder()
-    private static INITIALIZED = false
+    private static _instance = new LocaleHolder()
+    private static initialized = false
 
     private _localeType = DEFAULT_LOCALE
     private constructor() {}
@@ -12,15 +12,15 @@ export default class LocaleHolder {
         return this._localeType;
     }
 
-    public static getInstance(): LocaleHolder {
-        if (!this.INITIALIZED) {
+    public static get instance(): LocaleHolder {
+        if (!this.initialized) {
             throw new Error("Locale holder is not initialized")
         }
-        return this.INSTANCE
+        return this._instance
     }
 
     public static initialize(localeType: LocaleType): void {
-        this.INSTANCE._localeType = localeType
-        this.INITIALIZED = true
+        this._instance._localeType = localeType
+        this.initialized = true
     }
 }

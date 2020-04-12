@@ -2,7 +2,7 @@ import * as React from "react";
 
 var styles = require("./styles.css");
 
-export default class AppContent extends React.Component<AppContentProps> {
+export default class AppContent extends React.Component<Properties> {
 
     static defaultProps = {
         visible: true,
@@ -19,6 +19,6 @@ export default class AppContent extends React.Component<AppContentProps> {
     }
 }
 
-type AppContentProps = {
+type Properties = {
     visible: boolean
 }

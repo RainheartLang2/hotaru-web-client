@@ -1,4 +1,4 @@
 export enum ApplicationType {
-    NONE = "none",
-    ADMIN = "admin",
+    None = "none",
+    Admin = "admin",
 }

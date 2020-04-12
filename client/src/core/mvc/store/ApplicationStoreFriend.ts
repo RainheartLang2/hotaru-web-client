@@ -1,8 +1,8 @@
-import FieldValidator from "./validators/FieldValidator";
-import {Selector} from "./ApplicationStore";
+import FieldValidator from "../validators/FieldValidator";
+import {Selector} from "./Selector";
 
 export interface ApplicationStoreFriend {
-    registerProperty(property: string, defaultValue: any): void
+    registerProperty(propertyName: string, defaultValue: any): void
 
     registerSelector(selectorName: string, selector: Selector): void
 
@@ -10,9 +10,9 @@ export interface ApplicationStoreFriend {
 
     setPropertyValue<V>(propertyName: string, newValue: V): void
 
-    getPropertyValue<T>(property: string): T
+    getPropertyValue<T>(propertyName: string): T
 
-    getFieldValue<T>(property: string): T
+    getFieldValue<T>(propertyName: string): T
 
     setFieldValue<V>(fieldName: string, newValue: V): void
 }

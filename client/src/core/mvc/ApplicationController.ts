@@ -1,4 +1,4 @@
-import ApplicationStore from "./ApplicationStore";
+import ApplicationStore from "./store/ApplicationStore";
 import HttpTransportError from "../errors/HttpTransportError";
 
 export default abstract class ApplicationController<StoreType extends ApplicationStore = ApplicationStore> {
@@ -19,12 +19,12 @@ export default abstract class ApplicationController<StoreType extends Applicatio
 
     public abstract subscribe(propertyName: string, component: React.Component, propertyAlias?: string): void
 
-    setFieldValue<V>(fieldName: string, value: V): void {
-        this.applicationStore.setFieldValue<V>(fieldName, value)
+    setFieldValue<ValueType>(fieldName: string, value: ValueType): void {
+        this.applicationStore.setFieldValue<ValueType>(fieldName, value)
     }
 
-    toggleFieldValidation<V>(fieldName: string, validateActive: boolean): void {
-        this.applicationStore.toggleFieldValidation<V>(fieldName, validateActive)
+    toggleFieldValidation<ValueType>(fieldName: string, validationActive: boolean): void {
+        this.applicationStore.toggleFieldValidation<ValueType>(fieldName, validationActive)
     }
 
     protected handleError(e: Error) {
@@ -42,11 +42,11 @@ export class ErrorHandler {
     public handle(e: Error) {
         let errorMessageKey = "error.message.unknown"
         if (e instanceof HttpTransportError) {
-            errorMessageKey = "error.message.http." + (HANDLED_CODES.includes(e.code) ? e.code : "common")
+            errorMessageKey = "error.message.http." + (HANDLED_HTTP_CODES.includes(e.code) ? e.code : "common")
         }
 
         this.store.setGlobalApplicationError(errorMessageKey)
     }
 }
 
-const HANDLED_CODES = [404, 500]
+const HANDLED_HTTP_CODES = [404, 500]

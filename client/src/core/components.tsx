@@ -1,17 +1,7 @@
 import {ColorType} from "./ColorType";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {
-    AppBar,
-    Button, CircularProgress, Dialog,
-    Paper,
-    Tab,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TextField
-} from "@material-ui/core";
+import {AppBar, Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {CommonConstants} from "../common/constants.js";
 
 export const ButtonComponent = withStyles({
     root: {
@@ -25,14 +15,13 @@ export const ButtonComponent = withStyles({
 
 export const AppHeader = withStyles({
     root: {
-        //TODO: make constant value
-        minWidth: 800,
+        minWidth: CommonConstants.applicationMinimalWidth,
     }
 })(AppBar)
 
 export const TableCmp = withStyles({
     root: {
-        border: `1px solid ${ColorType.AT_GREY}`,
+        border: `1px solid ${ColorType.AtGrey}`,
         borderRadius: "5px",
         borderCollapse: "separate",
     }
@@ -40,13 +29,13 @@ export const TableCmp = withStyles({
 
 export const TableHeaderCmp = withStyles({
     root: {
-        backgroundColor: ColorType.LIGHT_SOLITUDE_BLUE,
+        backgroundColor: ColorType.LightSolitudeBlue,
     }
 })(TableHead)
 
 export const TableRowCmp = withStyles({
     root: {
-        borderColor: ColorType.AT_GREY,
+        borderColor: ColorType.AtGrey,
     }
 })(TableRow)
 export const TableCellCmp = TableCell

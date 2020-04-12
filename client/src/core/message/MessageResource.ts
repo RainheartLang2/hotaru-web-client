@@ -9,8 +9,8 @@ export default class MessageResource {
 
     public static getMessage(
                              messageKey: string,
-                             locale: LocaleType = LocaleHolder.getInstance().localeType,
-                             application: ApplicationType = ApplicationHolder.getInstance().applicationType,
+                             locale: LocaleType = LocaleHolder.instance.localeType,
+                             application: ApplicationType = ApplicationHolder.instance.applicationType,
                              args: string[] = []): string {
         let resultMessage = messages[locale][application][messageKey] as string
         if (!resultMessage) {

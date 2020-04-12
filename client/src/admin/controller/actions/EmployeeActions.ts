@@ -1,20 +1,16 @@
 import AdminAppController from "../AdminAppController";
 import {
-    EDITED_EMPLOYEE_FIRST_NAME,
-    EDITED_EMPLOYEE_LAST_NAME,
-    EDITED_EMPLOYEE_MIDDLE_NAME
-} from "../../state/AdminApplicationState";
-import {
     sendDeleteRequestToServer,
     sendGetRequestToServer,
     sendPostRequestToServer
 } from "../../../core/utils/HttpUtils";
-import {ADD_EMPLOYEE, DELETE_EMPLOYEE, GET_ALL_EMPLOYEES} from "../../../common/backApplication/ServerAppUrl";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
 import {DialogType} from "../../state/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
 import {ErrorHandler} from "../../../core/mvc/ApplicationController";
+import {GlobalStateProperty} from "../../state/AdminApplicationState";
+import {ServerAppUrls} from "../../../common/backApplication/ServerAppUrls";
 
 export default class EmployeeActions {
     private controller: AdminAppController
@@ -30,7 +26,7 @@ export default class EmployeeActions {
     }
 
     public loadUsersList(callback: Function): void {
-        sendGetRequestToServer(GET_ALL_EMPLOYEES).then(json => {
+        sendGetRequestToServer(ServerAppUrls.getAllEmployees).then(json => {
             this.node.setUserList(plainToClass(Employee, json) as Employee[])
             callback()
         }).catch(e => {
@@ -40,15 +36,15 @@ export default class EmployeeActions {
 
     public openCreateEmployeeDialog(): void {
         this.node.setEmployeeFirstName("")
-        this.controller.toggleFieldValidation(EDITED_EMPLOYEE_FIRST_NAME, false)
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeFirstName, false)
 
         this.node.setEmployeeMiddleName("")
-        this.controller.toggleFieldValidation(EDITED_EMPLOYEE_MIDDLE_NAME, false)
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeMiddleName, false)
 
         this.node.setEmployeeLastName("")
-        this.controller.toggleFieldValidation(EDITED_EMPLOYEE_LAST_NAME, false)
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLastName, false)
 
-        this.node.setShowDialog(DialogType.CREATE_EMPLOYEE)
+        this.node.setShowDialog(DialogType.CreateEmployee)
     }
 
     public setEmployeeLastName(value: string): void {
@@ -69,16 +65,16 @@ export default class EmployeeActions {
             middleName: this.node.getEmployeeMiddleName(),
             lastName: this.node.getEmployeeLastName(),
         }
-        sendPostRequestToServer(ADD_EMPLOYEE, JSON.stringify(employee)).then(json => {
+        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify(employee)).then(json => {
             this.node.addUser(employee)
-            this.node.setShowDialog(DialogType.NONE)
+            this.node.setShowDialog(DialogType.None)
         }).catch(error => {
             this.errorHandler.handle(error)
         })
     }
 
     public deleteEmployee(id: number): void {
-        sendDeleteRequestToServer(DELETE_EMPLOYEE, [{
+        sendDeleteRequestToServer(ServerAppUrls.deleteEmployee, [{
             name: "id",
             value: id,
         }]).then(response => {

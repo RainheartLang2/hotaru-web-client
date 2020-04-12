@@ -5,28 +5,28 @@ import ApplicationController from "../../core/mvc/ApplicationController";
 import EmployeeActions from "./actions/EmployeeActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
-    private static INSTANCE: AdminAppController
+    private static _instance: AdminAppController
 
     private _employeeActions: EmployeeActions
 
     private constructor() {
-        super(AdminApplicationState.getInstance())
+        super(AdminApplicationState.instance)
         this._employeeActions = new EmployeeActions(this, this.errorHandler, this.applicationStore.employeeNode)
     }
 
-    public static getInstance(): AdminAppController {
-        if (!AdminAppController.INSTANCE) {
-            AdminAppController.INSTANCE = new AdminAppController()
+    public static get instance(): AdminAppController {
+        if (!AdminAppController._instance) {
+            AdminAppController._instance = new AdminAppController()
         }
-        return AdminAppController.INSTANCE
+        return AdminAppController._instance
     }
 
     get employeeActions(): EmployeeActions {
         return this._employeeActions;
     }
 
-    public subscribe(property: string, component: React.Component, propertyAlias: string = property) {
-        this.applicationStore.subscribe(property, component, propertyAlias)
+    public subscribe(property: string, subscriber: React.Component, propertyAlias: string = property) {
+        this.applicationStore.subscribe(property, subscriber, propertyAlias)
     }
 
     public startApplication(): void {
@@ -35,10 +35,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public closeCurrentDialog(): void {
-        this.applicationStore.setShowDialog(DialogType.NONE)
+        this.applicationStore.setShowDialog(DialogType.None)
     }
 
     protected getApplicationState(): AdminApplicationState {
-        return AdminApplicationState.getInstance()
+        return AdminApplicationState.instance
     }
 }

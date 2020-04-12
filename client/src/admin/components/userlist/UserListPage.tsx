@@ -1,13 +1,7 @@
 import * as React from "react";
-import {
-    TableBodyCmp,
-    TableCellCmp,
-    TableCmp,
-    TableHeaderCmp,
-    TableRowCmp
-} from "../../../core/components";
+import {TableBodyCmp, TableCellCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import {USER_LIST_PROPERTY} from "../../state/AdminApplicationState";
+import {GlobalStateProperty} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Button} from "@material-ui/core";
@@ -17,12 +11,13 @@ import EmployeeActions from "../../controller/actions/EmployeeActions";
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
     private actions: EmployeeActions
+
     constructor(props: {}) {
         super(props)
         this.state = {
-            [USER_LIST_PROPERTY]: []
+            [StateProperty.UserList]: []
         }
-        this.actions = AdminAppController.getInstance().employeeActions
+        this.actions = AdminAppController.instance.employeeActions
     }
 
     render() {
@@ -69,10 +64,14 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     }
 
     componentDidMount(): void {
-        AdminAppController.getInstance().subscribe(USER_LIST_PROPERTY, this)
+        AdminAppController.instance.subscribe(GlobalStateProperty.UserList, this, StateProperty.UserList)
     }
 }
 
+enum StateProperty {
+    UserList = "userList"
+}
+
 export type UserListPageState = {
-    [USER_LIST_PROPERTY]: Employee[],
+    [StateProperty.UserList]: Employee[],
 }

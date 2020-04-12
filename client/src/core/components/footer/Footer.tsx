@@ -1,16 +1,17 @@
 import * as React from "react";
-import {CURRENT_THEME} from "../../../admin/AdminApp";
+import {useTheme} from "@material-ui/core";
+
+var styles = require("./styles.css");
 
 export default class Footer extends React.Component {
     render() {
-        //TODO: change styling
-        const styles = {
-            footer: {
-                background: CURRENT_THEME.palette.primary.main,
-                height: 50,
-                minWidth: 800,
-            }
-        }
-        return (<div style={styles.footer}/>)
+        return (<FooterRaw></FooterRaw>)
     }
+}
+
+function FooterRaw() {
+    const color = {
+        background: useTheme().palette.primary.main,
+    }
+    return (<div className={styles.footer} style={color}/>)
 }

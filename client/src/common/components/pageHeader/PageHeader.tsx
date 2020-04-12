@@ -4,7 +4,7 @@ import {Message} from "../../../core/components/Message";
 
 var styles = require("./styles.css");
 
-export default class PageHeader extends React.Component<PageHeaderProps> {
+export default class PageHeader extends React.Component<Properties> {
 
     static defaultProps = {
         hasButton: false,
@@ -29,7 +29,7 @@ export default class PageHeader extends React.Component<PageHeaderProps> {
     }
 }
 
-export type PageHeaderProps = {
+type Properties = {
     label: string | React.ReactNode,
     hasButton: boolean,
     buttonOnClick: Function,

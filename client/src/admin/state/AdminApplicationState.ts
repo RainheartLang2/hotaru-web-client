@@ -1,19 +1,16 @@
-import ApplicationStore, {FIELD_BASE_POSTFIX, FieldType} from "../../core/mvc/ApplicationStore";
-import {Employee} from "../../common/beans/Employee";
 import {DialogType} from "./DialogType";
-import RequiredFieldValidator from "../../core/mvc/validators/RequiredFieldValidator";
-import MaximalLengthValidator from "../../core/mvc/validators/MaximalLengthValidator";
 import EmployeeNode from "./nodes/EmployeeNode";
+import ApplicationStore from "../../core/mvc/store/ApplicationStore";
 
 export default class AdminApplicationState extends ApplicationStore {
-    private static INSTANCE: AdminApplicationState
+    private static _instance: AdminApplicationState
 
     private _employeeNode: EmployeeNode
 
     private constructor() {
         super()
-        this.registerProperty(IS_APPLICATION_LOADING_PROPERTY, true)
-        this.registerProperty(SHOW_DIALOG, DialogType.NONE)
+        this.registerProperty(GlobalStateProperty.IsApplicationLoading, true)
+        this.registerProperty(GlobalStateProperty.ShowDialog, DialogType.None)
 
         this._employeeNode = new EmployeeNode(this.friend)
     }
@@ -22,34 +19,36 @@ export default class AdminApplicationState extends ApplicationStore {
         return this._employeeNode;
     }
 
-    public static getInstance(): AdminApplicationState {
-        if (!AdminApplicationState.INSTANCE) {
-            AdminApplicationState.INSTANCE = new AdminApplicationState()
+    public static get instance(): AdminApplicationState {
+        if (!AdminApplicationState._instance) {
+            AdminApplicationState._instance = new AdminApplicationState()
         }
-        return AdminApplicationState.INSTANCE
+        return AdminApplicationState._instance
     }
 
     public isApplicationLoading(): boolean {
-        return this.getPropertyValue(IS_APPLICATION_LOADING_PROPERTY)
+        return this.getPropertyValue(GlobalStateProperty.IsApplicationLoading)
     }
 
     public setApplicationLoading(applicationLoading: boolean) {
-        this.setPropertyValue(IS_APPLICATION_LOADING_PROPERTY, applicationLoading)
+        this.setPropertyValue(GlobalStateProperty.IsApplicationLoading, applicationLoading)
     }
 
     public getShowDialog(): DialogType {
-        return this.getPropertyValue(SHOW_DIALOG)
+        return this.getPropertyValue(GlobalStateProperty.ShowDialog)
     }
 
     public setShowDialog(dialogType: DialogType): void {
-        this.setPropertyValue(SHOW_DIALOG, dialogType)
+        this.setPropertyValue(GlobalStateProperty.ShowDialog, dialogType)
     }
 }
 
-export const USER_LIST_PROPERTY = "userList"
-export const IS_APPLICATION_LOADING_PROPERTY = "isApplicationLoading"
-export const SHOW_DIALOG = "showDialog"
-export const EDITED_EMPLOYEE_FIRST_NAME = "editedEmployeeFirstName"
-export const EDITED_EMPLOYEE_MIDDLE_NAME = "editedEmployeeMiddleName"
-export const EDITED_EMPLOYEE_LAST_NAME = "editedEmployeeLastName"
-export const EDIT_EMPLOYEE_FORM_HAS_ERRORS = "editedEmployeeHasErrors"
+export enum GlobalStateProperty {
+    UserList = "userList",
+    IsApplicationLoading = "isApplicationLoading",
+    ShowDialog = "showDialog",
+    EditedEmployeeFirstName = "editedEmployeeFirstName",
+    EditedEmployeeMiddleName = "editedEmployeeMiddleName",
+    EditedEmployeeLastName = "editedEmployeeLastName",
+    EditEmployeeFormHasErrors = "editEmployeFormHasErrors"
+}

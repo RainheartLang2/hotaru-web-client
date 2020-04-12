@@ -8,7 +8,7 @@ export class ServerAppUrl<M extends HttpMethod>{
     }
 
     public getUrl() {
-        return this.service.getUrl() + this.action.getUrl()
+        return this.service.url + this.action.url
     }
 }
 
@@ -18,25 +18,25 @@ export interface PostMethod extends HttpMethod {}
 export interface DeleteMethod extends HttpMethod {}
 
 export class ServerAppService {
-    private url: string
+    private _url: string
 
     constructor(url: string) {
-        this.url = url;
+        this._url = url;
     }
 
-    getUrl(): string {
-        return this.url
+    get url(): string {
+        return this._url
     }
 }
 
 export class ServerAppAction {
-    private url: string
+    private _url: string
 
     constructor(url: string) {
-        this.url = url;
+        this._url = url;
     }
 
-    getUrl(): string {
-        return this.url
+    get url(): string {
+        return this._url
     }
 }

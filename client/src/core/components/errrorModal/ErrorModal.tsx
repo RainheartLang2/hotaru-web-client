@@ -1,7 +1,7 @@
 import * as React from "react";
 import {DialogContent} from "@material-ui/core";
 import ApplicationController from "../../mvc/ApplicationController";
-import {GLOBAL_APPLICATION_ERROR} from "../../mvc/ApplicationStore";
+import {GlobalStateProperty} from "../../mvc/store/ApplicationStore";
 import {Message} from "../Message";
 import Dialog from "@material-ui/core/Dialog";
 
@@ -19,14 +19,14 @@ export default class ErrorModal extends React.Component<Properties, State> {
         return (
             <>
                 <Dialog
-                    open={this.state[ERROR_TEXT_KEY] !== null}
+                    open={this.state[StateProperty.ErrorTextKey] !== null}
                     fullWidth={true}
                     maxWidth="sm"
                 >
                     <DialogContent>
                         <div className={styles.content}>
-                            {(this.state[ERROR_TEXT_KEY])
-                                ? (<Message messageKey={this.state[ERROR_TEXT_KEY] as string}/>)
+                            {(this.state[StateProperty.ErrorTextKey])
+                                ? (<Message messageKey={this.state[StateProperty.ErrorTextKey] as string}/>)
                                 : ''}
                         </div>
                     </DialogContent>
@@ -36,8 +36,12 @@ export default class ErrorModal extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(GLOBAL_APPLICATION_ERROR, this, ERROR_TEXT_KEY)
+        this.props.controller.subscribe(GlobalStateProperty.ApplicationError, this, StateProperty.ErrorTextKey)
     }
+}
+
+enum StateProperty {
+    ErrorTextKey = "errorTextKey"
 }
 
 type Properties = {
@@ -47,5 +51,3 @@ type Properties = {
 type State = {
     errorTextKey: string | null,
 }
-
-const ERROR_TEXT_KEY = "errorTextKey"

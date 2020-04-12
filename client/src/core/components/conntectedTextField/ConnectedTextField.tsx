@@ -1,17 +1,15 @@
 import * as React from "react";
 import {TextField} from "@material-ui/core";
 import ApplicationController from "../../mvc/ApplicationController";
-import {FieldType} from "../../mvc/ApplicationStore";
 import Tooltip from "@material-ui/core/Tooltip";
-
-const ALIAS = "fieldData"
+import {Field} from "../../mvc/store/Field";
 
 export default class ConnectedTextField extends React.Component<Properties, State> {
 
     constructor(props: Properties) {
         super(props);
         this.state = {
-            fieldData: {
+            [StateProperty.FieldAlias]: {
                 value: this.props.defaultValue || "",
                 errors: [],
                 validators: [],
@@ -23,7 +21,7 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     private getTooltipText(): React.ReactNode {
         return (
             <>
-                {this.state[ALIAS].errors.map((errorText, index) => {
+                {this.state[StateProperty.FieldAlias].errors.map((errorText, index) => {
                     return (<div key={index}>{errorText}</div>)
                 })}
             </>
@@ -31,7 +29,8 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     }
 
     private hasErrors(): boolean {
-        return this.state[ALIAS].validationActive && this.state[ALIAS].errors.length > 0
+        return this.state[StateProperty.FieldAlias].validationActive
+            && this.state[StateProperty.FieldAlias].errors.length > 0
     }
 
     render() {
@@ -51,7 +50,7 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                         size={this.props.size}
                         fullWidth={this.props.fullWidth}
 
-                        value={this.state[ALIAS].value}
+                        value={this.state[StateProperty.FieldAlias].value}
                         error={this.hasErrors()}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             this.props.controller
@@ -65,8 +64,12 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this.props.fieldPropertyName, this, ALIAS)
+        this.props.controller.subscribe(this.props.fieldPropertyName, this, StateProperty.FieldAlias)
     }
+}
+
+enum StateProperty {
+    FieldAlias = "fieldAlias"
 }
 
 type Properties = {
@@ -80,6 +83,6 @@ type Properties = {
 }
 
 type State = {
-    [ALIAS]: FieldType<string>
+    [StateProperty.FieldAlias]: Field<string>
 }
 

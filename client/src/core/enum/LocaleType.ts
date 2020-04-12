@@ -1,5 +1,5 @@
 export enum LocaleType {
-    RU = "ru",
+    Russian = "ru",
 }
 
-export const DEFAULT_LOCALE = LocaleType.RU
+export const DEFAULT_LOCALE = LocaleType.Russian

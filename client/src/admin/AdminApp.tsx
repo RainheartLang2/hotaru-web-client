@@ -6,7 +6,6 @@ import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
 import UserListPage from "./components/userlist/UserListPage";
 import AdminAppController from "./controller/AdminAppController";
-import {IS_APPLICATION_LOADING_PROPERTY} from "./state/AdminApplicationState";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 import AdminDialogsContainer from "./containers/AdminDialogsContainer";
 import {ApplicationType} from "../core/enum/ApplicationType";
@@ -15,21 +14,23 @@ import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import {Tab} from "@material-ui/core";
 import ErrorModal from "../core/components/errrorModal/ErrorModal";
+import {GlobalStateProperty} from "./state/AdminApplicationState";
 
 export let CURRENT_THEME: Theme = vetTheme;
-const IS_LOADING = "isLoading"
 
-export default class AdminApp extends React.Component<{}, AdminAppComponentState> {
+export default class AdminApp extends React.Component<Properties, State> {
 
-    constructor(props: {}) {
+    private controller: AdminAppController
+
+    constructor(props: Properties) {
         super(props);
         this.state = {
-            [IS_LOADING]: true,
+            [StateProperty.IsLoading]: true,
         }
-        ApplicationHolder.initialize(ApplicationType.ADMIN)
-        console.log(1)
+        ApplicationHolder.initialize(ApplicationType.Admin)
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
+        this.controller = AdminAppController.instance
     }
 
     render() {
@@ -43,19 +44,24 @@ export default class AdminApp extends React.Component<{}, AdminAppComponentState
                 </AppContent>
                 <AdminDialogsContainer/>
                 <LoadingMoire visible={this.state.isLoading}/>
-                <ErrorModal controller={AdminAppController.getInstance()}/>
+                <ErrorModal controller={this.controller}/>
                 <Footer/>
             </MuiThemeProvider>
         )
     }
 
     componentDidMount(): void {
-        const controller = AdminAppController.getInstance()
-        controller.subscribe(IS_APPLICATION_LOADING_PROPERTY, this, IS_LOADING)
-        controller.startApplication()
+        this.controller.subscribe(GlobalStateProperty.IsApplicationLoading, this, StateProperty.IsLoading)
+        this.controller.startApplication()
     }
 }
 
-type AdminAppComponentState = {
-    [IS_LOADING]: boolean,
+enum StateProperty {
+    IsLoading = "isLoading"
+}
+
+type Properties = {}
+
+type State = {
+    [StateProperty.IsLoading]: boolean,
 }

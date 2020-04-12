@@ -1,33 +1,36 @@
 import * as React from "react";
 import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeDialog";
-import {SHOW_DIALOG} from "../state/AdminApplicationState";
 import {DialogType} from "../state/DialogType";
 import AdminAppController from "../controller/AdminAppController";
+import {GlobalStateProperty} from "../state/AdminApplicationState";
 
 export default class AdminDialogsContainer extends React.Component<{}, State> {
+
+    private controller: AdminAppController
 
     constructor(props: {}) {
         super(props);
         this.state = {
-            [SHOW_DIALOG]: DialogType.NONE,
+            [GlobalStateProperty.ShowDialog]: DialogType.None,
         }
+
+        this.controller = AdminAppController.instance
     }
 
     render() {
         return (
             <>
-                <EditEmployeeDialog open={this.state.showDialog === DialogType.CREATE_EMPLOYEE
-                                            || this.state.showDialog === DialogType.EDIT_EMPLOYEE}/>
+                <EditEmployeeDialog open={this.state[GlobalStateProperty.ShowDialog] === DialogType.CreateEmployee
+                || this.state[GlobalStateProperty.ShowDialog] === DialogType.EditEmployee}/>
             </>
         )
     }
 
     componentDidMount(): void {
-        const controller = AdminAppController.getInstance()
-        controller.subscribe(SHOW_DIALOG, this)
+        this.controller.subscribe(GlobalStateProperty.ShowDialog, this)
     }
 }
 
 type State = {
-    [SHOW_DIALOG]: DialogType,
+    [GlobalStateProperty.ShowDialog]: DialogType,
 }
