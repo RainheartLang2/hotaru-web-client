@@ -13,7 +13,35 @@ export default class EmployeeNode {
         this.store = store
 
         this.store.registerProperty(GlobalStateProperty.UserList, [])
+        this.store.registerSelector(GlobalStateProperty.UserListById, {
+            dependsOn: [GlobalStateProperty.UserList],
+            get: map => {
+                const userList: Employee[] = map.get(GlobalStateProperty.UserList) as Employee[]
+                const result = new Map<number, Employee>()
+                userList.forEach(user => {
+                    if (!user.id) {
+                        throw new Error("user without id should not be in the store")
+                    }
+                    result.set(user.id, user)
+                })
 
+                return result
+            }
+        })
+
+        this.store.registerSelector(GlobalStateProperty.EmployeeDialogType, {
+            dependsOn: [GlobalStateProperty.ShowDialog],
+            get: map => {
+                const globalDialogType: DialogType = map.get(GlobalStateProperty.ShowDialog)
+                switch (globalDialogType) {
+                    case DialogType.CreateEmployee: return "create"
+                    case DialogType.EditEmployee: return "edit"
+                    default: return "none"
+                }
+            }
+        })
+
+        this.store.registerProperty(GlobalStateProperty.EditedEmployeeId, 0)
         this.store.registerField(GlobalStateProperty.EditedEmployeeFirstName, "",
             [new RequiredFieldValidator(),
                 new MaximalLengthValidator(100)])
@@ -39,6 +67,18 @@ export default class EmployeeNode {
         return this.store.getPropertyValue(GlobalStateProperty.UserList)
     }
 
+    public getUserListById(): Map<number, Employee> {
+        return this.store.getPropertyValue(GlobalStateProperty.UserListById)
+    }
+
+    public getUserById(id: number): Employee {
+        const user = this.getUserListById().get(id)
+        if (!user) {
+            throw new Error("user with id " + id + " is not presented in the store")
+        }
+        return user
+    }
+
     public setUserList(userList: Employee[]) {
         this.store.setPropertyValue(GlobalStateProperty.UserList, userList)
     }
@@ -47,6 +87,11 @@ export default class EmployeeNode {
         const users = this.getUserList()
         users.push(user)
         this.setUserList(users)
+    }
+
+    public updateUser(updatedUser: Employee) {
+        const userList = this.getUserList().map(user => user.id == updatedUser.id ? updatedUser : user)
+        this.setUserList(userList)
     }
 
     public deleteUser(id: number) {
@@ -70,6 +115,18 @@ export default class EmployeeNode {
         this.store.setPropertyValue(GlobalStateProperty.ShowDialog, dialogType)
     }
 
+    public getEditedEmployee(): Employee {
+        return this.getUserById(this.getEmployeeId())
+    }
+
+    public getEmployeeId(): number {
+        return this.store.getPropertyValue<number>(GlobalStateProperty.EditedEmployeeId)
+    }
+
+    public setEmployeeId(id: number): void {
+        this.store.setPropertyValue<number>(GlobalStateProperty.EditedEmployeeId, id)
+    }
+
     public getEmployeeFirstName(): string {
         return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeFirstName)
     }
@@ -80,6 +137,29 @@ export default class EmployeeNode {
 
     public getEmployeeMiddleName(): string {
         return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeMiddleName)
+    }
+
+    public buildEmployeeBasedOnFields(): Employee {
+        return {
+            id: this.getEmployeeId(),
+            firstName: this.getEmployeeFirstName(),
+            middleName: this.getEmployeeMiddleName(),
+            lastName: this.getEmployeeLastName(),
+        }
+    }
+
+    public isEmployeeFormChanged(): boolean {
+        if (this.getShowDialog() == DialogType.CreateEmployee) {
+            return this.getEmployeeFirstName() != ""
+                || this.getEmployeeMiddleName() != ""
+                || this.getEmployeeLastName() != ""
+        } else {
+            const editedEmployee = this.getEditedEmployee()
+            return this.getShowDialog() == DialogType.EditEmployee
+                && (this.getEmployeeFirstName() != editedEmployee.firstName
+                    || this.getEmployeeMiddleName() != editedEmployee.middleName
+                    || this.getEmployeeLastName() != editedEmployee.lastName)
+        }
     }
 
     public setEmployeeMiddleName(value: string): void {

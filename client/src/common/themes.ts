@@ -42,6 +42,11 @@ export const vetTheme: Theme = createMuiTheme({
                     boxShadow: "none"
                 },
             },
+        },
+        MuiLink: {
+            root: {
+                cursor: "pointer",
+            }
         }
     }
 });

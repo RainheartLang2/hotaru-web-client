@@ -4,7 +4,7 @@ import {Employee} from "../../../common/beans/Employee";
 import {GlobalStateProperty} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
-import {Button} from "@material-ui/core";
+import {Link} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
 import EmployeeActions from "../../controller/actions/EmployeeActions";
 
@@ -40,9 +40,16 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                     <TableBodyCmp>
                         {this.state.userList.map(user => {
                             return (<TableRowCmp key={user.id}>
-                                <TableCellCmp>{`${user.lastName}, ${user.firstName} ${user.middleName}`}</TableCellCmp>
                                 <TableCellCmp>
-                                    <Button
+                                    <Link
+                                        color="primary"
+                                        onClick={() => this.actions.openEditEmployeeDialog(user)}
+                                    >
+                                        {`${user.lastName}, ${user.firstName} ${user.middleName}`}
+                                    </Link>
+                                </TableCellCmp>
+                                <TableCellCmp>
+                                    <Link
                                         color="primary"
                                         onClick={() => {
                                             if (user.id) {
@@ -53,7 +60,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                                         }}
                                     >
                                         <Message messageKey={"common.button.delete"}/>
-                                    </Button>
+                                    </Link>
                                 </TableCellCmp>
                             </TableRowCmp>)
                         })}

@@ -11,7 +11,6 @@ export default class AdminApplicationState extends ApplicationStore {
         super()
         this.registerProperty(GlobalStateProperty.IsApplicationLoading, true)
         this.registerProperty(GlobalStateProperty.ShowDialog, DialogType.None)
-
         this._employeeNode = new EmployeeNode(this.friend)
     }
 
@@ -44,9 +43,12 @@ export default class AdminApplicationState extends ApplicationStore {
 }
 
 export enum GlobalStateProperty {
-    UserList = "userList",
     IsApplicationLoading = "isApplicationLoading",
     ShowDialog = "showDialog",
+    UserList = "userList",
+    UserListById = "userListById",
+    EmployeeDialogType = "employeeDialogType",
+    EditedEmployeeId = "editedEmployeeId",
     EditedEmployeeFirstName = "editedEmployeeFirstName",
     EditedEmployeeMiddleName = "editedEmployeeMiddleName",
     EditedEmployeeLastName = "editedEmployeeLastName",

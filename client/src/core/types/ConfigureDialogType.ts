@@ -1,0 +1,1 @@
+export type ConfigureDialogType = "create" | "edit" | "none"

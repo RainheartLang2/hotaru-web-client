@@ -7,6 +7,7 @@ import ConnectedTextField from "../../../../core/components/conntectedTextField/
 import {ButtonComponent} from "../../../../core/components";
 import EmployeeActions from "../../../controller/actions/EmployeeActions";
 import {GlobalStateProperty} from "../../../state/AdminApplicationState";
+import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 
 var styles = require("./styles.css");
 
@@ -20,9 +21,16 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         this.controller = AdminAppController.instance
         this.actions = this.controller.employeeActions
         this.state = {
-            mode: 'create',
-            hasErrors: false,
+            [StateProperty.Mode]: 'none',
+            [StateProperty.HasErrors]: false,
         }
+    }
+
+    private closeDialog() {
+        if (this.state[StateProperty.Mode] == 'edit') {
+            this.actions.submitEditEmployeeForm()
+        }
+        this.controller.closeCurrentDialog()
     }
 
     render() {
@@ -30,10 +38,13 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
             <Dialog open={this.props.open}
                     fullWidth={true}
                     maxWidth="md"
-                    onBackdropClick={() => this.controller.closeCurrentDialog()}
-                    onClose={() => this.controller.closeCurrentDialog()}>
+                    onBackdropClick={() => this.closeDialog()}
+                    onClose={() => this.closeDialog()}>
                 <DialogTitle>
-                    <Message messageKey={"dialog.employee.create.label"}/>
+                    <Message messageKey={this.state[StateProperty.Mode] == "create"
+                        ? "dialog.employee.create.label"
+                        : "dialog.employee.edit.label"}
+                    />
                 </DialogTitle>
                 <DialogContent>
                     <div className={styles.dialogContent}>
@@ -73,15 +84,18 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     </div>
                     <div className={styles.footer}>
                         <div className={styles.footerButton}>
-                            <ButtonComponent
-                                variant="contained"
-                                color="primary"
-                                size="small"
-                                disabled={this.state[StateProperty.HasErrors]}
-                                onClick={() => this.actions.submitCreateEmployeeForm()}
-                            >
-                                <Message messageKey={"common.button.save"}/>
-                            </ButtonComponent>
+                            {this.state[StateProperty.Mode] == "create" ?
+                                (<ButtonComponent
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    disabled={this.state[StateProperty.HasErrors]}
+                                    onClick={() => this.actions.submitCreateEmployeeForm()}
+                                >
+                                    <Message messageKey={"common.button.save"}/>
+                                </ButtonComponent>)
+                                : ""
+                            }
                         </div>
                         <div className={styles.footerButton}>
                             <ButtonComponent
@@ -89,7 +103,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 color="secondary"
                                 size="small"
                                 onClick={() => this.controller.closeCurrentDialog()}>
-                                <Message messageKey={"common.button.cancel"}/>
+                                <Message messageKey={"common.button.back"}/>
                             </ButtonComponent>
                         </div>
                     </div>
@@ -100,10 +114,12 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
 
     componentDidMount(): void {
         this.controller.subscribe(GlobalStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
+        this.controller.subscribe(GlobalStateProperty.EmployeeDialogType, this, StateProperty.Mode)
     }
 }
 
 enum StateProperty {
+    Mode = "mode",
     HasErrors = "hasErrors"
 }
 
@@ -112,6 +128,6 @@ type Properties = {
 }
 
 type State = {
-    mode: 'create' | 'edit',
+    [StateProperty.Mode]: ConfigureDialogType,
     [StateProperty.HasErrors]: boolean
 }

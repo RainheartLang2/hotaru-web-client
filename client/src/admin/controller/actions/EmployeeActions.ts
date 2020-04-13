@@ -11,6 +11,7 @@ import EmployeeNode from "../../state/nodes/EmployeeNode";
 import {ErrorHandler} from "../../../core/mvc/ApplicationController";
 import {GlobalStateProperty} from "../../state/AdminApplicationState";
 import {ServerAppUrls} from "../../../common/backApplication/ServerAppUrls";
+import {CommonUtils} from "../../../core/utils/CommonUtils";
 
 export default class EmployeeActions {
     private controller: AdminAppController
@@ -47,6 +48,14 @@ export default class EmployeeActions {
         this.node.setShowDialog(DialogType.CreateEmployee)
     }
 
+    public openEditEmployeeDialog(user: Employee): void {
+        this.node.setEmployeeId(user.id ? user.id : 0)
+        this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
+        this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
+        this.node.setEmployeeLastName(user.lastName ? user.lastName : "")
+        this.node.setShowDialog(DialogType.EditEmployee)
+    }
+
     public setEmployeeLastName(value: string): void {
         this.node.setEmployeeLastName(value)
     }
@@ -60,14 +69,31 @@ export default class EmployeeActions {
     }
 
     public submitCreateEmployeeForm(): void {
-        const employee: Employee = {
-            firstName: this.node.getEmployeeFirstName(),
-            middleName: this.node.getEmployeeMiddleName(),
-            lastName: this.node.getEmployeeLastName(),
-        }
-        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify(employee)).then(json => {
+        const employee = this.node.buildEmployeeBasedOnFields()
+        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify(employee)).then(id => {
+            employee.id = id
             this.node.addUser(employee)
             this.node.setShowDialog(DialogType.None)
+        }).catch(error => {
+            this.errorHandler.handle(error)
+        })
+    }
+
+    public submitEditEmployeeForm(): void {
+        const sourceEmployee = this.node.getEditedEmployee()
+        const resultEmployee = {
+            id: this.node.getEmployeeId(),
+            firstName: CommonUtils.valueIfDiffers(this.node.getEmployeeFirstName(), sourceEmployee.firstName),
+            middleName: CommonUtils.valueIfDiffers(this.node.getEmployeeMiddleName(), sourceEmployee.middleName),
+            lastName: CommonUtils.valueIfDiffers(this.node.getEmployeeLastName(), sourceEmployee.lastName),
+        }
+
+        if (!this.node.isEmployeeFormChanged()) {
+            return
+        }
+
+        sendPostRequestToServer(ServerAppUrls.editEmployee, JSON.stringify(resultEmployee)).then(result => {
+            this.node.updateUser(this.node.buildEmployeeBasedOnFields())
         }).catch(error => {
             this.errorHandler.handle(error)
         })
