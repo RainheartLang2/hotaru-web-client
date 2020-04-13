@@ -8,6 +8,8 @@ import {Link} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
 import EmployeeActions from "../../controller/actions/EmployeeActions";
 
+var styles = require("./styles.css");
+
 export default class UserListPage extends React.Component<{}, UserListPageState> {
 
     private actions: EmployeeActions
@@ -32,6 +34,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                             <TableCellCmp>
                                 <Message messageKey={"common.employee.name"}/>
                             </TableCellCmp>
+                            <TableCellCmp/>
                             <TableCellCmp>
                                 <Message messageKey={"common.label.actions"}/>
                             </TableCellCmp>
@@ -47,6 +50,14 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                                     >
                                         {`${user.lastName}, ${user.firstName} ${user.middleName}`}
                                     </Link>
+                                </TableCellCmp>
+                                <TableCellCmp>
+                                    <div className={user.active ? styles.activeLabel : styles.notActiveLabel}>
+                                        <Message messageKey={user.active
+                                            ? "dialog.employee.control.active.label"
+                                            : "dialog.employee.control.notActive.label"}
+                                        />
+                                    </div>
                                 </TableCellCmp>
                                 <TableCellCmp>
                                     <Link

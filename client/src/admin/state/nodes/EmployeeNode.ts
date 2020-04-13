@@ -49,6 +49,9 @@ export default class EmployeeNode {
         this.store.registerField(GlobalStateProperty.EditedEmployeeLastName, "",
             [new RequiredFieldValidator(),
                 new MaximalLengthValidator(100)])
+
+        this.store.registerProperty(GlobalStateProperty.EditedEmployeeActive, true)
+
         this.store.registerSelector(GlobalStateProperty.EditEmployeeFormHasErrors,
             {
                 dependsOn: [GlobalStateProperty.EditedEmployeeFirstName,
@@ -139,12 +142,21 @@ export default class EmployeeNode {
         return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeMiddleName)
     }
 
+    public isEmployeeActive(): boolean {
+        return this.store.getPropertyValue<boolean>(GlobalStateProperty.EditedEmployeeActive)
+    }
+
+    public setEmployeeActive(value: boolean): void {
+        this.store.setPropertyValue<boolean>(GlobalStateProperty.EditedEmployeeActive, value)
+    }
+
     public buildEmployeeBasedOnFields(): Employee {
         return {
             id: this.getEmployeeId(),
             firstName: this.getEmployeeFirstName(),
             middleName: this.getEmployeeMiddleName(),
             lastName: this.getEmployeeLastName(),
+            active: this.isEmployeeActive(),
         }
     }
 
@@ -158,7 +170,8 @@ export default class EmployeeNode {
             return this.getShowDialog() == DialogType.EditEmployee
                 && (this.getEmployeeFirstName() != editedEmployee.firstName
                     || this.getEmployeeMiddleName() != editedEmployee.middleName
-                    || this.getEmployeeLastName() != editedEmployee.lastName)
+                    || this.getEmployeeLastName() != editedEmployee.lastName
+                    || this.isEmployeeActive() != editedEmployee.active)
         }
     }
 

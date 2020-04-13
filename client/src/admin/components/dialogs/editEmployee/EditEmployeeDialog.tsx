@@ -1,5 +1,5 @@
 import * as React from "react";
-import {DialogContent, DialogTitle} from "@material-ui/core";
+import {DialogContent, DialogTitle, FormControlLabel, Switch} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import AdminAppController from "../../../controller/AdminAppController";
 import {Message} from "../../../../core/components/Message";
@@ -22,6 +22,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         this.actions = this.controller.employeeActions
         this.state = {
             [StateProperty.Mode]: 'none',
+            [StateProperty.IsActive]: true,
             [StateProperty.HasErrors]: false,
         }
     }
@@ -80,6 +81,33 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             </div>
                         </div>
                         <div className={styles.column}>
+                            {this.state[StateProperty.Mode] == "edit"
+                                ? (
+                                    <div className={styles.activeSwitchWrapper}>
+                                        <FormControlLabel
+                                            control={
+                                                <Switch
+                                                    checked={this.state[StateProperty.IsActive]}
+                                                    color="primary"
+                                                    onChange={(event) => {
+                                                        this.actions.setEmployeeActive(event.target.checked)
+                                                    }}
+                                                />}
+                                            label={
+                                                <div className={styles.activeSwitchLabel}>
+                                                    <Message messageKey={this.state[StateProperty.IsActive]
+                                                        ? "dialog.employee.control.active.label"
+                                                        : "dialog.employee.control.notActive.label"}
+                                                    />
+                                                </div>
+                                                }
+                                            labelPlacement="start"
+                                        >
+                                        </FormControlLabel>
+                                    </div>
+                                )
+                                : ""}
+
                         </div>
                     </div>
                     <div className={styles.footer}>
@@ -113,14 +141,17 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(GlobalStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
         this.controller.subscribe(GlobalStateProperty.EmployeeDialogType, this, StateProperty.Mode)
+        this.controller.subscribe(GlobalStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
+        this.controller.subscribe(GlobalStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
+
     }
 }
 
 enum StateProperty {
     Mode = "mode",
-    HasErrors = "hasErrors"
+    IsActive = "isActive",
+    HasErrors = "hasErrors",
 }
 
 type Properties = {
@@ -129,5 +160,6 @@ type Properties = {
 
 type State = {
     [StateProperty.Mode]: ConfigureDialogType,
-    [StateProperty.HasErrors]: boolean
+    [StateProperty.IsActive]: boolean,
+    [StateProperty.HasErrors]: boolean,
 }

@@ -45,6 +45,8 @@ export default class EmployeeActions {
         this.node.setEmployeeLastName("")
         this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLastName, false)
 
+        this.node.setEmployeeActive(true)
+
         this.node.setShowDialog(DialogType.CreateEmployee)
     }
 
@@ -53,6 +55,7 @@ export default class EmployeeActions {
         this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
         this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
         this.node.setEmployeeLastName(user.lastName ? user.lastName : "")
+        this.node.setEmployeeActive(user.active != null ? user.active : true)
         this.node.setShowDialog(DialogType.EditEmployee)
     }
 
@@ -68,6 +71,10 @@ export default class EmployeeActions {
         this.node.setEmployeeMiddleName(value)
     }
 
+    public setEmployeeActive(value: boolean): void {
+        this.node.setEmployeeActive(value)
+    }
+
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
         sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify(employee)).then(id => {
@@ -81,11 +88,15 @@ export default class EmployeeActions {
 
     public submitEditEmployeeForm(): void {
         const sourceEmployee = this.node.getEditedEmployee()
+        console.log(this.node.isEmployeeActive())
+        console.log(this.node.getEditedEmployee().active)
+        console.log(this.node.isEmployeeActive() === sourceEmployee.active)
         const resultEmployee = {
             id: this.node.getEmployeeId(),
             firstName: CommonUtils.valueIfDiffers(this.node.getEmployeeFirstName(), sourceEmployee.firstName),
             middleName: CommonUtils.valueIfDiffers(this.node.getEmployeeMiddleName(), sourceEmployee.middleName),
             lastName: CommonUtils.valueIfDiffers(this.node.getEmployeeLastName(), sourceEmployee.lastName),
+            active: CommonUtils.valueIfDiffers(this.node.isEmployeeActive(), sourceEmployee.active),
         }
 
         if (!this.node.isEmployeeFormChanged()) {

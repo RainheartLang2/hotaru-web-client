@@ -28,3 +28,11 @@
 .footerButton {
     padding-left: 10px;
 }
+
+.activeSwitchWrapper {
+    width: 155px;
+}
+
+.activeSwitchLabel {
+    width: 100px;
+}

@@ -20,7 +20,9 @@
       "dialog.employee.edit.label": "Редактирование сотрудника",
       "dialog.employee.field.firstName.label": "Имя",
       "dialog.employee.field.middleName.label": "Отчество",
-      "dialog.employee.field.lastName.label": "Фамилия"
+      "dialog.employee.field.lastName.label": "Фамилия",
+      "dialog.employee.control.active.label": "Активен",
+      "dialog.employee.control.notActive.label": "Не активен"
     }
   }
 }
