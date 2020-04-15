@@ -8,6 +8,7 @@ import {ButtonComponent} from "../../../../core/components";
 import EmployeeActions from "../../../controller/actions/EmployeeActions";
 import {GlobalStateProperty} from "../../../state/AdminApplicationState";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import UserActiveSwitch from "./subcomponents/UserActiveSwitch";
 
 var styles = require("./styles.css");
 
@@ -83,31 +84,39 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                         <div className={styles.column}>
                             {this.state[StateProperty.Mode] == "edit"
                                 ? (
-                                    <div className={styles.activeSwitchWrapper}>
-                                        <FormControlLabel
-                                            control={
-                                                <Switch
-                                                    checked={this.state[StateProperty.IsActive]}
-                                                    color="primary"
-                                                    onChange={(event) => {
-                                                        this.actions.setEmployeeActive(event.target.checked)
-                                                    }}
-                                                />}
-                                            label={
-                                                <div className={styles.activeSwitchLabel}>
-                                                    <Message messageKey={this.state[StateProperty.IsActive]
-                                                        ? "dialog.employee.control.active.label"
-                                                        : "dialog.employee.control.notActive.label"}
-                                                    />
-                                                </div>
-                                                }
-                                            labelPlacement="start"
-                                        >
-                                        </FormControlLabel>
+                                    <div className={styles.row}>
+                                        <div className={styles.activeSwitchWrapper}>
+                                            <UserActiveSwitch
+                                                active={this.state[StateProperty.IsActive]}
+                                                onChange={(event) => this.actions.setEmployeeActive(event.target.checked)}
+                                            />
+                                        </div>
                                     </div>
                                 )
-                                : ""}
-
+                                : ""
+                            }
+                            <div className={styles.row}>
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={GlobalStateProperty.EditedEmployeePhone}
+                                    label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
+                                />
+                            </div>
+                            <div className={styles.row}>
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeEmail}
+                                    label={(<Message messageKey="dialog.employee.field.email.label"/>)}
+                                />
+                            </div>
+                            <div className={styles.row}>
+                                <ConnectedTextField
+                                    controller={this.controller}
+                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeAddress}
+                                    label={(<Message messageKey="dialog.employee.field.address.label"/>)}
+                                    rows={3}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className={styles.footer}>

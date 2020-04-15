@@ -4,4 +4,7 @@ export class Employee {
     middleName?: string
     lastName?: string
     active?: boolean
+    phone?: string
+    email?: string
+    address?: string
 }

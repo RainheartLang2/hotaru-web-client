@@ -40,12 +40,14 @@ export default class EmployeeActions {
         this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeFirstName, false)
 
         this.node.setEmployeeMiddleName("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeMiddleName, false)
 
         this.node.setEmployeeLastName("")
         this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLastName, false)
 
         this.node.setEmployeeActive(true)
+        this.node.setEmployeePhone("")
+        this.node.setEmployeeMail("")
+        this.node.setEmployeeAddress("")
 
         this.node.setShowDialog(DialogType.CreateEmployee)
     }
@@ -56,6 +58,10 @@ export default class EmployeeActions {
         this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
         this.node.setEmployeeLastName(user.lastName ? user.lastName : "")
         this.node.setEmployeeActive(user.active != null ? user.active : true)
+        this.node.setEmployeePhone(user.phone != null ? user.phone : "")
+        this.node.setEmployeeMail(user.email != null ? user.email : "")
+        this.node.setEmployeeAddress(user.address != null ? user.address : "")
+
         this.node.setShowDialog(DialogType.EditEmployee)
     }
 
@@ -88,15 +94,15 @@ export default class EmployeeActions {
 
     public submitEditEmployeeForm(): void {
         const sourceEmployee = this.node.getEditedEmployee()
-        console.log(this.node.isEmployeeActive())
-        console.log(this.node.getEditedEmployee().active)
-        console.log(this.node.isEmployeeActive() === sourceEmployee.active)
         const resultEmployee = {
             id: this.node.getEmployeeId(),
             firstName: CommonUtils.valueIfDiffers(this.node.getEmployeeFirstName(), sourceEmployee.firstName),
             middleName: CommonUtils.valueIfDiffers(this.node.getEmployeeMiddleName(), sourceEmployee.middleName),
             lastName: CommonUtils.valueIfDiffers(this.node.getEmployeeLastName(), sourceEmployee.lastName),
             active: CommonUtils.valueIfDiffers(this.node.isEmployeeActive(), sourceEmployee.active),
+            phone: CommonUtils.valueIfDiffers(this.node.getEmployeePhone(), sourceEmployee.phone),
+            email: CommonUtils.valueIfDiffers(this.node.getEmployeeMail(), sourceEmployee.email),
+            address: CommonUtils.valueIfDiffers(this.node.getEmployeeAddress(), sourceEmployee.address),
         }
 
         if (!this.node.isEmployeeFormChanged()) {

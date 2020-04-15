@@ -15,6 +15,7 @@ import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import {Tab} from "@material-ui/core";
 import ErrorModal from "../core/components/errrorModal/ErrorModal";
 import {GlobalStateProperty} from "./state/AdminApplicationState";
+import MaskTransformer from "../core/utils/MaskTransformer";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -31,6 +32,11 @@ export default class AdminApp extends React.Component<Properties, State> {
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = AdminAppController.instance
+        const maskTransformer = new MaskTransformer("? (???) ???-??-??")
+        console.log(maskTransformer.fromPureToMask("89535048752"))
+        console.log(maskTransformer.fromPureToMask("8953504"))
+        console.log(maskTransformer.fromMaskToPure("8 (953) 504-87-52"))
+        console.log(maskTransformer.fromMaskToPure("8 (953) 504-87-__"))
     }
 
     render() {

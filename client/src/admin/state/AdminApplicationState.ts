@@ -53,5 +53,8 @@ export enum GlobalStateProperty {
     EditedEmployeeMiddleName = "editedEmployeeMiddleName",
     EditedEmployeeLastName = "editedEmployeeLastName",
     EditedEmployeeActive = "editedEmployeeActive",
-    EditEmployeeFormHasErrors = "editEmployeFormHasErrors"
+    EditedEmployeePhone = "editedEmployeePhone",
+    EditedEmployeeEmail = "editedEmployeeEmail",
+    EditedEmployeeAddress = "editedEmployeeAddress",
+    EditEmployeeFormHasErrors = "editEmployeFormHasErrors",
 }

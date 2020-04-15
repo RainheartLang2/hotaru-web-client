@@ -3,11 +3,17 @@ import {TextField} from "@material-ui/core";
 import ApplicationController from "../../mvc/ApplicationController";
 import Tooltip from "@material-ui/core/Tooltip";
 import {Field} from "../../mvc/store/Field";
+import MaskTransformer from "../../utils/MaskTransformer";
 
 export default class ConnectedTextField extends React.Component<Properties, State> {
 
+    private maskTransformer: MaskTransformer = new MaskTransformer("")
+
     constructor(props: Properties) {
         super(props);
+        if (props.mask) {
+            this.maskTransformer = new MaskTransformer(props.mask)
+        }
         this.state = {
             [StateProperty.FieldAlias]: {
                 value: this.props.defaultValue || "",
@@ -33,6 +39,23 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
             && this.state[StateProperty.FieldAlias].errors.length > 0
     }
 
+    private onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        const eventValue = event.target.value
+        const settedValue = this.props.mask
+            ? this.maskTransformer.fromMaskToPure(eventValue)
+            : eventValue
+        this.props.controller
+            .setFieldValue(this.props.fieldPropertyName, settedValue)
+        this.props.controller.toggleFieldValidation(this.props.fieldPropertyName, true)
+    }
+
+    private getValue(): string {
+        const value = this.state[StateProperty.FieldAlias].value
+        return this.props.mask
+            ? this.maskTransformer.fromPureToMask(value)
+            : value
+    }
+
     render() {
         return (
             <>
@@ -47,16 +70,13 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                 >
                     <TextField
                         label={this.props.label}
-                        size={this.props.size}
-                        fullWidth={this.props.fullWidth}
+                        size={this.props.size != null ? this.props.size : 'small'}
+                        fullWidth={this.props.fullWidth != null ? this.props.fullWidth : true}
+                        rows={this.props.rows}
 
-                        value={this.state[StateProperty.FieldAlias].value}
+                        value={this.getValue()}
                         error={this.hasErrors()}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            this.props.controller
-                                .setFieldValue(this.props.fieldPropertyName, event.target.value)
-                            this.props.controller.toggleFieldValidation(this.props.fieldPropertyName, true)
-                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.onChange(event)}
                     />
                 </Tooltip>
             </>
@@ -79,6 +99,8 @@ type Properties = {
     required?: boolean,
     size?: 'small' | 'medium',
     fullWidth?: boolean,
+    mask?: string,
+    rows?: number,
     defaultValue?: string,
 }
 
