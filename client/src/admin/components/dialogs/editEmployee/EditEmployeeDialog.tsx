@@ -8,7 +8,9 @@ import {ButtonComponent} from "../../../../core/components";
 import EmployeeActions from "../../../controller/actions/EmployeeActions";
 import {GlobalStateProperty} from "../../../state/AdminApplicationState";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
-import UserActiveSwitch from "./subcomponents/UserActiveSwitch";
+import UserActiveSwitch from "./subcomponents/userActiveSwitch/UserActiveSwitch";
+import Dropzone, {DropzoneState} from "react-dropzone";
+import CredentialsSection from "./subcomponents/credentialsSection/CredentialsSection";
 
 var styles = require("./styles.css");
 
@@ -51,6 +53,13 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                 <DialogContent>
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
+                            <Dropzone
+                                onDrop={(acceptedFiles: File[]) => {
+                                    console.log(acceptedFiles)
+                                }}
+                            >
+                                {(state: DropzoneState) => {return (<div></div>)}}
+                            </Dropzone>
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
@@ -80,6 +89,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     fullWidth={true}
                                 />
                             </div>
+                            <CredentialsSection controller={this.controller}/>
                         </div>
                         <div className={styles.column}>
                             {this.state[StateProperty.Mode] == "edit"
@@ -153,7 +163,6 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         this.controller.subscribe(GlobalStateProperty.EmployeeDialogType, this, StateProperty.Mode)
         this.controller.subscribe(GlobalStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
         this.controller.subscribe(GlobalStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
-
     }
 }
 

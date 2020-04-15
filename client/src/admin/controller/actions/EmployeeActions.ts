@@ -48,6 +48,9 @@ export default class EmployeeActions {
         this.node.setEmployeePhone("")
         this.node.setEmployeeMail("")
         this.node.setEmployeeAddress("")
+        this.node.setEmployeeLogin("")
+        this.node.setEmployeePassword("")
+        this.node.setEmployeeConfirmPassword("")
 
         this.node.setShowDialog(DialogType.CreateEmployee)
     }
@@ -61,20 +64,11 @@ export default class EmployeeActions {
         this.node.setEmployeePhone(user.phone != null ? user.phone : "")
         this.node.setEmployeeMail(user.email != null ? user.email : "")
         this.node.setEmployeeAddress(user.address != null ? user.address : "")
+        this.node.setEmployeeLogin("")
+        this.node.setEmployeePassword("")
+        this.node.setEmployeeConfirmPassword("")
 
         this.node.setShowDialog(DialogType.EditEmployee)
-    }
-
-    public setEmployeeLastName(value: string): void {
-        this.node.setEmployeeLastName(value)
-    }
-
-    public setEmployeeFirstName(value: string): void {
-        this.node.setEmployeeFirstName(value)
-    }
-
-    public setEmployeeMiddleName(value: string): void {
-        this.node.setEmployeeMiddleName(value)
     }
 
     public setEmployeeActive(value: boolean): void {

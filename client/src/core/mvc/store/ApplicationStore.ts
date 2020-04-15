@@ -195,6 +195,15 @@ export default abstract class ApplicationStore {
         return fieldName + FIELD_BASE_POSTFIX
     }
 
+    protected fieldsHaveNoErrors(fieldNames: string[]): boolean {
+        fieldNames.forEach((fieldName: string) => {
+            if (this.getPropertyValue<Field<any>>(fieldName).errors.length > 0) {
+                return false
+            }
+        })
+        return true
+    }
+
     private createFriend(): ApplicationStoreFriend {
         const store = this
         return new class implements ApplicationStoreFriend {
@@ -224,6 +233,10 @@ export default abstract class ApplicationStore {
 
             setFieldValue<V>(fieldName: string, newValue: V): void {
                 store.setFieldValue(fieldName, newValue)
+            }
+
+            fieldsHaveNoErrors(fieldNames: string[]): boolean {
+                return store.fieldsHaveNoErrors(fieldNames)
             }
         }
     }

@@ -3,6 +3,10 @@
     "common": {
       "validator.required.message": "Поле является обязательным для заполнения",
       "validator.email.message": "email-адрес обязан содержать символ '@'",
+      "validator.confirm.password.message": "Значение не совпадает с изначально введённым паролем",
+      "field.login.label": "Логин",
+      "field.password.label": "Пароль",
+      "field.password.repeat.label": "Повторите пароль",
       "error.message.unknown": "Произошла непредвиденная ошибка. Пожалуйста, перезагрузите приложение и свяжитесь с технической поддержкой.",
       "error.message.http.common": "Произошла непредвиденная ошибка. Пожалуйста, перезагрузите приложение и свяжитесь с технической поддержкой.",
       "error.message.http.404": "Удалённый сервис недоступен. Попробуйте перезагрузить приложение через некоторое время или свяжитесь с технической поддержкой.",
@@ -26,7 +30,8 @@
       "dialog.employee.field.email.label": "E-mail",
       "dialog.employee.field.address.label": "Адрес",
       "dialog.employee.control.active.label": "Активен",
-      "dialog.employee.control.notActive.label": "Не активен"
+      "dialog.employee.control.notActive.label": "Не активен",
+      "dialog.employee.button.changePassword.label": "Сменить логин и пароль"
     }
   }
 }

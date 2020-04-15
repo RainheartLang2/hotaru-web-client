@@ -15,4 +15,6 @@ export interface ApplicationStoreFriend {
     getFieldValue<T>(propertyName: string): T
 
     setFieldValue<V>(fieldName: string, newValue: V): void
+
+    fieldsHaveNoErrors(fieldNames: string[]): boolean
 }

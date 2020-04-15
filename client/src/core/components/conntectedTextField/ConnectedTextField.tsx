@@ -73,6 +73,8 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                         size={this.props.size != null ? this.props.size : 'small'}
                         fullWidth={this.props.fullWidth != null ? this.props.fullWidth : true}
                         rows={this.props.rows}
+                        type={this.props.type ? this.props.type : "text"}
+                        variant={this.props.variant ? this.props.variant : "standard"}
 
                         value={this.getValue()}
                         error={this.hasErrors()}
@@ -102,6 +104,8 @@ type Properties = {
     mask?: string,
     rows?: number,
     defaultValue?: string,
+    type?: "text" | "password",
+    variant?: "standard" | "filled" | "outlined"
 }
 
 type State = {

@@ -4,9 +4,9 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import {Employee} from "../../../common/beans/Employee";
 import {ApplicationStoreFriend} from "../../../core/mvc/store/ApplicationStoreFriend";
 import {GlobalStateProperty} from "../AdminApplicationState";
-import {Field} from "../../../core/mvc/store/Field";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
+import ConfirmPasswordValidator from "../../../core/mvc/validators/ConfirmPasswordValidator";
 
 export default class EmployeeNode {
     private store: ApplicationStoreFriend
@@ -64,16 +64,35 @@ export default class EmployeeNode {
 
         this.store.registerProperty(GlobalStateProperty.EditedEmployeeActive, true)
 
+        this.store.registerField(GlobalStateProperty.EditedEmployeeLogin, "",
+            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee)])
+        this.store.registerField(GlobalStateProperty.EditedEmployeePassword, "",
+            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee)])
+        this.store.registerField(GlobalStateProperty.EditedEmployeeConfirmPassword, "",
+            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee),
+                     new ConfirmPasswordValidator(() => this.getEmployeePassword())])
+
         this.store.registerSelector(GlobalStateProperty.EditEmployeeFormHasErrors,
             {
                 dependsOn: [GlobalStateProperty.EditedEmployeeFirstName,
                     GlobalStateProperty.EditedEmployeeMiddleName,
-                    GlobalStateProperty.EditedEmployeeLastName
+                    GlobalStateProperty.EditedEmployeeLastName,
+                    GlobalStateProperty.EditedEmployeeEmail,
+                    GlobalStateProperty.EditedEmployeePhone,
+                    GlobalStateProperty.EditedEmployeeLogin,
+                    GlobalStateProperty.EditedEmployeePassword,
+                    GlobalStateProperty.EditedEmployeeConfirmPassword,
                 ],
                 get: (map: Map<string, any>) => {
-                    return this.store.getPropertyValue<Field<string>>(GlobalStateProperty.EditedEmployeeFirstName).errors.length > 0
-                        || this.store.getPropertyValue<Field<string>>(GlobalStateProperty.EditedEmployeeMiddleName).errors.length > 0
-                        || this.store.getPropertyValue<Field<string>>(GlobalStateProperty.EditedEmployeeLastName).errors.length > 0
+                    return !this.store.fieldsHaveNoErrors([GlobalStateProperty.EditedEmployeeFirstName,
+                        GlobalStateProperty.EditedEmployeeMiddleName,
+                        GlobalStateProperty.EditedEmployeeLastName,
+                        GlobalStateProperty.EditedEmployeePhone,
+                        GlobalStateProperty.EditedEmployeeEmail,
+                        GlobalStateProperty.EditedEmployeeLogin,
+                        GlobalStateProperty.EditedEmployeePassword,
+                        GlobalStateProperty.EditedEmployeeConfirmPassword,
+                    ])
                 }
             })
     }
@@ -198,6 +217,30 @@ export default class EmployeeNode {
         this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeAddress, value)
     }
 
+    public getEmployeeLogin(): string {
+        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeLogin)
+    }
+
+    public setEmployeeLogin(value: string): void {
+        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeLogin, value)
+    }
+
+    public getEmployeePassword(): string {
+        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeePassword)
+    }
+
+    public setEmployeePassword(value: string): void {
+        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeePassword, value)
+    }
+
+    public getEmployeeConfirmPassword(): string {
+        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeConfirmPassword)
+    }
+
+    public setEmployeeConfirmPassword(value: string): void {
+        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeConfirmPassword, value)
+    }
+
     public buildEmployeeBasedOnFields(): Employee {
         return {
             id: this.getEmployeeId(),
@@ -219,6 +262,8 @@ export default class EmployeeNode {
                 || this.getEmployeePhone() != ""
                 || this.getEmployeeMail() != ""
                 || this.getEmployeeAddress() != ""
+                || this.getEmployeeLogin() != ""
+                || this.getEmployeePassword() != ""
         } else {
             const editedEmployee = this.getEditedEmployee()
             return this.getShowDialog() == DialogType.EditEmployee

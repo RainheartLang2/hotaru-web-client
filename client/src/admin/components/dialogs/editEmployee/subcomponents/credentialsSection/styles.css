@@ -1,0 +1,13 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    border: 1px #e2e2e2 solid;
+    width: 360px;
+    padding: 0 20px;
+    border-radius: 3px;
+}
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}

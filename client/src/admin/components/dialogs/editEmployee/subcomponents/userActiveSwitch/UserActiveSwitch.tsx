@@ -1,6 +1,6 @@
 import * as React from "react";
 import {FormControlLabel, Switch} from "@material-ui/core";
-import {Message} from "../../../../../core/components/Message";
+import {Message} from "../../../../../../core/components/Message";
 
 var styles = require("./styles.css");
 

@@ -54,5 +54,6 @@
     ]
   },
   "dependencies": {
+    "react-dropzone": "^10.2.2"
   }
 }
