@@ -32,6 +32,9 @@
       "dialog.employee.control.active.label": "Активен",
       "dialog.employee.control.notActive.label": "Не активен",
       "dialog.employee.button.changePassword.label": "Сменить пароль"
+    },
+    "login": {
+      "login.title": "Войти"
     }
   }
 }

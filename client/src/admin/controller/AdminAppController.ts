@@ -25,10 +25,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         return this._employeeActions;
     }
 
-    public subscribe(property: string, subscriber: React.Component, propertyAlias: string = property) {
-        this.applicationStore.subscribe(property, subscriber, propertyAlias)
-    }
-
     public startApplication(): void {
         this.applicationStore.setApplicationLoading(true)
         this._employeeActions.loadUsersList(() => this.getApplicationState().setApplicationLoading(false))

@@ -17,8 +17,9 @@ export default abstract class ApplicationController<StoreType extends Applicatio
         return this._errorHandler;
     }
 
-    public abstract subscribe(propertyName: string, component: React.Component, propertyAlias?: string): void
-
+    public subscribe(property: string, subscriber: React.Component, propertyAlias: string = property) {
+        this.applicationStore.subscribe(property, subscriber, propertyAlias)
+    }
     setFieldValue<ValueType>(fieldName: string, value: ValueType): void {
         this.applicationStore.setFieldValue<ValueType>(fieldName, value)
     }
