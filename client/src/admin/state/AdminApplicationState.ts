@@ -59,5 +59,8 @@ export enum GlobalStateProperty {
     EditedEmployeeLogin = "editedEmployeLogin",
     EditedEmployeePassword = "editedEmployeePassword",
     EditedEmployeeConfirmPassword = "editedEmployeeConfirmPassword",
+    IsEmployeeChangePassword = "isEmployeeChangePassword",
+    IsChangePasswordButtonShow = "isChangePasswordButtonShow",
+    IsChangePasswordObligatory = "IsChangePasswordObligatory",
     EditEmployeeFormHasErrors = "editEmployeFormHasErrors",
 }

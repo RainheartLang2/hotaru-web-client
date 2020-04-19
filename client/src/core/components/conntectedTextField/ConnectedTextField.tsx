@@ -75,6 +75,7 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
                         rows={this.props.rows}
                         type={this.props.type ? this.props.type : "text"}
                         variant={this.props.variant ? this.props.variant : "standard"}
+                        disabled={this.props.disabled != null ? this.props.disabled : false}
 
                         value={this.getValue()}
                         error={this.hasErrors()}
@@ -98,6 +99,7 @@ type Properties = {
     controller: ApplicationController,
     fieldPropertyName: string,
     label?: React.ReactNode,
+    disabled?: boolean,
     required?: boolean,
     size?: 'small' | 'medium',
     fullWidth?: boolean,

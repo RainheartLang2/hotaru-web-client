@@ -31,7 +31,7 @@
       "dialog.employee.field.address.label": "Адрес",
       "dialog.employee.control.active.label": "Активен",
       "dialog.employee.control.notActive.label": "Не активен",
-      "dialog.employee.button.changePassword.label": "Сменить логин и пароль"
+      "dialog.employee.button.changePassword.label": "Сменить пароль"
     }
   }
 }

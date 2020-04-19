@@ -36,6 +36,8 @@ export default class EmployeeActions {
     }
 
     public openCreateEmployeeDialog(): void {
+        this.node.setShowDialog(DialogType.CreateEmployee)
+
         this.node.setEmployeeFirstName("")
         this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeFirstName, false)
 
@@ -49,13 +51,15 @@ export default class EmployeeActions {
         this.node.setEmployeeMail("")
         this.node.setEmployeeAddress("")
         this.node.setEmployeeLogin("")
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeePassword, false)
         this.node.setEmployeeConfirmPassword("")
-
-        this.node.setShowDialog(DialogType.CreateEmployee)
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeConfirmPassword, false)
     }
 
     public openEditEmployeeDialog(user: Employee): void {
+        this.node.setShowDialog(DialogType.EditEmployee)
         this.node.setEmployeeId(user.id ? user.id : 0)
         this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
         this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
@@ -64,20 +68,25 @@ export default class EmployeeActions {
         this.node.setEmployeePhone(user.phone != null ? user.phone : "")
         this.node.setEmployeeMail(user.email != null ? user.email : "")
         this.node.setEmployeeAddress(user.address != null ? user.address : "")
-        this.node.setEmployeeLogin("")
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeePassword, false)
         this.node.setEmployeeConfirmPassword("")
-
-        this.node.setShowDialog(DialogType.EditEmployee)
+        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeConfirmPassword, false)
     }
 
     public setEmployeeActive(value: boolean): void {
         this.node.setEmployeeActive(value)
     }
 
+    public setChangePassword(value: boolean): void {
+        this.node.setEmployeeChangePassword(value)
+    }
+
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
-        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify(employee)).then(id => {
+        const login = this.node.buildLoginBasedOnFields()
+        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify({employee, login})).then(id => {
             employee.id = id
             this.node.addUser(employee)
             this.node.setShowDialog(DialogType.None)
@@ -103,7 +112,14 @@ export default class EmployeeActions {
             return
         }
 
-        sendPostRequestToServer(ServerAppUrls.editEmployee, JSON.stringify(resultEmployee)).then(result => {
+        sendPostRequestToServer(ServerAppUrls.editEmployee,
+                                JSON.stringify({
+                                    employee: resultEmployee,
+                                    login: this.node.isEmployeeChangePassword()
+                                        ? this.node.buildLoginBasedOnFields()
+                                        : null,
+                                })
+        ).then(result => {
             this.node.updateUser(this.node.buildEmployeeBasedOnFields())
         }).catch(error => {
             this.errorHandler.handle(error)

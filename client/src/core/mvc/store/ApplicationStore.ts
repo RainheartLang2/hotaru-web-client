@@ -196,12 +196,14 @@ export default abstract class ApplicationStore {
     }
 
     protected fieldsHaveNoErrors(fieldNames: string[]): boolean {
+        let result = true
         fieldNames.forEach((fieldName: string) => {
             if (this.getPropertyValue<Field<any>>(fieldName).errors.length > 0) {
-                return false
+                result = false
+                return
             }
         })
-        return true
+        return result
     }
 
     private createFriend(): ApplicationStoreFriend {

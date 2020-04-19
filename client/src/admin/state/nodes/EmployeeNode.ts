@@ -7,6 +7,7 @@ import {GlobalStateProperty} from "../AdminApplicationState";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import ConfirmPasswordValidator from "../../../core/mvc/validators/ConfirmPasswordValidator";
+import {Login} from "../../../common/beans/Login";
 
 export default class EmployeeNode {
     private store: ApplicationStoreFriend
@@ -64,13 +65,29 @@ export default class EmployeeNode {
 
         this.store.registerProperty(GlobalStateProperty.EditedEmployeeActive, true)
 
+        this.store.registerProperty(GlobalStateProperty.IsEmployeeChangePassword, false)
+
+        this.store.registerSelector(GlobalStateProperty.IsChangePasswordButtonShow, {
+            dependsOn: [GlobalStateProperty.ShowDialog],
+            get: (map: Map<string, any>) => {
+                return this.getShowDialog() === DialogType.EditEmployee
+            }
+        })
+
+        this.store.registerSelector(GlobalStateProperty.IsChangePasswordObligatory, {
+            dependsOn: [GlobalStateProperty.ShowDialog, GlobalStateProperty.IsEmployeeChangePassword],
+            get: (map: Map<string, any>) => {
+                return this.getShowDialog() === DialogType.CreateEmployee || this.isEmployeeChangePassword()
+            }
+        })
+
         this.store.registerField(GlobalStateProperty.EditedEmployeeLogin, "",
-            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee)])
+            [new RequiredFieldValidator(() => this.isChangePasswordObligatory())])
         this.store.registerField(GlobalStateProperty.EditedEmployeePassword, "",
-            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee)])
+            [new RequiredFieldValidator(() => this.isChangePasswordObligatory())])
         this.store.registerField(GlobalStateProperty.EditedEmployeeConfirmPassword, "",
-            [new RequiredFieldValidator(() => this.getShowDialog() == DialogType.CreateEmployee),
-                     new ConfirmPasswordValidator(() => this.getEmployeePassword())])
+            [new RequiredFieldValidator(() => this.isChangePasswordObligatory()),
+                new ConfirmPasswordValidator(() => this.getEmployeePassword())])
 
         this.store.registerSelector(GlobalStateProperty.EditEmployeeFormHasErrors,
             {
@@ -241,6 +258,18 @@ export default class EmployeeNode {
         this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeConfirmPassword, value)
     }
 
+    public isEmployeeChangePassword(): boolean {
+        return this.store.getPropertyValue<boolean>(GlobalStateProperty.IsEmployeeChangePassword)
+    }
+
+    public setEmployeeChangePassword(value: boolean): void {
+        this.store.setPropertyValue<boolean>(GlobalStateProperty.IsEmployeeChangePassword, value)
+    }
+
+    public isChangePasswordObligatory(): boolean {
+        return this.store.getPropertyValue<boolean>(GlobalStateProperty.IsChangePasswordObligatory)
+    }
+
     public buildEmployeeBasedOnFields(): Employee {
         return {
             id: this.getEmployeeId(),
@@ -251,6 +280,13 @@ export default class EmployeeNode {
             phone: this.getEmployeePhone(),
             email: this.getEmployeeMail(),
             address: this.getEmployeeAddress(),
+        }
+    }
+
+    public buildLoginBasedOnFields(): Login {
+        return {
+            loginName: this.getEmployeeLogin(),
+            password: this.getEmployeePassword(),
         }
     }
 
