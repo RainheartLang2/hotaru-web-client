@@ -96,31 +96,16 @@ export default class EmployeeActions {
     }
 
     public submitEditEmployeeForm(): void {
-        const sourceEmployee = this.node.getEditedEmployee()
-        const resultEmployee = {
-            id: this.node.getEmployeeId(),
-            firstName: CommonUtils.valueIfDiffers(this.node.getEmployeeFirstName(), sourceEmployee.firstName),
-            middleName: CommonUtils.valueIfDiffers(this.node.getEmployeeMiddleName(), sourceEmployee.middleName),
-            lastName: CommonUtils.valueIfDiffers(this.node.getEmployeeLastName(), sourceEmployee.lastName),
-            active: CommonUtils.valueIfDiffers(this.node.isEmployeeActive(), sourceEmployee.active),
-            phone: CommonUtils.valueIfDiffers(this.node.getEmployeePhone(), sourceEmployee.phone),
-            email: CommonUtils.valueIfDiffers(this.node.getEmployeeMail(), sourceEmployee.email),
-            address: CommonUtils.valueIfDiffers(this.node.getEmployeeAddress(), sourceEmployee.address),
-        }
-
-        if (!this.node.isEmployeeFormChanged()) {
-            return
-        }
-
         sendPostRequestToServer(ServerAppUrls.editEmployee,
                                 JSON.stringify({
-                                    employee: resultEmployee,
+                                    employee: this.node.buildEmployeeBasedOnFields(),
                                     login: this.node.isEmployeeChangePassword()
                                         ? this.node.buildLoginBasedOnFields()
                                         : null,
                                 })
         ).then(result => {
             this.node.updateUser(this.node.buildEmployeeBasedOnFields())
+            this.node.setShowDialog(DialogType.None)
         }).catch(error => {
             this.errorHandler.handle(error)
         })

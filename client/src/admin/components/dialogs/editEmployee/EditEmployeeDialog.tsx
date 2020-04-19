@@ -31,10 +31,17 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     private closeDialog() {
+        this.controller.closeCurrentDialog()
+    }
+
+    private onSubmitButtonClick() {
         if (this.state[StateProperty.Mode] == 'edit') {
             this.actions.submitEditEmployeeForm()
+        } else if (this.state[StateProperty.Mode] == 'create') {
+            this.actions.submitCreateEmployeeForm()
+        } else {
+            throw new Error('unknown value of mode ' + this.state[StateProperty.Mode])
         }
-        this.controller.closeCurrentDialog()
     }
 
     render() {
@@ -58,7 +65,9 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                     console.log(acceptedFiles)
                                 }}
                             >
-                                {(state: DropzoneState) => {return (<div></div>)}}
+                                {(state: DropzoneState) => {
+                                    return (<div></div>)
+                                }}
                             </Dropzone>
                             <div className={styles.row}>
                                 <ConnectedTextField
@@ -131,25 +140,22 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     </div>
                     <div className={styles.footer}>
                         <div className={styles.footerButton}>
-                            {this.state[StateProperty.Mode] == "create" ?
-                                (<ButtonComponent
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    disabled={this.state[StateProperty.HasErrors]}
-                                    onClick={() => this.actions.submitCreateEmployeeForm()}
-                                >
-                                    <Message messageKey={"common.button.save"}/>
-                                </ButtonComponent>)
-                                : ""
-                            }
+                            <ButtonComponent
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                disabled={this.state[StateProperty.HasErrors]}
+                                onClick={() => this.onSubmitButtonClick()}
+                            >
+                                <Message messageKey={"common.button.save"}/>
+                            </ButtonComponent>
                         </div>
                         <div className={styles.footerButton}>
                             <ButtonComponent
                                 variant="contained"
                                 color="secondary"
                                 size="small"
-                                onClick={() => this.controller.closeCurrentDialog()}>
+                                onClick={() => this.closeDialog()}>
                                 <Message messageKey={"common.button.back"}/>
                             </ButtonComponent>
                         </div>
