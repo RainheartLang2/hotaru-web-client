@@ -1,4 +1,5 @@
 import ApplicationStore from "../../core/mvc/store/ApplicationStore";
+import {Login} from "../../common/beans/Login";
 
 export default class LoginApplicationState extends ApplicationStore {
     private static _instance: LoginApplicationState
@@ -21,6 +22,13 @@ export default class LoginApplicationState extends ApplicationStore {
                 return !!map.get(LoginStateProperty.Login).value && !!map.get(LoginStateProperty.Password).value
             }
         })
+    }
+
+    public buildLogin(): Login {
+        return {
+            loginName: this.getFieldValue(LoginStateProperty.Login),
+            password: this.getFieldValue(LoginStateProperty.Password),
+        }
     }
 }
 

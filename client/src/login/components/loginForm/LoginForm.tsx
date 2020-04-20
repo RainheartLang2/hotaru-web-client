@@ -44,6 +44,7 @@ export default class LoginForm extends React.Component<Properties, State> {
                     variant="contained"
                     color="primary"
                     disabled={!this.state[StateProperty.IsSubmitAllowed]}
+                    onClick={() => this.props.controller.submitLoginForm()}
                 >
                     <Message messageKey="login.title"/>
                 </ButtonComponent>

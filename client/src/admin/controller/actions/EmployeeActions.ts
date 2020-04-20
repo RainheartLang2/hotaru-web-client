@@ -1,8 +1,7 @@
 import AdminAppController from "../AdminAppController";
 import {
-    sendDeleteRequestToServer,
-    sendGetRequestToServer,
-    sendPostRequestToServer
+    extractData,
+    fetchRpc,
 } from "../../../core/utils/HttpUtils";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
@@ -10,8 +9,7 @@ import {DialogType} from "../../state/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
 import {ErrorHandler} from "../../../core/mvc/ApplicationController";
 import {GlobalStateProperty} from "../../state/AdminApplicationState";
-import {ServerAppUrls} from "../../../common/backApplication/ServerAppUrls";
-import {CommonUtils} from "../../../core/utils/CommonUtils";
+import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 
 export default class EmployeeActions {
     private controller: AdminAppController
@@ -27,8 +25,8 @@ export default class EmployeeActions {
     }
 
     public loadUsersList(callback: Function): void {
-        sendGetRequestToServer(ServerAppUrls.getAllEmployees).then(json => {
-            this.node.setUserList(plainToClass(Employee, json) as Employee[])
+        fetchRpc(RemoteMethods.getAllEmployees).then(response => {
+            this.node.setUserList(plainToClass(Employee, extractData(response)) as Employee[])
             callback()
         }).catch(e => {
             this.errorHandler.handle(e)
@@ -86,8 +84,8 @@ export default class EmployeeActions {
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
         const login = this.node.buildLoginBasedOnFields()
-        sendPostRequestToServer(ServerAppUrls.addEmployee, JSON.stringify({employee, login})).then(id => {
-            employee.id = id
+        fetchRpc(RemoteMethods.addEmployee, [employee, login]).then(respone => {
+            employee.id = +extractData(respone)
             this.node.addUser(employee)
             this.node.setShowDialog(DialogType.None)
         }).catch(error => {
@@ -96,13 +94,13 @@ export default class EmployeeActions {
     }
 
     public submitEditEmployeeForm(): void {
-        sendPostRequestToServer(ServerAppUrls.editEmployee,
-                                JSON.stringify({
-                                    employee: this.node.buildEmployeeBasedOnFields(),
-                                    login: this.node.isEmployeeChangePassword()
-                                        ? this.node.buildLoginBasedOnFields()
-                                        : null,
-                                })
+        fetchRpc(RemoteMethods.editEmployee,
+            [
+                this.node.buildEmployeeBasedOnFields(),
+                this.node.isEmployeeChangePassword()
+                    ? this.node.buildLoginBasedOnFields()
+                    : null,
+            ]
         ).then(result => {
             this.node.updateUser(this.node.buildEmployeeBasedOnFields())
             this.node.setShowDialog(DialogType.None)
@@ -112,10 +110,7 @@ export default class EmployeeActions {
     }
 
     public deleteEmployee(id: number): void {
-        sendDeleteRequestToServer(ServerAppUrls.deleteEmployee, [{
-            name: "id",
-            value: id,
-        }]).then(response => {
+        fetchRpc(RemoteMethods.deleteEmployee, [id]).then(response => {
             this.node.deleteUser(id)
         }).catch(error => {
             this.errorHandler.handle(error)

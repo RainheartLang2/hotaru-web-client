@@ -54,6 +54,7 @@
     ]
   },
   "dependencies": {
+    "jsonrpc-ts": "^0.2.0",
     "react-dropzone": "^10.2.2"
   }
 }
