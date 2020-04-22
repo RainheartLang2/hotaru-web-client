@@ -1,7 +1,7 @@
 import AdminAppController from "../AdminAppController";
 import {
     extractData,
-    fetchAuthorizedRpc,
+    fetchUserZoneRpc,
 } from "../../../core/utils/HttpUtils";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
@@ -25,7 +25,7 @@ export default class EmployeeActions {
     }
 
     public loadUsersList(callback: Function): void {
-        fetchAuthorizedRpc(RemoteMethods.getAllEmployees).then(response => {
+        fetchUserZoneRpc(RemoteMethods.getAllEmployees).then(response => {
             this.node.setUserList(plainToClass(Employee, extractData(response)) as Employee[])
             callback()
         }).catch(e => {
@@ -84,7 +84,7 @@ export default class EmployeeActions {
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
         const login = this.node.buildLoginBasedOnFields()
-        fetchAuthorizedRpc(RemoteMethods.addEmployee, [employee, login]).then(respone => {
+        fetchUserZoneRpc(RemoteMethods.addEmployee, [employee, login]).then(respone => {
             employee.id = +extractData(respone)
             this.node.addUser(employee)
             this.node.setShowDialog(DialogType.None)
@@ -94,7 +94,7 @@ export default class EmployeeActions {
     }
 
     public submitEditEmployeeForm(): void {
-        fetchAuthorizedRpc(RemoteMethods.editEmployee,
+        fetchUserZoneRpc(RemoteMethods.editEmployee,
             [
                 this.node.buildEmployeeBasedOnFields(),
                 this.node.isEmployeeChangePassword()
@@ -110,7 +110,7 @@ export default class EmployeeActions {
     }
 
     public deleteEmployee(id: number): void {
-        fetchAuthorizedRpc(RemoteMethods.deleteEmployee, [id]).then(response => {
+        fetchUserZoneRpc(RemoteMethods.deleteEmployee, [id]).then(response => {
             this.node.deleteUser(id)
         }).catch(error => {
             this.errorHandler.handle(error)

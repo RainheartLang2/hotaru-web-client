@@ -118,7 +118,6 @@ export default abstract class ApplicationStore {
     public subscribe(propertyName: string,
                      subscriber: React.Component,
                      propertyAlias: string = propertyName): void {
-        console.log(this.properties)
         const subscribersData = this.subscribers.get(propertyName)
         if (subscribersData !== undefined) {
             subscribersData.push({subscriber, propertyAlias})
@@ -132,7 +131,7 @@ export default abstract class ApplicationStore {
         this.setPropertyValue<V>(this.getFieldBasePropertyName(fieldName), newValue)
     }
 
-    protected setPropertyValue<V>(propertyName: string, newValue: V): void {
+    public setPropertyValue<V>(propertyName: string, newValue: V): void {
         try {
             this.setPropertyValueInternally(propertyName, newValue)
         } catch (e) {

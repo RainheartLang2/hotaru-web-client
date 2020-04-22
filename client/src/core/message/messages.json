@@ -34,6 +34,7 @@
       "dialog.employee.button.changePassword.label": "Сменить пароль"
     },
     "login": {
+      "error.message.INVALID_CREDENTIALS": "Некорректные логин или пароль",
       "login.title": "Войти"
     }
   }

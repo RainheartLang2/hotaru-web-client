@@ -13,6 +13,7 @@ export default class LoginApplicationState extends ApplicationStore {
 
     private constructor() {
         super()
+        this.registerProperty(LoginStateProperty.HasError, "")
         this.registerProperty(LoginStateProperty.IsApplicationLoading, true)
         this.registerField(LoginStateProperty.Login, "")
         this.registerField(LoginStateProperty.Password, "")
@@ -30,9 +31,14 @@ export default class LoginApplicationState extends ApplicationStore {
             password: this.getFieldValue(LoginStateProperty.Password),
         }
     }
+
+    public setLogicError(errorKey: string): void {
+        this.setPropertyValue(LoginStateProperty.HasError, errorKey)
+    }
 }
 
 export enum LoginStateProperty {
+    HasError = "hasError",
     IsApplicationLoading = "isLoading",
     Login = "login",
     Password = "password",

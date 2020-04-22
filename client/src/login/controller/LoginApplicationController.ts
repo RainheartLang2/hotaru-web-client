@@ -1,6 +1,6 @@
 import ApplicationController from "../../core/mvc/ApplicationController";
-import LoginApplicationState from "../state/LoginApplicationState";
-import {fetchUnauthorizedRpc} from "../../core/utils/HttpUtils";
+import LoginApplicationState, {LoginStateProperty} from "../state/LoginApplicationState";
+import {extractData, fetchPreloginRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 
 export default class LoginApplicationController extends ApplicationController<LoginApplicationState> {
@@ -18,13 +18,14 @@ export default class LoginApplicationController extends ApplicationController<Lo
     }
 
     public submitLoginForm(): void {
+        this.applicationStore.setPropertyValue(LoginStateProperty.HasError, "")
         const login = this.applicationStore.buildLogin()
-        fetchUnauthorizedRpc(RemoteMethods.employeeLogin,
+        fetchPreloginRpc(RemoteMethods.employeeLogin,
             [login.loginName, login.password]
         ).then(result => {
-            console.log(result)
+            window.location.href = extractData(result)
         }).catch(error => {
-            this.errorHandler.handle(error)
+            this.errorHandler.handle(error, LoginStateProperty.HasError)
         })
     }
 }

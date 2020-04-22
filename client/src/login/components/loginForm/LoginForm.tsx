@@ -12,11 +12,13 @@ export default class LoginForm extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
+            [StateProperty.HasError]: "",
             [StateProperty.IsSubmitAllowed]: false,
         }
     }
 
     render() {
+        const loginFormError = this.state[StateProperty.HasError]
         return (<div className={styles.loginForm}>
             <div className={styles.loginField}>
                 <ConnectedTextField
@@ -39,6 +41,9 @@ export default class LoginForm extends React.Component<Properties, State> {
                 />
 
             </div>
+            <div className={styles.errorsArea}>
+                {loginFormError && (<Message messageKey={"error.message." + loginFormError}/>)}
+            </div>
             <div className={styles.buttonsArea}>
                 <ButtonComponent
                     variant="contained"
@@ -53,11 +58,13 @@ export default class LoginForm extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
+        this.props.controller.subscribe(LoginStateProperty.HasError, this, StateProperty.HasError)
         this.props.controller.subscribe(LoginStateProperty.IsAllowedToSubmit, this, StateProperty.IsSubmitAllowed)
     }
 }
 
 enum StateProperty {
+    HasError = "hasError",
     IsSubmitAllowed = "isSubmitAllowed",
 }
 
@@ -66,5 +73,6 @@ type Properties = {
 }
 
 type State = {
+    [StateProperty.HasError]: "",
     [StateProperty.IsSubmitAllowed]: false,
 }

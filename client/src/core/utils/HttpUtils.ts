@@ -1,8 +1,9 @@
 import {RemoteMethod} from "../http/RemoteMethod";
 import HttpTransportError from "../errors/HttpTransportError";
+import BusinessLogicError from "../errors/BusinessLogicError";
 
-const SERVER_APP_AUTHORIZED_URL = "http://localhost:8080/web/user/req"
-const SERVER_APP_UNAUTHORIZED_URL = "http://localhost:8080/web/login/req"
+const SERVER_APP_USER_ZONE_URL = "http://localhost:8080/web/user/req"
+const SERVER_APP_PRELOGIN_ZONE_URL = "http://localhost:8080/web/login/req"
 
 export async function fetchRpc(url: string,
                                method: RemoteMethod,
@@ -26,23 +27,25 @@ export async function fetchRpc(url: string,
     return parseResponseFromServer(response)
 }
 
-export async function fetchAuthorizedRpc(method: RemoteMethod, params: any[] | null = null, id: number = 0): Promise<any> {
-    return fetchRpc(SERVER_APP_AUTHORIZED_URL, method, params, id)
+export async function fetchUserZoneRpc(method: RemoteMethod, params: any[] | null = null, id: number = 0): Promise<any> {
+    return fetchRpc(SERVER_APP_USER_ZONE_URL, method, params, id)
 }
 
-export async function fetchUnauthorizedRpc(method: RemoteMethod, params: any[] | null = null, id: number = 0): Promise<any> {
-    return fetchRpc(SERVER_APP_UNAUTHORIZED_URL, method, params, id)
+export async function fetchPreloginRpc(method: RemoteMethod, params: any[] | null = null, id: number = 0): Promise<any> {
+    return fetchRpc(SERVER_APP_PRELOGIN_ZONE_URL, method, params, id)
 }
 
 async function parseResponseFromServer(requestResult: Promise<Response>): Promise<any> {
     const response: Response = await requestResult
-    console.log(response)
-    if (!response.ok) {
+    if (!response.ok && response.status != 500) {
         throw new HttpTransportError(response.status, response.statusText)
     }
     return response.json()
 }
 
 export function extractData(responseJson: any): any {
+    if (responseJson.error) {
+        throw new BusinessLogicError(responseJson.error.message)
+    }
     return responseJson.result
 }

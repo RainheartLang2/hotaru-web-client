@@ -1,5 +1,7 @@
 import ApplicationStore from "./store/ApplicationStore";
 import HttpTransportError from "../errors/HttpTransportError";
+import BusinessLogicError from "../errors/BusinessLogicError";
+import {instanceOf} from "prop-types";
 
 export default abstract class ApplicationController<StoreType extends ApplicationStore = ApplicationStore> {
     private _applicationStore: StoreType
@@ -40,7 +42,13 @@ export class ErrorHandler {
         this.store = store
     }
 
-    public handle(e: Error) {
+    public handle(e: Error, businessErrorProperty: string | null = null) {
+        if (e instanceof BusinessLogicError) {
+            if (businessErrorProperty != null) {
+                this.store.setPropertyValue(businessErrorProperty, e.message)
+            }
+            return
+        }
         let errorMessageKey = "error.message.unknown"
         if (e instanceof HttpTransportError) {
             errorMessageKey = "error.message.http." + (HANDLED_HTTP_CODES.includes(e.code) ? e.code : "common")
