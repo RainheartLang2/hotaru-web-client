@@ -25,11 +25,13 @@ export default class EmployeeActions {
     }
 
     public loadUsersList(callback: Function): void {
-        fetchUserZoneRpc(RemoteMethods.getAllEmployees).then(response => {
-            this.node.setUserList(plainToClass(Employee, extractData(response)) as Employee[])
-            callback()
-        }).catch(e => {
-            this.errorHandler.handle(e)
+        fetchUserZoneRpc({
+            method: RemoteMethods.getAllEmployees,
+            successCallback: result => {
+                this.node.setUserList(plainToClass(Employee, result) as Employee[])
+                callback()
+            },
+            errorHandler: this.errorHandler
         })
     }
 
@@ -84,36 +86,41 @@ export default class EmployeeActions {
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
         const login = this.node.buildLoginBasedOnFields()
-        fetchUserZoneRpc(RemoteMethods.addEmployee, [employee, login]).then(respone => {
-            employee.id = +extractData(respone)
-            this.node.addUser(employee)
-            this.node.setShowDialog(DialogType.None)
-        }).catch(error => {
-            this.errorHandler.handle(error)
+        fetchUserZoneRpc({
+            method: RemoteMethods.addEmployee,
+            params: [employee, login],
+            successCallback: (result) => {
+                employee.id = +result
+                this.node.addUser(employee)
+                this.node.setShowDialog(DialogType.None)
+            },
+            errorHandler: this.errorHandler
         })
     }
 
     public submitEditEmployeeForm(): void {
-        fetchUserZoneRpc(RemoteMethods.editEmployee,
-            [
+        fetchUserZoneRpc({
+            method: RemoteMethods.editEmployee,
+            params: [
                 this.node.buildEmployeeBasedOnFields(),
                 this.node.isEmployeeChangePassword()
                     ? this.node.buildLoginBasedOnFields()
                     : null,
-            ]
-        ).then(result => {
-            this.node.updateUser(this.node.buildEmployeeBasedOnFields())
-            this.node.setShowDialog(DialogType.None)
-        }).catch(error => {
-            this.errorHandler.handle(error)
+            ],
+            successCallback: (result) => {
+                this.node.updateUser(this.node.buildEmployeeBasedOnFields())
+                this.node.setShowDialog(DialogType.None)
+            },
+            errorHandler: this.errorHandler,
         })
     }
 
     public deleteEmployee(id: number): void {
-        fetchUserZoneRpc(RemoteMethods.deleteEmployee, [id]).then(response => {
-            this.node.deleteUser(id)
-        }).catch(error => {
-            this.errorHandler.handle(error)
+        fetchUserZoneRpc({
+            method: RemoteMethods.deleteEmployee,
+            params: [id],
+            successCallback: (result) => this.node.deleteUser(id),
+            errorHandler: this.errorHandler,
         })
     }
 }

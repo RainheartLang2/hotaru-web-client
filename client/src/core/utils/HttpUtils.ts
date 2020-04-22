@@ -28,18 +28,24 @@ export async function fetchRpc(url: string,
     return parseResponseFromServer(response)
 }
 
-export async function fetchUserZoneRpc(method: RemoteMethod, params: any[] | null = null, id: number = 0): Promise<any> {
-    return fetchRpc(SERVER_APP_USER_ZONE_URL, method, params, id)
+export async function fetchUserZoneRpc(data: FetchData): Promise<any> {
+    return fetchServerRpc(SERVER_APP_USER_ZONE_URL,
+        data.method,
+        data.params,
+        data.id,
+        data.successCallback,
+        data.errorHandler,
+        data.setError)
 }
 
 export async function fetchPreloginRpc(data: FetchData): Promise<any> {
     return fetchServerRpc(SERVER_APP_PRELOGIN_ZONE_URL,
-                        data.method,
-                        data.params,
-                        data.id,
-                        data.successCallback,
-                        data.errorHandler,
-                        data.setError)
+        data.method,
+        data.params,
+        data.id,
+        data.successCallback,
+        data.errorHandler,
+        data.setError)
 }
 
 function fetchServerRpc(url: string,
@@ -48,7 +54,8 @@ function fetchServerRpc(url: string,
                         id: number = 0,
                         successCallback: (responseResult: any) => void,
                         errorHandler: ErrorHandler,
-                        setError: (errorType: string) => void = () => {},): void {
+                        setError: (errorType: string) => void = () => {
+                        },): void {
     setError("")
     fetchRpc(url, method, params, id
     ).then(response => {
