@@ -1,6 +1,6 @@
 import ApplicationController from "../../core/mvc/ApplicationController";
 import LoginApplicationState, {LoginStateProperty} from "../state/LoginApplicationState";
-import {extractData, fetchPreloginRpc} from "../../core/utils/HttpUtils";
+import {fetchPreloginRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 
 export default class LoginApplicationController extends ApplicationController<LoginApplicationState> {
@@ -23,7 +23,6 @@ export default class LoginApplicationController extends ApplicationController<Lo
             method: RemoteMethods.employeeLogin,
             params: [login.loginName, login.password],
             successCallback: (result: any) => window.location.href = result,
-            errorHandler: this.errorHandler,
             setError: (errorType: string) => this.applicationStore.setPropertyValue(LoginStateProperty.HasError, errorType)
         })
     }

@@ -7,20 +7,16 @@ import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
 import {DialogType} from "../../state/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
-import {ErrorHandler} from "../../../core/mvc/ApplicationController";
 import {GlobalStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 
 export default class EmployeeActions {
     private controller: AdminAppController
-    private errorHandler: ErrorHandler
     private node: EmployeeNode
 
     constructor(controller: AdminAppController,
-                errorHandler: ErrorHandler,
                 store: EmployeeNode) {
         this.controller = controller
-        this.errorHandler = errorHandler
         this.node = store;
     }
 
@@ -31,7 +27,6 @@ export default class EmployeeActions {
                 this.node.setUserList(plainToClass(Employee, result) as Employee[])
                 callback()
             },
-            errorHandler: this.errorHandler
         })
     }
 
@@ -94,7 +89,6 @@ export default class EmployeeActions {
                 this.node.addUser(employee)
                 this.node.setShowDialog(DialogType.None)
             },
-            errorHandler: this.errorHandler
         })
     }
 
@@ -111,7 +105,6 @@ export default class EmployeeActions {
                 this.node.updateUser(this.node.buildEmployeeBasedOnFields())
                 this.node.setShowDialog(DialogType.None)
             },
-            errorHandler: this.errorHandler,
         })
     }
 
@@ -120,7 +113,6 @@ export default class EmployeeActions {
             method: RemoteMethods.deleteEmployee,
             params: [id],
             successCallback: (result) => this.node.deleteUser(id),
-            errorHandler: this.errorHandler,
         })
     }
 }

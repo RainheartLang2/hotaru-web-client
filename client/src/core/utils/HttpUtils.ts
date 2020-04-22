@@ -1,7 +1,7 @@
 import {RemoteMethod} from "../http/RemoteMethod";
 import HttpTransportError from "../errors/HttpTransportError";
 import BusinessLogicError from "../errors/BusinessLogicError";
-import {ErrorHandler} from "../mvc/ApplicationController";
+import ApplicationControllerHolder from "./ApplicationControllerHolder";
 
 const SERVER_APP_USER_ZONE_URL = "http://localhost:8080/web/user/req"
 const SERVER_APP_PRELOGIN_ZONE_URL = "http://localhost:8080/web/login/req"
@@ -34,7 +34,6 @@ export async function fetchUserZoneRpc(data: FetchData): Promise<any> {
         data.params,
         data.id,
         data.successCallback,
-        data.errorHandler,
         data.setError)
 }
 
@@ -44,7 +43,6 @@ export async function fetchPreloginRpc(data: FetchData): Promise<any> {
         data.params,
         data.id,
         data.successCallback,
-        data.errorHandler,
         data.setError)
 }
 
@@ -53,7 +51,6 @@ function fetchServerRpc(url: string,
                         params: any[] | null = null,
                         id: number = 0,
                         successCallback: (responseResult: any) => void,
-                        errorHandler: ErrorHandler,
                         setError: (errorType: string) => void = () => {
                         },): void {
     setError("")
@@ -61,8 +58,23 @@ function fetchServerRpc(url: string,
     ).then(response => {
         successCallback(extractData(response))
     }).catch(e => {
-        errorHandler.handle(e, setError)
+        handleError(e, setError)
     })
+}
+
+const HANDLED_HTTP_CODES = [404, 500]
+
+function handleError(e: any, setError: (errorType: string) => void): void {
+    if (e instanceof BusinessLogicError) {
+        setError(e.message)
+        return
+    }
+    let errorMessageKey = "error.message.unknown"
+    if (e instanceof HttpTransportError) {
+        errorMessageKey = "error.message.http." + (HANDLED_HTTP_CODES.includes(e.code) ? e.code : "common")
+    }
+
+    ApplicationControllerHolder.instance.controller.setGlobalApplicationError(errorMessageKey)
 }
 
 async function parseResponseFromServer(requestResult: Promise<Response>): Promise<any> {
@@ -85,6 +97,5 @@ export type FetchData = {
     params?: any[] | null,
     id?: number,
     successCallback: (responseResult: any) => void,
-    errorHandler: ErrorHandler,
     setError?: (errorType: string) => void
 }

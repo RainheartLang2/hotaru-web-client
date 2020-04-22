@@ -16,6 +16,7 @@ import {Tab} from "@material-ui/core";
 import ErrorModal from "../core/components/errrorModal/ErrorModal";
 import {GlobalStateProperty} from "./state/AdminApplicationState";
 import MaskTransformer from "../core/utils/MaskTransformer";
+import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -32,6 +33,7 @@ export default class AdminApp extends React.Component<Properties, State> {
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = AdminAppController.instance
+        ApplicationControllerHolder.initialize(this.controller)
     }
 
     render() {
