@@ -18,14 +18,13 @@ export default class LoginApplicationController extends ApplicationController<Lo
     }
 
     public submitLoginForm(): void {
-        this.applicationStore.setPropertyValue(LoginStateProperty.HasError, "")
         const login = this.applicationStore.buildLogin()
-        fetchPreloginRpc(RemoteMethods.employeeLogin,
-            [login.loginName, login.password]
-        ).then(result => {
-            window.location.href = extractData(result)
-        }).catch(error => {
-            this.errorHandler.handle(error, LoginStateProperty.HasError)
+        fetchPreloginRpc({
+            method: RemoteMethods.employeeLogin,
+            params: [login.loginName, login.password],
+            successCallback: (result: any) => window.location.href = result,
+            errorHandler: this.errorHandler,
+            setError: (errorType: string) => this.applicationStore.setPropertyValue(LoginStateProperty.HasError, errorType)
         })
     }
 }

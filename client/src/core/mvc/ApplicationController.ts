@@ -42,11 +42,9 @@ export class ErrorHandler {
         this.store = store
     }
 
-    public handle(e: Error, businessErrorProperty: string | null = null) {
+    public handle(e: Error, setError: (errorMessage: string) => void = () => {}) {
         if (e instanceof BusinessLogicError) {
-            if (businessErrorProperty != null) {
-                this.store.setPropertyValue(businessErrorProperty, e.message)
-            }
+            setError(e.message)
             return
         }
         let errorMessageKey = "error.message.unknown"
