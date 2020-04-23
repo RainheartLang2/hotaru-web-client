@@ -25,7 +25,7 @@ export default class DialogFooter extends React.Component<Properties> {
                             variant="contained"
                             color="secondary"
                             size="small"
-                            onClick={() => this.props.onCancelClick}>
+                            onClick={() => this.props.onCancelClick()}>
                             <Message messageKey={"common.button.back"}/>
                         </ButtonComponent>
                     </div>

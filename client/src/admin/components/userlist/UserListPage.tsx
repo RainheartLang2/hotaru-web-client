@@ -4,9 +4,10 @@ import {Employee} from "../../../common/beans/Employee";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
-import {Link} from "@material-ui/core";
+import {Link, TableCell} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
 import EmployeeActions from "../../controller/actions/EmployeeActions";
+import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";
 
 var styles = require("./styles.css");
 
@@ -22,6 +23,20 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
         this.actions = AdminAppController.instance.employeeActions
     }
 
+    private getActiveLabelKey(isActive?: boolean): string {
+        return isActive
+            ? "dialog.employee.control.active.label"
+            : "dialog.employee.control.notActive.label"
+    }
+
+    private delete(userId?: number): void {
+        if (userId) {
+            this.actions.deleteEmployee(userId)
+        } else {
+            throw new Error("user has no id")
+        }
+    }
+
     render() {
         return (
             <>
@@ -31,48 +46,39 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
-                            <TableCellCmp>
+                            <CustomTableCell style={styles.nameCell}>
                                 <Message messageKey={"common.employee.name"}/>
-                            </TableCellCmp>
-                            <TableCellCmp/>
-                            <TableCellCmp>
+                            </CustomTableCell>
+                            <CustomTableCell style={styles.activeCell}/>
+                            <CustomTableCell style={styles.actionCell}>
                                 <Message messageKey={"common.label.actions"}/>
-                            </TableCellCmp>
+                            </CustomTableCell>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
                         {this.state.userList.map(user => {
                             return (<TableRowCmp key={user.id}>
-                                <TableCellCmp>
+                                <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"
                                         onClick={() => this.actions.openEditEmployeeDialog(user)}
                                     >
                                         {`${user.lastName}, ${user.firstName} ${user.middleName}`}
                                     </Link>
-                                </TableCellCmp>
-                                <TableCellCmp>
+                                </CustomTableCell>
+                                <CustomTableCell style={styles.activeCell}>
                                     <div className={user.active ? styles.activeLabel : styles.notActiveLabel}>
-                                        <Message messageKey={user.active
-                                            ? "dialog.employee.control.active.label"
-                                            : "dialog.employee.control.notActive.label"}
-                                        />
+                                        <Message messageKey={this.getActiveLabelKey(user.active)}/>
                                     </div>
-                                </TableCellCmp>
-                                <TableCellCmp>
+                                </CustomTableCell>
+                                <CustomTableCell style={styles.actionsCell}>
                                     <Link
                                         color="primary"
-                                        onClick={() => {
-                                            if (user.id) {
-                                                this.actions.deleteEmployee(user.id)
-                                            } else {
-                                                throw new Error("user has no id")
-                                            }
-                                        }}
+                                        onClick={() => this.delete(user.id)}
                                     >
                                         <Message messageKey={"common.button.delete"}/>
                                     </Link>
-                                </TableCellCmp>
+                                </CustomTableCell>
                             </TableRowCmp>)
                         })}
                     </TableBodyCmp>

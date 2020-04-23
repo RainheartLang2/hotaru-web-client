@@ -5,3 +5,16 @@
 .notActiveLabel {
     color: tomato;
 }
+
+.nameCell {
+    min-width: 368px;
+}
+
+.activeCell {
+    text-align: center;
+    width: 118px;
+}
+
+.actionsCell {
+    width: 218px;
+}
