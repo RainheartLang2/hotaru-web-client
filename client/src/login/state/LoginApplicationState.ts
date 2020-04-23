@@ -14,7 +14,8 @@ export default class LoginApplicationState extends ApplicationStore {
     private constructor() {
         super()
         this.registerProperty(LoginStateProperty.HasError, "")
-        this.registerProperty(LoginStateProperty.IsApplicationLoading, true)
+        this.registerProperty(LoginStateProperty.IsApplicationLoading, false)
+        this.registerProperty(LoginStateProperty.IsLoginButtonLoading, false)
         this.registerField(LoginStateProperty.Login, "")
         this.registerField(LoginStateProperty.Password, "")
         this.registerSelector(LoginStateProperty.IsAllowedToSubmit, {
@@ -40,6 +41,7 @@ export default class LoginApplicationState extends ApplicationStore {
 export enum LoginStateProperty {
     HasError = "hasError",
     IsApplicationLoading = "isLoading",
+    IsLoginButtonLoading = "isLoginButtonLoading",
     Login = "login",
     Password = "password",
     IsAllowedToSubmit = "isAllowedToSubmit",

@@ -22,8 +22,12 @@ export default class LoginApplicationController extends ApplicationController<Lo
         fetchPreloginRpc({
             method: RemoteMethods.employeeLogin,
             params: [login.loginName, login.password],
-            successCallback: (result: any) => window.location.href = result,
-            setError: (errorType: string) => this.applicationStore.setPropertyValue(LoginStateProperty.HasError, errorType)
+            successCallback: (result: any) => {
+                this.applicationStore.setPropertyValue(LoginStateProperty.IsApplicationLoading, true)
+                window.location.href = result
+            },
+            errorProperty: LoginStateProperty.HasError,
+            loadingProperty: LoginStateProperty.IsLoginButtonLoading,
         })
     }
 }

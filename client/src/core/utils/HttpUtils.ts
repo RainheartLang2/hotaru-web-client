@@ -34,7 +34,9 @@ export async function fetchUserZoneRpc(data: FetchData): Promise<any> {
         data.params,
         data.id,
         data.successCallback,
-        data.setError)
+        data.errorProperty,
+        data.loadingProperty,
+    )
 }
 
 export async function fetchPreloginRpc(data: FetchData): Promise<any> {
@@ -43,7 +45,9 @@ export async function fetchPreloginRpc(data: FetchData): Promise<any> {
         data.params,
         data.id,
         data.successCallback,
-        data.setError)
+        data.errorProperty,
+        data.loadingProperty,
+    )
 }
 
 function fetchServerRpc(url: string,
@@ -51,14 +55,26 @@ function fetchServerRpc(url: string,
                         params: any[] | null = null,
                         id: number = 0,
                         successCallback: (responseResult: any) => void,
-                        setError: (errorType: string) => void = () => {
-                        },): void {
+                        errorProperty: string = "",
+                        loadingProperty: string = "",
+                        ): void {
+    const controller = ApplicationControllerHolder.instance.controller
+    const setLoading = loadingProperty
+                            ? (value: boolean) => {controller.setPropertyValue<Boolean>(loadingProperty, value)}
+                            : (value: boolean) => {}
+    const setError = errorProperty
+                            ? (value: string) => {controller.setPropertyValue<String>(errorProperty, value)}
+                            : (value: string) => {}
+
+    setLoading(true)
     setError("")
     fetchRpc(url, method, params, id
     ).then(response => {
         successCallback(extractData(response))
+        setLoading(false)
     }).catch(e => {
         handleError(e, setError)
+        setLoading(false)
     })
 }
 
@@ -97,5 +113,6 @@ export type FetchData = {
     params?: any[] | null,
     id?: number,
     successCallback: (responseResult: any) => void,
-    setError?: (errorType: string) => void
+    errorProperty?: string,
+    loadingProperty?: string,
 }

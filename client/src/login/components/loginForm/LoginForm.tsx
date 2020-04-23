@@ -4,6 +4,7 @@ import {Message} from "../../../core/components/Message";
 import ConnectedTextField from "../../../core/components/conntectedTextField/ConnectedTextField";
 import LoginApplicationController from "../../controller/LoginApplicationController";
 import {LoginStateProperty} from "../../state/LoginApplicationState";
+import CustomButton from "../../../core/components/customButton/CustomButton";
 
 var styles = require("./styles.css");
 
@@ -45,14 +46,16 @@ export default class LoginForm extends React.Component<Properties, State> {
                 {loginFormError && (<Message messageKey={"error.message." + loginFormError}/>)}
             </div>
             <div className={styles.buttonsArea}>
-                <ButtonComponent
+                <CustomButton
+                    controller={this.props.controller}
                     variant="contained"
                     color="primary"
                     disabled={!this.state[StateProperty.IsSubmitAllowed]}
                     onClick={() => this.props.controller.submitLoginForm()}
+                    loadingProperty={LoginStateProperty.IsLoginButtonLoading}
                 >
                     <Message messageKey="login.title"/>
-                </ButtonComponent>
+                </CustomButton>
             </div>
         </div>)
     }

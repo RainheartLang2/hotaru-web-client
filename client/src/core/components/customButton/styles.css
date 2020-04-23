@@ -1,0 +1,7 @@
+.labelLoading {
+    visibility: hidden;
+}
+
+.loaderWrapper {
+    position: absolute;
+}
