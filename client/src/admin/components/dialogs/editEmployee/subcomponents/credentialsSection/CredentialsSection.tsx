@@ -1,7 +1,7 @@
 import * as React from "react";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import AdminAppController from "../../../../../controller/AdminAppController";
-import {GlobalStateProperty} from "../../../../../state/AdminApplicationState";
+import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
 import {ButtonComponent} from "../../../../../../core/components";
 
@@ -26,7 +26,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                 <div className={styles.row}>
                     <ConnectedTextField
                         controller={this.props.controller}
-                        fieldPropertyName={GlobalStateProperty.EditedEmployeeLogin}
+                        fieldPropertyName={AdminStateProperty.EditedEmployeeLogin}
                         label={(<Message messageKey={"field.login.label"}/>)}
                         disabled={!fieldsObligatory}
                     />
@@ -34,7 +34,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                 <div className={styles.row}>
                     <ConnectedTextField
                         controller={this.props.controller}
-                        fieldPropertyName={GlobalStateProperty.EditedEmployeePassword}
+                        fieldPropertyName={AdminStateProperty.EditedEmployeePassword}
                         label={(<Message messageKey={"field.password.label"}/>)}
                         type={"password"}
                         disabled={!fieldsObligatory}
@@ -43,7 +43,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                 <div className={styles.row}>
                     <ConnectedTextField
                         controller={this.props.controller}
-                        fieldPropertyName={GlobalStateProperty.EditedEmployeeConfirmPassword}
+                        fieldPropertyName={AdminStateProperty.EditedEmployeeConfirmPassword}
                         label={(<Message messageKey={"field.password.repeat.label"}/>)}
                         type={"password"}
                         disabled={!fieldsObligatory}
@@ -70,9 +70,9 @@ export default class CredentialsSection extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(GlobalStateProperty.IsEmployeeChangePassword, this, StateProperty.ChangePassword)
-        this.props.controller.subscribe(GlobalStateProperty.IsChangePasswordButtonShow, this, StateProperty.ShowButton)
-        this.props.controller.subscribe(GlobalStateProperty.IsChangePasswordObligatory, this, StateProperty.FieldsObligatory)
+        this.props.controller.subscribe(AdminStateProperty.IsEmployeeChangePassword, this, StateProperty.ChangePassword)
+        this.props.controller.subscribe(AdminStateProperty.IsChangePasswordButtonShow, this, StateProperty.ShowButton)
+        this.props.controller.subscribe(AdminStateProperty.IsChangePasswordObligatory, this, StateProperty.FieldsObligatory)
     }
 }
 

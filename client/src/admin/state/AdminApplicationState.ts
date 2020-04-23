@@ -1,6 +1,7 @@
 import {DialogType} from "./DialogType";
 import EmployeeNode from "./nodes/EmployeeNode";
 import ApplicationStore from "../../core/mvc/store/ApplicationStore";
+import {Employee} from "../../common/beans/Employee";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -9,8 +10,9 @@ export default class AdminApplicationState extends ApplicationStore {
 
     private constructor() {
         super()
-        this.registerProperty(GlobalStateProperty.IsApplicationLoading, true)
-        this.registerProperty(GlobalStateProperty.ShowDialog, DialogType.None)
+        this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
+        this.registerProperty(AdminStateProperty.ShowDialog, DialogType.None)
+        this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
         this._employeeNode = new EmployeeNode(this.friend)
     }
 
@@ -26,24 +28,33 @@ export default class AdminApplicationState extends ApplicationStore {
     }
 
     public isApplicationLoading(): boolean {
-        return this.getPropertyValue(GlobalStateProperty.IsApplicationLoading)
+        return this.getPropertyValue(AdminStateProperty.IsApplicationLoading)
     }
 
     public setApplicationLoading(applicationLoading: boolean) {
-        this.setPropertyValue(GlobalStateProperty.IsApplicationLoading, applicationLoading)
+        this.setPropertyValue(AdminStateProperty.IsApplicationLoading, applicationLoading)
     }
 
     public getShowDialog(): DialogType {
-        return this.getPropertyValue(GlobalStateProperty.ShowDialog)
+        return this.getPropertyValue(AdminStateProperty.ShowDialog)
     }
 
     public setShowDialog(dialogType: DialogType): void {
-        this.setPropertyValue(GlobalStateProperty.ShowDialog, dialogType)
+        this.setPropertyValue(AdminStateProperty.ShowDialog, dialogType)
+    }
+
+    public getLoggedInUser(): Employee {
+        return this.getPropertyValue<Employee>(AdminStateProperty.LoggedInEmployee)
+    }
+
+    public setLoggedInUser(employee: Employee): void {
+        this.setPropertyValue<Employee>(AdminStateProperty.LoggedInEmployee, employee)
     }
 }
 
-export enum GlobalStateProperty {
+export enum AdminStateProperty {
     IsApplicationLoading = "isApplicationLoading",
+    LoggedInEmployee = "LoggedInEmployee",
     ShowDialog = "showDialog",
     UserList = "userList",
     UserListById = "userListById",

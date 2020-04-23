@@ -1,12 +1,12 @@
 import * as React from "react";
-import {DialogContent, DialogTitle, FormControlLabel, Switch} from "@material-ui/core";
+import {DialogContent, DialogTitle} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import AdminAppController from "../../../controller/AdminAppController";
 import {Message} from "../../../../core/components/Message";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import {ButtonComponent} from "../../../../core/components";
 import EmployeeActions from "../../../controller/actions/EmployeeActions";
-import {GlobalStateProperty} from "../../../state/AdminApplicationState";
+import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import UserActiveSwitch from "./subcomponents/userActiveSwitch/UserActiveSwitch";
 import Dropzone, {DropzoneState} from "react-dropzone";
@@ -35,12 +35,22 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     private onSubmitButtonClick() {
-        if (this.state[StateProperty.Mode] == 'edit') {
+        const mode = this.state[StateProperty.Mode]
+        if (mode == 'edit' || mode == 'profile') {
             this.actions.submitEditEmployeeForm()
-        } else if (this.state[StateProperty.Mode] == 'create') {
+        } else if (mode == 'create') {
             this.actions.submitCreateEmployeeForm()
         } else {
             throw new Error('unknown value of mode ' + this.state[StateProperty.Mode])
+        }
+    }
+
+    private getTitleMessageKey(): string {
+        switch (this.state[StateProperty.Mode]) {
+            case "create": return "dialog.employee.create.label"
+            case "edit": return "dialog.employee.edit.label"
+            case "profile": return "dialog.employee.profile.label"
+            default: return "dialog.employee.create.label"
         }
     }
 
@@ -52,9 +62,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     onBackdropClick={() => this.closeDialog()}
                     onClose={() => this.closeDialog()}>
                 <DialogTitle>
-                    <Message messageKey={this.state[StateProperty.Mode] == "create"
-                        ? "dialog.employee.create.label"
-                        : "dialog.employee.edit.label"}
+                    <Message messageKey={this.getTitleMessageKey()}
                     />
                 </DialogTitle>
                 <DialogContent>
@@ -72,7 +80,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeLastName}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeeLastName}
                                     label={(<Message messageKey={"dialog.employee.field.lastName.label"}/>)}
                                     required={true}
                                     size="small"
@@ -82,7 +90,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeFirstName}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeeFirstName}
                                     label={(<Message messageKey={"dialog.employee.field.firstName.label"}/>)}
                                     required={true}
                                     size="small"
@@ -92,7 +100,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeMiddleName}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeeMiddleName}
                                     label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
                                     size="small"
                                     fullWidth={true}
@@ -117,21 +125,21 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeePhone}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeePhone}
                                     label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
                                 />
                             </div>
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeEmail}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeeEmail}
                                     label={(<Message messageKey="dialog.employee.field.email.label"/>)}
                                 />
                             </div>
                             <div className={styles.row}>
                                 <ConnectedTextField
                                     controller={this.controller}
-                                    fieldPropertyName={GlobalStateProperty.EditedEmployeeAddress}
+                                    fieldPropertyName={AdminStateProperty.EditedEmployeeAddress}
                                     label={(<Message messageKey="dialog.employee.field.address.label"/>)}
                                     rows={3}
                                 />
@@ -166,9 +174,9 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(GlobalStateProperty.EmployeeDialogType, this, StateProperty.Mode)
-        this.controller.subscribe(GlobalStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
-        this.controller.subscribe(GlobalStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
+        this.controller.subscribe(AdminStateProperty.EmployeeDialogType, this, StateProperty.Mode)
+        this.controller.subscribe(AdminStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
+        this.controller.subscribe(AdminStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
     }
 }
 

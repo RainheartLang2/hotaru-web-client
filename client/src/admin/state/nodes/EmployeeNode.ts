@@ -3,7 +3,7 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import {Employee} from "../../../common/beans/Employee";
 import {ApplicationStoreFriend} from "../../../core/mvc/store/ApplicationStoreFriend";
-import {GlobalStateProperty} from "../AdminApplicationState";
+import {AdminStateProperty} from "../AdminApplicationState";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import ConfirmPasswordValidator from "../../../core/mvc/validators/ConfirmPasswordValidator";
@@ -15,11 +15,11 @@ export default class EmployeeNode {
     constructor(store: ApplicationStoreFriend) {
         this.store = store
 
-        this.store.registerProperty(GlobalStateProperty.UserList, [])
-        this.store.registerSelector(GlobalStateProperty.UserListById, {
-            dependsOn: [GlobalStateProperty.UserList],
+        this.store.registerProperty(AdminStateProperty.UserList, [])
+        this.store.registerSelector(AdminStateProperty.UserListById, {
+            dependsOn: [AdminStateProperty.UserList],
             get: map => {
-                const userList: Employee[] = map.get(GlobalStateProperty.UserList) as Employee[]
+                const userList: Employee[] = map.get(AdminStateProperty.UserList) as Employee[]
                 const result = new Map<number, Employee>()
                 userList.forEach(user => {
                     if (!user.id) {
@@ -32,94 +32,97 @@ export default class EmployeeNode {
             }
         })
 
-        this.store.registerSelector(GlobalStateProperty.EmployeeDialogType, {
-            dependsOn: [GlobalStateProperty.ShowDialog],
+        this.store.registerSelector(AdminStateProperty.EmployeeDialogType, {
+            dependsOn: [AdminStateProperty.ShowDialog],
             get: map => {
-                const globalDialogType: DialogType = map.get(GlobalStateProperty.ShowDialog)
+                const globalDialogType: DialogType = map.get(AdminStateProperty.ShowDialog)
                 switch (globalDialogType) {
                     case DialogType.CreateEmployee:
                         return "create"
                     case DialogType.EditEmployee:
                         return "edit"
+                    case DialogType.EditEmployeeProfile:
+                        return "profile"
                     default:
                         return "none"
                 }
             }
         })
 
-        this.store.registerProperty(GlobalStateProperty.EditedEmployeeId, 0)
-        this.store.registerField(GlobalStateProperty.EditedEmployeeFirstName, "",
+        this.store.registerProperty(AdminStateProperty.EditedEmployeeId, 0)
+        this.store.registerField(AdminStateProperty.EditedEmployeeFirstName, "",
             [new RequiredFieldValidator(),
                 new MaximalLengthValidator(100)])
-        this.store.registerField(GlobalStateProperty.EditedEmployeeMiddleName, "", [new MaximalLengthValidator(100)])
-        this.store.registerField(GlobalStateProperty.EditedEmployeeLastName, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeeMiddleName, "", [new MaximalLengthValidator(100)])
+        this.store.registerField(AdminStateProperty.EditedEmployeeLastName, "",
             [new RequiredFieldValidator(),
                 new MaximalLengthValidator(100)])
-        this.store.registerField(GlobalStateProperty.EditedEmployeePhone, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeePhone, "",
             [new MaximalLengthValidator(15),
                 new OnlyDigitsValidator()])
-        this.store.registerField(GlobalStateProperty.EditedEmployeeEmail, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeeEmail, "",
             [new MaximalLengthValidator(254),
                 new EmailFormatValidator()])
-        this.store.registerField(GlobalStateProperty.EditedEmployeeAddress, "", [new MaximalLengthValidator(2048)])
+        this.store.registerField(AdminStateProperty.EditedEmployeeAddress, "", [new MaximalLengthValidator(2048)])
 
-        this.store.registerProperty(GlobalStateProperty.EditedEmployeeActive, true)
+        this.store.registerProperty(AdminStateProperty.EditedEmployeeActive, true)
 
-        this.store.registerProperty(GlobalStateProperty.IsEmployeeChangePassword, false)
+        this.store.registerProperty(AdminStateProperty.IsEmployeeChangePassword, false)
 
-        this.store.registerSelector(GlobalStateProperty.IsChangePasswordButtonShow, {
-            dependsOn: [GlobalStateProperty.ShowDialog],
+        this.store.registerSelector(AdminStateProperty.IsChangePasswordButtonShow, {
+            dependsOn: [AdminStateProperty.ShowDialog],
             get: (map: Map<string, any>) => {
                 return this.getShowDialog() === DialogType.EditEmployee
+                    || this.getShowDialog() === DialogType.EditEmployeeProfile
             }
         })
 
-        this.store.registerSelector(GlobalStateProperty.IsChangePasswordObligatory, {
-            dependsOn: [GlobalStateProperty.ShowDialog, GlobalStateProperty.IsEmployeeChangePassword],
+        this.store.registerSelector(AdminStateProperty.IsChangePasswordObligatory, {
+            dependsOn: [AdminStateProperty.ShowDialog, AdminStateProperty.IsEmployeeChangePassword],
             get: (map: Map<string, any>) => {
                 return this.getShowDialog() === DialogType.CreateEmployee || this.isEmployeeChangePassword()
             }
         })
 
-        this.store.registerField(GlobalStateProperty.EditedEmployeeLogin, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeeLogin, "",
             [new RequiredFieldValidator(() => this.isChangePasswordObligatory())])
-        this.store.registerField(GlobalStateProperty.EditedEmployeePassword, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeePassword, "",
             [new RequiredFieldValidator(() => this.isChangePasswordObligatory())])
-        this.store.registerField(GlobalStateProperty.EditedEmployeeConfirmPassword, "",
+        this.store.registerField(AdminStateProperty.EditedEmployeeConfirmPassword, "",
             [new RequiredFieldValidator(() => this.isChangePasswordObligatory()),
                 new ConfirmPasswordValidator(() => this.getEmployeePassword())])
 
-        this.store.registerSelector(GlobalStateProperty.EditEmployeeFormHasErrors,
+        this.store.registerSelector(AdminStateProperty.EditEmployeeFormHasErrors,
             {
-                dependsOn: [GlobalStateProperty.EditedEmployeeFirstName,
-                    GlobalStateProperty.EditedEmployeeMiddleName,
-                    GlobalStateProperty.EditedEmployeeLastName,
-                    GlobalStateProperty.EditedEmployeeEmail,
-                    GlobalStateProperty.EditedEmployeePhone,
-                    GlobalStateProperty.EditedEmployeeLogin,
-                    GlobalStateProperty.EditedEmployeePassword,
-                    GlobalStateProperty.EditedEmployeeConfirmPassword,
+                dependsOn: [AdminStateProperty.EditedEmployeeFirstName,
+                    AdminStateProperty.EditedEmployeeMiddleName,
+                    AdminStateProperty.EditedEmployeeLastName,
+                    AdminStateProperty.EditedEmployeeEmail,
+                    AdminStateProperty.EditedEmployeePhone,
+                    AdminStateProperty.EditedEmployeeLogin,
+                    AdminStateProperty.EditedEmployeePassword,
+                    AdminStateProperty.EditedEmployeeConfirmPassword,
                 ],
                 get: (map: Map<string, any>) => {
-                    return !this.store.fieldsHaveNoErrors([GlobalStateProperty.EditedEmployeeFirstName,
-                        GlobalStateProperty.EditedEmployeeMiddleName,
-                        GlobalStateProperty.EditedEmployeeLastName,
-                        GlobalStateProperty.EditedEmployeePhone,
-                        GlobalStateProperty.EditedEmployeeEmail,
-                        GlobalStateProperty.EditedEmployeeLogin,
-                        GlobalStateProperty.EditedEmployeePassword,
-                        GlobalStateProperty.EditedEmployeeConfirmPassword,
+                    return !this.store.fieldsHaveNoErrors([AdminStateProperty.EditedEmployeeFirstName,
+                        AdminStateProperty.EditedEmployeeMiddleName,
+                        AdminStateProperty.EditedEmployeeLastName,
+                        AdminStateProperty.EditedEmployeePhone,
+                        AdminStateProperty.EditedEmployeeEmail,
+                        AdminStateProperty.EditedEmployeeLogin,
+                        AdminStateProperty.EditedEmployeePassword,
+                        AdminStateProperty.EditedEmployeeConfirmPassword,
                     ])
                 }
             })
     }
 
     public getUserList(): Employee[] {
-        return this.store.getPropertyValue(GlobalStateProperty.UserList)
+        return this.store.getPropertyValue(AdminStateProperty.UserList)
     }
 
     public getUserListById(): Map<number, Employee> {
-        return this.store.getPropertyValue(GlobalStateProperty.UserListById)
+        return this.store.getPropertyValue(AdminStateProperty.UserListById)
     }
 
     public getUserById(id: number): Employee {
@@ -131,7 +134,7 @@ export default class EmployeeNode {
     }
 
     public setUserList(userList: Employee[]) {
-        this.store.setPropertyValue(GlobalStateProperty.UserList, userList)
+        this.store.setPropertyValue(AdminStateProperty.UserList, userList)
     }
 
     public addUser(user: Employee) {
@@ -151,19 +154,19 @@ export default class EmployeeNode {
     }
 
     public isApplicationLoading(): boolean {
-        return this.store.getPropertyValue(GlobalStateProperty.IsApplicationLoading)
+        return this.store.getPropertyValue(AdminStateProperty.IsApplicationLoading)
     }
 
     public setApplicationLoading(applicationLoading: boolean) {
-        this.store.setPropertyValue(GlobalStateProperty.IsApplicationLoading, applicationLoading)
+        this.store.setPropertyValue(AdminStateProperty.IsApplicationLoading, applicationLoading)
     }
 
     public getShowDialog(): DialogType {
-        return this.store.getPropertyValue(GlobalStateProperty.ShowDialog)
+        return this.store.getPropertyValue(AdminStateProperty.ShowDialog)
     }
 
     public setShowDialog(dialogType: DialogType): void {
-        this.store.setPropertyValue(GlobalStateProperty.ShowDialog, dialogType)
+        this.store.setPropertyValue(AdminStateProperty.ShowDialog, dialogType)
     }
 
     public getEditedEmployee(): Employee {
@@ -171,103 +174,103 @@ export default class EmployeeNode {
     }
 
     public getEmployeeId(): number {
-        return this.store.getPropertyValue<number>(GlobalStateProperty.EditedEmployeeId)
+        return this.store.getPropertyValue<number>(AdminStateProperty.EditedEmployeeId)
     }
 
     public setEmployeeId(id: number): void {
-        this.store.setPropertyValue<number>(GlobalStateProperty.EditedEmployeeId, id)
+        this.store.setPropertyValue<number>(AdminStateProperty.EditedEmployeeId, id)
     }
 
     public getEmployeeFirstName(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeFirstName)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeFirstName)
     }
 
     public setEmployeeFirstName(value: string): void {
-        this.store.setFieldValue(GlobalStateProperty.EditedEmployeeFirstName, value)
+        this.store.setFieldValue(AdminStateProperty.EditedEmployeeFirstName, value)
     }
 
     public getEmployeeMiddleName(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeMiddleName)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeMiddleName)
     }
 
     public setEmployeeMiddleName(value: string): void {
-        this.store.setFieldValue(GlobalStateProperty.EditedEmployeeMiddleName, value)
+        this.store.setFieldValue(AdminStateProperty.EditedEmployeeMiddleName, value)
     }
 
     public getEmployeeLastName(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeLastName)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeLastName)
     }
 
     public setEmployeeLastName(value: string): void {
-        this.store.setFieldValue(GlobalStateProperty.EditedEmployeeLastName, value)
+        this.store.setFieldValue(AdminStateProperty.EditedEmployeeLastName, value)
     }
 
     public isEmployeeActive(): boolean {
-        return this.store.getPropertyValue<boolean>(GlobalStateProperty.EditedEmployeeActive)
+        return this.store.getPropertyValue<boolean>(AdminStateProperty.EditedEmployeeActive)
     }
 
     public setEmployeeActive(value: boolean): void {
-        this.store.setPropertyValue<boolean>(GlobalStateProperty.EditedEmployeeActive, value)
+        this.store.setPropertyValue<boolean>(AdminStateProperty.EditedEmployeeActive, value)
     }
 
     public getEmployeePhone(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeePhone)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeePhone)
     }
 
     public setEmployeePhone(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeePhone, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeePhone, value)
     }
 
     public getEmployeeMail(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeEmail)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeEmail)
     }
 
     public setEmployeeMail(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeEmail, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeeEmail, value)
     }
 
     public getEmployeeAddress(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeAddress)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeAddress)
     }
 
     public setEmployeeAddress(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeAddress, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeeAddress, value)
     }
 
     public getEmployeeLogin(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeLogin)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeLogin)
     }
 
     public setEmployeeLogin(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeLogin, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeeLogin, value)
     }
 
     public getEmployeePassword(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeePassword)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeePassword)
     }
 
     public setEmployeePassword(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeePassword, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeePassword, value)
     }
 
     public getEmployeeConfirmPassword(): string {
-        return this.store.getFieldValue<string>(GlobalStateProperty.EditedEmployeeConfirmPassword)
+        return this.store.getFieldValue<string>(AdminStateProperty.EditedEmployeeConfirmPassword)
     }
 
     public setEmployeeConfirmPassword(value: string): void {
-        this.store.setFieldValue<string>(GlobalStateProperty.EditedEmployeeConfirmPassword, value)
+        this.store.setFieldValue<string>(AdminStateProperty.EditedEmployeeConfirmPassword, value)
     }
 
     public isEmployeeChangePassword(): boolean {
-        return this.store.getPropertyValue<boolean>(GlobalStateProperty.IsEmployeeChangePassword)
+        return this.store.getPropertyValue<boolean>(AdminStateProperty.IsEmployeeChangePassword)
     }
 
     public setEmployeeChangePassword(value: boolean): void {
-        this.store.setPropertyValue<boolean>(GlobalStateProperty.IsEmployeeChangePassword, value)
+        this.store.setPropertyValue<boolean>(AdminStateProperty.IsEmployeeChangePassword, value)
     }
 
     public isChangePasswordObligatory(): boolean {
-        return this.store.getPropertyValue<boolean>(GlobalStateProperty.IsChangePasswordObligatory)
+        return this.store.getPropertyValue<boolean>(AdminStateProperty.IsChangePasswordObligatory)
     }
 
     public buildEmployeeBasedOnFields(): Employee {
@@ -302,7 +305,7 @@ export default class EmployeeNode {
                 || this.getEmployeePassword() != ""
         } else {
             const editedEmployee = this.getEditedEmployee()
-            return this.getShowDialog() == DialogType.EditEmployee
+            return (this.getShowDialog() == DialogType.EditEmployee || this.getShowDialog() == DialogType.EditEmployeeProfile)
                 && (this.getEmployeeFirstName() != editedEmployee.firstName
                     || this.getEmployeeMiddleName() != editedEmployee.middleName
                     || this.getEmployeeLastName() != editedEmployee.lastName

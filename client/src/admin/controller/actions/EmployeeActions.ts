@@ -1,13 +1,10 @@
 import AdminAppController from "../AdminAppController";
-import {
-    extractData,
-    fetchUserZoneRpc,
-} from "../../../core/utils/HttpUtils";
+import {fetchUserZoneRpc,} from "../../../core/utils/HttpUtils";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
 import {DialogType} from "../../state/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
-import {GlobalStateProperty} from "../../state/AdminApplicationState";
+import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 
 export default class EmployeeActions {
@@ -34,27 +31,27 @@ export default class EmployeeActions {
         this.node.setShowDialog(DialogType.CreateEmployee)
 
         this.node.setEmployeeFirstName("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeFirstName, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeFirstName, false)
 
         this.node.setEmployeeMiddleName("")
 
         this.node.setEmployeeLastName("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLastName, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLastName, false)
 
         this.node.setEmployeeActive(true)
         this.node.setEmployeePhone("")
         this.node.setEmployeeMail("")
         this.node.setEmployeeAddress("")
         this.node.setEmployeeLogin("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLogin, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeePassword, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
         this.node.setEmployeeConfirmPassword("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeConfirmPassword, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
     }
 
-    public openEditEmployeeDialog(user: Employee): void {
-        this.node.setShowDialog(DialogType.EditEmployee)
+    public openEditEmployeeDialog(user: Employee, editProfile: boolean = false): void {
+        this.node.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
         this.node.setEmployeeId(user.id ? user.id : 0)
         this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
         this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
@@ -63,11 +60,11 @@ export default class EmployeeActions {
         this.node.setEmployeePhone(user.phone != null ? user.phone : "")
         this.node.setEmployeeMail(user.email != null ? user.email : "")
         this.node.setEmployeeAddress(user.address != null ? user.address : "")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeLogin, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeePassword, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
         this.node.setEmployeeConfirmPassword("")
-        this.controller.toggleFieldValidation(GlobalStateProperty.EditedEmployeeConfirmPassword, false)
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
     }
 
     public setEmployeeActive(value: boolean): void {
@@ -103,6 +100,9 @@ export default class EmployeeActions {
             ],
             successCallback: (result) => {
                 this.node.updateUser(this.node.buildEmployeeBasedOnFields())
+                if (this.node.getEmployeeId() == this.controller.getLoggedInUser().id) {
+                    this.controller.setLoggedInUser(this.node.buildEmployeeBasedOnFields())
+                }
                 this.node.setShowDialog(DialogType.None)
             },
         })

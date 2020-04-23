@@ -1,7 +1,6 @@
 import * as React from "react";
 import {vetTheme} from "../common/themes";
 import {MuiThemeProvider, Theme} from "../../node_modules/@material-ui/core/styles/index";
-import {AppHeader} from "../core/components";
 import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
 import UserListPage from "./components/userlist/UserListPage";
@@ -12,11 +11,12 @@ import {ApplicationType} from "../core/enum/ApplicationType";
 import ApplicationHolder from "../core/utils/ApplicationHolder";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
-import {Tab} from "@material-ui/core";
 import ErrorModal from "../core/components/errrorModal/ErrorModal";
-import {GlobalStateProperty} from "./state/AdminApplicationState";
-import MaskTransformer from "../core/utils/MaskTransformer";
+import {AdminStateProperty} from "./state/AdminApplicationState";
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
+import ApplicationHeader from "../common/components/applicationHeader/ApplicationHeader";
+import {Employee} from "../common/beans/Employee";
+import {log} from "util";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -28,6 +28,7 @@ export default class AdminApp extends React.Component<Properties, State> {
         super(props);
         this.state = {
             [StateProperty.IsLoading]: true,
+            [StateProperty.LoggedInUser]: null,
         }
         ApplicationHolder.initialize(ApplicationType.Admin)
         //TODO: remove from here
@@ -37,11 +38,17 @@ export default class AdminApp extends React.Component<Properties, State> {
     }
 
     render() {
+        const loggedInUser = this.state[StateProperty.LoggedInUser] as Employee | null
         return (
             <MuiThemeProvider theme={CURRENT_THEME}>
-                <AppHeader position={"static"}>
-                    <Tab label={"Users list"}/>
-                </AppHeader>
+                <ApplicationHeader
+                    userName={loggedInUser ? (loggedInUser.lastName + " " + loggedInUser.firstName) : ""}
+                    onLogOutClick={() => this.controller.logout()}
+                    onUserNameClick={() => {
+                        if (loggedInUser) {
+                            this.controller.employeeActions.openEditEmployeeDialog(loggedInUser, true)
+                        }
+                    }}/>
                 <AppContent visible={!this.state.isLoading}>
                     <UserListPage/>
                 </AppContent>
@@ -54,17 +61,20 @@ export default class AdminApp extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(GlobalStateProperty.IsApplicationLoading, this, StateProperty.IsLoading)
+        this.controller.subscribe(AdminStateProperty.IsApplicationLoading, this, StateProperty.IsLoading)
+        this.controller.subscribe(AdminStateProperty.LoggedInEmployee, this, StateProperty.LoggedInUser)
         this.controller.startApplication()
     }
 }
 
 enum StateProperty {
-    IsLoading = "isLoading"
+    IsLoading = "isLoading",
+    LoggedInUser = "loggedInUser",
 }
 
 type Properties = {}
 
 type State = {
     [StateProperty.IsLoading]: boolean,
+    [StateProperty.LoggedInUser]: Employee | null,
 }
