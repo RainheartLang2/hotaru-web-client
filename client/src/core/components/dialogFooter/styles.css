@@ -1,0 +1,10 @@
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.footerButton {
+    padding-left: 10px;
+}
