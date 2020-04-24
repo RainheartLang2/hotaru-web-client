@@ -13,6 +13,7 @@ export default class AdminApplicationState extends ApplicationStore {
     private constructor() {
         super()
         this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
+        this.registerProperty(AdminStateProperty.IsPageLoading, true)
         this.registerProperty(AdminStateProperty.PageType, PageType.None)
         this.registerProperty(AdminStateProperty.DialogType, DialogType.None)
         this.registerSelector(AdminStateProperty.NavigationMenuType, {
@@ -67,6 +68,7 @@ export default class AdminApplicationState extends ApplicationStore {
 
 export enum AdminStateProperty {
     IsApplicationLoading = "isApplicationLoading",
+    IsPageLoading = "isPageLoading",
     LoggedInEmployee = "LoggedInEmployee",
     NavigationMenuType = "navigationMenuType",
     PageType = "pageType",

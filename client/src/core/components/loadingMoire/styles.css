@@ -1,0 +1,16 @@
+.delayedMoire {
+    visibility: visible;
+    animation: delay 200ms ease-in-out;
+}
+
+@keyframes delay {
+    from {
+        visibility: hidden;
+    }
+    99% {
+        visibility: hidden;
+    }
+    to {
+        visibility: visible;
+    }
+}

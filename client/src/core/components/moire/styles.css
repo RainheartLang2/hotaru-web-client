@@ -11,10 +11,14 @@
     opacity: 0.9;
 }
 
-.hidden {
+.fading {
     visibility: hidden;
     opacity: 0;
-    animation: hide 1.5s ease-in-out;
+    animation: hide 1s ease-in;
+}
+
+.hidden {
+    display: none;
 }
 
 @keyframes hide {

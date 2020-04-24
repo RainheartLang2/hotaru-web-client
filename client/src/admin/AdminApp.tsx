@@ -3,7 +3,6 @@ import {vetTheme} from "../common/themes";
 import {MuiThemeProvider, Theme} from "../../node_modules/@material-ui/core/styles/index";
 import Footer from "../core/components/footer/Footer";
 import AppContent from "../core/components/appContent/AppContent";
-import UserListPage from "./components/userlist/UserListPage";
 import AdminAppController from "./controller/AdminAppController";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 import AdminDialogsContainer from "./containers/AdminDialogsContainer";
@@ -16,9 +15,7 @@ import {AdminStateProperty} from "./state/AdminApplicationState";
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import ApplicationHeader from "../common/components/applicationHeader/ApplicationHeader";
 import {Employee} from "../common/beans/Employee";
-import {log} from "util";
 import AdminPagesContainer from "./components/pages/AdminPagesContainer";
-import {AppBar, Tab, Tabs} from "@material-ui/core";
 import NavigationMenu from "./components/navigationMenu/NavigationMenu";
 
 export let CURRENT_THEME: Theme = vetTheme;
@@ -58,7 +55,7 @@ export default class AdminApp extends React.Component<Properties, State> {
                     <AdminPagesContainer controller={this.controller}/>
                 </AppContent>
                 <AdminDialogsContainer/>
-                <LoadingMoire visible={this.state.isLoading}/>
+                <LoadingMoire visible={this.state.isLoading} fading={true}/>
                 <ErrorModal controller={this.controller}/>
                 <Footer/>
             </MuiThemeProvider>

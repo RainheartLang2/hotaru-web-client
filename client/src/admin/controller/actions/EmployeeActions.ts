@@ -24,6 +24,7 @@ export default class EmployeeActions {
                 this.node.setUserList(plainToClass(Employee, result) as Employee[])
                 callback()
             },
+            loadingProperty: AdminStateProperty.IsPageLoading,
         })
     }
 

@@ -5,8 +5,9 @@
 }
 
 .appContent {
+    position: relative;
     min-height: 600px;
-    padding: 100px 0;
+    margin: 100px 0;
     min-width: 800px;
     max-width: 1100px;
 }
