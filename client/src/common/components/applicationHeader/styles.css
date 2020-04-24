@@ -1,3 +1,12 @@
+.applicationHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navigationMenu {
+
+}
+
 .profileAreaWrapper {
     display: flex;
     justify-content: flex-end;

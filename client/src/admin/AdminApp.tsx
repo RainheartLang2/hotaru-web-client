@@ -17,6 +17,9 @@ import ApplicationControllerHolder from "../core/utils/ApplicationControllerHold
 import ApplicationHeader from "../common/components/applicationHeader/ApplicationHeader";
 import {Employee} from "../common/beans/Employee";
 import {log} from "util";
+import AdminPagesContainer from "./components/pages/AdminPagesContainer";
+import {AppBar, Tab, Tabs} from "@material-ui/core";
+import NavigationMenu from "./components/navigationMenu/NavigationMenu";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -48,9 +51,11 @@ export default class AdminApp extends React.Component<Properties, State> {
                         if (loggedInUser) {
                             this.controller.employeeActions.openEditEmployeeDialog(loggedInUser, true)
                         }
-                    }}/>
+                    }}>
+                    <NavigationMenu controller={this.controller}/>
+                </ApplicationHeader>
                 <AppContent visible={!this.state.isLoading}>
-                    <UserListPage/>
+                    <AdminPagesContainer controller={this.controller}/>
                 </AppContent>
                 <AdminDialogsContainer/>
                 <LoadingMoire visible={this.state.isLoading}/>

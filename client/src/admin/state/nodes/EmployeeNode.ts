@@ -33,9 +33,9 @@ export default class EmployeeNode {
         })
 
         this.store.registerSelector(AdminStateProperty.EmployeeDialogType, {
-            dependsOn: [AdminStateProperty.ShowDialog],
+            dependsOn: [AdminStateProperty.DialogType],
             get: map => {
-                const globalDialogType: DialogType = map.get(AdminStateProperty.ShowDialog)
+                const globalDialogType: DialogType = map.get(AdminStateProperty.DialogType)
                 switch (globalDialogType) {
                     case DialogType.CreateEmployee:
                         return "create"
@@ -70,7 +70,7 @@ export default class EmployeeNode {
         this.store.registerProperty(AdminStateProperty.IsEmployeeChangePassword, false)
 
         this.store.registerSelector(AdminStateProperty.IsChangePasswordButtonShow, {
-            dependsOn: [AdminStateProperty.ShowDialog],
+            dependsOn: [AdminStateProperty.DialogType],
             get: (map: Map<string, any>) => {
                 return this.getShowDialog() === DialogType.EditEmployee
                     || this.getShowDialog() === DialogType.EditEmployeeProfile
@@ -78,7 +78,7 @@ export default class EmployeeNode {
         })
 
         this.store.registerSelector(AdminStateProperty.IsChangePasswordObligatory, {
-            dependsOn: [AdminStateProperty.ShowDialog, AdminStateProperty.IsEmployeeChangePassword],
+            dependsOn: [AdminStateProperty.DialogType, AdminStateProperty.IsEmployeeChangePassword],
             get: (map: Map<string, any>) => {
                 return this.getShowDialog() === DialogType.CreateEmployee || this.isEmployeeChangePassword()
             }
@@ -162,11 +162,11 @@ export default class EmployeeNode {
     }
 
     public getShowDialog(): DialogType {
-        return this.store.getPropertyValue(AdminStateProperty.ShowDialog)
+        return this.store.getPropertyValue(AdminStateProperty.DialogType)
     }
 
     public setShowDialog(dialogType: DialogType): void {
-        this.store.setPropertyValue(AdminStateProperty.ShowDialog, dialogType)
+        this.store.setPropertyValue(AdminStateProperty.DialogType, dialogType)
     }
 
     public getEditedEmployee(): Employee {

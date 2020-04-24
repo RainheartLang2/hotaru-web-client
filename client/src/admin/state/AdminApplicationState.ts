@@ -2,6 +2,8 @@ import {DialogType} from "./DialogType";
 import EmployeeNode from "./nodes/EmployeeNode";
 import ApplicationStore from "../../core/mvc/store/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
+import {PageType} from "./PageType";
+import {NavigationMenuType} from "./NavigationMenuType";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -11,7 +13,18 @@ export default class AdminApplicationState extends ApplicationStore {
     private constructor() {
         super()
         this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
-        this.registerProperty(AdminStateProperty.ShowDialog, DialogType.None)
+        this.registerProperty(AdminStateProperty.PageType, PageType.None)
+        this.registerProperty(AdminStateProperty.DialogType, DialogType.None)
+        this.registerSelector(AdminStateProperty.NavigationMenuType, {
+            dependsOn: [AdminStateProperty.PageType],
+            get: map => {
+                switch (this.getPropertyValue(AdminStateProperty.PageType)) {
+                    case PageType.UserList: return NavigationMenuType.UserList
+                    case PageType.ClinicList: return NavigationMenuType.ClinicList
+                    default: return NavigationMenuType.None
+                }
+            }
+        })
         this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
         this._employeeNode = new EmployeeNode(this.friend)
     }
@@ -35,12 +48,12 @@ export default class AdminApplicationState extends ApplicationStore {
         this.setPropertyValue(AdminStateProperty.IsApplicationLoading, applicationLoading)
     }
 
-    public getShowDialog(): DialogType {
-        return this.getPropertyValue(AdminStateProperty.ShowDialog)
+    public setDialogType(dialogType: DialogType): void {
+        this.setPropertyValue(AdminStateProperty.DialogType, dialogType)
     }
 
-    public setShowDialog(dialogType: DialogType): void {
-        this.setPropertyValue(AdminStateProperty.ShowDialog, dialogType)
+    public setPageType(pageType: PageType): void {
+        this.setPropertyValue<PageType>(AdminStateProperty.PageType, pageType)
     }
 
     public getLoggedInUser(): Employee {
@@ -55,7 +68,9 @@ export default class AdminApplicationState extends ApplicationStore {
 export enum AdminStateProperty {
     IsApplicationLoading = "isApplicationLoading",
     LoggedInEmployee = "LoggedInEmployee",
-    ShowDialog = "showDialog",
+    NavigationMenuType = "navigationMenuType",
+    PageType = "pageType",
+    DialogType = "dialogType",
     UserList = "userList",
     UserListById = "userListById",
     EmployeeDialogType = "employeeDialogType",

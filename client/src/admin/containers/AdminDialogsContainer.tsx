@@ -11,14 +11,14 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            [AdminStateProperty.ShowDialog]: DialogType.None,
+            [AdminStateProperty.DialogType]: DialogType.None,
         }
 
         this.controller = AdminAppController.instance
     }
 
     render() {
-        const dialogType = this.state[AdminStateProperty.ShowDialog]
+        const dialogType = this.state[AdminStateProperty.DialogType]
         return (
             <>
                 <EditEmployeeDialog open={dialogType === DialogType.CreateEmployee
@@ -30,10 +30,10 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(AdminStateProperty.ShowDialog, this)
+        this.controller.subscribe(AdminStateProperty.DialogType, this)
     }
 }
 
 type State = {
-    [AdminStateProperty.ShowDialog]: DialogType,
+    [AdminStateProperty.DialogType]: DialogType,
 }

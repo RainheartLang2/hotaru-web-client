@@ -1,12 +1,11 @@
-import AdminApplicationState, {
-    AdminStateProperty
-} from "../state/AdminApplicationState";
+import AdminApplicationState, {AdminStateProperty} from "../state/AdminApplicationState";
 import {DialogType} from "../state/DialogType";
 import ApplicationController from "../../core/mvc/ApplicationController";
 import EmployeeActions from "./actions/EmployeeActions";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
+import {PageType} from "../state/PageType";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
@@ -41,11 +40,23 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public startApplication(): void {
         this.applicationStore.setApplicationLoading(true)
-        this._employeeActions.loadUsersList(() => {
-            this.loadLoggedInUser(() => {
+        this.loadLoggedInUser(() => {
+            this.openUserListPage(() => {
                 this.getApplicationState().setApplicationLoading(false)
             })
         })
+    }
+
+    public openUserListPage(callback: Function = () => {}): void {
+        this.applicationStore.setPageType(PageType.UserList)
+        this._employeeActions.loadUsersList(() => {
+            callback()
+        })
+    }
+
+    public openClinicListPage(callback: Function = () => {}): void {
+        this.applicationStore.setPageType(PageType.ClinicList)
+        callback()
     }
 
     public logout(): void {
@@ -66,7 +77,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public closeCurrentDialog(): void {
-        this.applicationStore.setShowDialog(DialogType.None)
+        this.applicationStore.setDialogType(DialogType.None)
     }
 
     protected getApplicationState(): AdminApplicationState {
