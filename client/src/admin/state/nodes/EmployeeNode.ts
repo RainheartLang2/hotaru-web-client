@@ -8,6 +8,7 @@ import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValida
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import ConfirmPasswordValidator from "../../../core/mvc/validators/ConfirmPasswordValidator";
 import {Login} from "../../../common/beans/Login";
+import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
 export default class EmployeeNode {
     private store: ApplicationStoreFriend
@@ -20,15 +21,7 @@ export default class EmployeeNode {
             dependsOn: [AdminStateProperty.UserList],
             get: map => {
                 const userList: Employee[] = map.get(AdminStateProperty.UserList) as Employee[]
-                const result = new Map<number, Employee>()
-                userList.forEach(user => {
-                    if (!user.id) {
-                        throw new Error("user without id should not be in the store")
-                    }
-                    result.set(user.id, user)
-                })
-
-                return result
+                return CollectionUtils.mapArrayByPredicate(userList, employee => employee.id)
             }
         })
 

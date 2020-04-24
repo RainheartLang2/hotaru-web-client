@@ -8,6 +8,7 @@ import {Link, TableCell} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
 import EmployeeActions from "../../controller/actions/EmployeeActions";
 import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";
+import ActivityCell from "../../../core/components/activityCell/ActivityCell";
 
 var styles = require("./styles.css");
 
@@ -23,18 +24,19 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
         this.actions = AdminAppController.instance.employeeActions
     }
 
-    private getActiveLabelKey(isActive?: boolean): string {
-        return isActive
-            ? "dialog.employee.control.active.label"
-            : "dialog.employee.control.notActive.label"
-    }
-
     private delete(userId?: number): void {
         if (userId) {
             this.actions.deleteEmployee(userId)
         } else {
             throw new Error("user has no id")
         }
+    }
+
+    private getUserMiddleName(user: Employee): string {
+        return user.middleName ? user.middleName : ""
+    }
+    private getUserName(user: Employee): string {
+        return `${user.lastName}, ${user.firstName} ${this.getUserMiddleName(user)}`
     }
 
     render() {
@@ -56,20 +58,18 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
-                        {this.state.userList.map(user => {
+                        {this.state[StateProperty.UserList].map(user => {
                             return (<TableRowCmp key={user.id}>
                                 <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"
                                         onClick={() => this.actions.openEditEmployeeDialog(user)}
                                     >
-                                        {`${user.lastName}, ${user.firstName} ${user.middleName}`}
+                                        {this.getUserName(user)}
                                     </Link>
                                 </CustomTableCell>
                                 <CustomTableCell style={styles.activeCell}>
-                                    <div className={user.active ? styles.activeLabel : styles.notActiveLabel}>
-                                        <Message messageKey={this.getActiveLabelKey(user.active)}/>
-                                    </div>
+                                    <ActivityCell isActive={user.active}/>
                                 </CustomTableCell>
                                 <CustomTableCell style={styles.actionsCell}>
                                     <Link

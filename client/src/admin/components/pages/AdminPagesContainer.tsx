@@ -19,7 +19,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
         const currentPage = this.state[StateProperty.CurrentPage]
         return (<>
             {currentPage == PageType.UserList && (<UserListPage/>)}
-            {currentPage == PageType.ClinicList && (<ClinicsPage/>)}
+            {currentPage == PageType.ClinicList && (<ClinicsPage controller={this.props.controller}/>)}
 
             <LoadingMoire delay={true} visible={this.state[StateProperty.IsLoading]}/>
         </>)

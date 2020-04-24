@@ -6,15 +6,18 @@ import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
 import {PageType} from "../state/PageType";
+import ClinicActions from "./actions/ClinicActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
 
     private _employeeActions: EmployeeActions
+    private _clinicActions: ClinicActions
 
     private constructor() {
         super(AdminApplicationState.instance)
         this._employeeActions = new EmployeeActions(this, this.applicationStore.employeeNode)
+        this._clinicActions = new ClinicActions(this, this.applicationStore.clinicNode)
     }
 
     public static get instance(): AdminAppController {
@@ -35,7 +38,11 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     get employeeActions(): EmployeeActions {
-        return this._employeeActions;
+        return this._employeeActions
+    }
+
+    get clinicActions(): ClinicActions {
+        return this._clinicActions
     }
 
     public startApplication(): void {
@@ -56,7 +63,9 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openClinicListPage(callback: Function = () => {}): void {
         this.applicationStore.setPageType(PageType.ClinicList)
-        callback()
+        this._clinicActions.loadClinicList(() => {
+            callback()
+        })
     }
 
     public logout(): void {

@@ -4,11 +4,13 @@ import ApplicationStore from "../../core/mvc/store/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {PageType} from "./PageType";
 import {NavigationMenuType} from "./NavigationMenuType";
+import ClinicNode from "./nodes/ClinicNode";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
 
     private _employeeNode: EmployeeNode
+    private _clinicNode: ClinicNode
 
     private constructor() {
         super()
@@ -28,10 +30,15 @@ export default class AdminApplicationState extends ApplicationStore {
         })
         this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
         this._employeeNode = new EmployeeNode(this.friend)
+        this._clinicNode = new ClinicNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {
         return this._employeeNode;
+    }
+
+    get clinicNode(): ClinicNode {
+        return this._clinicNode
     }
 
     public static get instance(): AdminApplicationState {
@@ -67,12 +74,15 @@ export default class AdminApplicationState extends ApplicationStore {
 }
 
 export enum AdminStateProperty {
+    //Common
     IsApplicationLoading = "isApplicationLoading",
     IsPageLoading = "isPageLoading",
     LoggedInEmployee = "LoggedInEmployee",
     NavigationMenuType = "navigationMenuType",
     PageType = "pageType",
     DialogType = "dialogType",
+
+    //EmployeeNode
     UserList = "userList",
     UserListById = "userListById",
     EmployeeDialogType = "employeeDialogType",
@@ -91,4 +101,9 @@ export enum AdminStateProperty {
     IsChangePasswordButtonShow = "isChangePasswordButtonShow",
     IsChangePasswordObligatory = "IsChangePasswordObligatory",
     EditEmployeeFormHasErrors = "editEmployeFormHasErrors",
+
+    //ClinicNode
+    ClinicList = "clinicList",
+    ClinicListById = "clinicListById",
+
 }

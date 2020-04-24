@@ -14,7 +14,7 @@ export default class EmployeeActions {
     constructor(controller: AdminAppController,
                 store: EmployeeNode) {
         this.controller = controller
-        this.node = store;
+        this.node = store
     }
 
     public loadUsersList(callback: Function): void {

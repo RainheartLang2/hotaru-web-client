@@ -1,11 +1,3 @@
-.activeLabel {
-    color: limegreen;
-}
-
-.notActiveLabel {
-    color: tomato;
-}
-
 .nameCell {
     min-width: 368px;
 }
