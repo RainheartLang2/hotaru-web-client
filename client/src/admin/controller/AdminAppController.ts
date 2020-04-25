@@ -68,6 +68,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         })
     }
 
+    public setShowDialog(dialogType: DialogType): void {
+        this.applicationStore.setPropertyValue(AdminStateProperty.DialogType, dialogType)
+    }
+
     public logout(): void {
         fetchPreloginRpc({
             method: RemoteMethods.employeeLogout,

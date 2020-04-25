@@ -29,7 +29,7 @@ export default class EmployeeActions {
     }
 
     public openCreateEmployeeDialog(): void {
-        this.node.setShowDialog(DialogType.CreateEmployee)
+        this.controller.setShowDialog(DialogType.CreateEmployee)
 
         this.node.setEmployeeFirstName("")
         this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeFirstName, false)
@@ -52,7 +52,7 @@ export default class EmployeeActions {
     }
 
     public openEditEmployeeDialog(user: Employee, editProfile: boolean = false): void {
-        this.node.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
+        this.controller.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
         this.node.setEmployeeId(user.id ? user.id : 0)
         this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
         this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
@@ -85,7 +85,7 @@ export default class EmployeeActions {
             successCallback: (result) => {
                 employee.id = +result
                 this.node.addUser(employee)
-                this.node.setShowDialog(DialogType.None)
+                this.controller.closeCurrentDialog()
             },
         })
     }
@@ -104,7 +104,7 @@ export default class EmployeeActions {
                 if (this.node.getEmployeeId() == this.controller.getLoggedInUser().id) {
                     this.controller.setLoggedInUser(this.node.buildEmployeeBasedOnFields())
                 }
-                this.node.setShowDialog(DialogType.None)
+                this.controller.closeCurrentDialog()
             },
         })
     }

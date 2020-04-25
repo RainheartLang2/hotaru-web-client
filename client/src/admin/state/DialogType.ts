@@ -3,4 +3,6 @@ export enum DialogType {
     CreateEmployee,
     EditEmployee,
     EditEmployeeProfile,
+    CreateClinic,
+    EditClinic,
 }

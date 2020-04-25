@@ -158,10 +158,6 @@ export default class EmployeeNode {
         return this.store.getPropertyValue(AdminStateProperty.DialogType)
     }
 
-    public setShowDialog(dialogType: DialogType): void {
-        this.store.setPropertyValue(AdminStateProperty.DialogType, dialogType)
-    }
-
     public getEditedEmployee(): Employee {
         return this.getUserById(this.getEmployeeId())
     }

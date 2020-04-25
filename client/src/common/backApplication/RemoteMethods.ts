@@ -27,6 +27,9 @@ export namespace RemoteMethods {
     export const deleteEmployee = new RemoteMethod(employeeService, deleteAction)
 
     export const getAllClinics = new RemoteMethod(clinicService, getAllAction)
+    export const addClinic = new RemoteMethod(clinicService, addAction)
+    export const editClinic = new RemoteMethod(clinicService, editAction)
+    export const deleteClinic = new RemoteMethod(clinicService, deleteAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

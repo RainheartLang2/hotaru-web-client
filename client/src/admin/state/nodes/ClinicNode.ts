@@ -3,6 +3,7 @@ import {AdminStateProperty} from "../AdminApplicationState";
 import {Employee} from "../../../common/beans/Employee";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Clinic} from "../../../common/beans/Clinic";
+import {DialogType} from "../DialogType";
 
 export default class ClinicNode {
     private store: ApplicationStoreFriend
@@ -18,6 +19,21 @@ export default class ClinicNode {
                 return CollectionUtils.mapArrayByPredicate(clinicList, clinic => clinic.id)
             }
         })
+
+        this.store.registerSelector(AdminStateProperty.ClinicDialogType, {
+            dependsOn: [AdminStateProperty.DialogType],
+            get: map => {
+                const globalDialogType: DialogType = map.get(AdminStateProperty.DialogType)
+                switch (globalDialogType) {
+                    case DialogType.CreateClinic:
+                        return "create"
+                    case DialogType.EditClinic:
+                        return "edit"
+                    default:
+                        return "none"
+                }
+            }
+        })
     }
 
     public getClinicList(): Clinic[] {
@@ -30,5 +46,10 @@ export default class ClinicNode {
 
     public setClinicList(clinicList: Clinic[]) {
         this.store.setPropertyValue(AdminStateProperty.ClinicList, clinicList)
+    }
+
+    public deleteClinic(id: number) {
+        const clinics = this.getClinicList().filter(clinic => clinic.id != id)
+        this.setClinicList(clinics)
     }
 }

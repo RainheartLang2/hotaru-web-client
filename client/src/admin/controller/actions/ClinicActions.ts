@@ -1,12 +1,11 @@
 import AdminAppController from "../AdminAppController";
-import EmployeeNode from "../../state/nodes/EmployeeNode";
 import ClinicNode from "../../state/nodes/ClinicNode";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
-import {Employee} from "../../../common/beans/Employee";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {Clinic} from "../../../common/beans/Clinic";
+import {DialogType} from "../../state/DialogType";
 
 export default class ClinicActions {
     private controller: AdminAppController
@@ -26,6 +25,18 @@ export default class ClinicActions {
                 callback()
             },
             loadingProperty: AdminStateProperty.IsPageLoading,
+        })
+    }
+
+    public openCreateDialog(): void {
+        this.controller.setShowDialog(DialogType.CreateClinic)
+    }
+
+    public deleteClinic(id: number): void {
+        fetchUserZoneRpc({
+            method: RemoteMethods.deleteClinic,
+            params: [id],
+            successCallback: (result) => this.node.deleteClinic(id),
         })
     }
 }

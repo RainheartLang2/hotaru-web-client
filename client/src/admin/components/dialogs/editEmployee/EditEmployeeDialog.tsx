@@ -1,6 +1,5 @@
 import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
 import AdminAppController from "../../../controller/AdminAppController";
 import {Message} from "../../../../core/components/Message";
 import EmployeeActions from "../../../controller/actions/EmployeeActions";
@@ -45,20 +44,20 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
 
     private getTitleMessageKey(): string {
         switch (this.state[StateProperty.Mode]) {
-            case "create": return "dialog.employee.create.label"
-            case "edit": return "dialog.employee.edit.label"
-            case "profile": return "dialog.employee.profile.label"
-            default: return "dialog.employee.create.label"
+            case "create":
+                return "dialog.employee.create.label"
+            case "edit":
+                return "dialog.employee.edit.label"
+            case "profile":
+                return "dialog.employee.profile.label"
+            default:
+                return "dialog.employee.create.label"
         }
     }
 
     render() {
         return (
-            <Dialog open={this.props.open}
-                    fullWidth={true}
-                    maxWidth="md"
-                    onBackdropClick={() => this.closeDialog()}
-                    onClose={() => this.closeDialog()}>
+            <>
                 <DialogTitle>
                     <Message messageKey={this.getTitleMessageKey()}
                     />
@@ -80,15 +79,13 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                                 styles={styles}/>
                         </div>
                     </div>
-                    <div className={styles.footer}>
-                        <DialogFooter
-                            submitDisabled={this.state[StateProperty.HasErrors]}
-                            onSubmitClick={() => this.onSubmitButtonClick()}
-                            onCancelClick={() => this.closeDialog()}
-                        />
-                    </div>
+                    <DialogFooter
+                        submitDisabled={this.state[StateProperty.HasErrors]}
+                        onSubmitClick={() => this.onSubmitButtonClick()}
+                        onCancelClick={() => this.closeDialog()}
+                    />
                 </DialogContent>
-            </Dialog>
+            </>
         )
     }
 
@@ -105,9 +102,7 @@ enum StateProperty {
     HasErrors = "hasErrors",
 }
 
-type Properties = {
-    open: boolean
-}
+type Properties = {}
 
 type State = {
     [StateProperty.Mode]: ConfigureDialogType,

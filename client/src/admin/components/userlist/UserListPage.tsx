@@ -1,10 +1,10 @@
 import * as React from "react";
-import {TableBodyCmp, TableCellCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
+import {TableBodyCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
-import {Link, TableCell} from "@material-ui/core";
+import {Link} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
 import EmployeeActions from "../../controller/actions/EmployeeActions";
 import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";

@@ -22,6 +22,8 @@
       "common.employee.name": "Имя",
       "page.clinics.title": "Клиники",
       "page.clinics.name.title": "Название клиники",
+      "dialog.clinic.create.label": "Создание новой клиники",
+      "dialog.clinic.edit.label": "Редактирование клиники",
       "page.userList.title": "Сотрудники",
       "dialog.employee.create.label": "Создание нового сотрудника",
       "dialog.employee.edit.label": "Редактирование сотрудника",

@@ -3,6 +3,8 @@ import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeD
 import {DialogType} from "../state/DialogType";
 import AdminAppController from "../controller/AdminAppController";
 import {AdminStateProperty} from "../state/AdminApplicationState";
+import {Dialog} from "@material-ui/core";
+import ClinicDialog from "../components/dialogs/clinic/ClinicDialog";
 
 export default class AdminDialogsContainer extends React.Component<{}, State> {
 
@@ -11,20 +13,34 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            [AdminStateProperty.DialogType]: DialogType.None,
+            [StateProperty.DialogType]: DialogType.None,
+            [StateProperty.IsLoading]: false,
+            [StateProperty.ShowDialog]: false,
         }
 
         this.controller = AdminAppController.instance
+    }
+
+    private closeDialog() {
+        this.controller.closeCurrentDialog()
     }
 
     render() {
         const dialogType = this.state[AdminStateProperty.DialogType]
         return (
             <>
-                <EditEmployeeDialog open={dialogType === DialogType.CreateEmployee
-                || dialogType === DialogType.EditEmployee
-                || dialogType === DialogType.EditEmployeeProfile}
-                />
+                <Dialog open={dialogType != DialogType.None}
+                        maxWidth="md"
+                        onBackdropClick={() => this.closeDialog()}
+                        onClose={() => this.closeDialog()}>
+                    {(dialogType == DialogType.CreateEmployee
+                        || dialogType == DialogType.EditEmployee
+                        || dialogType == DialogType.EditEmployeeProfile)
+                    && (<EditEmployeeDialog/>)}
+
+                    {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
+                        && (<ClinicDialog controller={this.controller}/>)}
+                </Dialog>
             </>
         )
     }
@@ -34,6 +50,14 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
     }
 }
 
+enum StateProperty {
+    DialogType = "dialogType",
+    IsLoading = "isLoading",
+    ShowDialog = "showDialog",
+}
+
 type State = {
-    [AdminStateProperty.DialogType]: DialogType,
+    [StateProperty.DialogType]: DialogType,
+    [StateProperty.IsLoading]: boolean,
+    [StateProperty.ShowDialog]: boolean,
 }

@@ -16,8 +16,17 @@ export default class AdminApplicationState extends ApplicationStore {
         super()
         this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
         this.registerProperty(AdminStateProperty.IsPageLoading, true)
+        this.registerProperty(AdminStateProperty.IsDialogLoading, false)
         this.registerProperty(AdminStateProperty.PageType, PageType.None)
         this.registerProperty(AdminStateProperty.DialogType, DialogType.None)
+        this.registerSelector(AdminStateProperty.ShowDialog, {
+            dependsOn: [AdminStateProperty.IsDialogLoading, AdminStateProperty.DialogType],
+            get: map => {
+                const isLoading = map.get(AdminStateProperty.IsDialogLoading) as boolean
+                const dialogType = map.get(AdminStateProperty.DialogType) as DialogType
+                return isLoading || dialogType != DialogType.None
+            }
+        })
         this.registerSelector(AdminStateProperty.NavigationMenuType, {
             dependsOn: [AdminStateProperty.PageType],
             get: map => {
@@ -77,10 +86,12 @@ export enum AdminStateProperty {
     //Common
     IsApplicationLoading = "isApplicationLoading",
     IsPageLoading = "isPageLoading",
+    IsDialogLoading = "isDialogLoading",
     LoggedInEmployee = "LoggedInEmployee",
     NavigationMenuType = "navigationMenuType",
     PageType = "pageType",
     DialogType = "dialogType",
+    ShowDialog = "showDialog",
 
     //EmployeeNode
     UserList = "userList",
@@ -105,5 +116,13 @@ export enum AdminStateProperty {
     //ClinicNode
     ClinicList = "clinicList",
     ClinicListById = "clinicListById",
-
+    ClinicDialogType = "clinicDialogType",
+    EditedClinicId = "editedClinicId",
+    EditedClinicName = "editedClinicName",
+    EditedClinicActive = "editedClinicActive",
+    EditedClinicPhone = "editedClinicPhone",
+    EditedClinicEmail = "editedClinicEmail",
+    EditedClinicAddress = "editedClinicAddress",
+    EditedClinicSiteUrl = "editedClinicSiteUrl",
+    EditClinicFormHasErrors = "editClinicFormHasErrors",
 }

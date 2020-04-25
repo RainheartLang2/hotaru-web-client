@@ -25,7 +25,7 @@ export default class ClinicsPage extends React.Component<Properties, State> {
 
     private delete(clinicId?: number): void {
         if (clinicId) {
-            //TODO: add deletion
+            this.actions.deleteClinic(clinicId)
         } else {
             throw new Error("clinic has no id")
         }
@@ -35,14 +35,14 @@ export default class ClinicsPage extends React.Component<Properties, State> {
         return (<>
             <PageHeader label={(<Message messageKey={"page.clinics.title"}/>)}
                         hasButton={true}
-                        buttonOnClick={() => {
-                        }}/>
+                        buttonOnClick={() => this.actions.openCreateDialog()}/>
             <TableCmp>
                 <TableHeaderCmp>
                     <TableRowCmp>
                         <CustomTableCell style={styles.nameCell}>
                             <Message messageKey={"page.clinics.name.title"}/>
                         </CustomTableCell>
+                        <CustomTableCell style={styles.urlCell}/>
                         <CustomTableCell style={styles.addressCell}/>
                         <CustomTableCell style={styles.activeCell}/>
                         <CustomTableCell style={styles.actionCell}>
@@ -62,6 +62,7 @@ export default class ClinicsPage extends React.Component<Properties, State> {
                                         {clinic.name}
                                     </Link>
                                 </CustomTableCell>
+                                <CustomTableCell style={styles.urlCell}/>
                                 <CustomTableCell style={styles.addressCell}>
                                     {clinic.address}
                                 </CustomTableCell>
