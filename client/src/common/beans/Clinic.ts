@@ -5,6 +5,6 @@ export class Clinic {
     phone?: string
     email?: string
     siteUrl?: string
+    city?: string
     address?: string
-    timezone?: string
 }

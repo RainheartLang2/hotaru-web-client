@@ -5,6 +5,10 @@ import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import AdminAppController from "../../../controller/AdminAppController";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
+import ClinicLeftColumn from "./subcomponents/leftColumn/ClinicLeftColumn";
+import ClinicRightColumn from "./subcomponents/rightColumn/ClinicRightColumn";
+
+var styles = require("./styles.css")
 
 export default class ClinicDialog extends React.Component<Properties, State> {
 
@@ -28,6 +32,12 @@ export default class ClinicDialog extends React.Component<Properties, State> {
         }
     }
 
+    private submitForm(): void {
+        if (this.state[StateProperty.Mode] == "create") {
+            this.props.controller.clinicActions.submitCreateClinic()
+        }
+    }
+
     render() {
         const controller = this.props.controller
         return (<>
@@ -36,9 +46,17 @@ export default class ClinicDialog extends React.Component<Properties, State> {
                 />
             </DialogTitle>
             <DialogContent>
+                <div className={styles.dialogContent}>
+                    <div className={styles.column}>
+                        <ClinicLeftColumn controller={this.props.controller}/>
+                    </div>
+                    <div className={styles.column}>
+                        <ClinicRightColumn controller={this.props.controller}/>
+                    </div>
+                </div>
                 <DialogFooter
                     submitDisabled={this.state[StateProperty.HasErrors]}
-                    onSubmitClick={() => {}}
+                    onSubmitClick={() => this.submitForm()}
                     onCancelClick={() => controller.closeCurrentDialog()}
                 />
             </DialogContent>

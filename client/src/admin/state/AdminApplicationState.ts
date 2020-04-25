@@ -122,6 +122,7 @@ export enum AdminStateProperty {
     EditedClinicActive = "editedClinicActive",
     EditedClinicPhone = "editedClinicPhone",
     EditedClinicEmail = "editedClinicEmail",
+    EditedClinicCity = "editedClinicCity",
     EditedClinicAddress = "editedClinicAddress",
     EditedClinicSiteUrl = "editedClinicSiteUrl",
     EditClinicFormHasErrors = "editClinicFormHasErrors",

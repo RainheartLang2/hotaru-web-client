@@ -29,7 +29,31 @@ export default class ClinicActions {
     }
 
     public openCreateDialog(): void {
+        this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, 0)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicName, "")
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicName, false)
+
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicActive, true)
+
         this.controller.setShowDialog(DialogType.CreateClinic)
+    }
+
+    public submitCreateClinic(): void {
+        const clinic = this.node.buildClinicBasedOnFields()
+        fetchUserZoneRpc({
+            method: RemoteMethods.addClinic,
+            params: [clinic],
+            successCallback: (result) => {
+                clinic.id = +result
+                this.node.addClinic(clinic)
+                this.controller.closeCurrentDialog()
+            },
+        })
     }
 
     public deleteClinic(id: number): void {
