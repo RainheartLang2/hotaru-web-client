@@ -33,6 +33,7 @@ export default class AdminApplicationState extends ApplicationStore {
                 switch (this.getPropertyValue(AdminStateProperty.PageType)) {
                     case PageType.UserList: return NavigationMenuType.UserList
                     case PageType.ClinicList: return NavigationMenuType.ClinicList
+                    case PageType.Schedule: return NavigationMenuType.Schedule
                     default: return NavigationMenuType.None
                 }
             }

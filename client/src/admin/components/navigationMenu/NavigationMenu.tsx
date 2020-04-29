@@ -3,6 +3,7 @@ import * as React from "react";
 import {NavigationMenuType} from "../../state/NavigationMenuType";
 import AdminAppController from "../../controller/AdminAppController";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
+import {Message} from "../../../core/components/Message";
 
 var styles = require("./styles.css");
 
@@ -22,14 +23,19 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                 classes={{indicator: styles.indicator}}
             >
                 <Tab
-                    label="Сотрудники"
+                    label={<Message messageKey={"navigationMenu.employees.title"}/>}
                     value={NavigationMenuType.UserList}
                     onClick={() => this.props.controller.openUserListPage()}
                 />
                 <Tab
-                    label="Клиники"
+                    label={<Message messageKey={"navigationMenu.clinics.title"}/>}
                     value={NavigationMenuType.ClinicList}
                     onClick={() => this.props.controller.openClinicListPage()}
+                />
+                <Tab
+                    label={<Message messageKey={"navigationMenu.schedule.title"}/>}
+                    value={NavigationMenuType.Schedule}
+                    onClick={() => this.props.controller.openSchedulePage()}
                 />
             </Tabs>
         )
