@@ -3,12 +3,30 @@ import AdminAppController from "../../../../../controller/AdminAppController";
 import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
+import LabeledSwitch from "../../../../../../core/components/labeledSwitch/LabeledSwitch";
+import {ReactNode} from "react";
 
 var styles = require("../../styles.css")
 
 export default class ClinicRightColumn extends React.Component<Properties> {
+    private getActiveSwitch(): ReactNode {
+        return (
+            <div className={styles.row}>
+                <LabeledSwitch
+                    active={this.props.active}
+                    onChange={(event, checked) => this.props.controller.clinicActions.toggleClinicActivity(checked)}
+                    activeLabelKey={"dialog.clinic.active.label"}
+                    notActiveLabelKey={"dialog.clinic.notActive.label"}
+                />
+            </div>
+        )
+    }
+
     render() {
         return (<>
+            {this.props.showActiveSwitch
+                ? this.getActiveSwitch()
+                : ""}
             <div className={styles.row}>
                 <ConnectedTextField
                     controller={this.props.controller}
@@ -35,5 +53,7 @@ export default class ClinicRightColumn extends React.Component<Properties> {
 }
 
 export type Properties = {
-    controller: AdminAppController
+    controller: AdminAppController,
+    active: boolean,
+    showActiveSwitch: boolean,
 }

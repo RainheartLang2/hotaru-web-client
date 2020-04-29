@@ -53,6 +53,24 @@ export default class ClinicNode {
             [new EmailFormatValidator(), new MaximalLengthValidator(254)])
         this.store.registerField(AdminStateProperty.EditedClinicPhone, "",
             [new MaximalLengthValidator(15)])
+
+        this.store.registerSelector(AdminStateProperty.EditClinicFormHasErrors,
+            {
+                dependsOn: [AdminStateProperty.EditedClinicName,
+                    AdminStateProperty.EditedClinicSiteUrl,
+                    AdminStateProperty.EditedClinicCity,
+                    AdminStateProperty.EditedClinicEmail,
+                    AdminStateProperty.EditedClinicPhone
+                ],
+                get: (map: Map<string, any>) => {
+                    return !this.store.fieldsHaveNoErrors([AdminStateProperty.EditedClinicName,
+                        AdminStateProperty.EditedClinicSiteUrl,
+                        AdminStateProperty.EditedClinicCity,
+                        AdminStateProperty.EditedClinicEmail,
+                        AdminStateProperty.EditedClinicPhone
+                    ])
+                }
+            })
     }
 
     public getClinicList(): Clinic[] {
@@ -61,6 +79,14 @@ export default class ClinicNode {
 
     public getClinicListById(): Map<number, Clinic> {
         return this.store.getPropertyValue(AdminStateProperty.ClinicList)
+    }
+
+    public getClinicById(id: number): Clinic {
+        const clinic = this.getClinicListById().get(id)
+        if (!clinic) {
+            throw new Error("clinic with id " + id + " is not presented in the store")
+        }
+        return clinic
     }
 
     public setClinicList(clinicList: Clinic[]) {

@@ -36,11 +36,25 @@ export default class ClinicActions {
         this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, "")
         this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, "")
         this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, "")
+        this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicAddress, false)
         this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, "")
         this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicActive, true)
+        this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, true)
 
         this.controller.setShowDialog(DialogType.CreateClinic)
+    }
+
+    public openEditDialog(clinic: Clinic): void {
+        this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, clinic.id)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicName, clinic.name)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, clinic.siteUrl)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, clinic.city)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, clinic.address)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, clinic.phone)
+        this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, clinic.email)
+        this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, clinic.active)
+
+        this.controller.setShowDialog(DialogType.EditClinic)
     }
 
     public submitCreateClinic(): void {
@@ -56,11 +70,27 @@ export default class ClinicActions {
         })
     }
 
+    public submitEditClinic(): void {
+        const clinic = this.node.buildClinicBasedOnFields()
+        fetchUserZoneRpc({
+            method: RemoteMethods.editClinic,
+            params: [clinic],
+            successCallback: result => {
+                this.node.updateClinic(this.node.buildClinicBasedOnFields())
+                this.controller.closeCurrentDialog()
+            }
+        })
+    }
+
     public deleteClinic(id: number): void {
         fetchUserZoneRpc({
             method: RemoteMethods.deleteClinic,
             params: [id],
             successCallback: (result) => this.node.deleteClinic(id),
         })
+    }
+
+    public toggleClinicActivity(active: boolean): void {
+        this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, active)
     }
 }

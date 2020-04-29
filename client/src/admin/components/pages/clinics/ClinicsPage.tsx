@@ -57,12 +57,19 @@ export default class ClinicsPage extends React.Component<Properties, State> {
                                 <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"
-                                        onClick={() => {}}
+                                        onClick={() => this.actions.openEditDialog(clinic)}
                                     >
                                         {clinic.name}
                                     </Link>
                                 </CustomTableCell>
-                                <CustomTableCell style={styles.urlCell}/>
+                                <CustomTableCell style={styles.urlCell}>
+                                    <Link
+                                        color="primary"
+                                        href={clinic.siteUrl}
+                                    >
+                                        {clinic.siteUrl}
+                                    </Link>
+                                </CustomTableCell>
                                 <CustomTableCell style={styles.addressCell}>
                                     {clinic.address}
                                 </CustomTableCell>

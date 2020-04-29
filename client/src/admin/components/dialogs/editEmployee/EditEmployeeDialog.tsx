@@ -38,7 +38,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         } else if (mode == 'create') {
             this.actions.submitCreateEmployeeForm()
         } else {
-            throw new Error('unknown value of mode ' + this.state[StateProperty.Mode])
+            throw new Error('unknown value of mode ' + mode)
         }
     }
 

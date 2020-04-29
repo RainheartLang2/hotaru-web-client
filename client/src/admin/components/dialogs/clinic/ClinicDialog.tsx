@@ -33,8 +33,14 @@ export default class ClinicDialog extends React.Component<Properties, State> {
     }
 
     private submitForm(): void {
-        if (this.state[StateProperty.Mode] == "create") {
+        const mode = this.state[StateProperty.Mode]
+        const actions = this.props.controller.clinicActions
+        if (mode == "create") {
             this.props.controller.clinicActions.submitCreateClinic()
+        } else if (mode == 'edit') {
+            actions.submitEditClinic()
+        } else {
+            throw new Error('unknown value of mode ' + mode)
         }
     }
 
@@ -51,7 +57,11 @@ export default class ClinicDialog extends React.Component<Properties, State> {
                         <ClinicLeftColumn controller={this.props.controller}/>
                     </div>
                     <div className={styles.column}>
-                        <ClinicRightColumn controller={this.props.controller}/>
+                        <ClinicRightColumn
+                            controller={this.props.controller}
+                            active={this.state[StateProperty.IsActive]}
+                            showActiveSwitch={this.state[StateProperty.Mode] == "edit"}
+                        />
                     </div>
                 </div>
                 <DialogFooter
@@ -65,6 +75,8 @@ export default class ClinicDialog extends React.Component<Properties, State> {
 
     componentDidMount() {
         this.props.controller.subscribe(AdminStateProperty.ClinicDialogType, this, StateProperty.Mode)
+        this.props.controller.subscribe(AdminStateProperty.EditedClinicActive, this, StateProperty.IsActive)
+        this.props.controller.subscribe(AdminStateProperty.EditClinicFormHasErrors, this, StateProperty.HasErrors)
     }
 }
 
