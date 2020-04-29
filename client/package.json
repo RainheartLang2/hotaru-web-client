@@ -54,6 +54,10 @@
     ]
   },
   "dependencies": {
+    "@devexpress/dx-react-core": "^2.6.2",
+    "@devexpress/dx-react-scheduler": "^2.6.2",
+    "@devexpress/dx-react-scheduler-material-ui": "^2.6.2",
+    "@material-ui/icons": "^4.9.1",
     "jsonrpc-ts": "^0.2.0",
     "react-dropzone": "^10.2.2"
   }
