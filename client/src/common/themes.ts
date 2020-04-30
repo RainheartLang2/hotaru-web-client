@@ -47,6 +47,6 @@ export const vetTheme: Theme = createMuiTheme({
             root: {
                 cursor: "pointer",
             }
-        }
+        },
     }
 });

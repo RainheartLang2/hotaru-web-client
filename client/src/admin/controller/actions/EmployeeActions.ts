@@ -6,6 +6,7 @@ import {DialogType} from "../../state/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
+import {Clinic} from "../../../common/beans/Clinic";
 
 export default class EmployeeActions {
     private controller: AdminAppController
@@ -43,6 +44,7 @@ export default class EmployeeActions {
         this.node.setEmployeePhone("")
         this.node.setEmployeeMail("")
         this.node.setEmployeeAddress("")
+        this.node.setEmployeeClinic(Clinic.getMock())
         this.node.setEmployeeLogin("")
         this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
@@ -61,6 +63,7 @@ export default class EmployeeActions {
         this.node.setEmployeePhone(user.phone != null ? user.phone : "")
         this.node.setEmployeeMail(user.email != null ? user.email : "")
         this.node.setEmployeeAddress(user.address != null ? user.address : "")
+        this.node.setEmployeeClinic(user.clinicId ? this.controller.clinicActions.getClinicById(user.clinicId) : Clinic.getMock())
         this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
         this.node.setEmployeePassword("")
         this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)

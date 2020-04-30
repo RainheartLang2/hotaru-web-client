@@ -4,6 +4,8 @@ import {Message} from "../../../../../../core/components/Message";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import AdminAppController from "../../../../../controller/AdminAppController";
 import UserActiveSwitch from "../userActiveSwitch/UserActiveSwitch";
+import ConnectedSelect from "../../../../../../core/components/ConnectedSelect/ConnectedSelect";
+import {Clinic} from "../../../../../../common/beans/Clinic";
 
 export default class RightColumn extends React.Component<Properties> {
     render() {
@@ -23,6 +25,18 @@ export default class RightColumn extends React.Component<Properties> {
                     )
                     : ""
                 }
+                <div className={styles.row}>
+                    <div className={styles.selector}>
+                        <ConnectedSelect<Clinic>
+                            controller={this.props.controller}
+                            label={<Message messageKey={"dialog.employee.field.clinic"}/>}
+                            mapProperty={AdminStateProperty.ClinicListByIdWithMock}
+                            selectedItemProperty={AdminStateProperty.EditedEmployeeClinic}
+                            itemToString={(clinic: Clinic | null) => clinic && clinic.name ? clinic.name : ""}
+                            getKey={clinic => clinic && clinic.id ? clinic.id : 0}
+                        />
+                    </div>
+                </div>
                 <div className={styles.row}>
                     <ConnectedTextField
                         controller={this.props.controller}

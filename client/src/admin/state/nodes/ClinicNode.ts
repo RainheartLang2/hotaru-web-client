@@ -22,6 +22,16 @@ export default class ClinicNode {
                 return CollectionUtils.mapArrayByPredicate(clinicList, clinic => clinic.id)
             }
         })
+        this.store.registerSelector(AdminStateProperty.ClinicListByIdWithMock, {
+            dependsOn: [AdminStateProperty.ClinicListById],
+            get: map => {
+                const clinicMap = map.get(AdminStateProperty.ClinicListById) as Map<number, Clinic>
+                const resultMap = new Map<number, Clinic>()
+                resultMap.set(0, Clinic.getMock())
+                CollectionUtils.mergeMaps(resultMap, clinicMap)
+                return resultMap
+            }
+        })
 
         this.store.registerSelector(AdminStateProperty.ClinicDialogType, {
             dependsOn: [AdminStateProperty.DialogType],

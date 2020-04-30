@@ -9,6 +9,7 @@ import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidato
 import ConfirmPasswordValidator from "../../../core/mvc/validators/ConfirmPasswordValidator";
 import {Login} from "../../../common/beans/Login";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {Clinic} from "../../../common/beans/Clinic";
 
 export default class EmployeeNode {
     private store: ApplicationStoreFriend
@@ -58,7 +59,9 @@ export default class EmployeeNode {
                 new EmailFormatValidator()])
         this.store.registerField(AdminStateProperty.EditedEmployeeAddress, "", [new MaximalLengthValidator(2048)])
 
-        this.store.registerProperty(AdminStateProperty.EditedEmployeeActive, true)
+        this.store.registerProperty(AdminStateProperty.EditedEmployeeClinic, null)
+
+        this.store.registerProperty(AdminStateProperty.EditedEmployeeActive, Clinic.getMock())
 
         this.store.registerProperty(AdminStateProperty.IsEmployeeChangePassword, false)
 
@@ -262,6 +265,14 @@ export default class EmployeeNode {
         return this.store.getPropertyValue<boolean>(AdminStateProperty.IsChangePasswordObligatory)
     }
 
+    public getEmployeeClinic(): Clinic {
+        return this.store.getPropertyValue<Clinic>(AdminStateProperty.EditedEmployeeClinic)
+    }
+
+    public setEmployeeClinic(value: Clinic): void {
+        this.store.setPropertyValue<Clinic>(AdminStateProperty.EditedEmployeeClinic, value)
+    }
+
     public buildEmployeeBasedOnFields(): Employee {
         return {
             id: this.getEmployeeId(),
@@ -272,6 +283,7 @@ export default class EmployeeNode {
             phone: this.getEmployeePhone(),
             email: this.getEmployeeMail(),
             address: this.getEmployeeAddress(),
+            clinicId: this.getEmployeeClinic().id,
         }
     }
 

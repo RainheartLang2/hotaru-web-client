@@ -57,7 +57,9 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     public openUserListPage(callback: Function = () => {}): void {
         this.applicationStore.setPageType(PageType.UserList)
         this._employeeActions.loadUsersList(() => {
-            callback()
+            this._clinicActions.loadClinicList(() => {
+                callback()
+            })
         })
     }
 

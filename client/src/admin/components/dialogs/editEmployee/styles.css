@@ -14,8 +14,13 @@
 .row {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
     width: 400px;
+    height: 45px;
+    padding-bottom: 10px;
+}
+
+.selector {
+    width: 250px;
 }
 
 .activeSwitchWrapper {

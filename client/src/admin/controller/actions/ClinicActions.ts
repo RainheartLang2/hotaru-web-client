@@ -82,6 +82,10 @@ export default class ClinicActions {
         })
     }
 
+    public getClinicById(id: number): Clinic {
+        return this.node.getClinicById(id)
+    }
+
     public deleteClinic(id: number): void {
         fetchUserZoneRpc({
             method: RemoteMethods.deleteClinic,

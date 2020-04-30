@@ -7,4 +7,5 @@ export class Employee {
     phone?: string
     email?: string
     address?: string
+    clinicId?: number
 }

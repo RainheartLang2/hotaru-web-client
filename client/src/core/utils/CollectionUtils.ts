@@ -13,4 +13,18 @@ export namespace CollectionUtils {
         })
         return result
     }
+
+    export function cloneMap<KeyType, ItemType>(map: Map<KeyType, ItemType>): Map<KeyType, ItemType> {
+        const result = new Map<KeyType, ItemType>()
+        map.forEach((item, key) => {
+            result.set(key, item)
+        })
+        return result
+    }
+
+    export function mergeMaps<KeyType, ItemType>(targetMap: Map<KeyType, ItemType>, sourctMap: Map<KeyType, ItemType>): void {
+        sourctMap.forEach((item, key) => {
+            targetMap.set(key, item)
+        })
+    }
 }

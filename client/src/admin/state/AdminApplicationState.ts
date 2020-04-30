@@ -106,6 +106,7 @@ export enum AdminStateProperty {
     EditedEmployeePhone = "editedEmployeePhone",
     EditedEmployeeEmail = "editedEmployeeEmail",
     EditedEmployeeAddress = "editedEmployeeAddress",
+    EditedEmployeeClinic = "editedEmployeeClinic",
     EditedEmployeeLogin = "editedEmployeLogin",
     EditedEmployeePassword = "editedEmployeePassword",
     EditedEmployeeConfirmPassword = "editedEmployeeConfirmPassword",
@@ -117,6 +118,7 @@ export enum AdminStateProperty {
     //ClinicNode
     ClinicList = "clinicList",
     ClinicListById = "clinicListById",
+    ClinicListByIdWithMock = "clinicListByIdWithMock",
     ClinicDialogType = "clinicDialogType",
     EditedClinicId = "editedClinicId",
     EditedClinicName = "editedClinicName",
