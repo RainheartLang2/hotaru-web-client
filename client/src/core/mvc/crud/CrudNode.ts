@@ -3,7 +3,7 @@ import {CollectionUtils} from "../../utils/CollectionUtils";
 import Identitiable from "../../entities/Identitiable";
 
 export default abstract class CrudNode<ItemType extends Identitiable> {
-    private store: ApplicationStoreFriend
+    protected store: ApplicationStoreFriend
 
     constructor(store: ApplicationStoreFriend) {
         this.store = store
@@ -13,7 +13,7 @@ export default abstract class CrudNode<ItemType extends Identitiable> {
             dependsOn: [this.getListPropertyName()],
             get: map => {
                 const list: ItemType[] = map.get(this.getListPropertyName()) as ItemType[]
-                return CollectionUtils.mapArrayByPredicate(list, item => item.getId())
+                return CollectionUtils.mapArrayByPredicate(list, item => item.id)
             }
         })
     }
@@ -51,12 +51,12 @@ export default abstract class CrudNode<ItemType extends Identitiable> {
     }
 
     public update(updatedItem: ItemType) {
-        const list = this.getList().map(item => item.getId() == updatedItem.getId() ? updatedItem : item)
+        const list = this.getList().map(item => item.id == updatedItem.id ? updatedItem : item)
         this.setList(list)
     }
 
     public delete(id: number) {
-        const items = this.getList().filter(item => item.getId() != id)
+        const items = this.getList().filter(item => item.id != id)
         this.setList(items)
     }
 }

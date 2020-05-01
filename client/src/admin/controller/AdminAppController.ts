@@ -7,17 +7,20 @@ import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
 import {PageType} from "../state/PageType";
 import ClinicActions from "./actions/ClinicActions";
+import SpeciesActions from "./actions/SpeciesActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
 
     private _employeeActions: EmployeeActions
     private _clinicActions: ClinicActions
+    private _speciesActions: SpeciesActions
 
     private constructor() {
         super(AdminApplicationState.instance)
         this._employeeActions = new EmployeeActions(this, this.applicationStore.employeeNode)
         this._clinicActions = new ClinicActions(this, this.applicationStore.clinicNode)
+        this._speciesActions = new SpeciesActions(this, this.applicationStore.speciesNode)
     }
 
     public static get instance(): AdminAppController {
@@ -43,6 +46,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     get clinicActions(): ClinicActions {
         return this._clinicActions
+    }
+
+    get speciesActions(): SpeciesActions {
+        return this._speciesActions
     }
 
     public startApplication(): void {
@@ -80,7 +87,9 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openSpeciesPage(): void {
         this.applicationStore.setPageType(PageType.Species)
+        this._speciesActions.loadList()
     }
+
     public setShowDialog(dialogType: DialogType): void {
         this.applicationStore.setPropertyValue(AdminStateProperty.DialogType, dialogType)
     }

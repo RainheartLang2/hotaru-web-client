@@ -5,12 +5,14 @@ import {Employee} from "../../common/beans/Employee";
 import {PageType} from "./PageType";
 import {NavigationMenuType} from "./NavigationMenuType";
 import ClinicNode from "./nodes/ClinicNode";
+import SpeciesNode from "./nodes/SpeciesNode";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
 
     private _employeeNode: EmployeeNode
     private _clinicNode: ClinicNode
+    private _speciesNode: SpeciesNode
 
     private constructor() {
         super()
@@ -36,7 +38,7 @@ export default class AdminApplicationState extends ApplicationStore {
                     case PageType.Schedule: return NavigationMenuType.Schedule
                     case PageType.Species:
                     case PageType.Breeds:
-                        return NavigationMenuType.Settings
+                        return NavigationMenuType.SettingsMenu
                     default: return NavigationMenuType.None
                 }
             }
@@ -44,6 +46,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
         this._employeeNode = new EmployeeNode(this.friend)
         this._clinicNode = new ClinicNode(this.friend)
+        this._speciesNode = new SpeciesNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {
@@ -52,6 +55,10 @@ export default class AdminApplicationState extends ApplicationStore {
 
     get clinicNode(): ClinicNode {
         return this._clinicNode
+    }
+
+    get speciesNode(): SpeciesNode {
+        return this._speciesNode
     }
 
     public static get instance(): AdminApplicationState {
@@ -132,4 +139,11 @@ export enum AdminStateProperty {
     EditedClinicAddress = "editedClinicAddress",
     EditedClinicSiteUrl = "editedClinicSiteUrl",
     EditClinicFormHasErrors = "editClinicFormHasErrors",
+
+    //SpeciesNode
+    SpeciesList = "speciesList",
+    SpeciesListById = "speciesListById",
+    EditedSpeciesId = "editedSpeciesId",
+    EditedSpeciesName = "editedSpeciesName",
+    AddedSpeciesName = "addedSpeciesName",
 }

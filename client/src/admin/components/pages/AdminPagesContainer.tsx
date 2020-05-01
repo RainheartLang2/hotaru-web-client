@@ -23,7 +23,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {currentPage == PageType.UserList && (<UserListPage/>)}
             {currentPage == PageType.ClinicList && (<ClinicsPage controller={this.props.controller}/>)}
             {currentPage == PageType.Schedule && (<SchedulePage/>)}
-            {currentPage == PageType.Species && (<SpeciesPage/>)}
+            {currentPage == PageType.Species && (<SpeciesPage controller={this.props.controller}/>)}
 
             <LoadingMoire delay={true} visible={this.state[StateProperty.IsLoading]}/>
         </>)

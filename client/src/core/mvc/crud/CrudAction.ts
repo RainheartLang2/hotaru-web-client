@@ -5,12 +5,15 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {RemoteMethod} from "../../http/RemoteMethod";
 import Identitiable from "../../entities/Identitiable";
 
-export default abstract class CrudAction<ItemType extends Identitiable, ControllerType extends ApplicationController> {
-    private controller: ControllerType
-    private node: CrudNode<ItemType>
+export default abstract class CrudAction<ItemType extends Identitiable,
+    ControllerType extends ApplicationController,
+    NodeType extends CrudNode<ItemType>
+    > {
+    protected controller: ControllerType
+    protected node: NodeType
 
     constructor(controller: ControllerType,
-                node: CrudNode<ItemType>) {
+                node: NodeType) {
         this.controller = controller
         this.node = node
     }
@@ -24,7 +27,7 @@ export default abstract class CrudAction<ItemType extends Identitiable, Controll
 
     protected abstract convertResultToItem(result: any): ItemType[]
 
-    public loadList(callback: Function): void {
+    public loadList(callback: Function = () => {}): void {
         fetchUserZoneRpc({
             method: this.getAllMethod,
             successCallback: result => {
@@ -35,29 +38,37 @@ export default abstract class CrudAction<ItemType extends Identitiable, Controll
         })
     }
 
-    public submitCreateItem(callback: Function): void {
-        const item = this.node.buildBasedOnFields()
+    public submitCreateItem(callback: Function = () => {}): void {
+        const item = this.getCreateItem()
         fetchUserZoneRpc({
-            method: RemoteMethods.addClinic,
+            method: this.addMethod,
             params: [item],
             successCallback: (result) => {
-                item.setId(result)
+                item.id = +result
                 this.node.add(item)
                 callback()
             },
         })
     }
 
-    public submitEditItem(callback: Function): void {
-        const item = this.node.buildBasedOnFields()
+    protected getCreateItem(): ItemType {
+        return this.node.buildBasedOnFields()
+    }
+
+    public submitEditItem(callback: Function = () => {}): void {
+        const item = this.getEditItem()
         fetchUserZoneRpc({
             method: this.updateMethod,
             params: [item],
             successCallback: result => {
-                this.node.update(this.node.buildBasedOnFields())
+                this.node.update(item)
                 callback
             }
         })
+    }
+
+    protected getEditItem(): ItemType {
+        return this.node.buildBasedOnFields()
     }
 
     public getItemById(id: number): ItemType {

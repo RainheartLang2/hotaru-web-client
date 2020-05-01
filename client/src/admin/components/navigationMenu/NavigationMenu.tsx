@@ -19,7 +19,6 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log(this.state.settingsMenuAnchor)
         return (
             <Tabs
                 variant="fullWidth"
@@ -43,13 +42,9 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                 />
                 <Tab
                     label={<Message messageKey={"navigationMenu.settings.title"}/>}
-                    value={NavigationMenuType.Settings}
-                    onClick={(event) => {
-                        console.log(event.currentTarget)
-                        this.setState({settingsMenuAnchor: event.currentTarget})}
-                    }
-                >
-                </Tab>
+                    value={NavigationMenuType.SettingsMenu}
+                    onClick={(event) => this.setState({settingsMenuAnchor: event.currentTarget})}
+                />
                 <Menu
                     open={!!this.state.settingsMenuAnchor}
                     anchorEl={this.state.settingsMenuAnchor}

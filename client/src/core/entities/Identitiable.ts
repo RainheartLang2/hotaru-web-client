@@ -1,4 +1,3 @@
-export default interface Identitiable {
-    getId(): number
-    setId(id: number): void
+export default abstract class Identitiable {
+    id?: number
 }

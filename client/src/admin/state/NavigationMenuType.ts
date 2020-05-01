@@ -3,5 +3,7 @@ export enum NavigationMenuType {
     UserList,
     ClinicList,
     Schedule,
-    Settings,
+    //Unused type as for option with value "4" tab indicator works incorrectly
+    MockType,
+    SettingsMenu,
 }

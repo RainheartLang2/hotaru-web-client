@@ -10,7 +10,7 @@ import ActivityCell from "../../../../core/components/activityCell/ActivityCell"
 import {Link} from "@material-ui/core";
 import ClinicActions from "../../../controller/actions/ClinicActions";
 
-var styles = require("./styles.css");
+var styles = require("./styles.css")
 
 export default class ClinicsPage extends React.Component<Properties, State> {
 
