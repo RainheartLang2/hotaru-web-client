@@ -6,6 +6,7 @@ import ClinicsPage from "./clinics/ClinicsPage";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import LoadingMoire from "../../../core/components/loadingMoire/LoadingMoire";
 import SchedulePage from "./schedule/SchedulePage";
+import SpeciesPage from "./species/SpeciesPage";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -22,6 +23,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {currentPage == PageType.UserList && (<UserListPage/>)}
             {currentPage == PageType.ClinicList && (<ClinicsPage controller={this.props.controller}/>)}
             {currentPage == PageType.Schedule && (<SchedulePage/>)}
+            {currentPage == PageType.Species && (<SpeciesPage/>)}
 
             <LoadingMoire delay={true} visible={this.state[StateProperty.IsLoading]}/>
         </>)

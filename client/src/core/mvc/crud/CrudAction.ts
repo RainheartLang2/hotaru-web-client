@@ -2,10 +2,6 @@ import CrudNode from "./CrudNode";
 import ApplicationController from "../ApplicationController";
 import {fetchUserZoneRpc} from "../../utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
-import {plainToClass} from "class-transformer";
-import {Clinic} from "../../../common/beans/Clinic";
-import {AdminStateProperty} from "../../../admin/state/AdminApplicationState";
-import {DialogType} from "../../../admin/state/DialogType";
 import {RemoteMethod} from "../../http/RemoteMethod";
 import Identitiable from "../../entities/Identitiable";
 

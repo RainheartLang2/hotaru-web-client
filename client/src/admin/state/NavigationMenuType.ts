@@ -3,4 +3,5 @@ export enum NavigationMenuType {
     UserList,
     ClinicList,
     Schedule,
+    Settings,
 }

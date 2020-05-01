@@ -18,6 +18,8 @@ export default abstract class ApplicationController<StoreType extends Applicatio
     }
 
     setPropertyValue<ValueType>(propertyName: string, value: ValueType): void {
+        console.log(propertyName)
+        console.log(value)
         this.applicationStore.setPropertyValue<ValueType>(propertyName, value)
     }
 

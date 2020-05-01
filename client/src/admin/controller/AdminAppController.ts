@@ -74,6 +74,13 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         this.applicationStore.setPageType(PageType.Schedule)
     }
 
+    public openSettings(): void {
+        this.openSpeciesPage()
+    }
+
+    public openSpeciesPage(): void {
+        this.applicationStore.setPageType(PageType.Species)
+    }
     public setShowDialog(dialogType: DialogType): void {
         this.applicationStore.setPropertyValue(AdminStateProperty.DialogType, dialogType)
     }

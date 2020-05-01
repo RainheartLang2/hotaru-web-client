@@ -34,6 +34,9 @@ export default class AdminApplicationState extends ApplicationStore {
                     case PageType.UserList: return NavigationMenuType.UserList
                     case PageType.ClinicList: return NavigationMenuType.ClinicList
                     case PageType.Schedule: return NavigationMenuType.Schedule
+                    case PageType.Species:
+                    case PageType.Breeds:
+                        return NavigationMenuType.Settings
                     default: return NavigationMenuType.None
                 }
             }
