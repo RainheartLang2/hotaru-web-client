@@ -1,0 +1,15 @@
+.selectorWrapper {
+    display: flex;
+}
+
+.selectorTitle {
+    margin-right: 15px;
+}
+
+.selector {
+    width: 200px;
+}
+
+.nameCell {
+    width: 200px;
+}

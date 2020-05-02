@@ -26,12 +26,12 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
                 <Tab
                     label={<Message messageKey={"second.navigation.dictionaries.species.label"}/>}
                     value={DictionaryMenuItemType.Species}
-                    onClick={() => {}}
+                    onClick={() => this.props.controller.openSpeciesPage()}
                 />
                 <Tab
                     label={<Message messageKey={"second.navigation.dictionaries.breed.label"}/>}
                     value={DictionaryMenuItemType.Breed}
-                    onClick={() => {}}
+                    onClick={() => this.props.controller.openBreedsPage()}
                 />
             </Tabs>
         )

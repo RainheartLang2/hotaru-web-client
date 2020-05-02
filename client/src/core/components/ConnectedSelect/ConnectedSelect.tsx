@@ -4,6 +4,11 @@ import ApplicationController from "../../mvc/ApplicationController";
 import {ReactNode} from "react";
 
 export default class ConnectedSelect<ItemType> extends React.Component<Properties<ItemType>, State<ItemType>> {
+
+    static defaultProps = {
+        variant: "standard",
+    }
+
     constructor(props: Properties<ItemType>) {
         super(props)
         this.state = {
@@ -25,15 +30,18 @@ export default class ConnectedSelect<ItemType> extends React.Component<Propertie
         })
         return (
             <FormControl>
-                <InputLabel>
-                    {this.props.label}
-                </InputLabel>
+                {this.props.label && (
+                    <InputLabel>
+                        {this.props.label}
+                    </InputLabel>
+                )}
                 <Select
                     onChange={event => {
                         this.props.controller.setPropertyValue(this.props.selectedItemProperty, itemsMap.get(+(event.target.value as string)))
                     }}
                     value={getKey(this.state[StateProperty.SelectedItem])}
                     fullWidth={true}
+                    variant={this.props.variant}
                 >
                     {options}
                 </Select>
@@ -54,7 +62,8 @@ enum StateProperty {
 
 type Properties<ItemType> = {
     controller: ApplicationController
-    label: ReactNode,
+    label?: ReactNode,
+    variant: "standard" | "outlined"
     mapProperty: string,
     selectedItemProperty: string,
     itemToString: (item: ItemType) => string,

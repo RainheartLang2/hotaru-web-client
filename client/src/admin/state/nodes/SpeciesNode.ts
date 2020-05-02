@@ -35,5 +35,4 @@ export default class SpeciesNode extends CrudNode<Species> {
     protected getMapByIdPropertyName(): string {
         return AdminStateProperty.SpeciesListById;
     }
-
 }

@@ -22,7 +22,7 @@ export default class EmployeeNode {
             dependsOn: [AdminStateProperty.UserList],
             get: map => {
                 const userList: Employee[] = map.get(AdminStateProperty.UserList) as Employee[]
-                return CollectionUtils.mapArrayByPredicate(userList, employee => employee.id)
+                return CollectionUtils.mapArrayByUniquePredicate(userList, employee => employee.id)
             }
         })
 

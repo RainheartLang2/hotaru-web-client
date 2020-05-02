@@ -1,5 +1,5 @@
 export namespace CollectionUtils {
-    export function mapArrayByPredicate<ItemType, KeyType>(
+    export function mapArrayByUniquePredicate<ItemType, KeyType>(
         array: ItemType[],
         predicate: (item: ItemType) => KeyType | null
     ): Map<KeyType, ItemType> {
@@ -9,7 +9,30 @@ export namespace CollectionUtils {
             if (!predicateResult) {
                 throw new Error("predicate returned null for item " + item)
             }
+            if (result.get(predicateResult) != null) {
+                throw new Error("predicate is not unique for item " + item)
+            }
             result.set(predicateResult, item)
+        })
+        return result
+    }
+
+    export function mapArrayByPredicate<ItemType, KeyType>(
+        array: ItemType[],
+        predicate: (item: ItemType) => KeyType | null
+    ): Map<KeyType, ItemType[]> {
+        const result = new Map<KeyType, ItemType[]>()
+        array.forEach(item => {
+            const predicateResult = predicate(item)
+            if (!predicateResult) {
+                throw new Error("predicate returned null for item " + item)
+            }
+            const array = result.get(predicateResult)
+            if (!array) {
+                result.set(predicateResult, [item])
+            } else {
+                array.push(item)
+            }
         })
         return result
     }

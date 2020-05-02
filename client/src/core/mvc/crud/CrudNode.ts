@@ -13,7 +13,7 @@ export default abstract class CrudNode<ItemType extends Identifiable> {
             dependsOn: [this.getListPropertyName()],
             get: map => {
                 const list: ItemType[] = map.get(this.getListPropertyName()) as ItemType[]
-                return CollectionUtils.mapArrayByPredicate(list, item => item.id)
+                return CollectionUtils.mapArrayByUniquePredicate(list, item => item.id)
             }
         })
     }

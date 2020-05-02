@@ -46,4 +46,17 @@ export default class SpeciesActions extends CrudAction<Species, AdminAppControll
             name: this.node.getAddedSpeciesName()
         }
     }
+
+    public setSelectedSpecies(speciesId?: number): void {
+        let selectedSpecies = null
+        if (!speciesId) {
+            const speciesList = this.node.getList()
+            if (speciesList.length > 0) {
+                selectedSpecies = speciesList[0]
+            }
+        } else {
+            selectedSpecies = this.node.getItemById(speciesId)
+        }
+        this.controller.setPropertyValue(AdminStateProperty.BreedPageSelectedSpecies, selectedSpecies)
+    }
 }

@@ -8,6 +8,7 @@ import {Employee} from "../../common/beans/Employee";
 import {PageType} from "../state/enum/PageType";
 import ClinicActions from "./actions/ClinicActions";
 import SpeciesActions from "./actions/SpeciesActions";
+import BreedActions from "./actions/BreedActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
@@ -15,12 +16,14 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     private _employeeActions: EmployeeActions
     private _clinicActions: ClinicActions
     private _speciesActions: SpeciesActions
+    private _breedActions: BreedActions
 
     private constructor() {
         super(AdminApplicationState.instance)
         this._employeeActions = new EmployeeActions(this, this.applicationStore.employeeNode)
         this._clinicActions = new ClinicActions(this, this.applicationStore.clinicNode)
         this._speciesActions = new SpeciesActions(this, this.applicationStore.speciesNode)
+        this._breedActions = new BreedActions(this, this.applicationStore.breedNode)
     }
 
     public static get instance(): AdminAppController {
@@ -50,6 +53,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     get speciesActions(): SpeciesActions {
         return this._speciesActions
+    }
+
+    get breedActions(): BreedActions {
+        return this._breedActions
     }
 
     public startApplication(): void {
@@ -88,6 +95,15 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     public openSpeciesPage(): void {
         this.applicationStore.setPageType(PageType.Species)
         this._speciesActions.loadList()
+    }
+
+    public openBreedsPage(speciesId?: number): void {
+        this.applicationStore.setPageType(PageType.Breeds)
+        this._speciesActions.loadList(() => {
+            this._breedActions.loadList(() => {
+                this._speciesActions.setSelectedSpecies(speciesId)
+            })
+        })
     }
 
     public setShowDialog(dialogType: DialogType): void {

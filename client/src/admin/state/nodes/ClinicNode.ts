@@ -19,7 +19,7 @@ export default class ClinicNode {
             dependsOn: [AdminStateProperty.ClinicList],
             get: map => {
                 const clinicList: Employee[] = map.get(AdminStateProperty.ClinicList) as Clinic[]
-                return CollectionUtils.mapArrayByPredicate(clinicList, clinic => clinic.id)
+                return CollectionUtils.mapArrayByUniquePredicate(clinicList, clinic => clinic.id)
             }
         })
         this.store.registerSelector(AdminStateProperty.ClinicListByIdWithMock, {
