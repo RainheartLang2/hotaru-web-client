@@ -1,6 +1,16 @@
 import {ColorType} from "./ColorType";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {AppBar, Button, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow} from "@material-ui/core";
+import {
+    AppBar,
+    Button,
+    CircularProgress,
+    Tab,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow
+} from "@material-ui/core";
 import {CommonConstants} from "../common/constants.js";
 
 export const ButtonComponent = withStyles({

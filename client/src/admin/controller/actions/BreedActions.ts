@@ -51,4 +51,12 @@ export default class BreedActions extends CrudAction<Breed, AdminAppController, 
             speciesId: this.node.getSelectedSpecies().id,
         }
     }
+
+    public submitCreateItem(callback: Function = () => {}): void {
+        super.submitCreateItem(() => {
+            this.controller.setFieldValue(AdminStateProperty.AddedBreedName, "")
+            this.controller.toggleFieldValidation(AdminStateProperty.AddedBreedName, false)
+            callback()
+        })
+    }
 }

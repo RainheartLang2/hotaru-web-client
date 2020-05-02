@@ -31,6 +31,7 @@
       "page.schedule.title": "Расписание",
       "page.clinics.title": "Клиники",
       "page.species.title": "Справочник видов животных",
+      "page.species.button.toBreeds.label": "Перейти к породам",
       "page.breeds.title": "Справочник пород",
       "page.breeds.speciesSelector.title": "Вид животных",
       "page.clinics.name.title": "Название клиники",

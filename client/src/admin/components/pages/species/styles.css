@@ -1,3 +1,11 @@
 .nameCell {
     width: 200px;
 }
+
+.additionalRow {
+    background-color: #ddfada;
+}
+
+.actions {
+    display: flex;
+}

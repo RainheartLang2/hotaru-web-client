@@ -74,7 +74,9 @@ export default class BreedsPage extends React.Component<Properties, State> {
                             </TableRowCmp>
                         )
                     })}
-                    <TableRowCmp>
+                    <TableRowCmp classes={{
+                        root: styles.additionalRow
+                    }}>
                         <CustomTableCell style={styles.nameCell}>
                             <ConnectedTextField
                                 controller={this.props.controller}

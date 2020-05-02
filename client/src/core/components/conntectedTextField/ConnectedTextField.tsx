@@ -25,6 +25,7 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     }
 
     private getTooltipText(): React.ReactNode {
+        console.log(this.state[StateProperty.FieldAlias])
         return (
             <>
                 {this.state[StateProperty.FieldAlias].errors.map((errorText, index) => {

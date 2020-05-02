@@ -6,6 +6,7 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {plainToClass} from "class-transformer";
 import SpeciesNode from "../../state/nodes/SpeciesNode";
+import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 
 export default class SpeciesActions extends CrudAction<Species, AdminAppController, SpeciesNode> {
 
@@ -58,5 +59,13 @@ export default class SpeciesActions extends CrudAction<Species, AdminAppControll
             selectedSpecies = this.node.getItemById(speciesId)
         }
         this.controller.setPropertyValue(AdminStateProperty.BreedPageSelectedSpecies, selectedSpecies)
+    }
+
+    public submitCreateItem(callback: Function = () => {}): void {
+        super.submitCreateItem(() => {
+            this.controller.setFieldValue(AdminStateProperty.AddedSpeciesName, "")
+            this.controller.toggleFieldValidation(AdminStateProperty.AddedSpeciesName, false)
+            callback()
+        })
     }
 }

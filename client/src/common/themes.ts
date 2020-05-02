@@ -48,5 +48,14 @@ export const vetTheme: Theme = createMuiTheme({
                 cursor: "pointer",
             }
         },
+        MuiOutlinedInput: {
+            root: {
+                backgroundColor: "white",
+            },
+            input: {
+                paddingTop: "10.5px",
+                paddingBottom: "10.5px",
+            }
+        }
     }
 });

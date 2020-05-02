@@ -1,9 +1,11 @@
 .selectorWrapper {
     display: flex;
+    margin-bottom: 10px;
 }
 
 .selectorTitle {
     margin-right: 15px;
+    line-height: 40px;
 }
 
 .selector {
@@ -12,4 +14,8 @@
 
 .nameCell {
     width: 200px;
+}
+
+.additionalRow {
+    background-color: #ddfada;
 }

@@ -9,6 +9,7 @@ import CustomTableCell from "../../../../core/components/tableCell/CustomTableCe
 import {TextField} from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
+import ActionSeparator from "../../../../common/components/actionSeparator/ActionSeparator";
 
 var styles = require("./styles.css")
 
@@ -45,7 +46,14 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                                             onBlur={(event) => actions.submitEditItem(() => actions.setEditedSpeciesId(undefined))}
                                         />
                                     </CustomTableCell>
-                                    <CustomTableCell style={""}>
+                                    <CustomTableCell style={styles.actions}>
+                                        <Link
+                                            color={"primary"}
+                                            onClick={() => this.props.controller.openBreedsPage(item.id)}
+                                        >
+                                            <Message messageKey={"page.species.button.toBreeds.label"}/>
+                                        </Link>
+                                        <ActionSeparator/>
                                         <Link
                                             color="primary"
                                             onClick={() => {
@@ -60,7 +68,9 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                                 </TableRowCmp>
                             )
                         })}
-                        <TableRowCmp>
+                        <TableRowCmp classes={{
+                            root: styles.additionalRow
+                        }}>
                             <CustomTableCell style={styles.nameCell}>
                                 <ConnectedTextField
                                     controller={this.props.controller}
@@ -78,7 +88,6 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                                 </Link>
                             </CustomTableCell>
                         </TableRowCmp>
-
                     </TableBodyCmp>
                 </TableCmp>
             </>
