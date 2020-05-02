@@ -2,7 +2,7 @@ import AdminAppController from "../AdminAppController";
 import {fetchUserZoneRpc,} from "../../../core/utils/HttpUtils";
 import {plainToClass} from "class-transformer";
 import {Employee} from "../../../common/beans/Employee";
-import {DialogType} from "../../state/DialogType";
+import {DialogType} from "../../state/enum/DialogType";
 import EmployeeNode from "../../state/nodes/EmployeeNode";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";

@@ -1,6 +1,6 @@
 import {MenuItem, Tab, Tabs} from "@material-ui/core";
 import * as React from "react";
-import {NavigationMenuType} from "../../state/NavigationMenuType";
+import {NavigationMenuItemType} from "../../state/enum/NavigationMenuItemType";
 import AdminAppController from "../../controller/AdminAppController";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {Message} from "../../../core/components/Message";
@@ -13,7 +13,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.SelectedItem]: NavigationMenuType.None,
+            [StateProperty.SelectedItem]: NavigationMenuItemType.None,
             settingsMenuAnchor: null,
         }
     }
@@ -27,22 +27,22 @@ export default class NavigationMenu extends React.Component<Properties, State> {
             >
                 <Tab
                     label={<Message messageKey={"navigationMenu.employees.title"}/>}
-                    value={NavigationMenuType.UserList}
+                    value={NavigationMenuItemType.UserList}
                     onClick={() => this.props.controller.openUserListPage()}
                 />
                 <Tab
                     label={<Message messageKey={"navigationMenu.clinics.title"}/>}
-                    value={NavigationMenuType.ClinicList}
+                    value={NavigationMenuItemType.ClinicList}
                     onClick={() => this.props.controller.openClinicListPage()}
                 />
                 <Tab
                     label={<Message messageKey={"navigationMenu.schedule.title"}/>}
-                    value={NavigationMenuType.Schedule}
+                    value={NavigationMenuItemType.Schedule}
                     onClick={() => this.props.controller.openSchedulePage()}
                 />
                 <Tab
                     label={<Message messageKey={"navigationMenu.settings.title"}/>}
-                    value={NavigationMenuType.SettingsMenu}
+                    value={NavigationMenuItemType.SettingsMenu}
                     onClick={(event) => this.setState({settingsMenuAnchor: event.currentTarget})}
                 />
                 <Menu
@@ -63,7 +63,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.NavigationMenuType, this, StateProperty.SelectedItem)
+        this.props.controller.subscribe(AdminStateProperty.NavigationMenuItemType, this, StateProperty.SelectedItem)
     }
 }
 
@@ -76,6 +76,6 @@ type Properties = {
 }
 
 type State = {
-    [StateProperty.SelectedItem]: NavigationMenuType
+    [StateProperty.SelectedItem]: NavigationMenuItemType
     settingsMenuAnchor: Element | null
 }

@@ -5,7 +5,7 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {Clinic} from "../../../common/beans/Clinic";
-import {DialogType} from "../../state/DialogType";
+import {DialogType} from "../../state/enum/DialogType";
 
 export default class ClinicActions {
     private controller: AdminAppController

@@ -17,6 +17,7 @@ import ApplicationHeader from "../common/components/applicationHeader/Applicatio
 import {Employee} from "../common/beans/Employee";
 import AdminPagesContainer from "./components/pages/AdminPagesContainer";
 import NavigationMenu from "./components/navigationMenu/NavigationMenu";
+import {AdminSecondLevelNavigationContainer} from "./components/secondLevelNavigation/AdminSecondLevelNavigationContainer";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -51,6 +52,7 @@ export default class AdminApp extends React.Component<Properties, State> {
                     }}>
                     <NavigationMenu controller={this.controller}/>
                 </ApplicationHeader>
+                <AdminSecondLevelNavigationContainer controller={this.controller}/>
                 <AppContent visible={!this.state.isLoading}>
                     <AdminPagesContainer controller={this.controller}/>
                 </AppContent>

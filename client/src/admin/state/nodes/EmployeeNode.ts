@@ -1,4 +1,4 @@
-import {DialogType} from "../DialogType";
+import {DialogType} from "../enum/DialogType";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import {Employee} from "../../../common/beans/Employee";

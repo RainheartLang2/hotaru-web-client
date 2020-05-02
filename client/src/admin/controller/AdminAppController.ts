@@ -1,11 +1,11 @@
 import AdminApplicationState, {AdminStateProperty} from "../state/AdminApplicationState";
-import {DialogType} from "../state/DialogType";
+import {DialogType} from "../state/enum/DialogType";
 import ApplicationController from "../../core/mvc/ApplicationController";
 import EmployeeActions from "./actions/EmployeeActions";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
-import {PageType} from "../state/PageType";
+import {PageType} from "../state/enum/PageType";
 import ClinicActions from "./actions/ClinicActions";
 import SpeciesActions from "./actions/SpeciesActions";
 

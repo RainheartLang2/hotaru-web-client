@@ -3,9 +3,9 @@ import ApplicationController from "../ApplicationController";
 import {fetchUserZoneRpc} from "../../utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {RemoteMethod} from "../../http/RemoteMethod";
-import Identitiable from "../../entities/Identitiable";
+import Identifiable from "../../entities/Identifiable";
 
-export default abstract class CrudAction<ItemType extends Identitiable,
+export default abstract class CrudAction<ItemType extends Identifiable,
     ControllerType extends ApplicationController,
     NodeType extends CrudNode<ItemType>
     > {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeDialog";
-import {DialogType} from "../state/DialogType";
+import {DialogType} from "../state/enum/DialogType";
 import AdminAppController from "../controller/AdminAppController";
 import {AdminStateProperty} from "../state/AdminApplicationState";
 import {Dialog} from "@material-ui/core";

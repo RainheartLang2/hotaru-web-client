@@ -3,7 +3,7 @@ import {AdminStateProperty} from "../AdminApplicationState";
 import {Employee} from "../../../common/beans/Employee";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Clinic} from "../../../common/beans/Clinic";
-import {DialogType} from "../DialogType";
+import {DialogType} from "../enum/DialogType";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";

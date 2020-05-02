@@ -1,4 +1,4 @@
-export enum NavigationMenuType {
+export enum NavigationMenuItemType {
     None,
     UserList,
     ClinicList,

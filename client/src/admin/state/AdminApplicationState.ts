@@ -1,11 +1,13 @@
-import {DialogType} from "./DialogType";
+import {DialogType} from "./enum/DialogType";
 import EmployeeNode from "./nodes/EmployeeNode";
 import ApplicationStore from "../../core/mvc/store/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
-import {PageType} from "./PageType";
-import {NavigationMenuType} from "./NavigationMenuType";
+import {PageType} from "./enum/PageType";
+import {NavigationMenuItemType} from "./enum/NavigationMenuItemType";
 import ClinicNode from "./nodes/ClinicNode";
 import SpeciesNode from "./nodes/SpeciesNode";
+import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuType";
+import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -29,20 +31,43 @@ export default class AdminApplicationState extends ApplicationStore {
                 return isLoading || dialogType != DialogType.None
             }
         })
-        this.registerSelector(AdminStateProperty.NavigationMenuType, {
+        this.registerSelector(AdminStateProperty.NavigationMenuItemType, {
             dependsOn: [AdminStateProperty.PageType],
             get: map => {
                 switch (this.getPropertyValue(AdminStateProperty.PageType)) {
-                    case PageType.UserList: return NavigationMenuType.UserList
-                    case PageType.ClinicList: return NavigationMenuType.ClinicList
-                    case PageType.Schedule: return NavigationMenuType.Schedule
+                    case PageType.UserList: return NavigationMenuItemType.UserList
+                    case PageType.ClinicList: return NavigationMenuItemType.ClinicList
+                    case PageType.Schedule: return NavigationMenuItemType.Schedule
                     case PageType.Species:
                     case PageType.Breeds:
-                        return NavigationMenuType.SettingsMenu
-                    default: return NavigationMenuType.None
+                        return NavigationMenuItemType.SettingsMenu
+                    default: return NavigationMenuItemType.None
                 }
             }
         })
+        this.registerSelector(AdminStateProperty.SecondLevelNavigationMenuType, {
+            dependsOn: [AdminStateProperty.PageType],
+            get: map => {
+                switch (this.getPropertyValue(AdminStateProperty.PageType)) {
+                    case PageType.Species:
+                    case PageType.Breeds:
+                        return SecondLevelNavigationMenuType.Dictionaries
+                    default: return SecondLevelNavigationMenuType.None
+                }
+            }
+        })
+
+        this.registerSelector(AdminStateProperty.DictionariesNavigationSelectedItem, {
+            dependsOn: [AdminStateProperty.PageType],
+            get: map => {
+                switch (this.getPropertyValue(AdminStateProperty.PageType)) {
+                    case PageType.Species: return DictionaryMenuItemType.Species
+                    case PageType.Breeds: return DictionaryMenuItemType.Breed
+                    default: return DictionaryMenuItemType.None
+                }
+            }
+        })
+
         this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
         this._employeeNode = new EmployeeNode(this.friend)
         this._clinicNode = new ClinicNode(this.friend)
@@ -99,7 +124,9 @@ export enum AdminStateProperty {
     IsPageLoading = "isPageLoading",
     IsDialogLoading = "isDialogLoading",
     LoggedInEmployee = "LoggedInEmployee",
-    NavigationMenuType = "navigationMenuType",
+    NavigationMenuItemType = "navigationMenuItemType",
+    SecondLevelNavigationMenuType = "secondLevelNavigationMenuType",
+    DictionariesNavigationSelectedItem = "dictionariesNavigationSelectedItem",
     PageType = "pageType",
     DialogType = "dialogType",
     ShowDialog = "showDialog",

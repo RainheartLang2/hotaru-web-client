@@ -1,6 +1,6 @@
 import * as React from "react";
 import AdminAppController from "../../controller/AdminAppController";
-import {PageType} from "../../state/PageType";
+import {PageType} from "../../state/enum/PageType";
 import UserListPage from "../userlist/UserListPage";
 import ClinicsPage from "./clinics/ClinicsPage";
 import {AdminStateProperty} from "../../state/AdminApplicationState";

@@ -1,8 +1,8 @@
 import {ApplicationStoreFriend} from "../store/ApplicationStoreFriend";
 import {CollectionUtils} from "../../utils/CollectionUtils";
-import Identitiable from "../../entities/Identitiable";
+import Identifiable from "../../entities/Identifiable";
 
-export default abstract class CrudNode<ItemType extends Identitiable> {
+export default abstract class CrudNode<ItemType extends Identifiable> {
     protected store: ApplicationStoreFriend
 
     constructor(store: ApplicationStoreFriend) {
