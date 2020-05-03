@@ -9,6 +9,7 @@ import SpeciesNode from "./nodes/SpeciesNode";
 import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuType";
 import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import BreedNode from "./nodes/BreedNode";
+import AppointmentNode from "./nodes/AppointmentNode";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -17,6 +18,7 @@ export default class AdminApplicationState extends ApplicationStore {
     private _clinicNode: ClinicNode
     private _speciesNode: SpeciesNode
     private _breedsNode: BreedNode
+    private _appointmentNode: AppointmentNode
 
     private constructor() {
         super()
@@ -75,6 +77,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this._clinicNode = new ClinicNode(this.friend)
         this._speciesNode = new SpeciesNode(this.friend)
         this._breedsNode = new BreedNode(this.friend)
+        this._appointmentNode = new AppointmentNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {
@@ -91,6 +94,10 @@ export default class AdminApplicationState extends ApplicationStore {
 
     get breedNode(): BreedNode {
         return this._breedsNode
+    }
+
+    get appointmentNode(): AppointmentNode {
+        return this._appointmentNode
     }
 
     public static get instance(): AdminApplicationState {
@@ -190,4 +197,8 @@ export enum AdminStateProperty {
     EditedBreedId = "editedBreedId",
     EditedBreedName = "editedBreedName",
     AddedBreedName = "addedBreedName",
+
+    //AppointmentNode
+    AppointmentsList = "appointmentsList",
+    AppointmentsListById = "appointmentsListById",
 }

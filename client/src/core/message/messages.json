@@ -35,6 +35,10 @@
       "page.breeds.title": "Справочник пород",
       "page.breeds.speciesSelector.title": "Вид животных",
       "page.clinics.name.title": "Название клиники",
+
+      "dialog.appointment.create.label": "Создание приёма",
+      "dialog.appointment.edit.label": "Редактирование приёма",
+
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",
       "dialog.clinic.siteUrl.label": "Сайт",

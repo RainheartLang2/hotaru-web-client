@@ -5,6 +5,7 @@ import AdminAppController from "../controller/AdminAppController";
 import {AdminStateProperty} from "../state/AdminApplicationState";
 import {Dialog} from "@material-ui/core";
 import ClinicDialog from "../components/dialogs/clinic/ClinicDialog";
+import AppointmentDialog from "../components/dialogs/appointment/AppointmentDialog";
 
 export default class AdminDialogsContainer extends React.Component<{}, State> {
 
@@ -40,6 +41,8 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
 
                     {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
                         && (<ClinicDialog controller={this.controller}/>)}
+                    {(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)
+                        && (<AppointmentDialog controller={this.controller}/>)}
                 </Dialog>
             </>
         )

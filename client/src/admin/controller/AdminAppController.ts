@@ -9,6 +9,7 @@ import {PageType} from "../state/enum/PageType";
 import ClinicActions from "./actions/ClinicActions";
 import SpeciesActions from "./actions/SpeciesActions";
 import BreedActions from "./actions/BreedActions";
+import AppointmentActions from "./actions/AppointmentActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
@@ -17,6 +18,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     private _clinicActions: ClinicActions
     private _speciesActions: SpeciesActions
     private _breedActions: BreedActions
+    private _appointmentActions: AppointmentActions
 
     private constructor() {
         super(AdminApplicationState.instance)
@@ -24,6 +26,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         this._clinicActions = new ClinicActions(this, this.applicationStore.clinicNode)
         this._speciesActions = new SpeciesActions(this, this.applicationStore.speciesNode)
         this._breedActions = new BreedActions(this, this.applicationStore.breedNode)
+        this._appointmentActions = new AppointmentActions(this, this.applicationStore.appointmentNode)
     }
 
     public static get instance(): AdminAppController {
@@ -57,6 +60,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     get breedActions(): BreedActions {
         return this._breedActions
+    }
+
+    get appointmentActions(): AppointmentActions {
+        return this._appointmentActions
     }
 
     public startApplication(): void {
