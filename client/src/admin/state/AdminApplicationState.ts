@@ -202,8 +202,11 @@ export enum AdminStateProperty {
     AppointmentsList = "appointmentsList",
     AppointmentsListById = "appointmentsListById",
     AppointmentModelsList = "appointmentModelsList",
+    AppointmentDialogMode = "appointmentDialogMode",
+    EditedAppointmentId = "editedAppointmentId",
     EditedAppointmentTitle = "editedAppointmentTitle",
     EditedAppointmentDate = "editedAppointmentDate",
     EditedAppointmentStartTime = "editedAppointmentStartTime",
     EditedAppointmentEndTime = "editedAppointmentEndTime",
+    AppointmentFormHasErrors = "appointmentFormHasErrors",
 }

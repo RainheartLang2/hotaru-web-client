@@ -8,6 +8,9 @@ import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {DialogType} from "../../state/enum/DialogType";
 import {AppointmentInfo} from "../../../common/beans/AppointmentInfo";
 import {DateUtils} from "../../../core/utils/DateUtils";
+import {ChangeSet} from "@devexpress/dx-react-scheduler";
+import {DateRange} from "../../../common/beans/DateRange";
+import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 
 export default class AppointmentActions extends CrudAction<MedicalAppointment, AdminAppController, AppointmentNode> {
 
@@ -47,6 +50,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         const appointment = addedAppointment as AppointmentInfo
         const startDate = appointment.startDate
         const endDate = appointment.endDate
+        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, null)
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, "")
         this.controller.toggleFieldValidation(AdminStateProperty.EditedAppointmentTitle, false)
         this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
@@ -54,8 +58,52 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
             DateUtils.dateToTimeString(startDate))
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
-                DateUtils.dateToTimeString(endDate))
+            DateUtils.dateToTimeString(endDate))
         this.controller.setShowDialog(DialogType.CreateAppointment)
+    }
+
+    public openEditAppointmentDialog(editedAppointment: Object): void {
+        const appointment = editedAppointment as AppointmentInfo
+        const startDate = appointment.startDate
+        const endDate = appointment.endDate
+        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, appointment.id)
+        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, appointment.title)
+        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
+            new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()))
+        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
+            DateUtils.dateToTimeString(startDate))
+        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
+            DateUtils.dateToTimeString(endDate))
+        this.controller.setShowDialog(DialogType.EditAppointment)
+    }
+
+    public handleAppointmentChange(changes: ChangeSet, callback: Function = () => {}): void {
+        if (!changes.changed) {
+            return
+        }
+        const changedList = changes.changed
+        for (let key in changedList) {
+                    const id = +key
+                    const dateRange = changedList[key]
+                    this.updateDates(id, dateRange.startDate, dateRange.endDate, callback)
+        }
+    }
+
+    private updateDates(id: number, startDate: Date, endDate: Date, callback: Function): void {
+        const appointment = this.node.getItemById(id)
+        this.node.update({
+            id: appointment.id,
+            title: appointment.title,
+            startDate,
+            endDate,
+        })
+        fetchUserZoneRpc({
+            method: RemoteMethods.updateAppointmentDates,
+            params: [id, startDate, endDate],
+            successCallback: (result) => {
+                callback()
+            },
+        })
     }
 }
 

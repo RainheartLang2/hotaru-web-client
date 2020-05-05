@@ -3,7 +3,7 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
-    AppointmentForm, Appointments,
+    AppointmentForm, Appointments, AppointmentTooltip,
     DateNavigator,
     DragDropProvider,
     Scheduler,
@@ -11,7 +11,7 @@ import {
     Toolbar,
     WeekView
 } from "@devexpress/dx-react-scheduler-material-ui";
-import {AppointmentModel, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
+import {AppointmentModel, ChangeSet, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
 import AdminAppController from "../../../controller/AdminAppController";
 import AppointmentMockForm from "./subcomponents/mockForm/AppointmentMockForm";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
@@ -47,15 +47,21 @@ export default class SchedulePage extends React.Component<Properties, State> {
                         endDayHour={19}
                     />
                     <EditingState
-                        onCommitChanges={() => {console.log("onCommit")}}
-                        onEditingAppointmentChange={() => {console.log("onEditing")}}
+                        onCommitChanges={(changes: ChangeSet) => actions.handleAppointmentChange(changes)}
+                        onEditingAppointmentChange={(editedAppointment: Object) => {
+                            if (editedAppointment && !editedAppointment.hasOwnProperty("type")) {
+                                actions.openEditAppointmentDialog(editedAppointment)
+                            }
+                        }}
                         onAddedAppointmentChange={(addedAppointment: Object) => actions.openCreateAppointmentDialog(addedAppointment)}
                     />
                     <IntegratedEditing/>
                     <Appointments/>
+                    <AppointmentTooltip/>
                     <AppointmentForm
                         overlayComponent={AppointmentMockForm}
                     />
+
                     <Toolbar/>
                     <DateNavigator />
                     <TodayButton />

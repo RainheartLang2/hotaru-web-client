@@ -22,6 +22,7 @@ export namespace RemoteMethods {
     const loginAction = new ServerAppAction("login")
     const logoutAction = new ServerAppAction("logout")
     const getProfile = new ServerAppAction("getProfile")
+    const updateDates = new ServerAppAction("updateDates")
 
     //Back application concrete services urls
     export const getAllEmployees = new RemoteMethod(employeeService, getAllAction)
@@ -47,6 +48,7 @@ export namespace RemoteMethods {
     export const getAllAppointments = new RemoteMethod(appointmentService, getAllAction)
     export const addAppointment = new RemoteMethod(appointmentService, addAction)
     export const editAppointment = new RemoteMethod(appointmentService, editAction)
+    export const updateAppointmentDates = new RemoteMethod(appointmentService, updateDates)
     export const deleteAppointment = new RemoteMethod(appointmentService, deleteAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)

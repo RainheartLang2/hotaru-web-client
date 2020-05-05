@@ -42,8 +42,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
     render() {
         return (<>
             <DialogTitle>
-                <Message messageKey={this.getTitleMessageKey()}
-                />
+                <Message messageKey={this.getTitleMessageKey()}/>
             </DialogTitle>
             <DialogContent>
                 <div className={styles.dialogContent}>
@@ -81,13 +80,18 @@ export default class AppointmentDialog extends React.Component<Properties, State
                         </div>
                     </div>
                 </div>
+                <DialogFooter
+                    submitDisabled={this.state[StateProperty.HasErrors]}
+                    onSubmitClick={() => this.onSubmitClick()}
+                    onCancelClick={() => this.props.controller.closeCurrentDialog()}
+                />
             </DialogContent>
-            <DialogFooter
-                submitDisabled={this.state[StateProperty.HasErrors]}
-                onSubmitClick={() => this.onSubmitClick()}
-                onCancelClick={() => this.props.controller.closeCurrentDialog()}
-            />
         </>)
+    }
+
+    componentDidMount(): void {
+        this.props.controller.subscribe(AdminStateProperty.AppointmentDialogMode, this, StateProperty.Mode)
+        this.props.controller.subscribe(AdminStateProperty.AppointmentFormHasErrors, this, StateProperty.HasErrors)
     }
 }
 
