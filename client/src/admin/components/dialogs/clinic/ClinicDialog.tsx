@@ -36,7 +36,7 @@ export default class ClinicDialog extends React.Component<Properties, State> {
         const mode = this.state[StateProperty.Mode]
         const actions = this.props.controller.clinicActions
         if (mode == "create") {
-            this.props.controller.clinicActions.submitCreateClinic()
+            actions.submitCreateClinic()
         } else if (mode == 'edit') {
             actions.submitEditClinic()
         } else {

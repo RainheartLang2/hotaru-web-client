@@ -4,6 +4,10 @@ import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
+import {AdminStateProperty} from "../../../state/AdminApplicationState";
+
+const styles = require("./styles.css");
 
 export default class AppointmentDialog extends React.Component<Properties, State> {
 
@@ -27,6 +31,14 @@ export default class AppointmentDialog extends React.Component<Properties, State
         }
     }
 
+    private onSubmitClick(): void {
+        if (this.state[StateProperty.Mode]) {
+            this.props.controller.appointmentActions.submitCreateItem(() => this.props.controller.closeCurrentDialog())
+        } else {
+            this.props.controller.appointmentActions.submitEditItem(() => this.props.controller.closeCurrentDialog())
+        }
+    }
+
     render() {
         return (<>
             <DialogTitle>
@@ -34,11 +46,46 @@ export default class AppointmentDialog extends React.Component<Properties, State
                 />
             </DialogTitle>
             <DialogContent>
+                <div className={styles.dialogContent}>
+                    <div className={styles.row}>
+                        <div className={styles.titleField}>
+                            <ConnectedTextField
+                                controller={this.props.controller}
+                                fieldPropertyName={AdminStateProperty.EditedAppointmentTitle}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.row}>
+                        <div className={styles.timeRow}>
+                            <div className={styles.dateFieldTitle}>
+                                Время приёма:
+                            </div>
+                            <div className={styles.dateField}>
+                                <ConnectedTextField
+                                    controller={this.props.controller}
+                                    fieldPropertyName={AdminStateProperty.EditedAppointmentStartTime}
+                                    type={"time"}
+                                />
+                            </div>
+                            <div className={styles.dateSeparator}>
+                                -
+                            </div>
+                            <div className={styles.dateField}>
+                                <ConnectedTextField
+                                    controller={this.props.controller}
+                                    fieldPropertyName={AdminStateProperty.EditedAppointmentEndTime}
+                                    type={"time"}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </DialogContent>
             <DialogFooter
                 submitDisabled={this.state[StateProperty.HasErrors]}
-                onSubmitClick={() => {}}
-                onCancelClick={() => {}}
+                onSubmitClick={() => this.onSubmitClick()}
+                onCancelClick={() => this.props.controller.closeCurrentDialog()}
             />
         </>)
     }

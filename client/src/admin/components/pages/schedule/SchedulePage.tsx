@@ -3,9 +3,7 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
-    AppointmentForm,
-    Appointments,
-    AppointmentTooltip,
+    AppointmentForm, Appointments,
     DateNavigator,
     DragDropProvider,
     Scheduler,
@@ -13,17 +11,23 @@ import {
     Toolbar,
     WeekView
 } from "@devexpress/dx-react-scheduler-material-ui";
-import {EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
+import {AppointmentModel, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
 import AdminAppController from "../../../controller/AdminAppController";
 import AppointmentMockForm from "./subcomponents/mockForm/AppointmentMockForm";
+import {AdminStateProperty} from "../../../state/AdminApplicationState";
 
-export default class SchedulePage extends React.Component<Properties> {
+export default class SchedulePage extends React.Component<Properties, State> {
+    constructor(props: Properties) {
+        super(props)
+
+        this.state = {
+            [StateProperty.AppointmentList]: []
+        }
+    }
+
     render() {
         const currentDate = '2018-11-01';
-        const schedulerData = [
-            { startDate: '2018-11-01T09:42', endDate: '2018-11-01T11:06', title: 'Meeting' },
-            { startDate: '2018-11-01T12:00', endDate: '2018-11-01T13:30', title: 'Go to a gym' },
-        ]
+        const schedulerData = this.state[StateProperty.AppointmentList]
         const actions = this.props.controller.appointmentActions
         return (<>
             <PageHeader
@@ -45,7 +49,7 @@ export default class SchedulePage extends React.Component<Properties> {
                     <EditingState
                         onCommitChanges={() => {console.log("onCommit")}}
                         onEditingAppointmentChange={() => {console.log("onEditing")}}
-                        onAddedAppointmentChange={() => actions.openCreateAppointmentDialog()}
+                        onAddedAppointmentChange={(addedAppointment: Object) => actions.openCreateAppointmentDialog(addedAppointment)}
                     />
                     <IntegratedEditing/>
                     <Appointments/>
@@ -60,8 +64,20 @@ export default class SchedulePage extends React.Component<Properties> {
             </Paper>
         </>)
     }
+
+    componentDidMount(): void {
+        this.props.controller.subscribe(AdminStateProperty.AppointmentModelsList, this, StateProperty.AppointmentList)
+    }
+}
+
+enum StateProperty {
+    AppointmentList = "appointmentList",
 }
 
 type Properties = {
     controller: AdminAppController
+}
+
+type State = {
+    [StateProperty.AppointmentList]: AppointmentModel[]
 }

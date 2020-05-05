@@ -1,0 +1,32 @@
+.dialogContent {
+    width: 900px;
+    min-height: 340px;
+    padding: 0px 5px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.timeRow {
+    display: flex;
+}
+
+.titleField {
+    width: 450px;
+}
+
+.dateField {
+    width: 75px;
+}
+
+.dateFieldTitle {
+    margin-right: 10px;
+    line-height: 29px;
+}
+
+.dateSeparator {
+    margin: 0 10px;
+}

@@ -93,6 +93,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openSchedulePage(): void {
         this.applicationStore.setPageType(PageType.Schedule)
+        this._appointmentActions.loadList()
     }
 
     public openSettings(): void {

@@ -4,6 +4,7 @@
       "validator.required.message": "Поле является обязательным для заполнения",
       "validator.email.message": "email-адрес обязан содержать символ '@'",
       "validator.confirm.password.message": "Значение не совпадает с изначально введённым паролем",
+      "validator.time.message": "Поле должно быть заполнено в формате 'hh:mm' и содержать только цифры",
       "field.login.label": "Логин",
       "field.password.label": "Пароль",
       "field.password.repeat.label": "Повторите пароль",

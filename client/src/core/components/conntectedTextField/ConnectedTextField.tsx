@@ -106,7 +106,7 @@ type Properties = {
     mask?: string,
     rows?: number,
     defaultValue?: string,
-    type?: "text" | "password",
+    type?: "text" | "password" | "time",
     variant?: "standard" | "filled" | "outlined"
 }
 
