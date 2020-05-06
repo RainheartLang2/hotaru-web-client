@@ -216,6 +216,7 @@ export enum AdminStateProperty {
     EditedAppointmentStartTime = "editedAppointmentStartTime",
     EditedAppointmentEndTime = "editedAppointmentEndTime",
     AppointmentFormHasErrors = "appointmentFormHasErrors",
+    CreateClientInfo = "createClientInfo",
     EditedClientInfoId = "editedClientInfoId",
     EditedClientInfoFirstName = "editedClientInfoFirstName",
     EditedClientInfoMiddleName = "editedClientInfoMiddleName",

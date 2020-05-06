@@ -45,6 +45,7 @@
       "dialog.appointment.field.phone.label": "Телефон",
       "dialog.appointment.field.email.label": "E-mail",
       "dialog.appointment.field.address.label": "Адрес",
+      "dialog.appointment.checkbox.createClient.label": "Подробная информация о клиенте",
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",

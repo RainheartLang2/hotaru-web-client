@@ -59,6 +59,15 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             DateUtils.dateToTimeString(startDate))
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
             DateUtils.dateToTimeString(endDate))
+
+        this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, null)
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, "")
+
         this.controller.setShowDialog(DialogType.CreateAppointment)
     }
 
@@ -75,6 +84,24 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
             DateUtils.dateToTimeString(endDate))
         this.controller.setShowDialog(DialogType.EditAppointment)
+    }
+
+    public submitCreateItem(callback: Function = () => {}): void {
+        const appointment = this.getCreateItem()
+        const client = this.node.buildClientInfo()
+        fetchUserZoneRpc({
+            method: this.addMethod,
+            params: [appointment, client],
+            successCallback: (result) => {
+                const addedAppointment = result as MedicalAppointment
+                this.node.add(addedAppointment)
+                if (!!client) {
+                    client.id = addedAppointment.cliendId
+                    this.controller.clientActions.addClient(client)
+                }
+                callback()
+            },
+        })
     }
 
     public handleAppointmentChange(changes: ChangeSet, callback: Function = () => {}): void {

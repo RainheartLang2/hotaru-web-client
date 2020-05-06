@@ -19,4 +19,8 @@ export default class ClientActions extends ReadActions<Client, AdminAppControlle
         return RemoteMethods.getAllClients
     }
 
+    public addClient(client: Client): void {
+        this.node.add(client)
+    }
+
 }

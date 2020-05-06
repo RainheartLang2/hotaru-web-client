@@ -7,6 +7,7 @@ import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter"
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ClientInfoForm from "./subcomponents/ClientInfoForm";
+import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/ConnectedCheckbox";
 
 const styles = require("./styles.css");
 
@@ -18,6 +19,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
         this.state = {
             [StateProperty.Mode]: 'none',
             [StateProperty.HasErrors]: false,
+            [StateProperty.ShowClientInfoForm]: false,
         }
     }
 
@@ -80,7 +82,15 @@ export default class AppointmentDialog extends React.Component<Properties, State
                             </div>
                         </div>
                     </div>
-                    <ClientInfoForm controller={this.props.controller}/>
+                    <div className={styles.row}>
+                        <ConnectedCheckbox
+                            propertyName={AdminStateProperty.CreateClientInfo}
+                            label={<Message messageKey={"dialog.appointment.checkbox.createClient.label"}/>}
+                            controller={this.props.controller}
+                        />
+                    </div>
+                    {this.state[StateProperty.ShowClientInfoForm]
+                        && (<ClientInfoForm controller={this.props.controller}/>)}
                 </div>
                 <DialogFooter
                     submitDisabled={this.state[StateProperty.HasErrors]}
@@ -93,6 +103,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
 
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.AppointmentDialogMode, this, StateProperty.Mode)
+        this.props.controller.subscribe(AdminStateProperty.CreateClientInfo, this, StateProperty.ShowClientInfoForm)
         this.props.controller.subscribe(AdminStateProperty.AppointmentFormHasErrors, this, StateProperty.HasErrors)
     }
 }
@@ -100,6 +111,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
 enum StateProperty {
     Mode = "mode",
     HasErrors = "hasErrors",
+    ShowClientInfoForm = "showClientInfoForm"
 }
 
 type Properties = {
@@ -109,4 +121,5 @@ type Properties = {
 type State = {
     [StateProperty.Mode]: ConfigureDialogType,
     [StateProperty.HasErrors]: boolean,
+    [StateProperty.ShowClientInfoForm]: boolean,
 }

@@ -11,6 +11,7 @@ import {DialogType} from "../enum/DialogType";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import Time = DateUtils.Time;
+import {Client} from "../../../common/beans/Client";
 
 export default class AppointmentNode extends CrudNode<MedicalAppointment> {
 
@@ -48,6 +49,7 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         this.store.registerField(AdminStateProperty.EditedClientInfoPhone, "", [new OnlyDigitsValidator()])
         this.store.registerField(AdminStateProperty.EditedClientInfoMail, "", [new EmailFormatValidator()])
         this.store.registerField(AdminStateProperty.EditedClientInfoAddress, "")
+        this.store.registerProperty(AdminStateProperty.CreateClientInfo, false)
 
         const fieldsList = [
             AdminStateProperty.EditedAppointmentTitle,
@@ -74,6 +76,21 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
             title: this.store.getFieldValue(AdminStateProperty.EditedAppointmentTitle),
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), startTime.hours, startTime.minutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), endTime.hours, endTime.minutes),
+        }
+    }
+
+    buildClientInfo(): Client | null {
+        if (!this.store.getPropertyValue(AdminStateProperty.CreateClientInfo)) {
+            return null
+        }
+        return {
+            id: this.store.getPropertyValue(AdminStateProperty.EditedClientInfoId),
+            firstName: this.store.getFieldValue(AdminStateProperty.EditedClientInfoFirstName),
+            middleName: this.store.getFieldValue(AdminStateProperty.EditedClientInfoMiddleName),
+            lastName: this.store.getFieldValue(AdminStateProperty.EditedClientInfoLastName),
+            phone: this.store.getFieldValue(AdminStateProperty.EditedClientInfoPhone),
+            email: this.store.getFieldValue(AdminStateProperty.EditedClientInfoMail),
+            address: this.store.getFieldValue(AdminStateProperty.EditedClientInfoAddress),
         }
     }
 
