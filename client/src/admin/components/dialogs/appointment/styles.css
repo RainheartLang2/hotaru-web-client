@@ -1,7 +1,7 @@
 .dialogContent {
     width: 900px;
     min-height: 340px;
-    padding: 0px 5px;
+    padding: 0 15px 0 5px;
 }
 
 .row {
@@ -29,4 +29,12 @@
 
 .dateSeparator {
     margin: 0 10px;
+}
+
+.nameField {
+    width: 270px;
+}
+
+.addressField {
+    width: 270px;
 }

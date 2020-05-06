@@ -8,6 +8,8 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import TimeValidator from "../../../core/mvc/validators/TimeValidator";
 import {DialogType} from "../enum/DialogType";
+import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
+import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import Time = DateUtils.Time;
 
 export default class AppointmentNode extends CrudNode<MedicalAppointment> {
@@ -39,10 +41,23 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
             }
         })
 
+        this.store.registerProperty(AdminStateProperty.EditedClientInfoId, null)
+        this.store.registerField(AdminStateProperty.EditedClientInfoFirstName, "", [new MaximalLengthValidator(100)])
+        this.store.registerField(AdminStateProperty.EditedClientInfoMiddleName, "", [new MaximalLengthValidator(100)])
+        this.store.registerField(AdminStateProperty.EditedClientInfoLastName, "", [new MaximalLengthValidator(100)])
+        this.store.registerField(AdminStateProperty.EditedClientInfoPhone, "", [new OnlyDigitsValidator()])
+        this.store.registerField(AdminStateProperty.EditedClientInfoMail, "", [new EmailFormatValidator()])
+        this.store.registerField(AdminStateProperty.EditedClientInfoAddress, "")
+
         const fieldsList = [
             AdminStateProperty.EditedAppointmentTitle,
             AdminStateProperty.EditedAppointmentStartTime,
-            AdminStateProperty.EditedAppointmentEndTime
+            AdminStateProperty.EditedAppointmentEndTime,
+            AdminStateProperty.EditedClientInfoFirstName,
+            AdminStateProperty.EditedClientInfoMiddleName,
+            AdminStateProperty.EditedClientInfoPhone,
+            AdminStateProperty.EditedClientInfoMail,
+            AdminStateProperty.EditedClientInfoAddress,
         ]
         this.store.registerSelector(AdminStateProperty.AppointmentFormHasErrors, {
             dependsOn: fieldsList,

@@ -9,7 +9,6 @@ import {DialogType} from "../../state/enum/DialogType";
 import {AppointmentInfo} from "../../../common/beans/AppointmentInfo";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
-import {DateRange} from "../../../common/beans/DateRange";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 
 export default class AppointmentActions extends CrudAction<MedicalAppointment, AdminAppController, AppointmentNode> {
@@ -26,6 +25,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                 title: bean.title,
                 startDate: new Date(bean.startDate),
                 endDate: new Date(bean.endDate),
+                cliendId: bean.clientId
             }
         })
     }
@@ -105,6 +105,14 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             },
         })
     }
+
+    public loadAppointmentsWithClients(callback: Function = () => {}) : void {
+        super.loadList([],() => {
+            const appointments = this.node.getList()
+            const clientIds = appointments.map(appointment => appointment.cliendId).filter(id => !!id)
+            this.controller.clientActions.loadList(clientIds.length > 0 ? [clientIds] : [], () => callback())
+        })
+    }
 }
 
 type ServerAppointmentBean = {
@@ -112,4 +120,5 @@ type ServerAppointmentBean = {
     title: string,
     startDate: number,
     endDate: number,
+    clientId?: number,
 }

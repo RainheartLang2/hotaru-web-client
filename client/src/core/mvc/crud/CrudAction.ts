@@ -4,39 +4,21 @@ import {fetchUserZoneRpc} from "../../utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {RemoteMethod} from "../../http/RemoteMethod";
 import Identifiable from "../../entities/Identifiable";
+import ReadActions from "../read/ReadActions";
 
 export default abstract class CrudAction<ItemType extends Identifiable,
-    ControllerType extends ApplicationController,
-    NodeType extends CrudNode<ItemType>
-    > {
-    protected controller: ControllerType
-    protected node: NodeType
+        ControllerType extends ApplicationController,
+        NodeType extends CrudNode<ItemType>>
+    extends ReadActions<ItemType, ControllerType, NodeType> {
 
     constructor(controller: ControllerType,
                 node: NodeType) {
-        this.controller = controller
-        this.node = node
+        super(controller, node)
     }
 
-    protected abstract getAllLoadingProperty(): string
-
-    protected abstract get getAllMethod(): RemoteMethod
     protected abstract get addMethod(): RemoteMethod
     protected abstract get updateMethod(): RemoteMethod
     protected abstract get deleteMethod(): RemoteMethod
-
-    protected abstract convertResultToItem(result: any): ItemType[]
-
-    public loadList(callback: Function = () => {}): void {
-        fetchUserZoneRpc({
-            method: this.getAllMethod,
-            successCallback: result => {
-                this.node.setList(this.convertResultToItem(result))
-                callback()
-            },
-            loadingProperty: this.getAllLoadingProperty(),
-        })
-    }
 
     public submitCreateItem(callback: Function = () => {}): void {
         const item = this.getCreateItem()
@@ -69,10 +51,6 @@ export default abstract class CrudAction<ItemType extends Identifiable,
 
     protected getEditItem(): ItemType {
         return this.node.buildBasedOnFields()
-    }
-
-    public getItemById(id: number): ItemType {
-        return this.node.getItemById(id)
     }
 
     public deleteItem(id: number): void {

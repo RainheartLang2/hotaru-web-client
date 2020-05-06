@@ -6,6 +6,7 @@ import {Message} from "../../../../core/components/Message";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
+import ClientInfoForm from "./subcomponents/ClientInfoForm";
 
 const styles = require("./styles.css");
 
@@ -79,6 +80,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
                             </div>
                         </div>
                     </div>
+                    <ClientInfoForm controller={this.props.controller}/>
                 </div>
                 <DialogFooter
                     submitDisabled={this.state[StateProperty.HasErrors]}

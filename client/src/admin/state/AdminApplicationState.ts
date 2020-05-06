@@ -10,6 +10,7 @@ import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuTyp
 import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import BreedNode from "./nodes/BreedNode";
 import AppointmentNode from "./nodes/AppointmentNode";
+import ClientNode from "./nodes/ClientNode";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -19,6 +20,7 @@ export default class AdminApplicationState extends ApplicationStore {
     private _speciesNode: SpeciesNode
     private _breedsNode: BreedNode
     private _appointmentNode: AppointmentNode
+    private _clientsNode: ClientNode
 
     private constructor() {
         super()
@@ -78,6 +80,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this._speciesNode = new SpeciesNode(this.friend)
         this._breedsNode = new BreedNode(this.friend)
         this._appointmentNode = new AppointmentNode(this.friend)
+        this._clientsNode = new ClientNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {
@@ -98,6 +101,10 @@ export default class AdminApplicationState extends ApplicationStore {
 
     get appointmentNode(): AppointmentNode {
         return this._appointmentNode
+    }
+
+    get clientNode(): ClientNode {
+        return this._clientsNode
     }
 
     public static get instance(): AdminApplicationState {
@@ -209,4 +216,15 @@ export enum AdminStateProperty {
     EditedAppointmentStartTime = "editedAppointmentStartTime",
     EditedAppointmentEndTime = "editedAppointmentEndTime",
     AppointmentFormHasErrors = "appointmentFormHasErrors",
+    EditedClientInfoId = "editedClientInfoId",
+    EditedClientInfoFirstName = "editedClientInfoFirstName",
+    EditedClientInfoMiddleName = "editedClientInfoMiddleName",
+    EditedClientInfoLastName = "editedClientInfoLastName",
+    EditedClientInfoPhone = "editedClientInfoPhone",
+    EditedClientInfoMail = "editedClientInfoMail",
+    EditedClientInfoAddress = "editedClientInfoAddress",
+
+    //ClientNode
+    ClientsList = "clientsList",
+    ClientsListById = "clientsListById",
 }

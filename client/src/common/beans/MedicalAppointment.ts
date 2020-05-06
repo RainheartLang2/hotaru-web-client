@@ -4,4 +4,5 @@ export type MedicalAppointment = {
     title: string
     startDate: Date
     endDate: Date
+    cliendId?: number
 }

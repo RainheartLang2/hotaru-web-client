@@ -1,48 +1,15 @@
 import {ApplicationStoreFriend} from "../store/ApplicationStoreFriend";
-import {CollectionUtils} from "../../utils/CollectionUtils";
 import Identifiable from "../../entities/Identifiable";
+import ReadNode from "../read/ReadNode";
 
-export default abstract class CrudNode<ItemType extends Identifiable> {
-    protected store: ApplicationStoreFriend
+export default abstract class CrudNode<ItemType extends Identifiable> extends ReadNode<ItemType>{
 
     constructor(store: ApplicationStoreFriend) {
-        this.store = store
-
-        this.store.registerProperty(this.getListPropertyName(), [])
-        this.store.registerSelector(this.getMapByIdPropertyName(), {
-            dependsOn: [this.getListPropertyName()],
-            get: map => {
-                const list: ItemType[] = map.get(this.getListPropertyName()) as ItemType[]
-                return CollectionUtils.mapArrayByUniquePredicate(list, item => item.id)
-            }
-        })
+        super(store)
     }
 
-    protected abstract getListPropertyName(): string
-
-    protected abstract getMapByIdPropertyName(): string
-
+    //TODO: remove, as it may be not used (see ClientNode)
     public abstract buildBasedOnFields(): ItemType
-
-    public getList(): ItemType[] {
-        return this.store.getPropertyValue(this.getListPropertyName())
-    }
-
-    public getByIdMap(): Map<number, ItemType> {
-        return this.store.getPropertyValue(this.getMapByIdPropertyName())
-    }
-
-    public getItemById(id: number): ItemType {
-        const item = this.getByIdMap().get(id)
-        if (!item) {
-            throw new Error("item with id " + id + " is not presented in the store")
-        }
-        return item
-    }
-
-    public setList(itemList: ItemType[]) {
-        this.store.setPropertyValue(this.getListPropertyName(), itemList)
-    }
 
     public add(item: ItemType) {
         const list = this.getList()

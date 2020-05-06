@@ -10,6 +10,7 @@ import ClinicActions from "./actions/ClinicActions";
 import SpeciesActions from "./actions/SpeciesActions";
 import BreedActions from "./actions/BreedActions";
 import AppointmentActions from "./actions/AppointmentActions";
+import ClientActions from "./actions/ClientActions";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
@@ -19,6 +20,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     private _speciesActions: SpeciesActions
     private _breedActions: BreedActions
     private _appointmentActions: AppointmentActions
+    private _clientActions: ClientActions
 
     private constructor() {
         super(AdminApplicationState.instance)
@@ -27,6 +29,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         this._speciesActions = new SpeciesActions(this, this.applicationStore.speciesNode)
         this._breedActions = new BreedActions(this, this.applicationStore.breedNode)
         this._appointmentActions = new AppointmentActions(this, this.applicationStore.appointmentNode)
+        this._clientActions = new ClientActions(this, this.applicationStore.clientNode)
     }
 
     public static get instance(): AdminAppController {
@@ -66,6 +69,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         return this._appointmentActions
     }
 
+    get clientActions(): ClientActions {
+        return this._clientActions
+    }
+
     public startApplication(): void {
         this.applicationStore.setApplicationLoading(true)
         this.loadLoggedInUser(() => {
@@ -93,7 +100,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openSchedulePage(): void {
         this.applicationStore.setPageType(PageType.Schedule)
-        this._appointmentActions.loadList()
+        this._appointmentActions.loadAppointmentsWithClients()
     }
 
     public openSettings(): void {
@@ -107,8 +114,8 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openBreedsPage(speciesId?: number): void {
         this.applicationStore.setPageType(PageType.Breeds)
-        this._speciesActions.loadList(() => {
-            this._breedActions.loadList(() => {
+        this._speciesActions.loadList([], () => {
+            this._breedActions.loadList([], () => {
                 this._speciesActions.setSelectedSpecies(speciesId)
             })
         })

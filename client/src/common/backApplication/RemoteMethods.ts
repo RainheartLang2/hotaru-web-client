@@ -13,6 +13,7 @@ export namespace RemoteMethods {
     const speciesService = new ServerAppService("SpeciesService")
     const breedService = new ServerAppService("BreedService")
     const appointmentService = new ServerAppService("AppointmentService")
+    const clientService = new ServerAppService("ClientService")
 
     //Back application typical actions list
     const getAllAction = new ServerAppAction("getAll")
@@ -50,6 +51,8 @@ export namespace RemoteMethods {
     export const editAppointment = new RemoteMethod(appointmentService, editAction)
     export const updateAppointmentDates = new RemoteMethod(appointmentService, updateDates)
     export const deleteAppointment = new RemoteMethod(appointmentService, deleteAction)
+
+    export const getAllClients = new RemoteMethod(clientService, getAllAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 
