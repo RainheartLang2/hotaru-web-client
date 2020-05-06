@@ -25,7 +25,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                 title: bean.title,
                 startDate: new Date(bean.startDate),
                 endDate: new Date(bean.endDate),
-                cliendId: bean.clientId
+                clientId: bean.clientId
             }
         })
     }
@@ -46,6 +46,17 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         return RemoteMethods.editAppointment
     }
 
+    private initializeClientInfo(): void {
+        this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, null)
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, "")
+        this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, false)
+    }
+
     public openCreateAppointmentDialog(addedAppointment: Object): void {
         const appointment = addedAppointment as AppointmentInfo
         const startDate = appointment.startDate
@@ -60,13 +71,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
             DateUtils.dateToTimeString(endDate))
 
-        this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, null)
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, "")
+        this.initializeClientInfo()
 
         this.controller.setShowDialog(DialogType.CreateAppointment)
     }
@@ -75,6 +80,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         const appointment = editedAppointment as AppointmentInfo
         const startDate = appointment.startDate
         const endDate = appointment.endDate
+
         this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, appointment.id)
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, appointment.title)
         this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
@@ -83,6 +89,22 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             DateUtils.dateToTimeString(startDate))
         this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
             DateUtils.dateToTimeString(endDate))
+
+        const clientId = appointment.id ? this.node.getItemById(appointment.id).clientId : null
+        if (!!clientId) {
+            const client = this.controller.clientActions.getItemById(clientId)
+            this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, clientId)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, client.firstName)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, client.middleName)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, client.lastName)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, client.phone)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, client.email)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, client.address)
+            this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, true)
+        } else {
+            this.initializeClientInfo()
+        }
+
         this.controller.setShowDialog(DialogType.EditAppointment)
     }
 
@@ -96,11 +118,27 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                 const addedAppointment = result as MedicalAppointment
                 this.node.add(addedAppointment)
                 if (!!client) {
-                    client.id = addedAppointment.cliendId
+                    client.id = addedAppointment.clientId
                     this.controller.clientActions.addClient(client)
                 }
                 callback()
             },
+        })
+    }
+
+    public submitEditItem(callback: Function = () => {}): void {
+        const appointment = this.getEditItem()
+        const client = this.node.buildClientInfo()
+        fetchUserZoneRpc({
+            method: this.updateMethod,
+            params: [appointment, client],
+            successCallback: result => {
+                this.node.update(appointment)
+                if (!!client) {
+                    this.controller.clientActions.updateClient(client)
+                }
+                callback()
+            }
         })
     }
 
@@ -136,8 +174,8 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
     public loadAppointmentsWithClients(callback: Function = () => {}) : void {
         super.loadList([],() => {
             const appointments = this.node.getList()
-            const clientIds = appointments.map(appointment => appointment.cliendId).filter(id => !!id)
-            this.controller.clientActions.loadList(clientIds.length > 0 ? [clientIds] : [], () => callback())
+            const clientIds = appointments.map(appointment => appointment.clientId).filter(id => !!id)
+            this.controller.clientActions.loadList(clientIds, () => callback())
         })
     }
 }

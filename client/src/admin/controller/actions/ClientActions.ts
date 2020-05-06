@@ -23,4 +23,8 @@ export default class ClientActions extends ReadActions<Client, AdminAppControlle
         this.node.add(client)
     }
 
+    public updateClient(client: Client): void {
+        this.node.update(client)
+    }
+
 }
