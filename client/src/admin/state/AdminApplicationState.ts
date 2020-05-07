@@ -11,6 +11,7 @@ import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import BreedNode from "./nodes/BreedNode";
 import AppointmentNode from "./nodes/AppointmentNode";
 import ClientNode from "./nodes/ClientNode";
+import PetNode from "./nodes/PetNode";
 
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
@@ -21,6 +22,7 @@ export default class AdminApplicationState extends ApplicationStore {
     private _breedsNode: BreedNode
     private _appointmentNode: AppointmentNode
     private _clientsNode: ClientNode
+    private _petNode: PetNode
 
     private constructor() {
         super()
@@ -81,6 +83,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this._breedsNode = new BreedNode(this.friend)
         this._appointmentNode = new AppointmentNode(this.friend)
         this._clientsNode = new ClientNode(this.friend)
+        this._petNode = new PetNode(this.friend)
     }
 
     get employeeNode(): EmployeeNode {
@@ -105,6 +108,10 @@ export default class AdminApplicationState extends ApplicationStore {
 
     get clientNode(): ClientNode {
         return this._clientsNode
+    }
+
+    get petNode(): PetNode {
+        return this._petNode
     }
 
     public static get instance(): AdminApplicationState {
@@ -227,8 +234,17 @@ export enum AdminStateProperty {
     EditedClientInfoPhone = "editedClientInfoPhone",
     EditedClientInfoMail = "editedClientInfoMail",
     EditedClientInfoAddress = "editedClientInfoAddress",
+    EditedClientPetName = "editedClientPetName",
+    EditedClientPetSpecies = "editedClientPetSpecies",
+    EditedClientSelectedSpecies = "editedClientSelectedSpecies",
+    EditedClientPetBreeds = "editedClientPetBreeds",
+    EditedClientSelectedBreed = "editedClientSelectedBreed",
 
     //ClientNode
     ClientsList = "clientsList",
     ClientsListById = "clientsListById",
+
+    //PetNode
+    PetList = "petList",
+    PetListById = "petListById",
 }

@@ -6,7 +6,7 @@ import {ReactNode} from "react";
 export default class ConnectedSelect<ItemType> extends React.Component<Properties<ItemType>, State<ItemType>> {
 
     static defaultProps = {
-        variant: "standard",
+        variant: "outlined",
     }
 
     constructor(props: Properties<ItemType>) {
@@ -63,7 +63,7 @@ enum StateProperty {
 type Properties<ItemType> = {
     controller: ApplicationController
     label?: ReactNode,
-    variant: "standard" | "outlined"
+    variant?: "standard" | "outlined"
     mapProperty: string,
     selectedItemProperty: string,
     itemToString: (item: ItemType) => string,

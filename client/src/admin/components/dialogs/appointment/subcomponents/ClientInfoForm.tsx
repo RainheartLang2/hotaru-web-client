@@ -3,6 +3,7 @@ import ConnectedTextField from "../../../../../core/components/conntectedTextFie
 import AdminAppController from "../../../../controller/AdminAppController";
 import {AdminStateProperty} from "../../../../state/AdminApplicationState";
 import {Message} from "../../../../../core/components/Message";
+import PetInfoForm from "./PetInfoForm";
 
 const styles = require("../styles.css");
 
@@ -55,6 +56,7 @@ export default class ClientInfoForm extends React.Component<Properties> {
                     />
                 </div>
             </div>
+            <PetInfoForm controller={this.props.controller}/>
         </>)
     }
 }

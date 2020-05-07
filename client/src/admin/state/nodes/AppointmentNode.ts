@@ -11,8 +11,11 @@ import {DialogType} from "../enum/DialogType";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import {Client} from "../../../common/beans/Client";
-import Time = DateUtils.Time;
 import {Employee} from "../../../common/beans/Employee";
+import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import Species from "../../../common/beans/Species";
+import Breed from "../../../common/beans/Breed";
+import Time = DateUtils.Time;
 
 export default class AppointmentNode extends CrudNode<MedicalAppointment> {
 
@@ -63,6 +66,33 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         this.store.registerField(AdminStateProperty.EditedClientInfoMail, "", [new EmailFormatValidator()])
         this.store.registerField(AdminStateProperty.EditedClientInfoAddress, "")
         this.store.registerProperty(AdminStateProperty.CreateClientInfo, false)
+
+        this.store.registerField(AdminStateProperty.EditedClientPetName, "", [new MaximalLengthValidator(100)])
+        this.store.registerSelector(AdminStateProperty.EditedClientPetSpecies, {
+            dependsOn: [AdminStateProperty.SpeciesListById],
+            get: map => {
+                const result = CollectionUtils.cloneMap(map.get(AdminStateProperty.SpeciesListById) as Map<number, Species>)
+                result.set(0, Species.getMock())
+                return result
+            }
+        })
+        this.store.registerProperty(AdminStateProperty.EditedClientSelectedSpecies, null)
+
+        this.store.registerSelector(AdminStateProperty.EditedClientPetBreeds, {
+            dependsOn: [AdminStateProperty.BreedsList, AdminStateProperty.EditedClientSelectedSpecies],
+            get: map => {
+                const selectedSpecies: Species | null = map.get(AdminStateProperty.EditedClientSelectedSpecies)
+                if (!selectedSpecies) {
+                    return [Breed.getMock()]
+                }
+                const breeds = (map.get(AdminStateProperty.BreedsList) as Breed[]).filter(breed => breed.speciesId == selectedSpecies.id)
+                breeds.push(Breed.getMock())
+                const result = CollectionUtils.mapArrayByUniquePredicate(breeds, breed => breed.id)
+                return result
+            }
+        })
+
+        this.store.registerProperty(AdminStateProperty.EditedClientSelectedBreed, null)
 
         const fieldsList = [
             AdminStateProperty.EditedAppointmentTitle,

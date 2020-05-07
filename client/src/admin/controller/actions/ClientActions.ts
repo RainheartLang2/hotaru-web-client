@@ -5,6 +5,8 @@ import ClientNode from "../../state/nodes/ClientNode";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethod} from "../../../core/http/RemoteMethod";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
+import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
+import {Pet} from "../../../common/beans/Pet";
 
 export default class ClientActions extends ReadActions<Client, AdminAppController, ClientNode> {
     protected convertResultToItem(result: any): Client[] {
@@ -27,4 +29,22 @@ export default class ClientActions extends ReadActions<Client, AdminAppControlle
         this.node.update(client)
     }
 
+    public loadClientsWithPets(clientsIds: number[], callback: Function) {
+        fetchUserZoneRpc({
+            method: this.getAllMethod,
+            params: clientsIds,
+            successCallback: result => {
+                const clientInfo: ServerClientInfo = result
+                this.node.setList(clientInfo.clients)
+                this.controller.petActions.setPets(clientInfo.pets)
+                callback(result)
+            },
+            loadingProperty: this.getAllLoadingProperty(),
+        })
+    }
+}
+
+type ServerClientInfo = {
+    clients: Client[],
+    pets: Pet[],
 }

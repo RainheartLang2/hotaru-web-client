@@ -177,7 +177,8 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         super.loadList([],() => {
             const appointments = this.node.getList()
             const clientIds = appointments.map(appointment => appointment.clientId).filter(id => !!id)
-            this.controller.clientActions.loadList(clientIds, () => callback())
+            // @ts-ignore
+            this.controller.clientActions.loadClientsWithPets(clientIds, () => callback())
         })
     }
 }

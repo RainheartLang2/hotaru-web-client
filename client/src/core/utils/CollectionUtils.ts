@@ -6,7 +6,7 @@ export namespace CollectionUtils {
         const result = new Map<KeyType, ItemType>()
         array.forEach(item => {
             const predicateResult = predicate(item)
-            if (!predicateResult) {
+            if (predicateResult == null) {
                 throw new Error("predicate returned null for item " + item)
             }
             if (result.get(predicateResult) != null) {

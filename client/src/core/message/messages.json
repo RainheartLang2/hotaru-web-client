@@ -22,6 +22,8 @@
       "common.label.actions": "Действия",
       "common.employee.name": "Имя",
       "clinic.mock.name": "Нет клиники",
+      "species.mock.name": "Вид не указан",
+      "breed.mock.name": "Порода не указана",
       "navigationMenu.employees.title": "Сотрудники",
       "navigationMenu.clinics.title": "Клиники",
       "navigationMenu.schedule.title": "Расписание",
@@ -46,6 +48,7 @@
       "dialog.appointment.field.phone.label": "Телефон",
       "dialog.appointment.field.email.label": "E-mail",
       "dialog.appointment.field.address.label": "Адрес",
+      "dialog.appointment.field.petName.label": "Кличка",
       "dialog.appointment.checkbox.createClient.label": "Подробная информация о клиенте",
 
       "dialog.clinic.create.label": "Создание новой клиники",
