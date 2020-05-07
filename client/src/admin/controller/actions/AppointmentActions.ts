@@ -25,7 +25,8 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                 title: bean.title,
                 startDate: new Date(bean.startDate),
                 endDate: new Date(bean.endDate),
-                clientId: bean.clientId
+                clientId: bean.clientId,
+                medicId: bean.medicId,
             }
         })
     }
@@ -161,6 +162,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             title: appointment.title,
             startDate,
             endDate,
+            medicId: appointment.medicId,
         })
         fetchUserZoneRpc({
             method: RemoteMethods.updateAppointmentDates,
@@ -186,4 +188,5 @@ type ServerAppointmentBean = {
     startDate: number,
     endDate: number,
     clientId?: number,
+    medicId: number,
 }

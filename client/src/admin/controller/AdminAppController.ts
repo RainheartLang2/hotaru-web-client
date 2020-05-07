@@ -100,7 +100,10 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     public openSchedulePage(): void {
         this.applicationStore.setPageType(PageType.Schedule)
-        this._appointmentActions.loadAppointmentsWithClients()
+        this._employeeActions.loadUsersList((employees) => {
+            this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
+            this._appointmentActions.loadAppointmentsWithClients()
+        })
     }
 
     public openSettings(): void {

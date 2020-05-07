@@ -5,4 +5,5 @@ export type MedicalAppointment = {
     startDate: Date
     endDate: Date
     clientId?: number
+    medicId: number
 }

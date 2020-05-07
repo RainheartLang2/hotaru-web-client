@@ -155,6 +155,7 @@ export enum AdminStateProperty {
     //EmployeeNode
     UserList = "userList",
     UserListById = "userListById",
+    MedicsListById = "medicsListById",
     EmployeeDialogType = "employeeDialogType",
     EditedEmployeeId = "editedEmployeeId",
     EditedEmployeeFirstName = "editedEmployeeFirstName",
@@ -208,8 +209,10 @@ export enum AdminStateProperty {
     //AppointmentNode
     AppointmentsList = "appointmentsList",
     AppointmentsListById = "appointmentsListById",
+    AppointmentsForSelectedMedic = "appointmentsForSelectedMedic",
     AppointmentModelsList = "appointmentModelsList",
     AppointmentDialogMode = "appointmentDialogMode",
+    SelectedEmployeeForSchedulePage = "selectedEmployeeForSchedulePage",
     EditedAppointmentId = "editedAppointmentId",
     EditedAppointmentTitle = "editedAppointmentTitle",
     EditedAppointmentDate = "editedAppointmentDate",

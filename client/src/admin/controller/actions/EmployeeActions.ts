@@ -18,12 +18,12 @@ export default class EmployeeActions {
         this.node = store
     }
 
-    public loadUsersList(callback: Function): void {
+    public loadUsersList(callback: (employees: Employee[]) => void = () => {}): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllEmployees,
             successCallback: result => {
                 this.node.setUserList(plainToClass(Employee, result) as Employee[])
-                callback()
+                callback(result)
             },
             loadingProperty: AdminStateProperty.IsPageLoading,
         })

@@ -10,8 +10,9 @@ import TimeValidator from "../../../core/mvc/validators/TimeValidator";
 import {DialogType} from "../enum/DialogType";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
-import Time = DateUtils.Time;
 import {Client} from "../../../common/beans/Client";
+import Time = DateUtils.Time;
+import {Employee} from "../../../common/beans/Employee";
 
 export default class AppointmentNode extends CrudNode<MedicalAppointment> {
 
@@ -25,9 +26,21 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         this.store.registerField(AdminStateProperty.EditedAppointmentStartTime, "00:00", [new TimeValidator()])
         this.store.registerField(AdminStateProperty.EditedAppointmentEndTime, "00:00", [new TimeValidator()])
 
+        this.store.registerProperty(AdminStateProperty.SelectedEmployeeForSchedulePage, null)
+
+        this.store.registerSelector(AdminStateProperty.AppointmentsForSelectedMedic, {
+            dependsOn: [AdminStateProperty.SelectedEmployeeForSchedulePage, AdminStateProperty.AppointmentsList],
+            get: map => {
+                const selectedMedic: Employee = map.get(AdminStateProperty.SelectedEmployeeForSchedulePage)
+                return this.getList().filter(appointment => appointment.medicId == selectedMedic.id)
+            }
+        })
         this.store.registerSelector(AdminStateProperty.AppointmentModelsList, {
-            dependsOn: [AdminStateProperty.AppointmentsList],
-            get: map => this.getList().map(item => this.toAppointmentModel(item))
+            dependsOn: [AdminStateProperty.AppointmentsForSelectedMedic],
+            get: map => {
+                const appointmentsForSelectedMedic: MedicalAppointment[] = map.get(AdminStateProperty.AppointmentsForSelectedMedic)
+                return appointmentsForSelectedMedic.map(item => this.toAppointmentModel(item))
+            }
         })
 
         this.store.registerSelector(AdminStateProperty.AppointmentDialogMode, {
@@ -71,11 +84,16 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         const date: Date = this.store.getPropertyValue(AdminStateProperty.EditedAppointmentDate)
         const startTime: Time = DateUtils.parseTime(this.store.getFieldValue(AdminStateProperty.EditedAppointmentStartTime))
         const endTime: Time = DateUtils.parseTime(this.store.getFieldValue(AdminStateProperty.EditedAppointmentEndTime))
+        const selectedMedic = this.getSelectedMedic()
+        if (!selectedMedic.id) {
+            throw new Error("medic id should be defined")
+        }
         return {
             id: this.store.getPropertyValue(AdminStateProperty.EditedAppointmentId),
             title: this.store.getFieldValue(AdminStateProperty.EditedAppointmentTitle),
             startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), startTime.hours, startTime.minutes),
             endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), endTime.hours, endTime.minutes),
+            medicId: selectedMedic.id,
         }
     }
 
@@ -100,6 +118,10 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
 
     protected getMapByIdPropertyName(): string {
         return AdminStateProperty.AppointmentsListById;
+    }
+
+    protected getSelectedMedic(): Employee {
+        return this.store.getPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage)
     }
 
     private toAppointmentModel(appointment: MedicalAppointment): AppointmentModel {

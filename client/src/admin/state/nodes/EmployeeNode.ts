@@ -26,6 +26,12 @@ export default class EmployeeNode {
             }
         })
 
+        //TODO: change to selecting medics only (after implementing of access rights)
+        this.store.registerSelector(AdminStateProperty.MedicsListById, {
+            dependsOn: [AdminStateProperty.UserListById],
+            get: map => map.get(AdminStateProperty.UserListById)
+        })
+
         this.store.registerSelector(AdminStateProperty.EmployeeDialogType, {
             dependsOn: [AdminStateProperty.DialogType],
             get: map => {

@@ -15,6 +15,11 @@ import {AppointmentModel, ChangeSet, EditingState, IntegratedEditing, ViewState}
 import AdminAppController from "../../../controller/AdminAppController";
 import AppointmentMockForm from "./subcomponents/mockForm/AppointmentMockForm";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
+import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
+import {Employee} from "../../../../common/beans/Employee";
+import {NameUtils} from "../../../../core/utils/NameUtils";
+
+var styles = require("./styles.css")
 
 export default class SchedulePage extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -34,6 +39,17 @@ export default class SchedulePage extends React.Component<Properties, State> {
                 label={(<Message messageKey={"page.schedule.title"}/>)}
                 hasButton={false}
             />
+            <div className={styles.medicSelect}>
+                <ConnectedSelect<Employee>
+                    controller={this.props.controller}
+                    variant={"outlined"}
+                    mapProperty={AdminStateProperty.MedicsListById}
+                    selectedItemProperty={AdminStateProperty.SelectedEmployeeForSchedulePage}
+                    itemToString={medic => NameUtils.formatName(medic)}
+                    getKey={medic => medic && medic.id ? medic.id : 0}
+                    label={<Message messageKey={"page.schedule.medicSelection.label"}/>}
+                />
+            </div>
             <Paper>
                 <Scheduler
                     data={schedulerData}

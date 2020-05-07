@@ -9,7 +9,7 @@ import LeftColumn from "./subcomponents/leftColumn/LeftColumn";
 import RightColumn from "./subcomponents/rightColumn/RightColumn";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
 
-var styles = require("./styles.css");
+var styles = require("./styles.css")
 
 export default class EditEmployeeDialog extends React.Component<Properties, State> {
 
