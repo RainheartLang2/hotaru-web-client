@@ -16,6 +16,7 @@ import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import Species from "../../../common/beans/Species";
 import Breed from "../../../common/beans/Breed";
 import Time = DateUtils.Time;
+import {Pet} from "../../../common/beans/Pet";
 
 export default class AppointmentNode extends CrudNode<MedicalAppointment> {
 
@@ -67,6 +68,7 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         this.store.registerField(AdminStateProperty.EditedClientInfoAddress, "")
         this.store.registerProperty(AdminStateProperty.CreateClientInfo, false)
 
+        this.store.registerProperty(AdminStateProperty.EditedClientPetId, 0)
         this.store.registerField(AdminStateProperty.EditedClientPetName, "", [new MaximalLengthValidator(100)])
         this.store.registerSelector(AdminStateProperty.EditedClientPetSpecies, {
             dependsOn: [AdminStateProperty.SpeciesListById],
@@ -139,6 +141,19 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
             phone: this.store.getFieldValue(AdminStateProperty.EditedClientInfoPhone),
             email: this.store.getFieldValue(AdminStateProperty.EditedClientInfoMail),
             address: this.store.getFieldValue(AdminStateProperty.EditedClientInfoAddress),
+        }
+    }
+
+    buildPetInfo(): Pet | null {
+        if (!this.store.getPropertyValue(AdminStateProperty.CreateClientInfo)) {
+            return null
+        }
+        const selectedBreed: Breed  = this.store.getPropertyValue(AdminStateProperty.EditedClientSelectedBreed)
+        return {
+            id: this.store.getPropertyValue(AdminStateProperty.EditedClientPetId),
+            name: this.store.getFieldValue(AdminStateProperty.EditedClientPetName),
+            ownerId: this.store.getPropertyValue(AdminStateProperty.EditedClientInfoId),
+            breedId: selectedBreed ? selectedBreed.id : undefined,
         }
     }
 

@@ -9,23 +9,32 @@ export default abstract class ReadNode<ItemType extends Identifiable> {
         this.store = store
 
         this.store.registerProperty(this.getListPropertyName(), [])
-        this.store.registerSelector(this.getMapByIdPropertyName(), {
-            dependsOn: [this.getListPropertyName()],
-            get: map => {
-                const list: ItemType[] = map.get(this.getListPropertyName()) as ItemType[]
-                return CollectionUtils.mapArrayByUniquePredicate(list, item => item.id)
-            }
-        })
+        if (this.isMappedById()) {
+            this.store.registerSelector(this.getMapByIdPropertyName(), {
+                dependsOn: [this.getListPropertyName()],
+                get: map => {
+                    const list: ItemType[] = map.get(this.getListPropertyName()) as ItemType[]
+                    return CollectionUtils.mapArrayByUniquePredicate(list, item => item.id)
+                }
+            })
+        }
     }
     protected abstract getListPropertyName(): string
 
     protected abstract getMapByIdPropertyName(): string
+
+    protected isMappedById(): boolean {
+        return true
+    }
 
     public getList(): ItemType[] {
         return this.store.getPropertyValue(this.getListPropertyName())
     }
 
     public getByIdMap(): Map<number, ItemType> {
+        if (!this.isMappedById()) {
+            throw new Error("Unsupported operation")
+        }
         return this.store.getPropertyValue(this.getMapByIdPropertyName())
     }
 

@@ -234,6 +234,7 @@ export enum AdminStateProperty {
     EditedClientInfoPhone = "editedClientInfoPhone",
     EditedClientInfoMail = "editedClientInfoMail",
     EditedClientInfoAddress = "editedClientInfoAddress",
+    EditedClientPetId = "editedClientPetId",
     EditedClientPetName = "editedClientPetName",
     EditedClientPetSpecies = "editedClientPetSpecies",
     EditedClientSelectedSpecies = "editedClientSelectedSpecies",
@@ -246,5 +247,5 @@ export enum AdminStateProperty {
 
     //PetNode
     PetList = "petList",
-    PetListById = "petListById",
+    PetsByOwner = "petsByOwner",
 }

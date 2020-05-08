@@ -10,6 +10,8 @@ import {AppointmentInfo} from "../../../common/beans/AppointmentInfo";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
+import Species from "../../../common/beans/Species";
+import Breed from "../../../common/beans/Breed";
 
 export default class AppointmentActions extends CrudAction<MedicalAppointment, AdminAppController, AppointmentNode> {
 
@@ -56,6 +58,10 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, "")
         this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, "")
         this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, false)
+        this.controller.setPropertyValue(AdminStateProperty.EditedClientPetId, null)
+        this.controller.setFieldValue(AdminStateProperty.EditedClientPetName, "")
+        this.controller.setFieldValue(AdminStateProperty.EditedClientSelectedSpecies, Species.getMock())
+        this.controller.setFieldValue(AdminStateProperty.EditedClientSelectedBreed, Breed.getMock())
     }
 
     public openCreateAppointmentDialog(addedAppointment: Object): void {
@@ -102,6 +108,15 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, client.email)
             this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, client.address)
             this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, true)
+
+            const pet = this.controller.petActions.getOwnerPets(clientId)[0]
+            this.controller.setPropertyValue(AdminStateProperty.EditedClientPetId, pet.id)
+            this.controller.setFieldValue(AdminStateProperty.EditedClientPetName, pet.name)
+
+            const breed = pet.breedId ? this.controller.breedActions.getItemById(pet.breedId) : Breed.getMock()
+            const species = breed.speciesId ? this.controller.speciesActions.getItemById(breed.speciesId) : Species.getMock()
+            this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedSpecies, species)
+            this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedBreed, breed)
         } else {
             this.initializeClientInfo()
         }
@@ -112,15 +127,19 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
     public submitCreateItem(callback: Function = () => {}): void {
         const appointment = this.getCreateItem()
         const client = this.node.buildClientInfo()
+        const pet = this.node.buildPetInfo()
         fetchUserZoneRpc({
             method: this.addMethod,
-            params: [appointment, client],
+            params: [appointment, client, pet],
             successCallback: (result) => {
                 const addedAppointment = result as MedicalAppointment
                 this.node.add(addedAppointment)
                 if (!!client) {
                     client.id = addedAppointment.clientId
                     this.controller.clientActions.addClient(client)
+                }
+                if (!!pet) {
+                    this.controller.petActions
                 }
                 callback()
             },

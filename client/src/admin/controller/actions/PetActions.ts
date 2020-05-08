@@ -1,6 +1,7 @@
 import ApplicationController from "../../../core/mvc/ApplicationController";
 import PetNode from "../../state/nodes/PetNode";
 import {Pet} from "../../../common/beans/Pet";
+import {AdminStateProperty} from "../../state/AdminApplicationState";
 
 export default class PetActions {
     private controller: ApplicationController
@@ -13,5 +14,9 @@ export default class PetActions {
 
     public setPets(pets: Pet[]) {
         this.node.setList(pets)
+    }
+
+    public getOwnerPets(ownerId: number): Pet[] {
+        return this.node.getOwnerPets(ownerId)
     }
 }
