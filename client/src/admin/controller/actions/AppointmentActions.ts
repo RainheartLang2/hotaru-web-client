@@ -49,6 +49,10 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         return RemoteMethods.editAppointment
     }
 
+    public changeWeek(dayInWeek: Date): void {
+        this.controller.setPropertyValue(AdminStateProperty.SchedulePageDate, dayInWeek)
+    }
+
     private initializeClientInfo(): void {
         this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, null)
         this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, "")

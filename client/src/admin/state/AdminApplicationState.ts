@@ -216,6 +216,7 @@ export enum AdminStateProperty {
     //AppointmentNode
     AppointmentsList = "appointmentsList",
     AppointmentsListById = "appointmentsListById",
+    SchedulePageDate = "schedulePageDate",
     AppointmentsForSelectedMedic = "appointmentsForSelectedMedic",
     AppointmentModelsList = "appointmentModelsList",
     AppointmentDialogMode = "appointmentDialogMode",

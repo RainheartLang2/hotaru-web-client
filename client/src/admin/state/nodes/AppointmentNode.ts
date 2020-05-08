@@ -26,6 +26,7 @@ export default class AppointmentNode extends CrudNode<MedicalAppointment> {
         this.store.registerProperty(AdminStateProperty.EditedAppointmentId, null)
         this.store.registerField(AdminStateProperty.EditedAppointmentTitle, "",
             [new RequiredFieldValidator(), new MaximalLengthValidator(100)])
+        this.store.registerProperty(AdminStateProperty.SchedulePageDate, new Date())
         this.store.registerProperty(AdminStateProperty.EditedAppointmentDate, null)
         this.store.registerField(AdminStateProperty.EditedAppointmentStartTime, "00:00", [new TimeValidator()])
         this.store.registerField(AdminStateProperty.EditedAppointmentEndTime, "00:00", [new TimeValidator()])

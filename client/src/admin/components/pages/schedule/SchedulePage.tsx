@@ -18,6 +18,9 @@ import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {Employee} from "../../../../common/beans/Employee";
 import {NameUtils} from "../../../../core/utils/NameUtils";
+import LocaleHolder from "../../../../core/utils/LocaleHolder";
+import {LocaleUtils} from "../../../../core/enum/LocaleType";
+import MessageResource from "../../../../core/message/MessageResource";
 
 var styles = require("./styles.css")
 
@@ -26,12 +29,14 @@ export default class SchedulePage extends React.Component<Properties, State> {
         super(props)
 
         this.state = {
-            [StateProperty.AppointmentList]: []
+            [StateProperty.AppointmentList]: [],
+            [StateProperty.SelectedDate]: new Date(),
         }
     }
 
     render() {
-        const currentDate = '2018-11-01';
+        const currentDate = this.state[StateProperty.SelectedDate]
+        const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         const schedulerData = this.state[StateProperty.AppointmentList]
         const actions = this.props.controller.appointmentActions
         return (<>
@@ -52,11 +57,13 @@ export default class SchedulePage extends React.Component<Properties, State> {
             </div>
             <Paper>
                 <Scheduler
+                    locale={localeTag}
                     data={schedulerData}
                     firstDayOfWeek={1}
                 >
                     <ViewState
                         currentDate={currentDate}
+                        onCurrentDateChange={(currentDate: Date) => actions.changeWeek(currentDate)}
                     />
                     <WeekView
                         startDayHour={9}
@@ -73,14 +80,17 @@ export default class SchedulePage extends React.Component<Properties, State> {
                     />
                     <IntegratedEditing/>
                     <Appointments/>
-                    <AppointmentTooltip/>
                     <AppointmentForm
                         overlayComponent={AppointmentMockForm}
                     />
 
                     <Toolbar/>
                     <DateNavigator />
-                    <TodayButton />
+                    <TodayButton
+                        messages={{
+                            today: MessageResource.getMessage("page.schedule.todayButton.label")
+                        }}
+                    />
                     <DragDropProvider/>
                 </Scheduler>
             </Paper>
@@ -89,11 +99,13 @@ export default class SchedulePage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.AppointmentModelsList, this, StateProperty.AppointmentList)
+        this.props.controller.subscribe(AdminStateProperty.SchedulePageDate, this, StateProperty.SelectedDate)
     }
 }
 
 enum StateProperty {
     AppointmentList = "appointmentList",
+    SelectedDate = "selectedDate",
 }
 
 type Properties = {
@@ -102,4 +114,5 @@ type Properties = {
 
 type State = {
     [StateProperty.AppointmentList]: AppointmentModel[]
+    [StateProperty.SelectedDate]: Date
 }
