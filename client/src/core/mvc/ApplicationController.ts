@@ -40,4 +40,6 @@ export default abstract class ApplicationController<StoreType extends Applicatio
             this.onErrorEvent = () => {}
         })
     }
+
+    public abstract handleUnauthorizedUserSituation(): void
 }

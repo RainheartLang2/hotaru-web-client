@@ -1,6 +1,6 @@
 import CustomError from "./CustomError";
 
-export default class HtttpTransportError extends CustomError {
+export default class HttpTransportError extends CustomError {
     private _code: number
     private _message: string
 
@@ -8,6 +8,7 @@ export default class HtttpTransportError extends CustomError {
         super(message);
         this._code = code;
         this._message = message;
+        Object.setPrototypeOf(this, HttpTransportError.prototype)
     }
 
     get code(): number {

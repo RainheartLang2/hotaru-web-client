@@ -32,4 +32,8 @@ export default class LoginApplicationController extends ApplicationController<Lo
             errorProperty: LoginStateProperty.HasError,
         })
     }
+
+    handleUnauthorizedUserSituation(): void {
+        throw new Error("Unauthorized User situation is impossible, since login app does not require autentication")
+    }
 }

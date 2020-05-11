@@ -80,12 +80,17 @@ function handleError(e: any, setError: (errorType: string) => void): void {
         setError(e.message)
         return
     }
+    const controller = ApplicationControllerHolder.instance.controller
     let errorMessageKey = "error.message.unknown"
     if (e instanceof HttpTransportError) {
+        if (e.code == 401) {
+            controller.handleUnauthorizedUserSituation()
+            return
+        }
         errorMessageKey = "error.message.http." + (HANDLED_HTTP_CODES.includes(e.code) ? e.code : "common")
     }
 
-    ApplicationControllerHolder.instance.controller.setGlobalApplicationError(errorMessageKey)
+    controller.setGlobalApplicationError(errorMessageKey)
 }
 
 async function parseResponseFromServer(requestResult: Promise<Response>): Promise<any> {

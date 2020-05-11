@@ -164,7 +164,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         fetchPreloginRpc({
             method: RemoteMethods.employeeLogout,
             successCallback: result => {
-                window.location.href = "login"
+                this.handleUnauthorizedUserSituation()
             },
         })
     }
@@ -183,5 +183,9 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     protected getApplicationState(): AdminApplicationState {
         return AdminApplicationState.instance
+    }
+
+    handleUnauthorizedUserSituation(): void {
+        window.location.href = "login"
     }
 }
