@@ -24,7 +24,6 @@ export default class ClinicActions {
                 this.node.setClinicList(plainToClass(Clinic, result) as Clinic[])
                 callback()
             },
-            loadingProperty: AdminStateProperty.IsPageLoading,
         })
     }
 

@@ -37,10 +37,6 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         return RemoteMethods.deleteAppointment
     }
 
-    protected getAllLoadingProperty(): string {
-        return AdminStateProperty.IsPageLoading
-    }
-
     protected get getAllMethod(): RemoteMethod {
         return RemoteMethods.getAllAppointments
     }

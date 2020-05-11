@@ -22,10 +22,6 @@ export default class SpeciesActions extends CrudAction<Species, AdminAppControll
         return RemoteMethods.deleteSpecies
     }
 
-    protected getAllLoadingProperty(): string {
-        return AdminStateProperty.IsPageLoading
-    }
-
     protected get getAllMethod(): RemoteMethod {
         return RemoteMethods.getAllSpecies
     }

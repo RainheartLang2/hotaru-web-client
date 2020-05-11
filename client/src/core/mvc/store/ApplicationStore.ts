@@ -35,7 +35,7 @@ export default abstract class ApplicationStore {
             if (propertyDependencies) {
                 propertyDependencies.push(selectorName)
             } else {
-                throw new Error("no dependencies records for property " + propertyName)
+                throw new Error("no dependencies records for property " + propertyName + ", while registering sleector " + selectorName)
             }
         })
         this.selectors.set(selectorName, selector)

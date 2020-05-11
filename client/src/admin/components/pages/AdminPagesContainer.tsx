@@ -19,14 +19,16 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
     }
 
     render() {
+        console.log("rendering")
+        console.log(this.state[StateProperty.IsLoading])
         const currentPage = this.state[StateProperty.CurrentPage]
         return (<>
+            <LoadingMoire delay={true} visible={this.state[StateProperty.IsLoading]}/>
             {currentPage == PageType.UserList && (<UserListPage/>)}
             {currentPage == PageType.ClinicList && (<ClinicsPage controller={this.props.controller}/>)}
             {currentPage == PageType.Schedule && (<SchedulePage controller={this.props.controller}/>)}
             {currentPage == PageType.Species && (<SpeciesPage controller={this.props.controller}/>)}
             {currentPage == PageType.Breeds && (<BreedsPage controller={this.props.controller}/>)}
-            <LoadingMoire delay={true} visible={this.state[StateProperty.IsLoading]}/>
         </>)
     }
 

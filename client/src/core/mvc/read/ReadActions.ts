@@ -19,8 +19,6 @@ export default abstract class ReadActions<ItemType extends Identifiable,
         this.node = node
     }
 
-    protected abstract getAllLoadingProperty(): string
-
     protected abstract get getAllMethod(): RemoteMethod
 
     protected abstract convertResultToItem(result: any): ItemType[]
@@ -33,7 +31,6 @@ export default abstract class ReadActions<ItemType extends Identifiable,
                 this.node.setList(this.convertResultToItem(result))
                 callback(result)
             },
-            loadingProperty: this.getAllLoadingProperty(),
         })
     }
 

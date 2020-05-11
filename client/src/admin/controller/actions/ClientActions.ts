@@ -2,7 +2,6 @@ import {Client} from "../../../common/beans/Client";
 import ReadActions from "../../../core/mvc/read/ReadActions";
 import AdminAppController from "../AdminAppController";
 import ClientNode from "../../state/nodes/ClientNode";
-import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {RemoteMethod} from "../../../core/http/RemoteMethod";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
@@ -11,10 +10,6 @@ import {Pet} from "../../../common/beans/Pet";
 export default class ClientActions extends ReadActions<Client, AdminAppController, ClientNode> {
     protected convertResultToItem(result: any): Client[] {
         return result as Client[]
-    }
-
-    protected getAllLoadingProperty(): string {
-        return AdminStateProperty.IsPageLoading
     }
 
     protected get getAllMethod(): RemoteMethod {
@@ -39,7 +34,6 @@ export default class ClientActions extends ReadActions<Client, AdminAppControlle
                 this.controller.petActions.setPets(clientInfo.pets)
                 callback(result)
             },
-            loadingProperty: this.getAllLoadingProperty(),
         })
     }
 }

@@ -27,7 +27,7 @@ export default class AdminApplicationState extends ApplicationStore {
     private constructor() {
         super()
         this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
-        this.registerProperty(AdminStateProperty.IsPageLoading, true)
+        this.registerProperty(AdminStateProperty.IsPageLoading, false)
         this.registerProperty(AdminStateProperty.IsDialogLoading, false)
         this.registerProperty(AdminStateProperty.PageType, PageType.None)
         this.registerProperty(AdminStateProperty.DialogType, DialogType.None)

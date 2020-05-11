@@ -21,10 +21,6 @@ export default class BreedActions extends CrudAction<Breed, AdminAppController, 
         return RemoteMethods.deleteBreed;
     }
 
-    protected getAllLoadingProperty(): string {
-        return AdminStateProperty.IsPageLoading;
-    }
-
     protected get getAllMethod(): RemoteMethod {
         return RemoteMethods.getAllBreeds;
     }
