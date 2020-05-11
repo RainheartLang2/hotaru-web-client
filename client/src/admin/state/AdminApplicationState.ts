@@ -129,6 +129,14 @@ export default class AdminApplicationState extends ApplicationStore {
         this.setPropertyValue(AdminStateProperty.IsApplicationLoading, applicationLoading)
     }
 
+    public isPageLoading(): boolean {
+        return this.getPropertyValue(AdminStateProperty.IsPageLoading)
+    }
+
+    public setPageLoading(value: boolean): void {
+        this.setPropertyValue(AdminStateProperty.IsPageLoading, value)
+    }
+
     public setDialogType(dialogType: DialogType): void {
         this.setPropertyValue(AdminStateProperty.DialogType, dialogType)
     }

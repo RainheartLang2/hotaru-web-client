@@ -12,7 +12,6 @@ import BreedActions from "./actions/BreedActions";
 import AppointmentActions from "./actions/AppointmentActions";
 import ClientActions from "./actions/ClientActions";
 import PetActions from "./actions/PetActions";
-import {chainLoad, LoadData} from "../../core/utils/LoadChainUtils";
 
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
@@ -90,29 +89,47 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         })
     }
 
-    public openUserListPage(callback: Function = () => {}): void {
-        this.applicationStore.setPageType(PageType.UserList)
-        this._employeeActions.loadUsersList(() => {
-            this._clinicActions.loadClinicList(() => {
+    protected openPage(pageType: PageType, loadingFunction: (f: Function) => void) {
+        this.applicationStore.setPageType(pageType)
+        this.applicationStore.setPageLoading(true)
+        this.onErrorFireEvent((callback: Function) => {
+            loadingFunction(() => {
+                this.applicationStore.setPageLoading(false)
                 callback()
+            })
+        },
+            () => this.applicationStore.setPageLoading(false)
+        )
+    }
+
+    public openUserListPage(callback: Function = () => {}): void {
+        this.openPage(PageType.UserList, (setPageLoad: Function) => {
+            this._employeeActions.loadUsersList(() => {
+                this._clinicActions.loadClinicList(() => {
+                    callback()
+                    setPageLoad()
+                })
             })
         })
     }
 
     public openClinicListPage(callback: Function = () => {}): void {
-        this.applicationStore.setPageType(PageType.ClinicList)
-        this._clinicActions.loadClinicList(() => {
-            callback()
-        })
+       this.openPage(PageType.ClinicList, (setPageLoad: Function) => {
+           this._clinicActions.loadClinicList(() => {
+               callback()
+               setPageLoad()
+           })
+       })
     }
 
     public openSchedulePage(): void {
-        this.applicationStore.setPageType(PageType.Schedule)
-        this._employeeActions.loadUsersList((employees) => {
-            this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
-            this._speciesActions.loadList([], () => {
-                this._breedActions.loadList([], () => {
-                    this._appointmentActions.loadAppointmentsWithClients()
+        this.openPage(PageType.Schedule, (setPageLoad: Function) => {
+            this._employeeActions.loadUsersList((employees) => {
+                this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
+                this._speciesActions.loadList([], () => {
+                    this._breedActions.loadList([], () => {
+                        this._appointmentActions.loadAppointmentsWithClients(() => setPageLoad())
+                    })
                 })
             })
         })
@@ -123,15 +140,18 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public openSpeciesPage(): void {
-        this.applicationStore.setPageType(PageType.Species)
-        this._speciesActions.loadList()
+        this.openPage(PageType.Species, (setPageLoad: Function) => {
+            this._speciesActions.loadList([], () => setPageLoad())
+        })
     }
 
     public openBreedsPage(speciesId?: number): void {
-        this.applicationStore.setPageType(PageType.Breeds)
-        this._speciesActions.loadList([], () => {
-            this._breedActions.loadList([], () => {
-                this._speciesActions.setSelectedSpecies(speciesId)
+        this.openPage(PageType.Breeds, (setPageLoad: Function) => {
+            this._speciesActions.loadList([], () => {
+                this._breedActions.loadList([], () => {
+                    this._speciesActions.setSelectedSpecies(speciesId)
+                    setPageLoad()
+                })
             })
         })
     }

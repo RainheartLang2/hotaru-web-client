@@ -1,10 +1,9 @@
 import ApplicationStore from "./store/ApplicationStore";
-import HttpTransportError from "../errors/HttpTransportError";
-import BusinessLogicError from "../errors/BusinessLogicError";
-import {instanceOf} from "prop-types";
 
 export default abstract class ApplicationController<StoreType extends ApplicationStore = ApplicationStore> {
     private _applicationStore: StoreType
+    private onErrorEvent: Function = () => {}
+
     constructor(applicationStore: StoreType) {
         this._applicationStore = applicationStore
     }
@@ -30,6 +29,15 @@ export default abstract class ApplicationController<StoreType extends Applicatio
     }
 
     public setGlobalApplicationError(errorMessageKey: string) {
+        this.onErrorEvent()
         this.applicationStore.setGlobalApplicationError(errorMessageKey)
+    }
+
+    protected onErrorFireEvent(body: (f: Function) => void,
+                               event: Function) {
+        this.onErrorEvent = event
+        body(() => {
+            this.onErrorEvent = () => {}
+        })
     }
 }
