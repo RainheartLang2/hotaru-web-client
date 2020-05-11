@@ -1,4 +1,5 @@
 import ApplicationStore from "./store/ApplicationStore";
+import {PageType} from "../../admin/state/enum/PageType";
 
 export default abstract class ApplicationController<StoreType extends ApplicationStore = ApplicationStore> {
     private _applicationStore: StoreType
@@ -41,5 +42,23 @@ export default abstract class ApplicationController<StoreType extends Applicatio
         })
     }
 
+    public executeLoadable(loadingFunction: (f: Function) => void, loadingProperty: string) {
+        this.setPropertyValue(loadingProperty, true)
+        this.onErrorFireEvent((callback: Function) => {
+                loadingFunction(() => {
+                    this.setPropertyValue(loadingProperty, false)
+                    callback()
+                })
+            },
+            () => this.setPropertyValue(loadingProperty, false)
+        )
+    }
+
     public abstract handleUnauthorizedUserSituation(): void
+
+    public abstract getDialogSubmitButtonPropertyName(): string
+
+    public setDialogButtonLoading(value: boolean): void {
+        this.setPropertyValue(this.getDialogSubmitButtonPropertyName(), value)
+    }
 }

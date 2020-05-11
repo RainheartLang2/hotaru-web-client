@@ -1,6 +1,8 @@
 import * as React from "react";
-import {ButtonComponent} from "../../components";
 import {Message} from "../Message";
+import ApplicationController from "../../mvc/ApplicationController";
+import CustomButton from "../customButton/CustomButton";
+import {LoginStateProperty} from "../../../login/state/LoginApplicationState";
 
 var styles = require("./styles.css");
 
@@ -10,32 +12,37 @@ export default class DialogFooter extends React.Component<Properties> {
             <>
                 <div className={styles.footer}>
                     <div className={styles.footerButton}>
-                        <ButtonComponent
+                        <CustomButton
+                            controller={this.props.controller}
                             variant="contained"
                             color="primary"
                             size="small"
                             disabled={this.props.submitDisabled}
                             onClick={() => this.props.onSubmitClick()}
+                            loadingProperty={this.props.controller.getDialogSubmitButtonPropertyName()}
                         >
                             <Message messageKey={"common.button.save"}/>
-                        </ButtonComponent>
+                        </CustomButton>
                     </div>
                     <div className={styles.footerButton}>
-                        <ButtonComponent
+                        <CustomButton
+                            controller={this.props.controller}
                             variant="contained"
                             color="secondary"
                             size="small"
-                            onClick={() => this.props.onCancelClick()}>
+                            onClick={() => this.props.onCancelClick()}
+                        >
                             <Message messageKey={"common.button.back"}/>
-                        </ButtonComponent>
+                        </CustomButton>
                     </div>
                 </div>
-                </>
+            </>
         )
     }
 }
 
 type Properties = {
+    controller: ApplicationController,
     submitDisabled: boolean,
     onSubmitClick: () => void,
     onCancelClick: () => void,

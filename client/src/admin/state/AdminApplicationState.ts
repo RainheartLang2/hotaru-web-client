@@ -29,6 +29,7 @@ export default class AdminApplicationState extends ApplicationStore {
         this.registerProperty(AdminStateProperty.IsApplicationLoading, true)
         this.registerProperty(AdminStateProperty.IsPageLoading, false)
         this.registerProperty(AdminStateProperty.IsDialogLoading, false)
+        this.registerProperty(AdminStateProperty.IsDialogSubmitButtonLoading, false)
         this.registerProperty(AdminStateProperty.PageType, PageType.None)
         this.registerProperty(AdminStateProperty.DialogType, DialogType.None)
         this.registerSelector(AdminStateProperty.ShowDialog, {
@@ -159,6 +160,7 @@ export enum AdminStateProperty {
     IsApplicationLoading = "isApplicationLoading",
     IsPageLoading = "isPageLoading",
     IsDialogLoading = "isDialogLoading",
+    IsDialogSubmitButtonLoading = "isDialogSubmitButtonLoading",
     LoggedInEmployee = "LoggedInEmployee",
     NavigationMenuItemType = "navigationMenuItemType",
     SecondLevelNavigationMenuType = "secondLevelNavigationMenuType",

@@ -37,7 +37,7 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
                     {(dialogType == DialogType.CreateEmployee
                         || dialogType == DialogType.EditEmployee
                         || dialogType == DialogType.EditEmployeeProfile)
-                    && (<EditEmployeeDialog/>)}
+                    && (<EditEmployeeDialog controller={this.controller}/>)}
 
                     {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
                         && (<ClinicDialog controller={this.controller}/>)}

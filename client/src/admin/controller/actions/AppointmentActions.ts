@@ -125,6 +125,7 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
     }
 
     public submitCreateItem(callback: Function = () => {}): void {
+        this.controller.setDialogButtonLoading(true)
         const appointment = this.getCreateItem()
         const client = this.node.buildClientInfo()
         const pet = this.node.buildPetInfo()
@@ -139,14 +140,17 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                     this.controller.clientActions.addClient(client)
                 }
                 if (!!pet) {
-                    this.controller.petActions
+                    //TODO: add pet to application state
                 }
                 callback()
+                this.controller.setDialogButtonLoading(false)
             },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 
     public submitEditItem(callback: Function = () => {}): void {
+        this.controller.setDialogButtonLoading(true)
         const appointment = this.getEditItem()
         const client = this.node.buildClientInfo()
         fetchUserZoneRpc({
@@ -157,8 +161,12 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
                 if (!!client) {
                     this.controller.clientActions.updateClient(client)
                 }
+
+                //TODO: update pet
                 callback()
-            }
+                this.controller.setDialogButtonLoading(false)
+            },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 

@@ -57,6 +57,7 @@ export default class ClinicActions {
     }
 
     public submitCreateClinic(): void {
+        this.controller.setDialogButtonLoading(true)
         const clinic = this.node.buildClinicBasedOnFields()
         fetchUserZoneRpc({
             method: RemoteMethods.addClinic,
@@ -65,11 +66,14 @@ export default class ClinicActions {
                 clinic.id = +result
                 this.node.addClinic(clinic)
                 this.controller.closeCurrentDialog()
+                this.controller.setDialogButtonLoading(false)
             },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 
     public submitEditClinic(): void {
+        this.controller.setDialogButtonLoading(true)
         const clinic = this.node.buildClinicBasedOnFields()
         fetchUserZoneRpc({
             method: RemoteMethods.editClinic,
@@ -77,7 +81,9 @@ export default class ClinicActions {
             successCallback: result => {
                 this.node.updateClinic(this.node.buildClinicBasedOnFields())
                 this.controller.closeCurrentDialog()
-            }
+                this.controller.setDialogButtonLoading(false)
+            },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 

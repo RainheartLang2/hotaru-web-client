@@ -188,4 +188,8 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     handleUnauthorizedUserSituation(): void {
         window.location.href = "login"
     }
+
+    getDialogSubmitButtonPropertyName(): string {
+        return AdminStateProperty.IsDialogSubmitButtonLoading;
+    }
 }

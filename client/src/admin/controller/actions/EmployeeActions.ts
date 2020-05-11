@@ -81,6 +81,7 @@ export default class EmployeeActions {
     public submitCreateEmployeeForm(): void {
         const employee = this.node.buildEmployeeBasedOnFields()
         const login = this.node.buildLoginBasedOnFields()
+        this.controller.setDialogButtonLoading(true)
         fetchUserZoneRpc({
             method: RemoteMethods.addEmployee,
             params: [employee, login],
@@ -88,11 +89,14 @@ export default class EmployeeActions {
                 employee.id = +result
                 this.node.addUser(employee)
                 this.controller.closeCurrentDialog()
+                this.controller.setDialogButtonLoading(false)
             },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 
     public submitEditEmployeeForm(): void {
+        this.controller.setDialogButtonLoading(true)
         fetchUserZoneRpc({
             method: RemoteMethods.editEmployee,
             params: [
@@ -107,7 +111,9 @@ export default class EmployeeActions {
                     this.controller.setLoggedInUser(this.node.buildEmployeeBasedOnFields())
                 }
                 this.controller.closeCurrentDialog()
+                this.controller.setDialogButtonLoading(false)
             },
+            errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
     }
 

@@ -4,4 +4,5 @@
 
 .loaderWrapper {
     position: absolute;
+    top: 3px;
 }

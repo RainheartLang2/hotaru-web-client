@@ -22,7 +22,7 @@ export default class CustomButton extends React.Component<Properties, State> {
     render() {
         return (<ButtonComponent
             disabled={this.props.disabled}
-            onClick={this.props.onClick ? this.props.onClick : () => {}}
+            onClick={(this.props.onClick && !this.isLoading()) ? this.props.onClick : () => {}}
             color={this.props.color ? this.props.color : "primary"}
             fullWidth={this.props.fullWidth}
             size={this.props.size ? this.props.size : "small"}

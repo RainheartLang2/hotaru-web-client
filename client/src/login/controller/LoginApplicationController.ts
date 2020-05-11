@@ -36,4 +36,8 @@ export default class LoginApplicationController extends ApplicationController<Lo
     handleUnauthorizedUserSituation(): void {
         throw new Error("Unauthorized User situation is impossible, since login app does not require autentication")
     }
+
+    getDialogSubmitButtonPropertyName(): string {
+        throw new Error("Unsupported operation")
+    }
 }

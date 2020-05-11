@@ -13,13 +13,11 @@ var styles = require("./styles.css")
 
 export default class EditEmployeeDialog extends React.Component<Properties, State> {
 
-    private controller: AdminAppController
     private actions: EmployeeActions
 
     constructor(props: Properties) {
         super(props);
-        this.controller = AdminAppController.instance
-        this.actions = this.controller.employeeActions
+        this.actions = this.props.controller.employeeActions
         this.state = {
             [StateProperty.Mode]: 'none',
             [StateProperty.IsActive]: true,
@@ -28,7 +26,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     private closeDialog() {
-        this.controller.closeCurrentDialog()
+        this.props.controller.closeCurrentDialog()
     }
 
     private onSubmitButtonClick() {
@@ -66,13 +64,13 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
                             <LeftColumn
-                                controller={this.controller}
+                                controller={this.props.controller}
                                 rowStyle={styles.row}
                             />
                         </div>
                         <div className={styles.column}>
                             <RightColumn
-                                controller={this.controller}
+                                controller={this.props.controller}
                                 showActiveSwitch={this.state[StateProperty.Mode] == "edit"}
                                 userActive={this.state[StateProperty.IsActive]}
                                 setUserActive={(value: boolean) => this.actions.setEmployeeActive(value)}
@@ -80,6 +78,7 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
                         </div>
                     </div>
                     <DialogFooter
+                        controller={this.props.controller}
                         submitDisabled={this.state[StateProperty.HasErrors]}
                         onSubmitClick={() => this.onSubmitButtonClick()}
                         onCancelClick={() => this.closeDialog()}
@@ -90,9 +89,9 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(AdminStateProperty.EmployeeDialogType, this, StateProperty.Mode)
-        this.controller.subscribe(AdminStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
-        this.controller.subscribe(AdminStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
+        this.props.controller.subscribe(AdminStateProperty.EmployeeDialogType, this, StateProperty.Mode)
+        this.props.controller.subscribe(AdminStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
+        this.props.controller.subscribe(AdminStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
     }
 }
 
@@ -102,7 +101,9 @@ enum StateProperty {
     HasErrors = "hasErrors",
 }
 
-type Properties = {}
+type Properties = {
+    controller: AdminAppController
+}
 
 type State = {
     [StateProperty.Mode]: ConfigureDialogType,
