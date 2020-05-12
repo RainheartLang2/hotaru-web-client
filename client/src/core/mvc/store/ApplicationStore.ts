@@ -120,6 +120,24 @@ export default abstract class ApplicationStore {
         }
     }
 
+    public subscribeBatched(subscriber: React.Component, data: SubscriptionData[]) {
+        const componentState: {[k: string]: any} = {}
+        data.forEach(propertyData => {
+            const propertyName = propertyData.propertyName
+            const propertyAlias = propertyData.propertyAlias ? propertyData.propertyAlias : propertyData.propertyName
+            const subscribersData = this.subscribers.get(propertyName)
+            if (subscribersData !== undefined) {
+                this.storeAdditionalInfo(propertyName, subscriber)
+                subscribersData.push({subscriber, propertyAlias})
+                componentState[propertyAlias] = this.getPropertyValue(propertyName)
+            } else {
+                this.unregisteredPropertySituationHandle(propertyName)
+            }
+        })
+        subscriber.setState(componentState)
+    }
+
+    //deprecated. Use "subscribeBatched"
     public subscribe(propertyName: string,
                      subscriber: React.Component,
                      propertyAlias: string = propertyName): void {
@@ -337,6 +355,11 @@ type SubscriberData = {
 type ValidationResult = {
     errors: string[],
     abort: boolean,
+}
+
+export type SubscriptionData = {
+    propertyName: string,
+    propertyAlias?: string,
 }
 
 class AbortError extends Error {}

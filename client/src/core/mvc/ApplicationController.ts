@@ -1,5 +1,6 @@
-import ApplicationStore from "./store/ApplicationStore";
+import ApplicationStore, {SubscriptionData} from "./store/ApplicationStore";
 import {PageType} from "../../admin/state/enum/PageType";
+import * as React from "react";
 
 export default abstract class ApplicationController<StoreType extends ApplicationStore = ApplicationStore> {
     private _applicationStore: StoreType
@@ -15,6 +16,10 @@ export default abstract class ApplicationController<StoreType extends Applicatio
 
     public subscribe(property: string, subscriber: React.Component, propertyAlias: string = property) {
         this.applicationStore.subscribe(property, subscriber, propertyAlias)
+    }
+
+    public subscribeBatched(subscriber: React.Component, data: SubscriptionData[]) {
+        this.applicationStore.subscribeBatched(subscriber, data)
     }
 
     public unsubscribe(subscriber: React.Component) {

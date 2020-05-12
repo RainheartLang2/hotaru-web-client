@@ -3,7 +3,8 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
-    AppointmentForm, Appointments, AppointmentTooltip,
+    AppointmentForm,
+    Appointments,
     DateNavigator,
     DragDropProvider,
     Scheduler,
@@ -35,6 +36,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     render() {
+        console.log("render")
         const currentDate = this.state[StateProperty.SelectedDate]
         const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         const schedulerData = this.state[StateProperty.AppointmentList]
@@ -98,8 +100,11 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.AppointmentModelsList, this, StateProperty.AppointmentList)
-        this.props.controller.subscribe(AdminStateProperty.SchedulePageDate, this, StateProperty.SelectedDate)
+        console.log("componentDidMount")
+        this.props.controller.subscribeBatched(this, [
+            {propertyName: AdminStateProperty.AppointmentModelsList, propertyAlias: StateProperty.AppointmentList},
+            {propertyName: AdminStateProperty.SchedulePageDate, propertyAlias: StateProperty.SelectedDate}
+        ])
     }
 
     componentWillUnmount(): void {
