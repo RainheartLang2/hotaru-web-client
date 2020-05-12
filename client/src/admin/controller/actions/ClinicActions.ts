@@ -18,13 +18,7 @@ export default class ClinicActions {
     }
 
     public loadClinicList(callback: Function): void {
-        fetchUserZoneRpc({
-            method: RemoteMethods.getAllClinics,
-            successCallback: result => {
-                this.node.setClinicList(plainToClass(Clinic, result) as Clinic[])
-                callback()
-            },
-        })
+        this.controller.cacheManager.clinicCache.execute(callback)
     }
 
     public openCreateDialog(): void {
