@@ -29,27 +29,29 @@ export default class EmployeeActions {
     }
 
     public openCreateEmployeeDialog(): void {
-        this.controller.setShowDialog(DialogType.CreateEmployee)
+        this.controller.batched(() => {
+            this.controller.setShowDialog(DialogType.CreateEmployee)
 
-        this.node.setEmployeeFirstName("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeFirstName, false)
+            this.node.setEmployeeFirstName("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeFirstName, false)
 
-        this.node.setEmployeeMiddleName("")
+            this.node.setEmployeeMiddleName("")
 
-        this.node.setEmployeeLastName("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLastName, false)
+            this.node.setEmployeeLastName("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLastName, false)
 
-        this.node.setEmployeeActive(true)
-        this.node.setEmployeePhone("")
-        this.node.setEmployeeMail("")
-        this.node.setEmployeeAddress("")
-        this.node.setEmployeeClinic(Clinic.getMock())
-        this.node.setEmployeeLogin("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
-        this.node.setEmployeePassword("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
-        this.node.setEmployeeConfirmPassword("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
+            this.node.setEmployeeActive(true)
+            this.node.setEmployeePhone("")
+            this.node.setEmployeeMail("")
+            this.node.setEmployeeAddress("")
+            this.node.setEmployeeClinic(Clinic.getMock())
+            this.node.setEmployeeLogin("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
+            this.node.setEmployeePassword("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
+            this.node.setEmployeeConfirmPassword("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
+        })
     }
 
     public openEditEmployeeDialog(user: Employee, editProfile: boolean = false): void {

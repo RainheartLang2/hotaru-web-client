@@ -10,10 +10,14 @@ export default abstract class ApplicationStore {
     private dependencies: Map<string, string[]> = new Map()
     private subscribers: Map<string, SubscriberData[]> = new Map()
 
+    private batchData: Map<string, any> = new Map()
+    private batchedMode: boolean
+
     protected friend: ApplicationStoreFriend
 
     constructor() {
         this.friend = this.createFriend()
+        this.batchedMode = false
         this.registerProperty(GlobalStateProperty.ApplicationError, null)
     }
 
@@ -147,7 +151,11 @@ export default abstract class ApplicationStore {
             this.unregisteredPropertySituationHandle(propertyName)
         }
         this.properties.set(propertyName, newValue)
-        this.postPropertyChange(propertyName, newValue)
+        if (this.batchedMode) {
+            this.saveBatch(propertyName, newValue)
+        } else {
+            this.postPropertyChange(propertyName, newValue)
+        }
         const propertySelectors = this.dependencies.get(propertyName)
         if (propertySelectors) {
             propertySelectors.forEach(selectorName => {
@@ -203,6 +211,52 @@ export default abstract class ApplicationStore {
             }
         })
         return result
+    }
+
+    private saveBatch<ValueType>(propertyName: string, propertyValue: ValueType) {
+        const subscribers = this.subscribers.get(propertyName)
+        if (subscribers == null) {
+            throw new Error("Null subscribers data for property " + propertyName)
+        }
+        this.batchData.set(propertyName, propertyValue)
+    }
+
+    private getBatchDataByComponent(): Map<React.Component, Map<string, any>> {
+        const result = new Map<React.Component, Map<string, any>>()
+        this.batchData.forEach((value, propertyName) => {
+            const subscribersDataOfProperty = this.subscribers.get(propertyName)
+            if (subscribersDataOfProperty == null) {
+                throw new Error("Null subscribers data for property " + propertyName)
+            }
+            subscribersDataOfProperty.forEach((subscriberData) => {
+                let propertiesOfCurrentSubscriber = result.get(subscriberData.subscriber)
+                if (propertiesOfCurrentSubscriber == null) {
+                    propertiesOfCurrentSubscriber = new Map()
+                    result.set(subscriberData.subscriber, propertiesOfCurrentSubscriber)
+                }
+                propertiesOfCurrentSubscriber.set(subscriberData.propertyAlias, value)
+            })
+        })
+        return result
+    }
+
+    private commitBatch() {
+        const batchDataBySubscribers = this.getBatchDataByComponent()
+        batchDataBySubscribers.forEach((properties, component) => {
+            const componentState: {[k: string]: any} = {}
+            properties.forEach((value, propertyName) => {
+                componentState[propertyName] = value
+            })
+            component.setState(componentState)
+        })
+        this.batchedMode = false
+        this.batchData = new Map()
+    }
+
+    public batched(executableBody: Function) {
+        this.batchedMode = true
+        executableBody()
+        this.commitBatch()
     }
 
     private createFriend(): ApplicationStoreFriend {

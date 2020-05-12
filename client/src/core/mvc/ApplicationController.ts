@@ -61,4 +61,8 @@ export default abstract class ApplicationController<StoreType extends Applicatio
     public setDialogButtonLoading(value: boolean): void {
         this.setPropertyValue(this.getDialogSubmitButtonPropertyName(), value)
     }
+
+    public batched(executableBody: Function) {
+        this.applicationStore.batched(executableBody)
+    }
 }
