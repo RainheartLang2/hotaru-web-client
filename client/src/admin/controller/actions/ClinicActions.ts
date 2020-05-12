@@ -28,32 +28,36 @@ export default class ClinicActions {
     }
 
     public openCreateDialog(): void {
-        this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, 0)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicName, "")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicName, false)
+        this.controller.batched(() => {
+            this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, 0)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicName, "")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicName, false)
 
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, "")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicAddress, false)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, "")
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, "")
-        this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, true)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, "")
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, "")
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, "")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedClinicAddress, false)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, "")
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, "")
+            this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, true)
 
-        this.controller.setShowDialog(DialogType.CreateClinic)
+            this.controller.setShowDialog(DialogType.CreateClinic)
+        })
     }
 
     public openEditDialog(clinic: Clinic): void {
-        this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, clinic.id)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicName, clinic.name)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, clinic.siteUrl)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, clinic.city)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, clinic.address)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, clinic.phone)
-        this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, clinic.email)
-        this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, clinic.active)
+        this.controller.batched(() => {
+            this.controller.setPropertyValue(AdminStateProperty.EditedClinicId, clinic.id)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicName, clinic.name)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicSiteUrl, clinic.siteUrl)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicCity, clinic.city)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicAddress, clinic.address)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicPhone, clinic.phone)
+            this.controller.setFieldValue(AdminStateProperty.EditedClinicEmail, clinic.email)
+            this.controller.setPropertyValue(AdminStateProperty.EditedClinicActive, clinic.active)
 
-        this.controller.setShowDialog(DialogType.EditClinic)
+            this.controller.setShowDialog(DialogType.EditClinic)
+        })
     }
 
     public submitCreateClinic(): void {

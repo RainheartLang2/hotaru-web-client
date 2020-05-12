@@ -55,21 +55,23 @@ export default class EmployeeActions {
     }
 
     public openEditEmployeeDialog(user: Employee, editProfile: boolean = false): void {
-        this.controller.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
-        this.node.setEmployeeId(user.id ? user.id : 0)
-        this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
-        this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
-        this.node.setEmployeeLastName(user.lastName ? user.lastName : "")
-        this.node.setEmployeeActive(user.active != null ? user.active : true)
-        this.node.setEmployeePhone(user.phone != null ? user.phone : "")
-        this.node.setEmployeeMail(user.email != null ? user.email : "")
-        this.node.setEmployeeAddress(user.address != null ? user.address : "")
-        this.node.setEmployeeClinic(user.clinicId ? this.controller.clinicActions.getClinicById(user.clinicId) : Clinic.getMock())
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
-        this.node.setEmployeePassword("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
-        this.node.setEmployeeConfirmPassword("")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
+        this.controller.batched(() => {
+            this.controller.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
+            this.node.setEmployeeId(user.id ? user.id : 0)
+            this.node.setEmployeeFirstName(user.firstName ? user.firstName : "")
+            this.node.setEmployeeMiddleName(user.middleName ? user.middleName : "")
+            this.node.setEmployeeLastName(user.lastName ? user.lastName : "")
+            this.node.setEmployeeActive(user.active != null ? user.active : true)
+            this.node.setEmployeePhone(user.phone != null ? user.phone : "")
+            this.node.setEmployeeMail(user.email != null ? user.email : "")
+            this.node.setEmployeeAddress(user.address != null ? user.address : "")
+            this.node.setEmployeeClinic(user.clinicId ? this.controller.clinicActions.getClinicById(user.clinicId) : Clinic.getMock())
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeLogin, false)
+            this.node.setEmployeePassword("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeePassword, false)
+            this.node.setEmployeeConfirmPassword("")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedEmployeeConfirmPassword, false)
+        })
     }
 
     public setEmployeeActive(value: boolean): void {

@@ -30,8 +30,10 @@ export default class ClientActions extends ReadActions<Client, AdminAppControlle
             params: clientsIds,
             successCallback: result => {
                 const clientInfo: ServerClientInfo = result
-                this.node.setList(clientInfo.clients)
-                this.controller.petActions.setPets(clientInfo.pets)
+                this.controller.batched(() => {
+                    this.node.setList(clientInfo.clients)
+                    this.controller.petActions.setPets(clientInfo.pets)
+                })
                 callback(result)
             },
         })

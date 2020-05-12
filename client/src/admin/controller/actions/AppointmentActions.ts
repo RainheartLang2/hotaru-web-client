@@ -68,19 +68,21 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         const appointment = addedAppointment as AppointmentInfo
         const startDate = appointment.startDate
         const endDate = appointment.endDate
-        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, null)
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, "")
-        this.controller.toggleFieldValidation(AdminStateProperty.EditedAppointmentTitle, false)
-        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
-            new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()))
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
-            DateUtils.dateToTimeString(startDate))
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
-            DateUtils.dateToTimeString(endDate))
+        this.controller.batched(() => {
+            this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, null)
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, "")
+            this.controller.toggleFieldValidation(AdminStateProperty.EditedAppointmentTitle, false)
+            this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
+                new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()))
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
+                DateUtils.dateToTimeString(startDate))
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
+                DateUtils.dateToTimeString(endDate))
 
-        this.initializeClientInfo()
+            this.initializeClientInfo()
 
-        this.controller.setShowDialog(DialogType.CreateAppointment)
+            this.controller.setShowDialog(DialogType.CreateAppointment)
+        })
     }
 
     public openEditAppointmentDialog(editedAppointment: Object): void {
@@ -88,40 +90,42 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
         const startDate = appointment.startDate
         const endDate = appointment.endDate
 
-        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, appointment.id)
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, appointment.title)
-        this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
-            new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()))
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
-            DateUtils.dateToTimeString(startDate))
-        this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
-            DateUtils.dateToTimeString(endDate))
+        this.controller.batched(() => {
+            this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentId, appointment.id)
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentTitle, appointment.title)
+            this.controller.setPropertyValue(AdminStateProperty.EditedAppointmentDate,
+                new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()))
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentStartTime,
+                DateUtils.dateToTimeString(startDate))
+            this.controller.setFieldValue(AdminStateProperty.EditedAppointmentEndTime,
+                DateUtils.dateToTimeString(endDate))
 
-        const clientId = appointment.id ? this.node.getItemById(appointment.id).clientId : null
-        if (!!clientId) {
-            const client = this.controller.clientActions.getItemById(clientId)
-            this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, clientId)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, client.firstName)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, client.middleName)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, client.lastName)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, client.phone)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, client.email)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, client.address)
-            this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, true)
+            const clientId = appointment.id ? this.node.getItemById(appointment.id).clientId : null
+            if (!!clientId) {
+                const client = this.controller.clientActions.getItemById(clientId)
+                this.controller.setPropertyValue(AdminStateProperty.EditedClientInfoId, clientId)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoFirstName, client.firstName)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMiddleName, client.middleName)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoLastName, client.lastName)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoPhone, client.phone)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoMail, client.email)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientInfoAddress, client.address)
+                this.controller.setPropertyValue(AdminStateProperty.CreateClientInfo, true)
 
-            const pet = this.controller.petActions.getOwnerPets(clientId)[0]
-            this.controller.setPropertyValue(AdminStateProperty.EditedClientPetId, pet.id)
-            this.controller.setFieldValue(AdminStateProperty.EditedClientPetName, pet.name)
+                const pet = this.controller.petActions.getOwnerPets(clientId)[0]
+                this.controller.setPropertyValue(AdminStateProperty.EditedClientPetId, pet.id)
+                this.controller.setFieldValue(AdminStateProperty.EditedClientPetName, pet.name)
 
-            const breed = pet.breedId ? this.controller.breedActions.getItemById(pet.breedId) : Breed.getMock()
-            const species = breed.speciesId ? this.controller.speciesActions.getItemById(breed.speciesId) : Species.getMock()
-            this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedSpecies, species)
-            this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedBreed, breed)
-        } else {
-            this.initializeClientInfo()
-        }
+                const breed = pet.breedId ? this.controller.breedActions.getItemById(pet.breedId) : Breed.getMock()
+                const species = breed.speciesId ? this.controller.speciesActions.getItemById(breed.speciesId) : Species.getMock()
+                this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedSpecies, species)
+                this.controller.setPropertyValue(AdminStateProperty.EditedClientSelectedBreed, breed)
+            } else {
+                this.initializeClientInfo()
+            }
 
-        this.controller.setShowDialog(DialogType.EditAppointment)
+            this.controller.setShowDialog(DialogType.EditAppointment)
+        })
     }
 
     public submitCreateItem(callback: Function = () => {}): void {
@@ -134,16 +138,18 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             params: [appointment, client, pet],
             successCallback: (result) => {
                 const addedAppointment = result as MedicalAppointment
-                this.node.add(addedAppointment)
-                if (!!client) {
-                    client.id = addedAppointment.clientId
-                    this.controller.clientActions.addClient(client)
-                }
-                if (!!pet) {
-                    //TODO: add pet to application state
-                }
-                callback()
-                this.controller.setDialogButtonLoading(false)
+                this.controller.batched(() => {
+                    this.node.add(addedAppointment)
+                    if (!!client) {
+                        client.id = addedAppointment.clientId
+                        this.controller.clientActions.addClient(client)
+                    }
+                    if (!!pet) {
+                        //TODO: add pet to application state
+                    }
+                    callback()
+                    this.controller.setDialogButtonLoading(false)
+                })
             },
             errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
@@ -157,14 +163,16 @@ export default class AppointmentActions extends CrudAction<MedicalAppointment, A
             method: this.updateMethod,
             params: [appointment, client],
             successCallback: result => {
-                this.node.update(appointment)
-                if (!!client) {
-                    this.controller.clientActions.updateClient(client)
-                }
+                this.controller.batched(() => {
+                    this.node.update(appointment)
+                    if (!!client) {
+                        this.controller.clientActions.updateClient(client)
+                    }
 
-                //TODO: update pet
-                callback()
-                this.controller.setDialogButtonLoading(false)
+                    //TODO: update pet
+                    callback()
+                    this.controller.setDialogButtonLoading(false)
+                })
             },
             errorCallback: () => this.controller.setDialogButtonLoading(false)
         })
