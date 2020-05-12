@@ -93,6 +93,10 @@ export default class EditEmployeeDialog extends React.Component<Properties, Stat
         this.props.controller.subscribe(AdminStateProperty.EditedEmployeeActive, this, StateProperty.IsActive)
         this.props.controller.subscribe(AdminStateProperty.EditEmployeeFormHasErrors, this, StateProperty.HasErrors)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

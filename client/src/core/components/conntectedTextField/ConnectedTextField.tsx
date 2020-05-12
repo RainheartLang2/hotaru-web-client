@@ -89,6 +89,10 @@ export default class ConnectedTextField extends React.Component<Properties, Stat
     componentDidMount(): void {
         this.props.controller.subscribe(this.props.fieldPropertyName, this, StateProperty.FieldAlias)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

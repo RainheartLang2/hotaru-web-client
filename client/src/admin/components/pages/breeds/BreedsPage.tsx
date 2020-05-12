@@ -103,6 +103,10 @@ export default class BreedsPage extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.BreedsForCurrentSpecies, this, StateProperty.BreedsList)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

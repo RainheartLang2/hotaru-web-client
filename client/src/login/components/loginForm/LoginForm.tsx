@@ -64,6 +64,10 @@ export default class LoginForm extends React.Component<Properties, State> {
         this.props.controller.subscribe(LoginStateProperty.HasError, this, StateProperty.HasError)
         this.props.controller.subscribe(LoginStateProperty.IsAllowedToSubmit, this, StateProperty.IsSubmitAllowed)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

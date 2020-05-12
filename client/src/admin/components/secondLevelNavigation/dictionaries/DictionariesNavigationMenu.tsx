@@ -40,6 +40,10 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.DictionariesNavigationSelectedItem, this, StateProperty.SelectedItem)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

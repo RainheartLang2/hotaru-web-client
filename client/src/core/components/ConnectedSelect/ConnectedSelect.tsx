@@ -53,6 +53,10 @@ export default class ConnectedSelect<ItemType> extends React.Component<Propertie
         this.props.controller.subscribe(this.props.mapProperty, this, StateProperty.ItemsMap)
         this.props.controller.subscribe(this.props.selectedItemProperty, this, StateProperty.SelectedItem)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

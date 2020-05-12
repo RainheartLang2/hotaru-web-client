@@ -65,6 +65,10 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.NavigationMenuItemType, this, StateProperty.SelectedItem)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

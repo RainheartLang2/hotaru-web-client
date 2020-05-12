@@ -48,6 +48,10 @@ export default class CustomButton extends React.Component<Properties, State> {
             this.props.controller.subscribe(this.props.loadingProperty, this, StateProperty.IsLoading)
         }
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

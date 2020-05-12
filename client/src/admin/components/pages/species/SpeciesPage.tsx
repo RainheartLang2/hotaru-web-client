@@ -97,6 +97,10 @@ export default class SpeciesPage extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.SpeciesList, this, StateProperty.SpeciesList)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

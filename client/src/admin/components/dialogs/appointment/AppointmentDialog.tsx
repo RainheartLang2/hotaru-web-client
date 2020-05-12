@@ -107,6 +107,10 @@ export default class AppointmentDialog extends React.Component<Properties, State
         this.props.controller.subscribe(AdminStateProperty.CreateClientInfo, this, StateProperty.ShowClientInfoForm)
         this.props.controller.subscribe(AdminStateProperty.AppointmentFormHasErrors, this, StateProperty.HasErrors)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

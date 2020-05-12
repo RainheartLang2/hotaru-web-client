@@ -40,6 +40,10 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
         this.props.controller.subscribe(AdminStateProperty.PageType, this, StateProperty.CurrentPage)
         this.props.controller.subscribe(AdminStateProperty.IsPageLoading, this, StateProperty.IsLoading)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

@@ -74,6 +74,10 @@ export default class CredentialsSection extends React.Component<Properties, Stat
         this.props.controller.subscribe(AdminStateProperty.IsChangePasswordButtonShow, this, StateProperty.ShowButton)
         this.props.controller.subscribe(AdminStateProperty.IsChangePasswordObligatory, this, StateProperty.FieldsObligatory)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

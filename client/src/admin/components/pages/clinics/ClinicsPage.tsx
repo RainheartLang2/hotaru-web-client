@@ -95,6 +95,10 @@ export default class ClinicsPage extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.ClinicList, this, StateProperty.Clinics)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

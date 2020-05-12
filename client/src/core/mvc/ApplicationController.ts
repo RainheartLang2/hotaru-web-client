@@ -17,6 +17,10 @@ export default abstract class ApplicationController<StoreType extends Applicatio
         this.applicationStore.subscribe(property, subscriber, propertyAlias)
     }
 
+    public unsubscribe(subscriber: React.Component) {
+        this.applicationStore.unsubscribe(subscriber)
+    }
+
     setPropertyValue<ValueType>(propertyName: string, value: ValueType): void {
         this.applicationStore.setPropertyValue<ValueType>(propertyName, value)
     }

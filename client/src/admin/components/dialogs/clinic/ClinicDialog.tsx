@@ -79,6 +79,10 @@ export default class ClinicDialog extends React.Component<Properties, State> {
         this.props.controller.subscribe(AdminStateProperty.EditedClinicActive, this, StateProperty.IsActive)
         this.props.controller.subscribe(AdminStateProperty.EditClinicFormHasErrors, this, StateProperty.HasErrors)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

@@ -9,6 +9,7 @@ export default abstract class ApplicationStore {
     private selectors: Map<string, Selector> = new Map()
     private dependencies: Map<string, string[]> = new Map()
     private subscribers: Map<string, SubscriberData[]> = new Map()
+    private propertiesBySubscribers: Map<React.Component, string[]> = new Map()
 
     private batchData: Map<string, any> = new Map()
     private batchedMode: boolean
@@ -124,10 +125,37 @@ export default abstract class ApplicationStore {
                      propertyAlias: string = propertyName): void {
         const subscribersData = this.subscribers.get(propertyName)
         if (subscribersData !== undefined) {
+            this.storeAdditionalInfo(propertyName, subscriber)
             subscribersData.push({subscriber, propertyAlias})
             subscriber.setState({[propertyAlias]: this.getPropertyValue(propertyName)})
         } else {
             this.unregisteredPropertySituationHandle(propertyName)
+        }
+    }
+
+    private storeAdditionalInfo(propertyName: string, subscriber: React.Component) :void {
+        let propertiesBySubscriber = this.propertiesBySubscribers.get(subscriber)
+        if (propertiesBySubscriber == null) {
+            propertiesBySubscriber = []
+            this.propertiesBySubscribers.set(subscriber, propertiesBySubscriber)
+        }
+        propertiesBySubscriber.push(propertyName)
+    }
+
+    public unsubscribe(subscriber: React.Component): void {
+        const propertiesBySubscriber = this.propertiesBySubscribers.get(subscriber)
+        if (propertiesBySubscriber != null) {
+            propertiesBySubscriber.forEach(propertyName => {
+                this.cleanSubscribersData(propertyName, subscriber)
+            })
+        }
+        this.propertiesBySubscribers.delete(subscriber)
+    }
+
+    private cleanSubscribersData(propertyName: string, subscriber: React.Component): void {
+        const propertySubscribersData = this.subscribers.get(propertyName)
+        if (propertySubscribersData != null) {
+            this.subscribers.set(propertyName, propertySubscribersData.filter(data => data.subscriber != subscriber))
         }
     }
 
@@ -257,6 +285,10 @@ export default abstract class ApplicationStore {
         this.batchedMode = true
         executableBody()
         this.commitBatch()
+    }
+
+    public handleSubscriberUnmount(subscriber: React.Component): void {
+        this.subscribers
     }
 
     private createFriend(): ApplicationStoreFriend {

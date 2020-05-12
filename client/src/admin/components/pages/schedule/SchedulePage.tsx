@@ -101,6 +101,10 @@ export default class SchedulePage extends React.Component<Properties, State> {
         this.props.controller.subscribe(AdminStateProperty.AppointmentModelsList, this, StateProperty.AppointmentList)
         this.props.controller.subscribe(AdminStateProperty.SchedulePageDate, this, StateProperty.SelectedDate)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

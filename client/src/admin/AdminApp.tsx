@@ -69,6 +69,10 @@ export default class AdminApp extends React.Component<Properties, State> {
         this.controller.subscribe(AdminStateProperty.LoggedInEmployee, this, StateProperty.LoggedInUser)
         this.controller.startApplication()
     }
+
+    componentWillUnmount(): void {
+        this.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

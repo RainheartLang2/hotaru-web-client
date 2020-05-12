@@ -39,6 +39,10 @@ export default class ConnectedCheckbox extends React.Component<Properties, State
     componentDidMount(): void {
         this.props.controller.subscribe(this.props.propertyName, this, StateProperty.IsChecked)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

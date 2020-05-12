@@ -51,6 +51,10 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
     componentDidMount(): void {
         this.controller.subscribe(AdminStateProperty.DialogType, this)
     }
+
+    componentWillUnmount(): void {
+        this.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

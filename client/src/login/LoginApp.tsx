@@ -37,6 +37,10 @@ export default class LoginApp extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.controller.subscribe(LoginStateProperty.IsApplicationLoading, this, StateProperty.IsLoading)
     }
+
+    componentWillUnmount(): void {
+        this.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

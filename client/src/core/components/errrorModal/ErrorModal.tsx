@@ -38,6 +38,10 @@ export default class ErrorModal extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(GlobalStateProperty.ApplicationError, this, StateProperty.ErrorTextKey)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

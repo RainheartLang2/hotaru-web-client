@@ -26,6 +26,10 @@ export class AdminSecondLevelNavigationContainer extends React.Component<Propert
     componentDidMount(): void {
         this.props.controller.subscribe(AdminStateProperty.SecondLevelNavigationMenuType, this, StateProperty.CurrentMenu)
     }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
+    }
 }
 
 enum StateProperty {

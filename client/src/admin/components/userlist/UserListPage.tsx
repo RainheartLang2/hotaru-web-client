@@ -90,6 +90,10 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     componentDidMount(): void {
         AdminAppController.instance.subscribe(AdminStateProperty.UserList, this, StateProperty.UserList)
     }
+
+    componentWillUnmount(): void {
+        AdminAppController.instance.unsubscribe(this)
+    }
 }
 
 enum StateProperty {
