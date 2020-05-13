@@ -11,6 +11,8 @@ export default abstract class ApplicationStore {
     private subscribers: Map<string, SubscriberData[]> = new Map()
     private propertiesBySubscribers: Map<React.Component, string[]> = new Map()
 
+    private fieldNames: string[] = []
+
     private batchData: Map<string, any> = new Map()
     private batchedMode: boolean
 
@@ -50,6 +52,7 @@ export default abstract class ApplicationStore {
                                        defaultValue: ValueType,
                                        validators: FieldValidator<ValueType>[] = []
     ): void {
+        this.fieldNames.push(fieldName)
         const basePropertyName = this.getFieldBasePropertyName(fieldName)
         this.registerProperty(basePropertyName, defaultValue)
         this.registerSelector(fieldName, {
@@ -177,24 +180,34 @@ export default abstract class ApplicationStore {
         }
     }
 
+    //TODO: deprecated. Remove usages.
     public setFieldValue<V>(fieldName: string, newValue: V): void {
-        this.setPropertyValue<V>(this.getFieldBasePropertyName(fieldName), newValue)
+        this.setPropertyValue<V>(fieldName, newValue)
     }
 
-    public setPropertyValue<V>(propertyName: string, newValue: V): void {
+    public setPropertyValue<ValueType>(propertyName: string, newValue: ValueType): void {
+        if (this.fieldNames.includes(propertyName)) {
+            this.setPropertyValue(this.getFieldBasePropertyName(propertyName), newValue)
+            return
+        }
         try {
             this.setPropertyValueInternally(propertyName, newValue)
         } catch (e) {
             if (e instanceof AbortError) {
-                const currentValue = this.properties.get(propertyName) as V
+                const currentValue = this.properties.get(propertyName) as ValueType
                 this.setPropertyValueInternally(propertyName, currentValue)
             }
         }
     }
 
     private setPropertyValueInternally<V>(propertyName: string, newValue: V): void {
-        if (this.properties.get(propertyName) === undefined) {
+        const oldValue = this.properties.get(propertyName)
+        if (oldValue === undefined) {
             this.unregisteredPropertySituationHandle(propertyName)
+        }
+
+        if (newValue == oldValue) {
+            return
         }
         this.properties.set(propertyName, newValue)
         if (this.batchedMode) {
