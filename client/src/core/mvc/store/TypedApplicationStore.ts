@@ -1,4 +1,6 @@
 import {CommonUtils} from "../../utils/CommonUtils";
+import FieldValidator from "../validators/FieldValidator";
+import {Field} from "./Field";
 
 export default abstract class TypedApplicationStore<StateType, DerivativeType> {
     private originalState: StateType
@@ -34,6 +36,55 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
 
     public get state(): Readonly<StateType & DerivativeType> {
         return this.readableState
+    }
+
+    protected createField(originalProperty: keyof(StateType & DerivativeType),
+                                    defaultValue: string = "",
+                                    validators: FieldValidator[] = [],
+    ): DerivativeRecord<(StateType & DerivativeType), Pick<(StateType & DerivativeType), any>, Field> {
+        return {
+            dependsOn: [originalProperty],
+            get: (args: Pick<StateType & DerivativeType, any>, prevValue?: Field) => {
+                const originalValue = args[originalProperty]
+                const validationResult = this.validateField(originalValue, validators)
+                return {
+                    value: originalValue,
+                    errors: validationResult.errors,
+                    validators,
+                    validationActive: prevValue ? prevValue.validationActive : false,
+                }
+            },
+            value: {
+                value: defaultValue,
+                errors: [],
+                validators,
+                validationActive: true,
+            },
+        }
+    }
+
+    private validateField<ValueType>(value: ValueType,
+                                     validators: FieldValidator<ValueType>[]
+    ): ValidationResult {
+        const errors: string[] = []
+        validators.forEach(validator => {
+            if (!validator.isValid(value)) {
+                if (validator.isAbortingValidator()) {
+                    throw new AbortError()
+                }
+                errors.push(validator.getErrorMessage())
+            }
+        })
+        return {errors, abort: false}
+    }
+
+    private getCurrentValidationActive(fieldKey: keyof DerivativeType): boolean {
+        let validationActive = false
+        const currentValue = (this.readableState[fieldKey]) as unknown as Field<string>
+        if (currentValue) {
+            validationActive = currentValue.validationActive
+        }
+        return validationActive
     }
 
     private putDataByPropertyKey<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & DerivativeType), alias: keyof CState): void {
@@ -114,7 +165,7 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
 
     private refreshDerivative(derivativeKey: keyof DerivativeType): void {
         const record = this.derivatives[derivativeKey]
-        record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn))
+        record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
         this.readableState[derivativeKey] = record.value
         this.postChanges(derivativeKey, record.value)
@@ -170,7 +221,7 @@ export type SubscriptionData = {
 
 export type DerivativeRecord<StateType, ArgsType extends Pick<StateType, any>, ResultType> = {
     dependsOn: (keyof StateType)[],
-    get: (args: ArgsType) => ResultType,
+    get: (args: ArgsType, prevValue?: ResultType) => ResultType,
     value: ResultType,
 }
 
@@ -178,7 +229,13 @@ export type Derivatives<StateType, DerivativeStateType> = {
     [P in (keyof DerivativeStateType)]: DerivativeRecord<(StateType & DerivativeStateType), Pick<(StateType & DerivativeStateType), any>, DerivativeStateType[P]>
 }
 
+type ValidationResult = {
+    errors: string[],
+    abort: boolean,
+}
 
 type KeysJunction<FirstType, SecondType> = keyof (FirstType & SecondType)
 
 export type SingleProperty<A> = A[keyof A]
+
+class AbortError extends Error {}

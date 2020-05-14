@@ -1,4 +1,5 @@
 import TypedApplicationStore, {Derivatives, SingleProperty} from "./TypedApplicationStore";
+import {Field} from "./Field";
 
 export default class TestApplicationStore extends TypedApplicationStore<State, Derivations> {
     protected getDefaultState(): State {
@@ -25,7 +26,8 @@ export default class TestApplicationStore extends TypedApplicationStore<State, D
                 dependsOn: ['firstNumber', 'sum'],
                 get: (args: Pick<State & Derivations, 'firstNumber' | 'sum'>): number => args.firstNumber + args.sum,
                 value: 0,
-            }
+            },
+            field: this.createField('testProperty', "")
         }
     }
 }
@@ -40,4 +42,5 @@ export type Derivations = {
     sum: number,
     testNumber: number,
     nested: number,
+    field: Field,
 }

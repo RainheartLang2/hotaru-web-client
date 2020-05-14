@@ -33,6 +33,7 @@ export default class LoginApp extends React.Component<Properties, State> {
             firstNumber: 1,
             secondNumber: 3,
         })
+        console.log(testStore.state)
     }
 
     render() {
