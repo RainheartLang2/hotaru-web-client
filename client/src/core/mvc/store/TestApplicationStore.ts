@@ -1,4 +1,4 @@
-import TypedApplicationStore, {Derivatives} from "./TypedApplicationStore";
+import TypedApplicationStore, {Derivatives, SingleProperty} from "./TypedApplicationStore";
 
 export default class TestApplicationStore extends TypedApplicationStore<State, Derivations> {
     protected getDefaultState(): State {

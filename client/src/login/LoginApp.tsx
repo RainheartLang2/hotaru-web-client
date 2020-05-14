@@ -31,6 +31,7 @@ export default class LoginApp extends React.Component<Properties, State> {
         testStore.setState({
             testProperty: "1",
             firstNumber: 1,
+            secondNumber: 3,
         })
     }
 
