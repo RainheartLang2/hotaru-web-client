@@ -10,6 +10,7 @@ import LoginApplicationController from "./controller/LoginApplicationController"
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 import {LoginStateProperty} from "./state/LoginApplicationState";
+import TestApplicationStore from "../core/mvc/store/TestApplicationStore";
 
 export default class LoginApp extends React.Component<Properties, State> {
 
@@ -25,6 +26,12 @@ export default class LoginApp extends React.Component<Properties, State> {
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = LoginApplicationController.instance
         ApplicationControllerHolder.initialize(this.controller)
+
+        const testStore = new TestApplicationStore()
+        testStore.setState({
+            testProperty: "1",
+            firstNumber: 1,
+        })
     }
 
     render() {
