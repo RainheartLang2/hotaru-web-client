@@ -1,4 +1,3 @@
-import {ApplicationType} from "../enum/ApplicationType";
 import ApplicationController from "../mvc/ApplicationController";
 
 export default class ApplicationControllerHolder {

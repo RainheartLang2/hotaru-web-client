@@ -2,7 +2,6 @@ import * as React from "react";
 import {Message} from "../Message";
 import ApplicationController from "../../mvc/ApplicationController";
 import CustomButton from "../customButton/CustomButton";
-import {LoginStateProperty} from "../../../login/state/LoginApplicationState";
 
 var styles = require("./styles.css");
 

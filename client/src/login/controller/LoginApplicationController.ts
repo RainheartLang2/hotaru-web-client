@@ -1,13 +1,13 @@
-import ApplicationController from "../../core/mvc/ApplicationController";
-import LoginApplicationState, {LoginStateProperty} from "../state/LoginApplicationState";
+import LoginApplicationStore, {LoginDerivationState, LoginState} from "../state/LoginApplicationStore";
 import {fetchPreloginRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
+import TypedApplicationController from "../../core/mvc/controllers/TypedApplicationController";
 
-export default class LoginApplicationController extends ApplicationController<LoginApplicationState> {
+export default class LoginApplicationController extends TypedApplicationController<LoginState, LoginDerivationState, LoginApplicationStore> {
     private static _instance: LoginApplicationController
 
     private constructor() {
-        super(LoginApplicationState.instance)
+        super(LoginApplicationStore.instance)
     }
 
     public static get instance(): LoginApplicationController {
@@ -18,19 +18,19 @@ export default class LoginApplicationController extends ApplicationController<Lo
     }
 
     public submitLoginForm(): void {
-        const login = this.applicationStore.buildLogin()
-        this.setPropertyValue(LoginStateProperty.IsLoginButtonLoading, true)
+        const login = this.store.buildLogin()
+        this.setState({isLoginButtonLoading: true})
         fetchPreloginRpc({
             method: RemoteMethods.employeeLogin,
             params: [login.loginName, login.password],
             successCallback: (result: any) => {
-                this.setPropertyValue(LoginStateProperty.IsLoginButtonLoading, false)
-                this.applicationStore.setPropertyValue(LoginStateProperty.IsApplicationLoading, false)
+                this.setState({isLoginButtonLoading: false, isApplicationLoading: false})
                 window.location.href = result
             },
-            errorCallback: () => this.setPropertyValue(LoginStateProperty.IsLoginButtonLoading, false),
-            errorProperty: LoginStateProperty.HasError,
-        })
+            errorCallback: (errorMessage: string) => {
+                this.setState({isLoginButtonLoading: false})
+            },
+        }, true)
     }
 
     handleUnauthorizedUserSituation(): void {

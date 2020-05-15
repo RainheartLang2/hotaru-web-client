@@ -3,8 +3,10 @@ import {ButtonComponent} from "../../../core/components";
 import {Message} from "../../../core/components/Message";
 import ConnectedTextField from "../../../core/components/conntectedTextField/ConnectedTextField";
 import LoginApplicationController from "../../controller/LoginApplicationController";
-import {LoginStateProperty} from "../../state/LoginApplicationState";
 import CustomButton from "../../../core/components/customButton/CustomButton";
+import TypedConnectedTextField from "../../../core/components/conntectedTextField/TypedConnectedTextField";
+import LoginApplicationStore, {LoginDerivationState, LoginState} from "../../state/LoginApplicationStore";
+import TypedCustomButton from "../../../core/components/customButton/TypedCustomButton";
 
 var styles = require("./styles.css");
 
@@ -13,18 +15,19 @@ export default class LoginForm extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.HasError]: "",
-            [StateProperty.IsSubmitAllowed]: false,
+            hasError: "",
+            isSubmitAllowed: false,
         }
     }
 
     render() {
-        const loginFormError = this.state[StateProperty.HasError]
+        const loginFormError = this.state.hasError
         return (<div className={styles.loginForm}>
             <div className={styles.loginField}>
-                <ConnectedTextField
+                <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={LoginStateProperty.Login}
+                    fieldKey={"loginField"}
+                    originalPropertyKey={"login"}
                     variant="outlined"
                     label={(<Message messageKey={"field.login.label"}/>)}
                     size="small"
@@ -32,9 +35,10 @@ export default class LoginForm extends React.Component<Properties, State> {
             </div>
 
             <div className={styles.passwordField}>
-                <ConnectedTextField
+                <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={LoginStateProperty.Password}
+                    fieldKey={"passwordField"}
+                    originalPropertyKey={"password"}
                     variant="outlined"
                     label={(<Message messageKey={"field.password.label"}/>)}
                     size="small"
@@ -46,23 +50,23 @@ export default class LoginForm extends React.Component<Properties, State> {
                 {loginFormError && (<Message messageKey={"error.message." + loginFormError}/>)}
             </div>
             <div className={styles.buttonsArea}>
-                <CustomButton
+                <TypedCustomButton<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
                     variant="contained"
                     color="primary"
-                    disabled={!this.state[StateProperty.IsSubmitAllowed]}
+                    disabled={!this.state.isSubmitAllowed}
                     onClick={() => this.props.controller.submitLoginForm()}
-                    loadingProperty={LoginStateProperty.IsLoginButtonLoading}
+                    loadingProperty={"isLoginButtonLoading"}
                 >
                     <Message messageKey="login.title"/>
-                </CustomButton>
+                </TypedCustomButton>
             </div>
         </div>)
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(LoginStateProperty.HasError, this, StateProperty.HasError)
-        this.props.controller.subscribe(LoginStateProperty.IsAllowedToSubmit, this, StateProperty.IsSubmitAllowed)
+        this.props.controller.subscribe(this, "hasError", "hasError")
+        this.props.controller.subscribe(this, "isAllowedToSubmit", "isSubmitAllowed")
     }
 
     componentWillUnmount(): void {
@@ -70,16 +74,11 @@ export default class LoginForm extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    HasError = "hasError",
-    IsSubmitAllowed = "isSubmitAllowed",
-}
-
 type Properties = {
     controller: LoginApplicationController,
 }
 
 type State = {
-    [StateProperty.HasError]: "",
-    [StateProperty.IsSubmitAllowed]: false,
+    hasError: "",
+    isSubmitAllowed: false,
 }

@@ -7,10 +7,9 @@ import {ApplicationType} from "../core/enum/ApplicationType";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import LoginApplicationController from "./controller/LoginApplicationController";
-import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
-import {LoginStateProperty} from "./state/LoginApplicationState";
 import TestApplicationStore from "../core/mvc/store/TestApplicationStore";
+import TypedApplicationControllerHolder from "../core/utils/TypedApplicationControllerHolder";
 
 export default class LoginApp extends React.Component<Properties, State> {
 
@@ -19,32 +18,24 @@ export default class LoginApp extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props);
         this.state = {
-            [StateProperty.IsLoading]: false,
+            isLoading: false,
         }
         ApplicationHolder.initialize(ApplicationType.Login)
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = LoginApplicationController.instance
-        ApplicationControllerHolder.initialize(this.controller)
-
-        const testStore = new TestApplicationStore()
-        testStore.setState({
-            testProperty: "1",
-            firstNumber: 1,
-            secondNumber: 3,
-        })
-        console.log(testStore.state)
+        TypedApplicationControllerHolder.initialize(this.controller)
     }
 
     render() {
         return <MuiThemeProvider theme={CURRENT_THEME}>
             <LoginForm controller={this.controller}/>
-            <LoadingMoire visible={this.state[StateProperty.IsLoading]}/>
+            <LoadingMoire visible={this.state.isLoading}/>
         </MuiThemeProvider>
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(LoginStateProperty.IsApplicationLoading, this, StateProperty.IsLoading)
+        this.controller.subscribe(this, "isApplicationLoading", "isLoading")
     }
 
     componentWillUnmount(): void {
@@ -52,12 +43,8 @@ export default class LoginApp extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    IsLoading = "isLoading"
-}
-
 type Properties = {}
 
 type State = {
-    [StateProperty.IsLoading]: boolean,
+    isLoading: boolean,
 }

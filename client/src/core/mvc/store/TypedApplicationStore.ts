@@ -63,6 +63,11 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         }
     }
 
+    public toggleFieldValidation(fieldKey: keyof DerivativeType, value: boolean): void {
+        const field = this.readableState[fieldKey] as unknown as Field
+        field.validationActive = value
+    }
+
     private validateField<ValueType>(value: ValueType,
                                      validators: FieldValidator<ValueType>[]
     ): ValidationResult {
@@ -76,15 +81,6 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
             }
         })
         return {errors, abort: false}
-    }
-
-    private getCurrentValidationActive(fieldKey: keyof DerivativeType): boolean {
-        let validationActive = false
-        const currentValue = (this.readableState[fieldKey]) as unknown as Field<string>
-        if (currentValue) {
-            validationActive = currentValue.validationActive
-        }
-        return validationActive
     }
 
     private putDataByPropertyKey<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & DerivativeType), alias: keyof CState): void {
