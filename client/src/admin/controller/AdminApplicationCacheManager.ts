@@ -9,17 +9,19 @@ import {fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
 import {Clinic} from "../../common/beans/Clinic";
+import EmployeeAppController from "./EmployeeAppController";
+import EmployeeApplicationStore from "../state/EmployeeApplicationStore";
 
 export default class CacheManager {
 
-    private controller: AdminAppController
-    private store: AdminApplicationState
+    private controller: EmployeeAppController
+    private store: EmployeeApplicationStore
     private settings: CacheSettings
 
     private clinicCacheKey = new CacheKey("clinic", CacheVolatility.EXTRA_LOW)
     private _clinicCache: ExecutableCache
 
-    constructor(controller: AdminAppController, store: AdminApplicationState) {
+    constructor(controller: EmployeeAppController, store: EmployeeApplicationStore) {
         this.controller = controller
         this.store = store
         this.settings = new CacheSettings(CacheUtils.getCacheLifetineSettings(),
@@ -35,7 +37,7 @@ export default class CacheManager {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllClinics,
             successCallback: result => {
-                this.store.clinicNode.setClinicList(plainToClass(Clinic, result) as Clinic[])
+                this.store.setState({userList: result})
                 callback()
             },
         })

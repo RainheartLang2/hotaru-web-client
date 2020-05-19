@@ -8,7 +8,6 @@ import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import LoginApplicationController from "./controller/LoginApplicationController";
 import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
-import TestApplicationStore from "../core/mvc/store/TestApplicationStore";
 import TypedApplicationControllerHolder from "../core/utils/TypedApplicationControllerHolder";
 
 export default class LoginApp extends React.Component<Properties, State> {

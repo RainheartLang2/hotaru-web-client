@@ -4,9 +4,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import {Field} from "../../mvc/store/Field";
 import MaskTransformer from "../../utils/MaskTransformer";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
-import TypedApplicationStore from "../../mvc/store/TypedApplicationStore";
+import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
 
-export default class TypedConnectedTextField<StateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>>
+export default class TypedConnectedTextField<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>>
     extends React.Component<Properties<StateType, DerivationType, StoreType>, State> {
 
     private maskTransformer: MaskTransformer = new MaskTransformer("")
@@ -97,7 +97,7 @@ export default class TypedConnectedTextField<StateType, DerivationType, StoreTyp
     }
 }
 
-type Properties<StateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>> = {
+type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>> = {
     controller: TypedApplicationController<StateType, DerivationType, StoreType>,
     fieldKey: keyof DerivationType,
     originalPropertyKey: keyof StateType,

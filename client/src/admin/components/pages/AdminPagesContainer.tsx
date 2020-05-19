@@ -8,37 +8,38 @@ import LoadingMoire from "../../../core/components/loadingMoire/LoadingMoire";
 import SchedulePage from "./schedule/SchedulePage";
 import SpeciesPage from "./species/SpeciesPage";
 import BreedsPage from "./breeds/BreedsPage";
+import EmployeeAppController from "../../controller/EmployeeAppController";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.CurrentPage]: PageType.None,
-            [StateProperty.IsLoading]: false,
+            currentPage: PageType.None,
+            isLoading: false,
         }
     }
 
     private isRenderPage(pageType: PageType) {
-        const currentPage = this.state[StateProperty.CurrentPage]
-        const isLoading = this.state[StateProperty.IsLoading]
-        return !isLoading && currentPage == pageType
+        return !this.state.isLoading && this.state.currentPage == pageType
     }
 
     render() {
-        const isLoading = this.state[StateProperty.IsLoading]
+        const isLoading = this.state.isLoading
         return (<>
             <LoadingMoire delay={true} visible={isLoading}/>
-            {this.isRenderPage(PageType.UserList) && (<UserListPage/>)}
-            {this.isRenderPage(PageType.ClinicList) && (<ClinicsPage controller={this.props.controller}/>)}
-            {this.isRenderPage(PageType.Schedule) && (<SchedulePage controller={this.props.controller}/>)}
-            {this.isRenderPage(PageType.Species) && (<SpeciesPage controller={this.props.controller}/>)}
-            {this.isRenderPage(PageType.Breeds) && (<BreedsPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.UserList) && (<UserListPage controller={this.props.controller}/>)}
+            {/*{this.isRenderPage(PageType.ClinicList) && (<ClinicsPage controller={this.props.controller}/>)}*/}
+            {/*{this.isRenderPage(PageType.Schedule) && (<SchedulePage controller={this.props.controller}/>)}*/}
+            {/*{this.isRenderPage(PageType.Species) && (<SpeciesPage controller={this.props.controller}/>)}*/}
+            {/*{this.isRenderPage(PageType.Breeds) && (<BreedsPage controller={this.props.controller}/>)}*/}
         </>)
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.PageType, this, StateProperty.CurrentPage)
-        this.props.controller.subscribe(AdminStateProperty.IsPageLoading, this, StateProperty.IsLoading)
+        this.props.controller.subscribeBatch(this, [
+            ["pageType", "currentPage"],
+            ["isPageLoading", "isLoading"],
+        ])
     }
 
     componentWillUnmount(): void {
@@ -46,16 +47,11 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
     }
 }
 
-enum StateProperty {
-    CurrentPage = "currentPage",
-    IsLoading = "isLoading",
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.CurrentPage]: PageType,
-    [StateProperty.IsLoading]: boolean,
+    currentPage: PageType,
+    isLoading: boolean,
 }

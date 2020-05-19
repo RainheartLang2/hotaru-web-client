@@ -2,7 +2,6 @@ import {ApplicationType} from "../enum/ApplicationType";
 
 export default class ApplicationHolder {
     private static _instance = new ApplicationHolder()
-    private static initialized = false
 
     private _applicationType = ApplicationType.None
     private constructor() {}
@@ -12,7 +11,7 @@ export default class ApplicationHolder {
     }
 
     public static get instance(): ApplicationHolder {
-        if (!this.initialized) {
+        if (this._instance.applicationType == ApplicationType.None) {
             throw new Error("Application holder is not initialized")
         }
         return this._instance
@@ -20,6 +19,5 @@ export default class ApplicationHolder {
 
     public static initialize(applicationType: ApplicationType): void {
         this._instance._applicationType = applicationType
-        this.initialized = true
     }
 }

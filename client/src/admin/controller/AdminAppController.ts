@@ -17,7 +17,7 @@ import AdminApplicationCacheManager from "./AdminApplicationCacheManager";
 export default class AdminAppController extends ApplicationController<AdminApplicationState> {
     private static _instance: AdminAppController
 
-    private _cacheManager: AdminApplicationCacheManager
+    // private _cacheManager: AdminApplicationCacheManager
 
     private _employeeActions: EmployeeActions
     private _clinicActions: ClinicActions
@@ -37,7 +37,7 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         this._clientActions = new ClientActions(this, this.applicationStore.clientNode)
         this._petActions = new PetActions(this, this.applicationStore.petNode)
 
-        this._cacheManager = new AdminApplicationCacheManager(this, this.applicationStore)
+        // this._cacheManager = new AdminApplicationCacheManager(this, this.applicationStore)
     }
 
     public static get instance(): AdminAppController {
@@ -85,9 +85,9 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         return this._petActions
     }
 
-    get cacheManager(): AdminApplicationCacheManager {
-        return this._cacheManager;
-    }
+    // get cacheManager(): AdminApplicationCacheManager {
+    //     // /return this._cacheManager;
+    // }
 
     public startApplication(): void {
         this.applicationStore.setApplicationLoading(true)

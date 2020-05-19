@@ -6,30 +6,27 @@ import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Link} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
-import EmployeeActions from "../../controller/actions/EmployeeActions";
 import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";
 import ActivityCell from "../../../core/components/activityCell/ActivityCell";
+import EmployeeAppController from "../../controller/EmployeeAppController";
 
 var styles = require("./styles.css");
 
-export default class UserListPage extends React.Component<{}, UserListPageState> {
+export default class UserListPage extends React.Component<Properties, State> {
 
-    private actions: EmployeeActions
-
-    constructor(props: {}) {
+    constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.UserList]: []
+            userList: []
         }
-        this.actions = AdminAppController.instance.employeeActions
     }
 
     private delete(userId?: number): void {
-        if (userId) {
-            this.actions.deleteEmployee(userId)
-        } else {
-            throw new Error("user has no id")
-        }
+        // if (userId) {
+        //     this.actions.deleteEmployee(userId)
+        // } else {
+        //     throw new Error("user has no id")
+        // }
     }
 
     private getUserMiddleName(user: Employee): string {
@@ -44,7 +41,7 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
             <>
                 <PageHeader label={(<Message messageKey={"page.userList.title"}/>)}
                             hasButton={true}
-                            buttonOnClick={() => this.actions.openCreateEmployeeDialog()}/>
+                            buttonOnClick={() => {}}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
@@ -58,12 +55,12 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
-                        {this.state[StateProperty.UserList].map(user => {
+                        {this.state.userList.map(user => {
                             return (<TableRowCmp key={user.id}>
                                 <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"
-                                        onClick={() => this.actions.openEditEmployeeDialog(user)}
+                                        onClick={() => {}}
                                     >
                                         {this.getUserName(user)}
                                     </Link>
@@ -88,7 +85,9 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     }
 
     componentDidMount(): void {
-        AdminAppController.instance.subscribe(AdminStateProperty.UserList, this, StateProperty.UserList)
+        this.props.controller.subscribeBatch(this, [
+            ["userList", "userList"],
+        ])
     }
 
     componentWillUnmount(): void {
@@ -96,10 +95,9 @@ export default class UserListPage extends React.Component<{}, UserListPageState>
     }
 }
 
-enum StateProperty {
-    UserList = "userList"
+type Properties = {
+    controller: EmployeeAppController
 }
-
-export type UserListPageState = {
-    [StateProperty.UserList]: Employee[],
+type State = {
+    userList: Employee[],
 }

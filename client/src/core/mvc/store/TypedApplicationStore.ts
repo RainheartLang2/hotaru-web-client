@@ -1,22 +1,23 @@
 import {CommonUtils} from "../../utils/CommonUtils";
 import FieldValidator from "../validators/FieldValidator";
 import {Field} from "./Field";
+import TypedApplicationStoreFriend from "./TypedApplicationStoreFriend";
 
-export default abstract class TypedApplicationStore<StateType, DerivativeType> {
-    private originalState: StateType
-    private derivatives: Derivatives<StateType, DerivativeType>
-    private readableState: StateType & DerivativeType
+export default abstract class TypedApplicationStore<StateType extends DefaultStateType, SelectorsType> {
+    private originalState!: StateType
+    private selectors!: SelectorsInfo<StateType, SelectorsType>
+    private readableState!: StateType & SelectorsType
 
-    private dependencies: Map<KeysJunction<StateType, DerivativeType>, (keyof DerivativeType)[]>
+    private dependencies!: Map<KeysJunction<StateType, SelectorsType>, (keyof SelectorsType)[]>
 
-    private subscriptionDataByPropertyKey: Map<keyof (StateType & DerivativeType), SubscriptionData[]>
-    private propertyKeysBySubscriber: Map<React.Component, (keyof (StateType & DerivativeType))[]>
+    private subscriptionDataByPropertyKey!: Map<keyof (StateType & SelectorsType), SubscriptionData[]>
+    private propertyKeysBySubscriber!: Map<React.Component, (keyof (StateType & SelectorsType))[]>
 
-    constructor() {
+    protected initialize(): void {
         this.originalState = this.getDefaultState()
-        this.derivatives = this.getDefaultDerivatives()
+        this.selectors = this.getSelectors()
         this.dependencies = this.createDependencies()
-        this.checkDerivatives(this.derivatives)
+        this.checkSelectors(this.selectors)
         this.readableState = this.createReadableState()
 
         this.subscriptionDataByPropertyKey = new Map()
@@ -25,26 +26,33 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         for (let propertyKey in this.originalState) {
             this.subscriptionDataByPropertyKey.set(propertyKey, [])
         }
-        for (let derivativeKey in this.derivatives) {
-            this.subscriptionDataByPropertyKey.set(derivativeKey, [])
+        for (let selectorKey in this.selectors) {
+            this.subscriptionDataByPropertyKey.set(selectorKey, [])
         }
     }
 
     protected abstract getDefaultState(): StateType
 
-    protected abstract getDefaultDerivatives(): Derivatives<StateType, DerivativeType>
+    protected abstract getSelectors(): SelectorsInfo<StateType, SelectorsType>
 
-    public get state(): Readonly<StateType & DerivativeType> {
+    protected createDefaultStateTypeEntry(): DefaultStateType {
+        return {
+            isDialogSubmitButtonLoading: false,
+            globalErrorTextKey: null,
+        }
+    }
+
+    public get state(): Readonly<StateType & SelectorsType> {
         return this.readableState
     }
 
-    protected createField(originalProperty: keyof(StateType & DerivativeType),
+    protected createField(originalProperty: keyof(StateType & SelectorsType),
                                     defaultValue: string = "",
                                     validators: FieldValidator[] = [],
-    ): DerivativeRecord<(StateType & DerivativeType), Pick<(StateType & DerivativeType), any>, Field> {
+    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
         return {
             dependsOn: [originalProperty],
-            get: (args: Pick<StateType & DerivativeType, any>, prevValue?: Field) => {
+            get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field) => {
                 const originalValue = args[originalProperty]
                 const validationResult = this.validateField(originalValue, validators)
                 return {
@@ -63,7 +71,24 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         }
     }
 
-    public toggleFieldValidation(fieldKey: keyof DerivativeType, value: boolean): void {
+    protected createFormHasNoErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
+        return {
+            dependsOn: fieldsKeys,
+            get: (state: Pick<StateType & SelectorsType, any>) => {
+                fieldsKeys.forEach(key => {
+                    const field = this.readableState[key] as unknown as Field
+                    if (field.errors.length > 0) {
+                        return false
+                    }
+                })
+                return true
+            },
+            value: true,
+        }
+    }
+
+    public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean): void {
         const field = this.readableState[fieldKey] as unknown as Field
         field.validationActive = value
     }
@@ -83,7 +108,7 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         return {errors, abort: false}
     }
 
-    private putDataByPropertyKey<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & DerivativeType), alias: keyof CState): void {
+    private putDataByPropertyKey<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & SelectorsType), alias: keyof CState): void {
         let propertySubscriptionData = this.subscriptionDataByPropertyKey.get(property)
         if (!propertySubscriptionData) {
             propertySubscriptionData = []
@@ -95,7 +120,7 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         })
     }
 
-    private putDataBySubscriber(subscriber: React.Component, property: keyof (StateType & DerivativeType)): void {
+    private putDataBySubscriber(subscriber: React.Component, property: keyof (StateType & SelectorsType)): void {
         let subscriberProperties = this.propertyKeysBySubscriber.get(subscriber)
         if (!subscriberProperties) {
             subscriberProperties = []
@@ -104,17 +129,24 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         subscriberProperties.push(property)
     }
 
-    public subscribe<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & DerivativeType), alias: keyof CState): void {
+    public subscribe<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & SelectorsType), alias: keyof CState): void {
         this.putDataByPropertyKey(subscriber, property, alias)
         this.putDataBySubscriber(subscriber, property)
+        // @ts-ignore
+        subscriber.setState({[alias]: this.readableState[property]})
     }
 
-    private getPropertySubscriptionData(propertyKey: keyof (StateType & DerivativeType)): SubscriptionData[] {
+    private getPropertySubscriptionData(propertyKey: keyof (StateType & SelectorsType)): SubscriptionData[] {
         const propertySubscriptionData = this.subscriptionDataByPropertyKey.get(propertyKey)
         if (!propertySubscriptionData) {
             throw new Error("no data for property key " + propertyKey)
         }
         return propertySubscriptionData
+    }
+
+    public subscribeBatch<CProps, CState>(subscribe: React.Component<CProps, CState>,
+                                          info: [keyof (StateType & SelectorsType), keyof CState][]): void {
+
     }
 
     public unsubscribe(subscriber: React.Component): void {
@@ -130,14 +162,14 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         this.propertyKeysBySubscriber.delete(subscriber)
     }
 
-    private postChanges<ValueType>(key: keyof (StateType & DerivativeType), newValue: ValueType) {
+    private postChanges<ValueType>(key: keyof (StateType & SelectorsType), newValue: ValueType) {
         const propertySubscriptionData = this.getPropertySubscriptionData(key)
         propertySubscriptionData.forEach(subscriptionData => {
             subscriptionData.subscriber.setState({[subscriptionData.propertyAlias]: newValue})
         })
     }
 
-    private refreshDependencies(key: keyof (StateType & DerivativeType)): void {
+    private refreshDependencies(key: keyof (StateType & SelectorsType)): void {
         const propertyDependencies = this.dependencies.get(key)
         if (!propertyDependencies) {
             throw new Error("no dependencies for key " + key)
@@ -159,55 +191,77 @@ export default abstract class TypedApplicationStore<StateType, DerivativeType> {
         }
     }
 
-    private refreshDerivative(derivativeKey: keyof DerivativeType): void {
-        const record = this.derivatives[derivativeKey]
+    private refreshDerivative(selectorKey: keyof SelectorsType): void {
+        const record = this.selectors[selectorKey]
         record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
-        this.readableState[derivativeKey] = record.value
-        this.postChanges(derivativeKey, record.value)
+        this.readableState[selectorKey] = record.value
+        this.postChanges(selectorKey, record.value)
 
-        this.refreshDependencies(derivativeKey)
+        this.refreshDependencies(selectorKey)
     }
 
-    private createDependencies(): Map<KeysJunction<StateType, DerivativeType>, (keyof DerivativeType)[]> {
-        const result = new Map<KeysJunction<StateType, DerivativeType>, (keyof DerivativeType)[]>()
+    private createDependencies(): Map<KeysJunction<StateType, SelectorsType>, (keyof SelectorsType)[]> {
+        const result = new Map<KeysJunction<StateType, SelectorsType>, (keyof SelectorsType)[]>()
 
         for (let propertyKey in this.originalState) {
             result.set(propertyKey, [])
         }
 
-        for (let derivativeKey in this.derivatives) {
-            result.set(derivativeKey, [])
+        for (let selectorKey in this.selectors) {
+            result.set(selectorKey, [])
         }
 
-        for (let derivativeKey in this.derivatives) {
-            this.derivatives[derivativeKey].dependsOn.forEach(key => {
+        for (let selectorKey in this.selectors) {
+            this.selectors[selectorKey].dependsOn.forEach(key => {
                 let keyDependencies = result.get(key)
                 if (keyDependencies == null) {
                     throw new Error("no dependencies array for " + key)
                 }
-                keyDependencies.push(derivativeKey)
+                keyDependencies.push(selectorKey)
             })
         }
         return result
     }
 
-    private checkDerivatives(derivatives: Derivatives<StateType, DerivativeType>): void {
+    private checkSelectors(selectorsInfo: SelectorsInfo<StateType, SelectorsType>): void {
         //TODO: implement
     }
 
-    private createReadableState(): StateType & DerivativeType {
-        return CommonUtils.mergeTypes(this.originalState, derivativesToDerivativeState(this.derivatives))
+    private createReadableState(): StateType & SelectorsType {
+        return CommonUtils.mergeTypes(this.originalState, getSelectorsValues(this.selectors))
+    }
+
+    public batched(executableBody: Function) {
+        //TODO: add batching
+        executableBody()
+    }
+
+    protected createFriend(): TypedApplicationStoreFriend<StateType, SelectorsType> {
+        const store = this
+        return new class implements TypedApplicationStoreFriend<StateType, SelectorsType> {
+            public createField(originalProperty: keyof(StateType & SelectorsType),
+                                        defaultValue: string = "",
+                                        validators: FieldValidator[] = [],
+            ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
+                return store.createField(originalProperty, defaultValue, validators)
+            }
+
+            public createFormHasNoErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+            ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
+                return store.createFormHasNoErrorsSelector(fieldsKeys)
+            }
+        }
     }
 }
 
-function derivativesToDerivativeState<StateType, DerivativeStateType>(derivatives: Derivatives<StateType, DerivativeStateType>): DerivativeStateType {
+function getSelectorsValues<StateType, SelectorsType>(selectors: SelectorsInfo<StateType, SelectorsType>): SelectorsType {
     const result: { [k in string]: any } = {}
-    for (let key in derivatives) {
-        result[key] = derivatives[key].value
+    for (let key in selectors) {
+        result[key] = selectors[key].value
     }
 
-    return result as DerivativeStateType
+    return result as SelectorsType
 }
 
 export type SubscriptionData = {
@@ -215,14 +269,14 @@ export type SubscriptionData = {
     propertyAlias: string,
 }
 
-export type DerivativeRecord<StateType, ArgsType extends Pick<StateType, any>, ResultType> = {
+export type Selector<StateType, ArgsType extends Pick<StateType, any>, ResultType> = {
     dependsOn: (keyof StateType)[],
     get: (args: ArgsType, prevValue?: ResultType) => ResultType,
     value: ResultType,
 }
 
-export type Derivatives<StateType, DerivativeStateType> = {
-    [P in (keyof DerivativeStateType)]: DerivativeRecord<(StateType & DerivativeStateType), Pick<(StateType & DerivativeStateType), any>, DerivativeStateType[P]>
+export type SelectorsInfo<StateType, SelectorsType> = {
+    [P in (keyof SelectorsType)]: Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, SelectorsType[P]>
 }
 
 type ValidationResult = {
@@ -235,3 +289,8 @@ type KeysJunction<FirstType, SecondType> = keyof (FirstType & SecondType)
 export type SingleProperty<A> = A[keyof A]
 
 class AbortError extends Error {}
+
+export type DefaultStateType = {
+    isDialogSubmitButtonLoading: boolean
+    globalErrorTextKey: string | null
+}

@@ -27,4 +27,10 @@ export namespace CommonUtils {
         })
         return result;
     }
+
+    export function createLooseObject<Type>(properties: [any, any][]): Partial<Type> {
+        const result: any = {}
+        properties.forEach(propertyEntry => result[propertyEntry[0]] = propertyEntry[1])
+        return result
+    }
 }

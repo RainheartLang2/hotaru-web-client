@@ -36,7 +36,6 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log("render")
         const currentDate = this.state[StateProperty.SelectedDate]
         const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         const schedulerData = this.state[StateProperty.AppointmentList]
@@ -100,7 +99,6 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        console.log("componentDidMount")
         this.props.controller.subscribeBatched(this, [
             {propertyName: AdminStateProperty.AppointmentModelsList, propertyAlias: StateProperty.AppointmentList},
             {propertyName: AdminStateProperty.SchedulePageDate, propertyAlias: StateProperty.SelectedDate}

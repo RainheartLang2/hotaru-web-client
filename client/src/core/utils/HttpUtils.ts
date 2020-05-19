@@ -2,6 +2,7 @@ import {RemoteMethod} from "../http/RemoteMethod";
 import HttpTransportError from "../errors/HttpTransportError";
 import BusinessLogicError from "../errors/BusinessLogicError";
 import ApplicationControllerHolder from "./ApplicationControllerHolder";
+import TypedApplicationControllerHolder from "./TypedApplicationControllerHolder";
 
 const SERVER_APP_USER_ZONE_URL = "http://localhost:8080/web/user/req"
 const SERVER_APP_PRELOGIN_ZONE_URL = "http://localhost:8080/web/login/req"
@@ -39,7 +40,7 @@ export async function fetchUserZoneRpc(data: FetchData): Promise<any> {
     )
 }
 
-export async function fetchPreloginRpc(data: FetchData, typedController: boolean = false): Promise<any> {
+export async function fetchPreloginRpc(data: FetchData): Promise<any> {
     return fetchServerRpc(SERVER_APP_PRELOGIN_ZONE_URL,
         data.method,
         data.params,
@@ -47,7 +48,6 @@ export async function fetchPreloginRpc(data: FetchData, typedController: boolean
         data.successCallback,
         data.errorCallback,
         data.errorProperty,
-        typedController
     )
 }
 
@@ -58,15 +58,12 @@ function fetchServerRpc(url: string,
                         successCallback: (responseResult: any) => void,
                         errorCallback: Function = () => {},
                         errorProperty: string = "",
-                        typedController: boolean = false
                         ): void {
     let setError = (value: string) => {}
-    if (!typedController) {
-        const controller = ApplicationControllerHolder.instance.controller
-        setError = errorProperty
-            ? (value: string) => {controller.setPropertyValue<String>(errorProperty, value)}
+    const controller = TypedApplicationControllerHolder.instance.controller
+    setError = errorProperty
+            ? (value: string) => {controller.setError(value)}
             : (value: string) => {}
-    }
 
     setError("")
     fetchRpc(url, method, params, id

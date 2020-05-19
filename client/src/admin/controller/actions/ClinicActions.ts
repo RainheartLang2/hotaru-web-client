@@ -18,7 +18,7 @@ export default class ClinicActions {
     }
 
     public loadClinicList(callback: Function): void {
-        this.controller.cacheManager.clinicCache.execute(callback)
+        // this.controller.cacheManager.clinicCache.execute(callback)
     }
 
     public openCreateDialog(): void {

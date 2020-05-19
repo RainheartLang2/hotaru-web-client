@@ -30,14 +30,14 @@ export default class LoginApplicationController extends TypedApplicationControll
             errorCallback: (errorMessage: string) => {
                 this.setState({isLoginButtonLoading: false})
             },
-        }, true)
+        })
     }
 
     handleUnauthorizedUserSituation(): void {
         throw new Error("Unauthorized User situation is impossible, since login app does not require autentication")
     }
 
-    getDialogSubmitButtonPropertyName(): string {
+    getDialogSubmitButtonPropertyName(): "isDialogSubmitButtonLoading" | "globalErrorTextKey" {
         throw new Error("Unsupported operation")
     }
 }
