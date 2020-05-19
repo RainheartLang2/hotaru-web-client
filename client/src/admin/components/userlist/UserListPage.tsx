@@ -37,6 +37,7 @@ export default class UserListPage extends React.Component<Properties, State> {
     }
 
     render() {
+        console.log(this.state.userList)
         return (
             <>
                 <PageHeader label={(<Message messageKey={"page.userList.title"}/>)}
@@ -85,9 +86,9 @@ export default class UserListPage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribeBatch(this, [
-            ["userList", "userList"],
-        ])
+        this.props.controller.subscribe(this, {
+            userList: "userList",
+        })
     }
 
     componentWillUnmount(): void {

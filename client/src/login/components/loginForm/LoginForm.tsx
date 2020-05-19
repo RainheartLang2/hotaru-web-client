@@ -65,8 +65,10 @@ export default class LoginForm extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this, "hasError", "hasError")
-        this.props.controller.subscribe(this, "isAllowedToSubmit", "isSubmitAllowed")
+        this.props.controller.subscribe(this, {
+            hasError: "hasError",
+            isAllowedToSubmit: "isSubmitAllowed",
+        })
     }
 
     componentWillUnmount(): void {

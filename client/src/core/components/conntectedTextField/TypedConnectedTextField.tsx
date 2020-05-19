@@ -5,6 +5,7 @@ import {Field} from "../../mvc/store/Field";
 import MaskTransformer from "../../utils/MaskTransformer";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
 import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
+import {CommonUtils} from "../../utils/CommonUtils";
 
 export default class TypedConnectedTextField<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>>
     extends React.Component<Properties<StateType, DerivationType, StoreType>, State> {
@@ -89,7 +90,7 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this, this.props.fieldKey, "field")
+        this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.fieldKey, "field"]]))
     }
 
     componentWillUnmount(): void {

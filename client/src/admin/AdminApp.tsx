@@ -67,10 +67,10 @@ export default class AdminApp extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.controller.subscribeBatch(this, [
-            ["isApplicationLoading", "isLoading"],
-            ["loggedInEmployee", "loggedInUser"],
-        ])
+        this.controller.subscribe(this, {
+            isApplicationLoading: "isLoading",
+            loggedInEmployee: "loggedInUser"
+        })
         this.controller.startApplication()
     }
 

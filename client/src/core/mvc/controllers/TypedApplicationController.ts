@@ -1,9 +1,9 @@
-import TypedApplicationStore, {DefaultStateType} from "../store/TypedApplicationStore";
+import TypedApplicationStore, {DefaultStateType, PropertyAliasInfo} from "../store/TypedApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
 
 export default abstract class TypedApplicationController<StateType extends DefaultStateType = any,
-                                                DerivationType = any,
-                                                StoreType extends TypedApplicationStore<StateType, DerivationType> = any> {
+                                                SelectorsType = any,
+                                                StoreType extends TypedApplicationStore<StateType, SelectorsType> = any> {
 
     protected store: StoreType
     private onErrorEvent: Function = () => {}
@@ -13,17 +13,11 @@ export default abstract class TypedApplicationController<StateType extends Defau
     }
 
     public subscribe<CProps, CState>(subscriber: React.Component<CProps, CState>,
-                                     property: keyof (StateType & DerivationType),
-                                     alias: keyof CState): void {
-        this.store.subscribe(subscriber, property, alias)
+                                     aliasInfo: Partial<PropertyAliasInfo<StateType & SelectorsType, CState>>): void {
+        this.store.subscribe(subscriber, aliasInfo)
     }
 
-    public subscribeBatch<CProps, CState>(subscriber: React.Component<CProps, CState>,
-                                            info: [keyof (StateType & DerivationType), keyof CState][]): void {
-        info.forEach(infoEntry => this.subscribe(subscriber, infoEntry[0], infoEntry[1]))
-    }
-
-    public get state(): Readonly<StateType & DerivationType> {
+    public get state(): Readonly<StateType & SelectorsType> {
         return this.store.state
     }
 
@@ -35,7 +29,7 @@ export default abstract class TypedApplicationController<StateType extends Defau
         this.store.setState(newState)
     }
 
-    public toggleFieldValidation(fieldKey: keyof DerivationType, value: boolean) {
+    public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean) {
         this.store.toggleFieldValidation(fieldKey, value)
     }
 

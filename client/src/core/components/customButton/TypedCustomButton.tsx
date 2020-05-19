@@ -4,6 +4,7 @@ import {CircularProgress, PropTypes} from "@material-ui/core";
 import {MouseEventHandler} from "react";
 import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import {CommonUtils} from "../../utils/CommonUtils";
 
 var styles = require("./styles.css");
 
@@ -47,7 +48,7 @@ export default class TypedCustomButton<GlobalState extends DefaultStateType, Der
 
     componentDidMount(): void {
         if (this.props.loadingProperty) {
-            this.props.controller.subscribe(this, this.props.loadingProperty, "isLoading")
+            this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.loadingProperty, "isLoading"]]))
         }
     }
 

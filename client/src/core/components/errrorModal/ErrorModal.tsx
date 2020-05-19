@@ -37,7 +37,9 @@ export default class ErrorModal extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribeBatch(this, [["globalErrorTextKey", "errorTextKey"]])
+        this.props.controller.subscribe(this, {
+            globalErrorTextKey: "errorTextKey",
+        })
     }
 
     componentWillUnmount(): void {

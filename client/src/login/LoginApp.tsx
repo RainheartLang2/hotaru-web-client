@@ -34,7 +34,9 @@ export default class LoginApp extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(this, "isApplicationLoading", "isLoading")
+        this.controller.subscribe(this, {
+            isApplicationLoading: "isLoading",
+        })
     }
 
     componentWillUnmount(): void {

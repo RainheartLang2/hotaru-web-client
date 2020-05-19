@@ -120,20 +120,27 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
         })
     }
 
-    private putDataBySubscriber(subscriber: React.Component, property: keyof (StateType & SelectorsType)): void {
+    private putDataBySubscriber(subscriber: React.Component, properties: (keyof (StateType & SelectorsType))[]): void {
         let subscriberProperties = this.propertyKeysBySubscriber.get(subscriber)
         if (!subscriberProperties) {
             subscriberProperties = []
-            this.propertyKeysBySubscriber.set(subscriber, subscriberProperties)
         }
-        subscriberProperties.push(property)
+        subscriberProperties = subscriberProperties.concat(properties)
+        this.propertyKeysBySubscriber.set(subscriber, subscriberProperties)
     }
 
-    public subscribe<CProps, CState>(subscriber: React.Component<CProps, CState>, property: keyof (StateType & SelectorsType), alias: keyof CState): void {
-        this.putDataByPropertyKey(subscriber, property, alias)
-        this.putDataBySubscriber(subscriber, property)
-        // @ts-ignore
-        subscriber.setState({[alias]: this.readableState[property]})
+    public subscribe<CProps, CState>(subscriber: React.Component<CProps, CState>,
+                                     aliasInfo: Partial<PropertyAliasInfo<StateType & SelectorsType, CState>>) {
+        const keysArray: (keyof (StateType & SelectorsType))[] = []
+        for (let propertyKey in aliasInfo) {
+            const key = propertyKey as keyof(StateType & SelectorsType)
+            const alias = aliasInfo[key] as keyof CState
+            this.putDataByPropertyKey(subscriber, key, alias)
+            keysArray.push(key)
+        }
+        this.putDataBySubscriber(subscriber, keysArray)
+        const state = CommonUtils.createLooseObject(keysArray.map(key => [aliasInfo[key], this.readableState[key]]))
+        subscriber.setState(state)
     }
 
     private getPropertySubscriptionData(propertyKey: keyof (StateType & SelectorsType)): SubscriptionData[] {
@@ -142,11 +149,6 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
             throw new Error("no data for property key " + propertyKey)
         }
         return propertySubscriptionData
-    }
-
-    public subscribeBatch<CProps, CState>(subscribe: React.Component<CProps, CState>,
-                                          info: [keyof (StateType & SelectorsType), keyof CState][]): void {
-
     }
 
     public unsubscribe(subscriber: React.Component): void {
@@ -293,4 +295,8 @@ class AbortError extends Error {}
 export type DefaultStateType = {
     isDialogSubmitButtonLoading: boolean
     globalErrorTextKey: string | null
+}
+
+export type PropertyAliasInfo<State, ComponentState> = {
+    [P in (keyof State)]: keyof ComponentState
 }

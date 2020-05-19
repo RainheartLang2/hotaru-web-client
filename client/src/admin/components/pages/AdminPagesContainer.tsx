@@ -36,10 +36,10 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribeBatch(this, [
-            ["pageType", "currentPage"],
-            ["isPageLoading", "isLoading"],
-        ])
+        this.props.controller.subscribe(this, {
+            pageType: "currentPage",
+            isPageLoading: "isLoading",
+        })
     }
 
     componentWillUnmount(): void {
