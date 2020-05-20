@@ -1,14 +1,10 @@
 import CacheSettings from "../../core/CacheSettings";
-import AdminAppController from "./AdminAppController";
 import {CacheVolatility} from "../../CacheVolaitlity";
 import {CacheUtils} from "../../core/CacheUtils";
 import CacheKey from "../../core/CacheKey";
 import ExecutableCache from "../../core/ExecutableCache";
-import AdminApplicationState from "../state/AdminApplicationState";
 import {fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
-import {plainToClass} from "class-transformer";
-import {Clinic} from "../../common/beans/Clinic";
 import EmployeeAppController from "./EmployeeAppController";
 import EmployeeApplicationStore from "../state/EmployeeApplicationStore";
 

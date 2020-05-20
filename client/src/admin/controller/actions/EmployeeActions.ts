@@ -55,6 +55,7 @@ export default class EmployeeActions {
     }
 
     public openEditEmployeeDialog(user: Employee, editProfile: boolean = false): void {
+        console.log(user)
         this.controller.batched(() => {
             this.controller.setShowDialog(editProfile ? DialogType.EditEmployeeProfile : DialogType.EditEmployee)
             this.node.setEmployeeId(user.id ? user.id : 0)

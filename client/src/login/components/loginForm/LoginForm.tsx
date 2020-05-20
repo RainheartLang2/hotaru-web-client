@@ -1,9 +1,6 @@
 import * as React from "react";
-import {ButtonComponent} from "../../../core/components";
 import {Message} from "../../../core/components/Message";
-import ConnectedTextField from "../../../core/components/conntectedTextField/ConnectedTextField";
 import LoginApplicationController from "../../controller/LoginApplicationController";
-import CustomButton from "../../../core/components/customButton/CustomButton";
 import TypedConnectedTextField from "../../../core/components/conntectedTextField/TypedConnectedTextField";
 import LoginApplicationStore, {LoginDerivationState, LoginState} from "../../state/LoginApplicationStore";
 import TypedCustomButton from "../../../core/components/customButton/TypedCustomButton";
@@ -26,8 +23,7 @@ export default class LoginForm extends React.Component<Properties, State> {
             <div className={styles.loginField}>
                 <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
-                    fieldKey={"loginField"}
-                    originalPropertyKey={"login"}
+                    fieldKey={{login: "loginField"}}
                     variant="outlined"
                     label={(<Message messageKey={"field.login.label"}/>)}
                     size="small"
@@ -37,8 +33,7 @@ export default class LoginForm extends React.Component<Properties, State> {
             <div className={styles.passwordField}>
                 <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
-                    fieldKey={"passwordField"}
-                    originalPropertyKey={"password"}
+                    fieldKey={{password: "passwordField"}}
                     variant="outlined"
                     label={(<Message messageKey={"field.password.label"}/>)}
                     size="small"

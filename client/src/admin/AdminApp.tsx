@@ -48,9 +48,9 @@ export default class AdminApp extends React.Component<Properties, State> {
                     userName={loggedInUser ? (loggedInUser.lastName + " " + loggedInUser.firstName) : ""}
                     onLogOutClick={() => this.controller.logout()}
                     onUserNameClick={() => {
-                        // if (loggedInUser) {
-                        //     this.controller.employeeActions.openEditEmployeeDialog(loggedInUser, true)
-                        // }
+                        if (loggedInUser) {
+                            this.controller.employeeActions.openEditEmployeeDialog(loggedInUser, true)
+                        }
                     }}>
                     {/*<NavigationMenu controller={this.controller}/>*/}
                 </ApplicationHeader>
@@ -58,7 +58,7 @@ export default class AdminApp extends React.Component<Properties, State> {
                 <AppContent visible={!this.state.isLoading}>
                     <AdminPagesContainer controller={this.controller}/>
                 </AppContent>
-                <AdminDialogsContainer/>
+                <AdminDialogsContainer controller={this.controller}/>
                 <LoadingMoire visible={this.state.isLoading} fading={true}/>
                 <ErrorModal controller={this.controller}/>
                 <Footer/>

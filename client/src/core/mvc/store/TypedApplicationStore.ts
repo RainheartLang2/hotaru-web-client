@@ -54,6 +54,7 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
             dependsOn: [originalProperty],
             get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field) => {
                 const originalValue = args[originalProperty]
+                console.log(originalProperty)
                 const validationResult = this.validateField(originalValue, validators)
                 return {
                     value: originalValue,
@@ -71,20 +72,22 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
         }
     }
 
-    protected createFormHasNoErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+    protected createFormHasErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
         return {
             dependsOn: fieldsKeys,
             get: (state: Pick<StateType & SelectorsType, any>) => {
+                let result = false
                 fieldsKeys.forEach(key => {
                     const field = this.readableState[key] as unknown as Field
                     if (field.errors.length > 0) {
-                        return false
+                        result = true
+                        return
                     }
                 })
-                return true
+                return result
             },
-            value: true,
+            value: false,
         }
     }
 
@@ -139,7 +142,9 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
             keysArray.push(key)
         }
         this.putDataBySubscriber(subscriber, keysArray)
-        const state = CommonUtils.createLooseObject(keysArray.map(key => [aliasInfo[key], this.readableState[key]]))
+        const state = CommonUtils.createLooseObject(keysArray
+                                                    .filter(key => this.readableState[key] != undefined)
+                                                    .map(key => [aliasInfo[key], this.readableState[key]]))
         subscriber.setState(state)
     }
 
@@ -177,7 +182,10 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
             throw new Error("no dependencies for key " + key)
         }
         propertyDependencies.forEach(dependency => {
-            this.refreshDerivative(dependency)
+            try {
+                this.refreshSelector(dependency)
+            } catch (e) {
+            }
         })
     }
 
@@ -193,7 +201,7 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
         }
     }
 
-    private refreshDerivative(selectorKey: keyof SelectorsType): void {
+    private refreshSelector(selectorKey: keyof SelectorsType): void {
         const record = this.selectors[selectorKey]
         record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
@@ -249,9 +257,9 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
                 return store.createField(originalProperty, defaultValue, validators)
             }
 
-            public createFormHasNoErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+            public createFormHasErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
             ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
-                return store.createFormHasNoErrorsSelector(fieldsKeys)
+                return store.createFormHasErrorsSelector(fieldsKeys)
             }
         }
     }

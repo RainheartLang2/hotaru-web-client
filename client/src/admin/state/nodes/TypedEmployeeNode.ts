@@ -3,7 +3,7 @@ import {Clinic} from "../../../common/beans/Clinic";
 import {Field} from "../../../core/mvc/store/Field";
 import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
-import {EmployeeDerivation, EmployeeState} from "../EmployeeApplicationStore";
+import {EmployeeSelectors, EmployeeState} from "../EmployeeApplicationStore";
 import {DialogType} from "../enum/DialogType";
 import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
@@ -12,10 +12,10 @@ import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidato
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 
 export default class TypedEmployeeNode {
-    private _store: TypedApplicationStoreFriend<EmployeeState, EmployeeDerivation>
+    private _store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeState, EmployeeDerivation>) {
+    constructor(store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>) {
         this._store = store;
     }
 
@@ -34,7 +34,7 @@ export default class TypedEmployeeNode {
             editedEmployeeLogin: "",
             editedEmployeePassword: "",
             editedEmployeeConfirmPassword: "",
-            isPasswordChanged: false,
+            isEditedEmployeePasswordChanged: false,
         }
     }
 
@@ -51,7 +51,7 @@ export default class TypedEmployeeNode {
         }
     }
 
-    public getDerivation(): SelectorsInfo<EmployeeState & EmployeeDerivation, UserPageEmployeeDerivation> {
+    public getDerivation(): SelectorsInfo<EmployeeState & EmployeeSelectors, UserSelectors> {
         return {
             userListById: {
                 dependsOn: ["userList"],
@@ -104,22 +104,21 @@ export default class TypedEmployeeNode {
                 value: false,
             },
             isChangePasswordObligatory: {
-                dependsOn: ["dialogType", "isPasswordChanged"],
-                get: (state: Pick<EmployeeState, "dialogType" | "isPasswordChanged">) => state.dialogType === DialogType.CreateEmployee || state.isPasswordChanged,
+                dependsOn: ["dialogType", "isEditedEmployeePasswordChanged"],
+                get: (state: Pick<EmployeeState, "dialogType" | "isEditedEmployeePasswordChanged">) => state.dialogType === DialogType.CreateEmployee || state.isEditedEmployeePasswordChanged,
                 value: false,
             },
-            employeeFormHasError: this._store.createFormHasNoErrorsSelector([
-                "editedEmployeeFirstName",
-                "editedEmployeeMiddleName",
-                "editedEmployeeLastName",
-                "editedEmployeeActive",
-                "editedEmployeePhone",
-                "editedEmployeeAddress",
-                "editedEmployeeMail",
-                "editedEmployeeLogin",
-                "editedEmployeePassword",
-                "editedEmployeeConfirmPassword",
-            ])
+            employeeFormHasError: this._store.createFormHasErrorsSelector([
+                "editedEmployeeFirstNameField",
+                "editedEmployeeMiddleNameField",
+                "editedEmployeeLastNameField",
+                "editedEmployeePhoneField",
+                "editedEmployeeAddressField",
+                "editedEmployeeMailField",
+                "editedEmployeeLoginField",
+                "editedEmployeePasswordField",
+                "editedEmployeeConfirmPasswordField",
+            ]),
         }
     }
 }
@@ -138,12 +137,12 @@ export type UserPageEmployeeState = {
     editedEmployeeLogin: string,
     editedEmployeePassword: string,
     editedEmployeeConfirmPassword: string,
-    isPasswordChanged: false,
+    isEditedEmployeePasswordChanged: boolean,
 }
 
 type EmployeeDialogType = "create" | "edit" | "profile" | "none"
 
-export type UserPageEmployeeDerivation = {
+export type UserSelectors = {
     userListById: Map<number, Employee>,
     medicsListById: Map<number, Employee>,
     employeeDialogType: EmployeeDialogType,

@@ -7,13 +7,16 @@ import TypedApplicationController from "../../mvc/controllers/TypedApplicationCo
 import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
 
-export default class TypedConnectedTextField<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>>
-    extends React.Component<Properties<StateType, DerivationType, StoreType>, State> {
+export default class TypedConnectedTextField<StateType extends DefaultStateType,
+                                            SelectorsType,
+                                            StoreType extends TypedApplicationStore<StateType, SelectorsType>>
+    extends React.Component<Properties<StateType, SelectorsType, StoreType>, State> {
 
     private maskTransformer: MaskTransformer = new MaskTransformer("")
 
-    constructor(props: Properties<StateType, DerivationType, StoreType>) {
-        super(props);
+    constructor(props: Properties<StateType, SelectorsType, StoreType>) {
+        super(props)
+        this.checkFieldKey()
         if (props.mask) {
             this.maskTransformer = new MaskTransformer(props.mask)
         }
@@ -27,6 +30,10 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
         }
     }
 
+    private checkFieldKey(): void {
+        //TODO: implement
+    }
+
     private getTooltipText(): React.ReactNode {
         return (
             <>
@@ -35,6 +42,15 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
                 })}
             </>
         )
+    }
+
+    private getKeys(): [keyof StateType, keyof SelectorsType] {
+        for (let originalFieldKey in this.props.fieldKey) {
+            const originalKey = originalFieldKey as keyof StateType
+            const selectorFieldKey = this.props.fieldKey[originalFieldKey] as keyof SelectorsType
+            return [originalKey, selectorFieldKey]
+        }
+        throw new Error("No field key property")
     }
 
     private hasErrors(): boolean {
@@ -47,9 +63,10 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
         const settedValue = this.props.mask
             ? this.maskTransformer.fromMaskToPure(eventValue)
             : eventValue
+        const keys = this.getKeys()
         this.props.controller
-            .setState({[this.props.originalPropertyKey]: settedValue} as unknown as Partial<StateType>)
-        this.props.controller.toggleFieldValidation(this.props.fieldKey, true)
+            .setState({[keys[0]]: settedValue} as unknown as Partial<StateType>)
+        this.props.controller.toggleFieldValidation(keys[1], true)
     }
 
     private getValue(): string {
@@ -90,7 +107,7 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.fieldKey, "field"]]))
+        this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.getKeys()[1], "field"]]))
     }
 
     componentWillUnmount(): void {
@@ -98,10 +115,15 @@ export default class TypedConnectedTextField<StateType extends DefaultStateType,
     }
 }
 
+type FieldCorrelationRecord<StateType, SelectorsType> = {
+    [P in keyof StateType]: keyof SelectorsType
+}
+
+export type FieldInfo<StateType, SelectorsType> = Partial<FieldCorrelationRecord<StateType, SelectorsType>>
+
 type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>> = {
     controller: TypedApplicationController<StateType, DerivationType, StoreType>,
-    fieldKey: keyof DerivationType,
-    originalPropertyKey: keyof StateType,
+    fieldKey: FieldInfo<StateType, DerivationType>,
     label?: React.ReactNode,
     disabled?: boolean,
     required?: boolean,

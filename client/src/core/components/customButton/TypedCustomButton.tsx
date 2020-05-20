@@ -25,7 +25,8 @@ export default class TypedCustomButton<GlobalState extends DefaultStateType, Der
     render() {
         return (<ButtonComponent
             disabled={this.props.disabled}
-            onClick={(this.props.onClick && !this.isLoading()) ? this.props.onClick : () => {}}
+            onClick={(this.props.onClick && !this.isLoading()) ? this.props.onClick : () => {
+            }}
             color={this.props.color ? this.props.color : "primary"}
             fullWidth={this.props.fullWidth}
             size={this.props.size ? this.props.size : "small"}
@@ -53,7 +54,9 @@ export default class TypedCustomButton<GlobalState extends DefaultStateType, Der
     }
 
     componentWillUnmount(): void {
-        this.props.controller.unsubscribe(this)
+        if (this.props.loadingProperty) {
+            this.props.controller.unsubscribe(this)
+        }
     }
 }
 
@@ -65,7 +68,7 @@ type Properties<GlobalState extends DefaultStateType, DerivationType, StoreType 
     fullWidth?: boolean
     size?: 'small' | 'medium' | 'large'
     variant?: 'text' | 'outlined' | 'contained'
-    loadingProperty?: keyof(GlobalState & DerivationType)
+    loadingProperty?: keyof (GlobalState & DerivationType)
 }
 
 type State = {

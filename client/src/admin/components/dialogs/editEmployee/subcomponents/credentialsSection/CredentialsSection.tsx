@@ -4,6 +4,10 @@ import AdminAppController from "../../../../../controller/AdminAppController";
 import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
 import {ButtonComponent} from "../../../../../../core/components";
+import EmployeeAppController from "../../../../../controller/EmployeeAppController";
+import {EmployeeSelectors, EmployeeState} from "../../../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore from "../../../../../state/EmployeeApplicationStore";
+import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
 
 var styles = require("./styles.css");
 
@@ -12,52 +16,50 @@ export default class CredentialsSection extends React.Component<Properties, Stat
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.ChangePassword]: false,
-            [StateProperty.ShowButton]: false,
-            [StateProperty.FieldsObligatory]: false,
+            changePassword: false,
+            showButton: false,
+            fieldsObligatory: false,
         }
     }
 
     render() {
-        const changePasswordFlag = this.state[StateProperty.ChangePassword]
-        const fieldsObligatory = this.state[StateProperty.FieldsObligatory]
+        const changePasswordFlag = this.state.changePassword
+        const fieldsObligatory = this.state.fieldsObligatory
         return (
             <div className={styles.section}>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeeLogin}
+                        fieldKey={{editedEmployeeLogin: "editedEmployeeLoginField"}}
                         label={(<Message messageKey={"field.login.label"}/>)}
                         disabled={!fieldsObligatory}
                     />
                 </div>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeePassword}
+                        fieldKey={{editedEmployeePassword: "editedEmployeePasswordField"}}
                         label={(<Message messageKey={"field.password.label"}/>)}
                         type={"password"}
                         disabled={!fieldsObligatory}
                     />
                 </div>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeeConfirmPassword}
+                        fieldKey={{editedEmployeeConfirmPassword: "editedEmployeeConfirmPasswordField"}}
                         label={(<Message messageKey={"field.password.repeat.label"}/>)}
                         type={"password"}
                         disabled={!fieldsObligatory}
                     />
                 </div>
                 <div className={styles.row + " " + styles.buttonsArea}>
-                    {this.state[StateProperty.ShowButton] && (
+                    {this.state.showButton && (
                         <ButtonComponent
                             variant="contained"
                             color={changePasswordFlag ? "secondary" : "primary"}
                             size="small"
-                            onClick={() => {
-                                this.props.controller.employeeActions.setChangePassword(!changePasswordFlag)
-                            }}
+                            onClick={() => this.props.controller.setState({isEditedEmployeePasswordChanged: !changePasswordFlag})}
                         >
                             <Message messageKey={changePasswordFlag
                                                     ? "common.button.cancel"
@@ -70,9 +72,11 @@ export default class CredentialsSection extends React.Component<Properties, Stat
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.IsEmployeeChangePassword, this, StateProperty.ChangePassword)
-        this.props.controller.subscribe(AdminStateProperty.IsChangePasswordButtonShow, this, StateProperty.ShowButton)
-        this.props.controller.subscribe(AdminStateProperty.IsChangePasswordObligatory, this, StateProperty.FieldsObligatory)
+        this.props.controller.subscribe(this, {
+            isEditedEmployeePasswordChanged: "changePassword",
+            editedEmployeeChangePasswordButtonShow: "showButton",
+            isChangePasswordObligatory: "fieldsObligatory",
+        })
     }
 
     componentWillUnmount(): void {
@@ -80,18 +84,12 @@ export default class CredentialsSection extends React.Component<Properties, Stat
     }
 }
 
-enum StateProperty {
-    ChangePassword = "changePassword",
-    ShowButton = "showButton",
-    FieldsObligatory = "fieldsObligatory",
-}
-
 type Properties = {
-    controller: AdminAppController,
+    controller: EmployeeAppController,
 }
 
 type State = {
-    [StateProperty.ChangePassword]: boolean,
-    [StateProperty.ShowButton]: boolean,
-    [StateProperty.FieldsObligatory]: boolean,
+    changePassword: boolean,
+    showButton: boolean,
+    fieldsObligatory: boolean,
 }

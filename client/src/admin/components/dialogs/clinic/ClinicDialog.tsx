@@ -64,12 +64,12 @@ export default class ClinicDialog extends React.Component<Properties, State> {
                         />
                     </div>
                 </div>
-                <DialogFooter
-                    controller={this.props.controller}
-                    submitDisabled={this.state[StateProperty.HasErrors]}
-                    onSubmitClick={() => this.submitForm()}
-                    onCancelClick={() => controller.closeCurrentDialog()}
-                />
+                {/*<DialogFooter*/}
+                    {/*controller={this.props.controller}*/}
+                    {/*submitDisabled={this.state[StateProperty.HasErrors]}*/}
+                    {/*onSubmitClick={() => this.submitForm()}*/}
+                    {/*onCancelClick={() => controller.closeCurrentDialog()}*/}
+                {/*/>*/}
             </DialogContent>
         </>)
     }

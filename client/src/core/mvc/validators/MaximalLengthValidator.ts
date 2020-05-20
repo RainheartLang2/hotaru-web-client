@@ -17,7 +17,7 @@ export default class MaximalLengthValidator extends FieldValidator<string> {
     }
 
     isValid(value: string): boolean {
-        return value.length <= this.length;
+        return value == null || value.length <= this.length;
     }
 
 }

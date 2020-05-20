@@ -50,4 +50,8 @@ export namespace CollectionUtils {
             targetMap.set(key, item)
         })
     }
+
+    export function updateArray<Type>(array: Type[], updatedItem: Type, predicate: (item: Type) => any) {
+        return array.map(item => predicate(item) == predicate(updatedItem) ? updatedItem : item)
+    }
 }

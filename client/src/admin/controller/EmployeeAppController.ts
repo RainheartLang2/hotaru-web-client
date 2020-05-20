@@ -1,5 +1,5 @@
 import TypedApplicationController from "../../core/mvc/controllers/TypedApplicationController";
-import EmployeeApplicationStore, {EmployeeDerivation, EmployeeState} from "../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {EmployeeSelectors, EmployeeState} from "../state/EmployeeApplicationStore";
 import {PageType} from "../state/enum/PageType";
 import {DialogType} from "../state/enum/DialogType";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
@@ -10,7 +10,7 @@ import AdminApplicationCacheManager from "./AdminApplicationCacheManager";
 import CacheManager from "./AdminApplicationCacheManager";
 import TypedClinicActions from "./actions/TypedClinicActions";
 
-export default class EmployeeAppController extends TypedApplicationController<EmployeeState, EmployeeDerivation, EmployeeApplicationStore> {
+export default class EmployeeAppController extends TypedApplicationController<EmployeeState, EmployeeSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
     private _employeeActions: TypedEmployeeActions
     private _clinicActions: TypedClinicActions
@@ -30,6 +30,14 @@ export default class EmployeeAppController extends TypedApplicationController<Em
             EmployeeAppController._instance = new EmployeeAppController()
         }
         return EmployeeAppController._instance
+    }
+
+    public get employeeActions(): TypedEmployeeActions {
+        return this._employeeActions
+    }
+
+    public get clinicActions(): TypedClinicActions {
+        return this._clinicActions
     }
 
     public get cacheManager(): CacheManager {

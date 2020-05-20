@@ -6,24 +6,21 @@ import {AdminStateProperty} from "../state/AdminApplicationState";
 import {Dialog} from "@material-ui/core";
 import ClinicDialog from "../components/dialogs/clinic/ClinicDialog";
 import AppointmentDialog from "../components/dialogs/appointment/AppointmentDialog";
+import EmployeeAppController from "../controller/EmployeeAppController";
 
-export default class AdminDialogsContainer extends React.Component<{}, State> {
+export default class AdminDialogsContainer extends React.Component<Properties, State> {
 
-    private controller: AdminAppController
-
-    constructor(props: {}) {
+    constructor(props: Properties) {
         super(props);
         this.state = {
-            [StateProperty.DialogType]: DialogType.None,
-            [StateProperty.IsLoading]: false,
-            [StateProperty.ShowDialog]: false,
+            dialogType: DialogType.None,
+            isLoading: false,
+            showDialog: false,
         }
-
-        this.controller = AdminAppController.instance
     }
 
     private closeDialog() {
-        this.controller.closeCurrentDialog()
+        this.props.controller.closeCurrentDialog()
     }
 
     render() {
@@ -37,34 +34,36 @@ export default class AdminDialogsContainer extends React.Component<{}, State> {
                     {(dialogType == DialogType.CreateEmployee
                         || dialogType == DialogType.EditEmployee
                         || dialogType == DialogType.EditEmployeeProfile)
-                    && (<EditEmployeeDialog controller={this.controller}/>)}
+                    && (<EditEmployeeDialog controller={this.props.controller}/>)}
 
-                    {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
-                        && (<ClinicDialog controller={this.controller}/>)}
-                    {(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)
-                        && (<AppointmentDialog controller={this.controller}/>)}
+                    {/*{(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)*/}
+                        {/*&& (<ClinicDialog controller={this.controller}/>)}*/}
+                    {/*{(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)*/}
+                        {/*&& (<AppointmentDialog controller={this.controller}/>)}*/}
                 </Dialog>
             </>
         )
     }
 
     componentDidMount(): void {
-        this.controller.subscribe(AdminStateProperty.DialogType, this)
+        this.props.controller.subscribe(this, {
+            dialogType: "dialogType",
+            isDialogLoading: "isLoading",
+            showDialog: "showDialog",
+        })
     }
 
     componentWillUnmount(): void {
-        this.controller.unsubscribe(this)
+        this.props.controller.unsubscribe(this)
     }
 }
 
-enum StateProperty {
-    DialogType = "dialogType",
-    IsLoading = "isLoading",
-    ShowDialog = "showDialog",
+type Properties = {
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.DialogType]: DialogType,
-    [StateProperty.IsLoading]: boolean,
-    [StateProperty.ShowDialog]: boolean,
+    dialogType: DialogType,
+    isLoading: boolean,
+    showDialog: boolean,
 }

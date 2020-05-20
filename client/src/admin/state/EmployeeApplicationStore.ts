@@ -5,12 +5,12 @@ import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuTyp
 import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import {PageType} from "./enum/PageType";
 import {DialogType} from "./enum/DialogType";
-import TypedEmployeeNode, {UserPageEmployeeDerivation, UserPageEmployeeState} from "./nodes/TypedEmployeeNode";
+import TypedEmployeeNode, {UserSelectors, UserPageEmployeeState} from "./nodes/TypedEmployeeNode";
 import {CommonUtils} from "../../core/utils/CommonUtils";
 import mergeTypes = CommonUtils.mergeTypes;
-import TypedClinicNode, {ClinicPageState} from "./nodes/TypedClinicNode";
+import TypedClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/TypedClinicNode";
 
-export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeState, EmployeeDerivation> {
+export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeState, EmployeeSelectors> {
 
     private static _instance: EmployeeApplicationStore
 
@@ -47,7 +47,7 @@ export default class EmployeeApplicationStore extends TypedApplicationStore<Empl
         }
     }
 
-    private createCommonDerivations(): SelectorsInfo<EmployeeState, CommonEmployeeDerivation> {
+    private createCommonDerivations(): SelectorsInfo<EmployeeState, CommonEmployeeSelectors> {
         return {
             showDialog: {
                 dependsOn: ["dialogType", "isDialogLoading"],
@@ -80,8 +80,11 @@ export default class EmployeeApplicationStore extends TypedApplicationStore<Empl
         return result
     }
 
-    protected getSelectors(): SelectorsInfo<EmployeeState, EmployeeDerivation> {
-        return mergeTypes(this.createCommonDerivations(), this.employeeNode.getDerivation())
+    protected getSelectors(): SelectorsInfo<EmployeeState, EmployeeSelectors> {
+        const employeePageSelectors = mergeTypes(this.createCommonDerivations(), this.employeeNode.getDerivation())
+        const clinicSelectors = mergeTypes(employeePageSelectors, this.clinicNode.getSelectors())
+        const result = clinicSelectors
+        return result
     }
 
     private calcNavigationMenuItemType(pageType: PageType): NavigationMenuItemType {
@@ -130,11 +133,11 @@ export type EmployeeState = DefaultStateType
     & UserPageEmployeeState
     & ClinicPageState
 
-type CommonEmployeeDerivation = {
+type CommonEmployeeSelectors = {
     showDialog: boolean,
     navigationMenuItemType: NavigationMenuItemType,
     secondLevelNavigationMenuType: SecondLevelNavigationMenuType,
     dictionariesNavigationSelectedItem: DictionaryMenuItemType,
 }
 
-export type EmployeeDerivation = CommonEmployeeDerivation & UserPageEmployeeDerivation
+export type EmployeeSelectors = CommonEmployeeSelectors & UserSelectors & ClinicSelectors

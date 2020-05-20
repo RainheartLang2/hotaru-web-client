@@ -1,11 +1,14 @@
 import * as React from "react";
-import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
-import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
-import AdminAppController from "../../../../../controller/AdminAppController";
 import UserActiveSwitch from "../userActiveSwitch/UserActiveSwitch";
-import ConnectedSelect from "../../../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {Clinic} from "../../../../../../common/beans/Clinic";
+import EmployeeAppController from "../../../../../controller/EmployeeAppController";
+import EmployeeApplicationStore, {
+    EmployeeSelectors,
+    EmployeeState
+} from "../../../../../state/EmployeeApplicationStore";
+import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import TypedConnectedSelect from "../../../../../../core/components/ConnectedSelect/TypedConnectedSelect";
 
 export default class RightColumn extends React.Component<Properties> {
     render() {
@@ -27,34 +30,34 @@ export default class RightColumn extends React.Component<Properties> {
                 }
                 <div className={styles.row}>
                     <div className={styles.selector}>
-                        <ConnectedSelect<Clinic>
+                        <TypedConnectedSelect<Clinic, EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                             controller={this.props.controller}
                             label={<Message messageKey={"dialog.employee.field.clinic"}/>}
-                            mapProperty={AdminStateProperty.ClinicListByIdWithMock}
-                            selectedItemProperty={AdminStateProperty.EditedEmployeeClinic}
+                            mapProperty={"clinicListByIdWithMock"}
+                            selectedItemProperty={"editedEmployeeClinic"}
                             itemToString={(clinic: Clinic | null) => clinic && clinic.name ? clinic.name : ""}
                             getKey={clinic => clinic && clinic.id ? clinic.id : 0}
                         />
                     </div>
                 </div>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeePhone}
+                        fieldKey={{editedEmployeePhone: "editedEmployeePhoneField"}}
                         label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
                     />
                 </div>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeeEmail}
+                        fieldKey={{editedEmployeeMail: "editedEmployeeMailField"}}
                         label={(<Message messageKey="dialog.employee.field.email.label"/>)}
                     />
                 </div>
                 <div className={styles.row}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedEmployeeAddress}
+                        fieldKey={{editedEmployeeAddress: "editedEmployeeAddressField"}}
                         label={(<Message messageKey="dialog.employee.field.address.label"/>)}
                         rows={3}
                     />
@@ -65,7 +68,7 @@ export default class RightColumn extends React.Component<Properties> {
 }
 
 type Properties = {
-    controller: AdminAppController,
+    controller: EmployeeAppController,
     showActiveSwitch: boolean,
     userActive: boolean,
     setUserActive: (value: boolean) => void,

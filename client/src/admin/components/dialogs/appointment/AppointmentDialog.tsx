@@ -92,12 +92,12 @@ export default class AppointmentDialog extends React.Component<Properties, State
                     {this.state[StateProperty.ShowClientInfoForm]
                         && (<ClientInfoForm controller={this.props.controller}/>)}
                 </div>
-                <DialogFooter
-                    controller = {this.props.controller}
-                    submitDisabled={this.state[StateProperty.HasErrors]}
-                    onSubmitClick={() => this.onSubmitClick()}
-                    onCancelClick={() => this.props.controller.closeCurrentDialog()}
-                />
+                {/*<DialogFooter*/}
+                    {/*controller = {this.props.controller}*/}
+                    {/*submitDisabled={this.state[StateProperty.HasErrors]}*/}
+                    {/*onSubmitClick={() => this.onSubmitClick()}*/}
+                    {/*onCancelClick={() => this.props.controller.closeCurrentDialog()}*/}
+                {/*/>*/}
             </DialogContent>
         </>)
     }

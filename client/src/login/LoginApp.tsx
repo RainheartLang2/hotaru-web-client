@@ -7,7 +7,6 @@ import {ApplicationType} from "../core/enum/ApplicationType";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import LoginApplicationController from "./controller/LoginApplicationController";
-import LoadingMoire from "../core/components/loadingMoire/LoadingMoire";
 import TypedApplicationControllerHolder from "../core/utils/TypedApplicationControllerHolder";
 
 export default class LoginApp extends React.Component<Properties, State> {
@@ -29,7 +28,6 @@ export default class LoginApp extends React.Component<Properties, State> {
     render() {
         return <MuiThemeProvider theme={CURRENT_THEME}>
             <LoginForm controller={this.controller}/>
-            <LoadingMoire visible={this.state.isLoading}/>
         </MuiThemeProvider>
     }
 

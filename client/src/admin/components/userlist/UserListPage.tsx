@@ -1,7 +1,6 @@
 import * as React from "react";
 import {TableBodyCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import {AdminStateProperty} from "../../state/AdminApplicationState";
 import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Link} from "@material-ui/core";
@@ -9,6 +8,7 @@ import {Message} from "../../../core/components/Message";
 import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";
 import ActivityCell from "../../../core/components/activityCell/ActivityCell";
 import EmployeeAppController from "../../controller/EmployeeAppController";
+import TypedEmployeeActions from "../../controller/actions/TypedEmployeeActions";
 
 var styles = require("./styles.css");
 
@@ -21,12 +21,16 @@ export default class UserListPage extends React.Component<Properties, State> {
         }
     }
 
+    private getActions(): TypedEmployeeActions {
+        return this.props.controller.employeeActions
+    }
+
     private delete(userId?: number): void {
-        // if (userId) {
-        //     this.actions.deleteEmployee(userId)
-        // } else {
-        //     throw new Error("user has no id")
-        // }
+        if (userId) {
+            this.getActions().deleteEmployee(userId)
+        } else {
+            throw new Error("user has no id")
+        }
     }
 
     private getUserMiddleName(user: Employee): string {
@@ -37,12 +41,12 @@ export default class UserListPage extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log(this.state.userList)
+        const actions = this.getActions()
         return (
             <>
                 <PageHeader label={(<Message messageKey={"page.userList.title"}/>)}
                             hasButton={true}
-                            buttonOnClick={() => {}}/>
+                            buttonOnClick={() => actions.openCreateEmployeeDialog()}/>
                 <TableCmp>
                     <TableHeaderCmp>
                         <TableRowCmp>
@@ -61,7 +65,7 @@ export default class UserListPage extends React.Component<Properties, State> {
                                 <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"
-                                        onClick={() => {}}
+                                        onClick={() => actions.openEditEmployeeDialog(user)}
                                     >
                                         {this.getUserName(user)}
                                     </Link>

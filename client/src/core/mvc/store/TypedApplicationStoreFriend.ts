@@ -8,6 +8,6 @@ export default abstract class TypedApplicationStoreFriend<StateType, DerivativeT
                                 validators?: FieldValidator[],
     ): Selector<(StateType & DerivativeType), Pick<(StateType & DerivativeType), any>, Field>
 
-    public abstract createFormHasNoErrorsSelector(fieldsKeys: (keyof (StateType & DerivativeType))[]
+    public abstract createFormHasErrorsSelector(fieldsKeys: (keyof (StateType & DerivativeType))[]
     ): Selector<(StateType & DerivativeType), Pick<(StateType & DerivativeType), any>, boolean>
 }
