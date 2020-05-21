@@ -1,5 +1,5 @@
 import TypedApplicationController from "../../core/mvc/controllers/TypedApplicationController";
-import EmployeeApplicationStore, {EmployeeSelectors, EmployeeState} from "../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../state/EmployeeApplicationStore";
 import {PageType} from "../state/enum/PageType";
 import {DialogType} from "../state/enum/DialogType";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
@@ -10,7 +10,7 @@ import AdminApplicationCacheManager from "./AdminApplicationCacheManager";
 import CacheManager from "./AdminApplicationCacheManager";
 import TypedClinicActions from "./actions/TypedClinicActions";
 
-export default class EmployeeAppController extends TypedApplicationController<EmployeeState, EmployeeSelectors, EmployeeApplicationStore> {
+export default class EmployeeAppController extends TypedApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
     private _employeeActions: TypedEmployeeActions
     private _clinicActions: TypedClinicActions
@@ -89,16 +89,16 @@ export default class EmployeeAppController extends TypedApplicationController<Em
         })
     }
 
-    // public openClinicListPage(callback: Function = () => {}): void {
-    //     this.openPage(PageType.ClinicList, (setPageLoad: Function) => {
-    //         this._clinicActions.loadClinicList(() => {
-    //             callback()
-    //             setPageLoad()
-    //         })
-    //     })
-    // }
+    public openClinicListPage(callback: Function = () => {}): void {
+        this.openPage(PageType.ClinicList, (setPageLoad: Function) => {
+            this._clinicActions.loadClinicList(() => {
+                callback()
+                setPageLoad()
+            })
+        })
+    }
 
-    // public openSchedulePage(): void {
+    public openSchedulePage(): void {
     //     this.openPage(PageType.Schedule, (setPageLoad: Function) => {
     //         this._employeeActions.loadUsersList((employees) => {
     //             this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
@@ -109,19 +109,19 @@ export default class EmployeeAppController extends TypedApplicationController<Em
     //             })
     //         })
     //     })
-    // }
+    }
 
-    // public openSettings(): void {
+    public openSettings(): void {
     //     this.openSpeciesPage()
-    // }
+    }
 
-    // public openSpeciesPage(): void {
+    public openSpeciesPage(): void {
     //     this.openPage(PageType.Species, (setPageLoad: Function) => {
     //         this._speciesActions.loadList([], () => setPageLoad())
     //     })
-    // }
+    }
 
-    // public openBreedsPage(speciesId?: number): void {
+    public openBreedsPage(speciesId?: number): void {
     //     this.openPage(PageType.Breeds, (setPageLoad: Function) => {
     //         this._speciesActions.loadList([], () => {
     //             this._breedActions.loadList([], () => {
@@ -130,7 +130,7 @@ export default class EmployeeAppController extends TypedApplicationController<Em
     //             })
     //         })
     //     })
-    // }
+    }
 
     public setShowDialog(dialogType: DialogType): void {
         this.store.setState({dialogType})
@@ -157,7 +157,7 @@ export default class EmployeeAppController extends TypedApplicationController<Em
         window.location.href = "login"
     }
 
-    getDialogSubmitButtonPropertyName(): keyof EmployeeState {
+    getDialogSubmitButtonPropertyName(): keyof EmployeeAppState {
         return "isDialogSubmitButtonLoading";
     }
 }

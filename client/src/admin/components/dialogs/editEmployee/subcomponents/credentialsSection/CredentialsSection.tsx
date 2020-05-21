@@ -5,7 +5,7 @@ import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
 import {ButtonComponent} from "../../../../../../core/components";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
-import {EmployeeSelectors, EmployeeState} from "../../../../../state/EmployeeApplicationStore";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../../../state/EmployeeApplicationStore";
 import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
 
@@ -28,7 +28,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
         return (
             <div className={styles.section}>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeLogin: "editedEmployeeLoginField"}}
                         label={(<Message messageKey={"field.login.label"}/>)}
@@ -36,7 +36,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeePassword: "editedEmployeePasswordField"}}
                         label={(<Message messageKey={"field.password.label"}/>)}
@@ -45,7 +45,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeState, EmployeeSelectors, EmployeeApplicationStore>
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeConfirmPassword: "editedEmployeeConfirmPasswordField"}}
                         label={(<Message messageKey={"field.password.repeat.label"}/>)}

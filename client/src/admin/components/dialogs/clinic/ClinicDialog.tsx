@@ -2,11 +2,10 @@ import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
-import AdminAppController from "../../../controller/AdminAppController";
-import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ClinicLeftColumn from "./subcomponents/leftColumn/ClinicLeftColumn";
 import ClinicRightColumn from "./subcomponents/rightColumn/ClinicRightColumn";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
 
 var styles = require("./styles.css")
 
@@ -15,14 +14,14 @@ export default class ClinicDialog extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props);
         this.state = {
-            [StateProperty.Mode]: 'none',
-            [StateProperty.IsActive]: true,
-            [StateProperty.HasErrors]: false,
+            mode: 'none',
+            isActive: true,
+            hasErrors: false,
         }
     }
 
     private getTitleMessageKey(): string {
-        switch (this.state[StateProperty.Mode]) {
+        switch (this.state.mode) {
             case "create":
                 return "dialog.clinic.create.label"
             case "edit":
@@ -33,7 +32,7 @@ export default class ClinicDialog extends React.Component<Properties, State> {
     }
 
     private submitForm(): void {
-        const mode = this.state[StateProperty.Mode]
+        const mode = this.state.mode
         const actions = this.props.controller.clinicActions
         if (mode == "create") {
             actions.submitCreateClinic()
@@ -59,25 +58,27 @@ export default class ClinicDialog extends React.Component<Properties, State> {
                     <div className={styles.column}>
                         <ClinicRightColumn
                             controller={this.props.controller}
-                            active={this.state[StateProperty.IsActive]}
-                            showActiveSwitch={this.state[StateProperty.Mode] == "edit"}
+                            active={this.state.isActive}
+                            showActiveSwitch={this.state.mode == "edit"}
                         />
                     </div>
                 </div>
-                {/*<DialogFooter*/}
-                    {/*controller={this.props.controller}*/}
-                    {/*submitDisabled={this.state[StateProperty.HasErrors]}*/}
-                    {/*onSubmitClick={() => this.submitForm()}*/}
-                    {/*onCancelClick={() => controller.closeCurrentDialog()}*/}
-                {/*/>*/}
+                <DialogFooter
+                    controller={this.props.controller}
+                    submitDisabled={this.state.hasErrors}
+                    onSubmitClick={() => this.submitForm()}
+                    onCancelClick={() => controller.closeCurrentDialog()}
+                />
             </DialogContent>
         </>)
     }
 
     componentDidMount() {
-        this.props.controller.subscribe(AdminStateProperty.ClinicDialogType, this, StateProperty.Mode)
-        this.props.controller.subscribe(AdminStateProperty.EditedClinicActive, this, StateProperty.IsActive)
-        this.props.controller.subscribe(AdminStateProperty.EditClinicFormHasErrors, this, StateProperty.HasErrors)
+        this.props.controller.subscribe(this, {
+            clinicDialogType: "mode",
+            editedClinicActive: "isActive",
+            editedClinicFormHasErrors: "hasErrors",
+        })
     }
 
     componentWillUnmount(): void {
@@ -85,18 +86,12 @@ export default class ClinicDialog extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    Mode = "mode",
-    IsActive = "isActive",
-    HasErrors = "hasErrors",
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.Mode]: ConfigureDialogType,
-    [StateProperty.IsActive]: boolean,
-    [StateProperty.HasErrors]: boolean,
+    mode: ConfigureDialogType,
+    isActive: boolean,
+    hasErrors: boolean,
 }

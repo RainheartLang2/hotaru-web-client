@@ -5,6 +5,7 @@ import AdminAppController from "../../controller/AdminAppController";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {Message} from "../../../core/components/Message";
 import Menu from "@material-ui/core/Menu";
+import EmployeeAppController from "../../controller/EmployeeAppController";
 
 var styles = require("./styles.css");
 
@@ -13,7 +14,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.SelectedItem]: NavigationMenuItemType.None,
+            selectedItem: NavigationMenuItemType.None,
             settingsMenuAnchor: null,
         }
     }
@@ -22,7 +23,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
         return (
             <Tabs
                 variant="fullWidth"
-                value={this.state[StateProperty.SelectedItem]}
+                value={this.state.selectedItem}
                 classes={{indicator: styles.indicator}}
             >
                 <Tab
@@ -63,7 +64,9 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.NavigationMenuItemType, this, StateProperty.SelectedItem)
+        this.props.controller.subscribe(this, {
+            secondLevelNavigationMenuType: "selectedItem",
+        })
     }
 
     componentWillUnmount(): void {
@@ -71,15 +74,11 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    SelectedItem = "selectedItem",
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.SelectedItem]: NavigationMenuItemType
+    selectedItem: NavigationMenuItemType
     settingsMenuAnchor: Element | null
 }

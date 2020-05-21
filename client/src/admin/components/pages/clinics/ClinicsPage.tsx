@@ -9,16 +9,18 @@ import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ActivityCell from "../../../../core/components/activityCell/ActivityCell";
 import {Link} from "@material-ui/core";
 import ClinicActions from "../../../controller/actions/ClinicActions";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import TypedClinicActions from "../../../controller/actions/TypedClinicActions";
 
 var styles = require("./styles.css")
 
 export default class ClinicsPage extends React.Component<Properties, State> {
 
-    private actions: ClinicActions
+    private actions: TypedClinicActions
     constructor(props: Properties) {
         super(props)
         this.state = {
-            [StateProperty.Clinics]: [],
+            clinics: [],
         }
         this.actions = this.props.controller.clinicActions
     }
@@ -51,7 +53,7 @@ export default class ClinicsPage extends React.Component<Properties, State> {
                     </TableRowCmp>
                 </TableHeaderCmp>
                 <TableBodyCmp>
-                    {this.state[StateProperty.Clinics].map(clinic => {
+                    {this.state.clinics.map(clinic => {
                         return (
                             <TableRowCmp key={clinic.id}>
                                 <CustomTableCell style={styles.nameCell}>
@@ -93,7 +95,9 @@ export default class ClinicsPage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.ClinicList, this, StateProperty.Clinics)
+        this.props.controller.subscribe(this, {
+            clinicList: "clinics",
+        })
     }
 
     componentWillUnmount(): void {
@@ -101,14 +105,10 @@ export default class ClinicsPage extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    Clinics = "clinics"
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.Clinics]: Clinic[]
+    clinics: Clinic[]
 }

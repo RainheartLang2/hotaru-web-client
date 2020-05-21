@@ -1,7 +1,6 @@
 import AdminApplicationState, {AdminStateProperty} from "../state/AdminApplicationState";
 import {DialogType} from "../state/enum/DialogType";
 import ApplicationController from "../../core/mvc/ApplicationController";
-import EmployeeActions from "./actions/EmployeeActions";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
@@ -19,7 +18,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     // private _cacheManager: AdminApplicationCacheManager
 
-    private _employeeActions: EmployeeActions
     private _clinicActions: ClinicActions
     private _speciesActions: SpeciesActions
     private _breedActions: BreedActions
@@ -29,7 +27,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
 
     private constructor() {
         super(AdminApplicationState.instance)
-        this._employeeActions = new EmployeeActions(this, this.applicationStore.employeeNode)
         this._clinicActions = new ClinicActions(this, this.applicationStore.clinicNode)
         this._speciesActions = new SpeciesActions(this, this.applicationStore.speciesNode)
         this._breedActions = new BreedActions(this, this.applicationStore.breedNode)
@@ -55,10 +52,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
                 callback()
             },
         })
-    }
-
-    get employeeActions(): EmployeeActions {
-        return this._employeeActions
     }
 
     get clinicActions(): ClinicActions {
@@ -89,15 +82,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     //     // /return this._cacheManager;
     // }
 
-    public startApplication(): void {
-        this.applicationStore.setApplicationLoading(true)
-        this.loadLoggedInUser(() => {
-            this.openUserListPage(() => {
-                this.getApplicationState().setApplicationLoading(false)
-            })
-        })
-    }
-
     protected openPage(pageType: PageType, loadingFunction: (f: Function) => void) {
         this.applicationStore.setPageType(pageType)
         this.applicationStore.setPageLoading(true)
@@ -111,17 +95,6 @@ export default class AdminAppController extends ApplicationController<AdminAppli
         )
     }
 
-    public openUserListPage(callback: Function = () => {}): void {
-        this.openPage(PageType.UserList, (setPageLoad: Function) => {
-            this._employeeActions.loadUsersList(() => {
-                this._clinicActions.loadClinicList(() => {
-                    callback()
-                    setPageLoad()
-                })
-            })
-        })
-    }
-
     public openClinicListPage(callback: Function = () => {}): void {
        this.openPage(PageType.ClinicList, (setPageLoad: Function) => {
            this._clinicActions.loadClinicList(() => {
@@ -132,16 +105,16 @@ export default class AdminAppController extends ApplicationController<AdminAppli
     }
 
     public openSchedulePage(): void {
-        this.openPage(PageType.Schedule, (setPageLoad: Function) => {
-            this._employeeActions.loadUsersList((employees) => {
-                this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
-                this._speciesActions.loadList([], () => {
-                    this._breedActions.loadList([], () => {
-                        this._appointmentActions.loadAppointmentsWithClients(() => setPageLoad())
-                    })
-                })
-            })
-        })
+        // this.openPage(PageType.Schedule, (setPageLoad: Function) => {
+        //     this._employeeActions.loadUsersList((employees) => {
+        //         this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
+        //         this._speciesActions.loadList([], () => {
+        //             this._breedActions.loadList([], () => {
+        //                 this._appointmentActions.loadAppointmentsWithClients(() => setPageLoad())
+        //             })
+        //         })
+        //     })
+        // })
     }
 
     public openSettings(): void {

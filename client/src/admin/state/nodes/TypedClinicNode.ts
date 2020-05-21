@@ -1,25 +1,38 @@
 import {Clinic} from "../../../common/beans/Clinic";
 import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
-import {EmployeeSelectors, EmployeeState} from "../EmployeeApplicationStore";
+import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
 import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
-import {UserSelectors} from "./TypedEmployeeNode";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {Field} from "../../../core/mvc/store/Field";
+import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
+import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
+import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
+import {ConfigureDialogType} from "../../../core/types/ConfigureDialogType";
+import {DialogType} from "../enum/DialogType";
 
 export default class TypedClinicNode {
-    private _store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>
+    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>) {
+    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 
     public getDefaultState(): ClinicPageState {
         return {
-            clinicList: []
+            clinicList: [],
+            editedClinicId: 0,
+            editedClinicName: "",
+            editedClinicActive: false,
+            editedClinicPhone: "",
+            editedClinicEmail: "",
+            editedClinicAddress: "",
+            editedClinicCity: "",
+            editedClinicSiteUrl: "",
         }
     }
 
-    public getSelectors(): SelectorsInfo<EmployeeState & EmployeeSelectors, ClinicSelectors> {
+    public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, ClinicSelectors> {
         return {
             clinicListById: {
                 dependsOn: ["clinicList"],
@@ -35,6 +48,36 @@ export default class TypedClinicNode {
                     return resultMap
                 },
                 value: new Map<number, Clinic>()
+            },
+            editedClinicNameField: this._store.createField("editedClinicName", "",
+                [new RequiredFieldValidator(), new MaximalLengthValidator(200)]),
+            editedClinicPhoneField: this._store.createField("editedClinicPhone", "", [new MaximalLengthValidator(15)]),
+            editedClinicEmailField: this._store.createField("editedClinicEmail", "",
+                [new EmailFormatValidator(), new MaximalLengthValidator(254)]),
+            editedClinicAddressField: this._store.createField("editedClinicAddress", "",
+                [new RequiredFieldValidator(), new MaximalLengthValidator(1024)]),
+            editedClinicCityField: this._store.createField("editedClinicCity", "", []),
+            editedClinicSiteUrlField: this._store.createField("editedClinicSiteUrl", "",
+                [new MaximalLengthValidator(256)]),
+            editedClinicFormHasErrors: this._store.createFormHasErrorsSelector(["editedClinicName",
+                "editedClinicPhone",
+                "editedClinicEmail",
+                "editedClinicAddress",
+                "editedClinicSiteUrl"
+            ]),
+            clinicDialogType: {
+                dependsOn: ["dialogType"],
+                get: (state: Pick<EmployeeAppState, "dialogType">) => {
+                    switch (state.dialogType) {
+                        case DialogType.CreateClinic:
+                            return "create"
+                        case DialogType.EditClinic:
+                            return "edit"
+                        default:
+                            return "none"
+                    }
+                },
+                value: "none",
             }
         }
     }
@@ -42,9 +85,25 @@ export default class TypedClinicNode {
 
 export type ClinicPageState = {
     clinicList: Clinic[],
+    editedClinicId: number,
+    editedClinicName: string,
+    editedClinicActive: boolean,
+    editedClinicPhone: string,
+    editedClinicEmail: string,
+    editedClinicAddress: string,
+    editedClinicCity: string,
+    editedClinicSiteUrl: string,
 }
 
 export type ClinicSelectors = {
     clinicListById: Map<number, Clinic>,
     clinicListByIdWithMock: Map<number, Clinic>,
+    clinicDialogType: ConfigureDialogType,
+    editedClinicNameField: Field,
+    editedClinicPhoneField: Field,
+    editedClinicEmailField: Field,
+    editedClinicAddressField: Field,
+    editedClinicCityField: Field,
+    editedClinicSiteUrlField: Field,
+    editedClinicFormHasErrors: boolean,
 }

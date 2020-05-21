@@ -3,7 +3,7 @@ import {Clinic} from "../../../common/beans/Clinic";
 import {Field} from "../../../core/mvc/store/Field";
 import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
-import {EmployeeSelectors, EmployeeState} from "../EmployeeApplicationStore";
+import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
 import {DialogType} from "../enum/DialogType";
 import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
@@ -12,10 +12,10 @@ import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidato
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 
 export default class TypedEmployeeNode {
-    private _store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>
+    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeState, EmployeeSelectors>) {
+    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 
@@ -51,7 +51,7 @@ export default class TypedEmployeeNode {
         }
     }
 
-    public getDerivation(): SelectorsInfo<EmployeeState & EmployeeSelectors, UserSelectors> {
+    public getDerivation(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, UserSelectors> {
         return {
             userListById: {
                 dependsOn: ["userList"],
@@ -68,7 +68,7 @@ export default class TypedEmployeeNode {
             },
             employeeDialogType: {
                 dependsOn: ["dialogType"],
-                get: (state: Pick<EmployeeState, "dialogType">) => this.calcEmployeeDialogType(state.dialogType),
+                get: (state: Pick<EmployeeAppState, "dialogType">) => this.calcEmployeeDialogType(state.dialogType),
                 value: "none",
             },
             editedEmployeeFirstNameField: this._store.createField("editedEmployeeFirstName", "",
@@ -98,14 +98,14 @@ export default class TypedEmployeeNode {
             editedEmployeeConfirmPasswordField: this._store.createField("editedEmployeeConfirmPassword", "", []),
             editedEmployeeChangePasswordButtonShow: {
                 dependsOn: ["dialogType"],
-                get: (state: Pick<EmployeeState, "dialogType">) =>
+                get: (state: Pick<EmployeeAppState, "dialogType">) =>
                     state.dialogType === DialogType.EditEmployee
                     || state.dialogType === DialogType.EditEmployeeProfile,
                 value: false,
             },
             isChangePasswordObligatory: {
                 dependsOn: ["dialogType", "isEditedEmployeePasswordChanged"],
-                get: (state: Pick<EmployeeState, "dialogType" | "isEditedEmployeePasswordChanged">) => state.dialogType === DialogType.CreateEmployee || state.isEditedEmployeePasswordChanged,
+                get: (state: Pick<EmployeeAppState, "dialogType" | "isEditedEmployeePasswordChanged">) => state.dialogType === DialogType.CreateEmployee || state.isEditedEmployeePasswordChanged,
                 value: false,
             },
             employeeFormHasError: this._store.createFormHasErrorsSelector([

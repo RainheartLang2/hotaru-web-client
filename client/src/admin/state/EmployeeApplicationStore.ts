@@ -10,7 +10,7 @@ import {CommonUtils} from "../../core/utils/CommonUtils";
 import mergeTypes = CommonUtils.mergeTypes;
 import TypedClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/TypedClinicNode";
 
-export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeState, EmployeeSelectors> {
+export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
     private static _instance: EmployeeApplicationStore
 
@@ -47,32 +47,32 @@ export default class EmployeeApplicationStore extends TypedApplicationStore<Empl
         }
     }
 
-    private createCommonDerivations(): SelectorsInfo<EmployeeState, CommonEmployeeSelectors> {
+    private createCommonDerivations(): SelectorsInfo<EmployeeAppState, CommonEmployeeSelectors> {
         return {
             showDialog: {
                 dependsOn: ["dialogType", "isDialogLoading"],
-                get: (state: Pick<EmployeeState, "dialogType" | "isDialogLoading">) => state.isDialogLoading || state.dialogType != DialogType.None,
+                get: (state: Pick<EmployeeAppState, "dialogType" | "isDialogLoading">) => state.isDialogLoading || state.dialogType != DialogType.None,
                 value: false,
             },
             navigationMenuItemType: {
                 dependsOn: ["pageType"],
-                get: (state: Pick<EmployeeState, "pageType">) => this.calcNavigationMenuItemType(state.pageType),
+                get: (state: Pick<EmployeeAppState, "pageType">) => this.calcNavigationMenuItemType(state.pageType),
                 value: NavigationMenuItemType.None,
             },
             secondLevelNavigationMenuType: {
                 dependsOn: ["pageType"],
-                get: (state: Pick<EmployeeState, "pageType">) => this.calcSecondLevelNavigationMenuItemType(state.pageType),
+                get: (state: Pick<EmployeeAppState, "pageType">) => this.calcSecondLevelNavigationMenuItemType(state.pageType),
                 value: SecondLevelNavigationMenuType.None,
             },
             dictionariesNavigationSelectedItem: {
                 dependsOn: ["pageType"],
-                get: (state: Pick<EmployeeState, "pageType">) => this.calcDictionariesNavigationSelectedItem(this.state.pageType),
+                get: (state: Pick<EmployeeAppState, "pageType">) => this.calcDictionariesNavigationSelectedItem(this.state.pageType),
                 value: DictionaryMenuItemType.None,
             }
         }
     }
 
-    protected getDefaultState(): EmployeeState {
+    protected getDefaultState(): EmployeeAppState {
         const commonState = mergeTypes(this.createCommonDefaultState(), this.createDefaultStateTypeEntry())
         const employeePageState = mergeTypes(commonState, this.employeeNode.getDefaultState())
         const clinicPageState = mergeTypes(employeePageState, this.clinicNode.getDefaultState())
@@ -80,7 +80,7 @@ export default class EmployeeApplicationStore extends TypedApplicationStore<Empl
         return result
     }
 
-    protected getSelectors(): SelectorsInfo<EmployeeState, EmployeeSelectors> {
+    protected getSelectors(): SelectorsInfo<EmployeeAppState, EmployeeAppSelectors> {
         const employeePageSelectors = mergeTypes(this.createCommonDerivations(), this.employeeNode.getDerivation())
         const clinicSelectors = mergeTypes(employeePageSelectors, this.clinicNode.getSelectors())
         const result = clinicSelectors
@@ -128,7 +128,7 @@ type CommonEmployeeState = {
     globalError: string | null,
 }
 
-export type EmployeeState = DefaultStateType
+export type EmployeeAppState = DefaultStateType
     & CommonEmployeeState
     & UserPageEmployeeState
     & ClinicPageState
@@ -140,4 +140,4 @@ type CommonEmployeeSelectors = {
     dictionariesNavigationSelectedItem: DictionaryMenuItemType,
 }
 
-export type EmployeeSelectors = CommonEmployeeSelectors & UserSelectors & ClinicSelectors
+export type EmployeeAppSelectors = CommonEmployeeSelectors & UserSelectors & ClinicSelectors

@@ -1,9 +1,6 @@
 import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
-import AdminAppController from "../../../controller/AdminAppController";
 import {Message} from "../../../../core/components/Message";
-import EmployeeActions from "../../../controller/actions/EmployeeActions";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import LeftColumn from "./subcomponents/leftColumn/LeftColumn";
 import RightColumn from "./subcomponents/rightColumn/RightColumn";

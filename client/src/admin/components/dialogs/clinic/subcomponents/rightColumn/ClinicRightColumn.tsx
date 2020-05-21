@@ -1,10 +1,13 @@
 import * as React from "react";
-import AdminAppController from "../../../../../controller/AdminAppController";
-import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
-import {Message} from "../../../../../../core/components/Message";
-import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
-import LabeledSwitch from "../../../../../../core/components/labeledSwitch/LabeledSwitch";
 import {ReactNode} from "react";
+import {Message} from "../../../../../../core/components/Message";
+import LabeledSwitch from "../../../../../../core/components/labeledSwitch/LabeledSwitch";
+import EmployeeAppController from "../../../../../controller/EmployeeAppController";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../../../state/EmployeeApplicationStore";
+import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
 
 var styles = require("../../styles.css")
 
@@ -28,9 +31,9 @@ export default class ClinicRightColumn extends React.Component<Properties> {
                 ? this.getActiveSwitch()
                 : ""}
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicPhone}
+                    fieldKey={{editedClinicPhone:"editedClinicPhoneField"}}
                     label={(<Message messageKey={"dialog.clinic.phone.label"}/>)}
                     required={true}
                     size="small"
@@ -38,9 +41,9 @@ export default class ClinicRightColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicEmail}
+                    fieldKey={{editedClinicEmail: "editedClinicEmailField"}}
                     label={(<Message messageKey={"dialog.clinic.email.label"}/>)}
                     required={true}
                     size="small"
@@ -49,11 +52,10 @@ export default class ClinicRightColumn extends React.Component<Properties> {
             </div>
         </>)
     }
-
 }
 
 export type Properties = {
-    controller: AdminAppController,
+    controller: EmployeeAppController,
     active: boolean,
     showActiveSwitch: boolean,
 }

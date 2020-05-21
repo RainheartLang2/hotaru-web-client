@@ -1,5 +1,4 @@
 import {DialogType} from "./enum/DialogType";
-import EmployeeNode from "./nodes/EmployeeNode";
 import ApplicationStore from "../../core/mvc/store/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {PageType} from "./enum/PageType";
@@ -16,7 +15,6 @@ import PetNode from "./nodes/PetNode";
 export default class AdminApplicationState extends ApplicationStore {
     private static _instance: AdminApplicationState
 
-    private _employeeNode: EmployeeNode
     private _clinicNode: ClinicNode
     private _speciesNode: SpeciesNode
     private _breedsNode: BreedNode
@@ -78,17 +76,12 @@ export default class AdminApplicationState extends ApplicationStore {
         })
 
         this.registerProperty(AdminStateProperty.LoggedInEmployee, null)
-        this._employeeNode = new EmployeeNode(this.friend)
         this._clinicNode = new ClinicNode(this.friend)
         this._speciesNode = new SpeciesNode(this.friend)
         this._breedsNode = new BreedNode(this.friend)
         this._appointmentNode = new AppointmentNode(this.friend)
         this._clientsNode = new ClientNode(this.friend)
         this._petNode = new PetNode(this.friend)
-    }
-
-    get employeeNode(): EmployeeNode {
-        return this._employeeNode;
     }
 
     get clinicNode(): ClinicNode {

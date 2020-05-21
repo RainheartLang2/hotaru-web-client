@@ -36,8 +36,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                         || dialogType == DialogType.EditEmployeeProfile)
                     && (<EditEmployeeDialog controller={this.props.controller}/>)}
 
-                    {/*{(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)*/}
-                        {/*&& (<ClinicDialog controller={this.controller}/>)}*/}
+                    {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
+                        && (<ClinicDialog controller={this.props.controller}/>)}
                     {/*{(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)*/}
                         {/*&& (<AppointmentDialog controller={this.controller}/>)}*/}
                 </Dialog>

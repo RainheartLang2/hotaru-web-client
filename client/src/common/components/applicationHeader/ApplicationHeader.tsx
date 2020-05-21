@@ -1,6 +1,5 @@
 import * as React from "react";
 import {AppHeader} from "../../../core/components";
-import {MuiThemeProvider} from "@material-ui/core";
 
 var styles = require("./styles.css");
 

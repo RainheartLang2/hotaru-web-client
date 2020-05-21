@@ -1,8 +1,11 @@
 import * as React from "react";
-import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
-import AdminAppController from "../../../../../controller/AdminAppController";
-import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
+import EmployeeAppController from "../../../../../controller/EmployeeAppController";
+import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../../../state/EmployeeApplicationStore";
 
 var styles = require("../../styles.css")
 
@@ -10,9 +13,9 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
     render() {
         return (<>
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicName}
+                    fieldKey={{editedClinicName: "editedClinicNameField"}}
                     label={(<Message messageKey={"page.clinics.name.title"}/>)}
                     required={true}
                     size="small"
@@ -20,9 +23,9 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicSiteUrl}
+                    fieldKey={{editedClinicSiteUrl: "editedClinicSiteUrlField"}}
                     label={(<Message messageKey={"dialog.clinic.siteUrl.label"}/>)}
                     required={true}
                     size="small"
@@ -30,9 +33,9 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicCity}
+                    fieldKey={{editedClinicCity: "editedClinicCityField"}}
                     label={(<Message messageKey={"dialog.clinic.city.label"}/>)}
                     required={true}
                     size="small"
@@ -40,9 +43,9 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <ConnectedTextField
+                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
-                    fieldPropertyName={AdminStateProperty.EditedClinicAddress}
+                    fieldKey={{editedClinicAddress: "editedClinicAddressField"}}
                     label={(<Message messageKey={"dialog.clinic.address.label"}/>)}
                     required={true}
                     size="small"
@@ -54,5 +57,5 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
 }
 
 export type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
