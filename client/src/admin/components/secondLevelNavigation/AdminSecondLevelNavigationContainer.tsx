@@ -3,28 +3,30 @@ import AdminAppController from "../../controller/AdminAppController";
 import {SecondLevelNavigationMenuType} from "../../state/enum/SecondLevelNavigationMenuType";
 import {AdminStateProperty} from "../../state/AdminApplicationState";
 import DictionariesNavigationMenu from "./dictionaries/DictionariesNavigationMenu";
+import EmployeeAppController from "../../controller/EmployeeAppController";
 
 export class AdminSecondLevelNavigationContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
         this.state = {
-            [StateProperty.CurrentMenu]: SecondLevelNavigationMenuType.None
+            currentMenu: SecondLevelNavigationMenuType.None
         }
     }
 
     render() {
-        const currentMenu = this.state[StateProperty.CurrentMenu]
         return (
             <div>
-                {currentMenu == SecondLevelNavigationMenuType.Dictionaries
+                {this.state.currentMenu == SecondLevelNavigationMenuType.Dictionaries
                 && (<DictionariesNavigationMenu controller={this.props.controller}/>)}
             </div>
         )
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.SecondLevelNavigationMenuType, this, StateProperty.CurrentMenu)
+        this.props.controller.subscribe(this, {
+            secondLevelNavigationMenuType: "currentMenu",
+        })
     }
 
     componentWillUnmount(): void {
@@ -32,14 +34,10 @@ export class AdminSecondLevelNavigationContainer extends React.Component<Propert
     }
 }
 
-enum StateProperty {
-    CurrentMenu = "currentMenu"
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.CurrentMenu]: SecondLevelNavigationMenuType
+    currentMenu: SecondLevelNavigationMenuType
 }

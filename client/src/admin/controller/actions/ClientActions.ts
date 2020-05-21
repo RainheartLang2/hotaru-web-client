@@ -8,6 +8,8 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {Pet} from "../../../common/beans/Pet";
 
 export default class ClientActions extends ReadActions<Client, AdminAppController, ClientNode> {
+
+
     protected convertResultToItem(result: any): Client[] {
         return result as Client[]
     }

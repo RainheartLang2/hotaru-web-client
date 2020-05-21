@@ -10,6 +10,10 @@ import {TextField} from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import ActionSeparator from "../../../../common/components/actionSeparator/ActionSeparator";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
+import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
 
 var styles = require("./styles.css")
 
@@ -18,7 +22,7 @@ export default class SpeciesPage extends React.Component<Properties, State> {
         super(props)
 
         this.state = {
-            [StateProperty.SpeciesList]: [],
+            speciesList: [],
         }
     }
 
@@ -34,7 +38,7 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                 />
                 <TableCmp>
                     <TableBodyCmp>
-                        {this.state[StateProperty.SpeciesList].map(item => {
+                        {this.state.speciesList.map(item => {
                             return (<TableRowCmp key={item.id}>
                                     <CustomTableCell style={styles.nameCell}>
                                         <TextField
@@ -58,7 +62,7 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                                             color="primary"
                                             onClick={() => {
                                                 if (item.id) {
-                                                    actions.deleteItem(item.id)
+                                                    actions.deleteSpecies(item.id)
                                                 }
                                             }}
                                         >
@@ -72,10 +76,10 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                             root: styles.additionalRow
                         }}>
                             <CustomTableCell style={styles.nameCell}>
-                                <ConnectedTextField
+                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     size={"small"}
-                                    fieldPropertyName={AdminStateProperty.AddedSpeciesName}
+                                    fieldKey={{addedSpeciesName: "addedSpeciesNameField"}}
                                     variant={"outlined"}
                                 />
                             </CustomTableCell>
@@ -95,7 +99,9 @@ export default class SpeciesPage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.SpeciesList, this, StateProperty.SpeciesList)
+        this.props.controller.subscribe(this, {
+            speciesList: "speciesList"
+        })
     }
 
     componentWillUnmount(): void {
@@ -103,14 +109,10 @@ export default class SpeciesPage extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    SpeciesList = "speciesList"
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.SpeciesList]: Species[]
+    speciesList: Species[]
 }

@@ -9,11 +9,15 @@ import TypedEmployeeActions from "./actions/TypedEmployeeActions";
 import AdminApplicationCacheManager from "./AdminApplicationCacheManager";
 import CacheManager from "./AdminApplicationCacheManager";
 import TypedClinicActions from "./actions/TypedClinicActions";
+import TypedSpeciesActions from "./actions/TypedSpeciesActions";
+import TypedBreedActions from "./actions/TypedBreedActions";
 
 export default class EmployeeAppController extends TypedApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
     private _employeeActions: TypedEmployeeActions
     private _clinicActions: TypedClinicActions
+    private _speciesActions: TypedSpeciesActions
+    private _breedActions: TypedBreedActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -21,6 +25,8 @@ export default class EmployeeAppController extends TypedApplicationController<Em
         super(EmployeeApplicationStore.instance)
         this._employeeActions = new TypedEmployeeActions(this)
         this._clinicActions = new TypedClinicActions(this)
+        this._speciesActions = new TypedSpeciesActions(this)
+        this._breedActions = new TypedBreedActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -38,6 +44,14 @@ export default class EmployeeAppController extends TypedApplicationController<Em
 
     public get clinicActions(): TypedClinicActions {
         return this._clinicActions
+    }
+
+    public get speciesActions(): TypedSpeciesActions {
+        return this._speciesActions
+    }
+
+    public get breedActions(): TypedBreedActions {
+        return this._breedActions
     }
 
     public get cacheManager(): CacheManager {
@@ -112,24 +126,24 @@ export default class EmployeeAppController extends TypedApplicationController<Em
     }
 
     public openSettings(): void {
-    //     this.openSpeciesPage()
+        this.openSpeciesPage()
     }
 
     public openSpeciesPage(): void {
-    //     this.openPage(PageType.Species, (setPageLoad: Function) => {
-    //         this._speciesActions.loadList([], () => setPageLoad())
-    //     })
+        this.openPage(PageType.Species, (setPageLoad: Function) => {
+            this._speciesActions.loadList([], () => setPageLoad())
+        })
     }
 
     public openBreedsPage(speciesId?: number): void {
-    //     this.openPage(PageType.Breeds, (setPageLoad: Function) => {
-    //         this._speciesActions.loadList([], () => {
-    //             this._breedActions.loadList([], () => {
-    //                 this._speciesActions.setSelectedSpecies(speciesId)
-    //                 setPageLoad()
-    //             })
-    //         })
-    //     })
+        this.openPage(PageType.Breeds, (setPageLoad: Function) => {
+            this._speciesActions.loadList([], () => {
+                this._breedActions.loadList([], () => {
+                    this._speciesActions.setSelectedSpecies(speciesId)
+                    setPageLoad()
+                })
+            })
+        })
     }
 
     public setShowDialog(dialogType: DialogType): void {

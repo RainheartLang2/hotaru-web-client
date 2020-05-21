@@ -5,13 +5,14 @@ import {DictionaryMenuItemType} from "../../../state/enum/DictionaryMenuItemType
 import {Message} from "../../../../core/components/Message";
 import {NavigationMenuItemType} from "../../../state/enum/NavigationMenuItemType";
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
 
 export default class DictionariesNavigationMenu extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
         this.state = {
-            [StateProperty.SelectedItem]: DictionaryMenuItemType.None
+            selectedItem: DictionaryMenuItemType.None
         }
     }
 
@@ -19,7 +20,7 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
         return (
             <Tabs
                 variant="fullWidth"
-                value={this.state[StateProperty.SelectedItem]}
+                value={this.state.selectedItem}
                 indicatorColor={"secondary"}
                 textColor={"primary"}
             >
@@ -38,7 +39,9 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.DictionariesNavigationSelectedItem, this, StateProperty.SelectedItem)
+        this.props.controller.subscribe(this, {
+            dictionariesNavigationSelectedItem: "selectedItem",
+        })
     }
 
     componentWillUnmount(): void {
@@ -46,14 +49,10 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
     }
 }
 
-enum StateProperty {
-    SelectedItem = "selectedItem"
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.SelectedItem]: DictionaryMenuItemType
+    selectedItem: DictionaryMenuItemType
 }

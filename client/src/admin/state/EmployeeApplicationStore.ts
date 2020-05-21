@@ -9,21 +9,26 @@ import TypedEmployeeNode, {UserSelectors, UserPageEmployeeState} from "./nodes/T
 import {CommonUtils} from "../../core/utils/CommonUtils";
 import mergeTypes = CommonUtils.mergeTypes;
 import TypedClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/TypedClinicNode";
+import TypedSpeciesNode, {SpeciesPageSelector, SpeciesPageState} from "./nodes/TypedSpeciesNode";
+import TypedBreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/TypedBreedNode";
 
 export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
     private static _instance: EmployeeApplicationStore
 
-    private employeeNode!: TypedEmployeeNode;
-    private clinicNode!: TypedClinicNode;
+    private employeeNode!: TypedEmployeeNode
+    private clinicNode!: TypedClinicNode
+    private speciesNode!: TypedSpeciesNode
+    private breedNode!: TypedBreedNode
 
     constructor() {
         super()
         const friend = this.createFriend()
         this.employeeNode = new TypedEmployeeNode(friend)
         this.clinicNode = new TypedClinicNode(friend)
+        this.speciesNode = new TypedSpeciesNode(friend)
+        this.breedNode = new TypedBreedNode(friend)
         this.initialize()
-
     }
 
     public static get instance(): EmployeeApplicationStore {
@@ -76,14 +81,18 @@ export default class EmployeeApplicationStore extends TypedApplicationStore<Empl
         const commonState = mergeTypes(this.createCommonDefaultState(), this.createDefaultStateTypeEntry())
         const employeePageState = mergeTypes(commonState, this.employeeNode.getDefaultState())
         const clinicPageState = mergeTypes(employeePageState, this.clinicNode.getDefaultState())
-        const result = clinicPageState
+        const speciesPageState = mergeTypes(clinicPageState, this.speciesNode.getDefaultState())
+        const breedPageState = mergeTypes(speciesPageState, this.breedNode.getDefaultState())
+        const result = breedPageState
         return result
     }
 
     protected getSelectors(): SelectorsInfo<EmployeeAppState, EmployeeAppSelectors> {
         const employeePageSelectors = mergeTypes(this.createCommonDerivations(), this.employeeNode.getDerivation())
         const clinicSelectors = mergeTypes(employeePageSelectors, this.clinicNode.getSelectors())
-        const result = clinicSelectors
+        const speciesSelectors = mergeTypes(clinicSelectors, this.speciesNode.getSelectors())
+        const breedSelectors = mergeTypes(speciesSelectors, this.breedNode.getSelectors())
+        const result = breedSelectors
         return result
     }
 
@@ -132,6 +141,8 @@ export type EmployeeAppState = DefaultStateType
     & CommonEmployeeState
     & UserPageEmployeeState
     & ClinicPageState
+    & SpeciesPageState
+    & BreedsPageState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -140,4 +151,8 @@ type CommonEmployeeSelectors = {
     dictionariesNavigationSelectedItem: DictionaryMenuItemType,
 }
 
-export type EmployeeAppSelectors = CommonEmployeeSelectors & UserSelectors & ClinicSelectors
+export type EmployeeAppSelectors = CommonEmployeeSelectors
+    & UserSelectors
+    & ClinicSelectors
+    & SpeciesPageSelector
+    & BreedsPageSelector
