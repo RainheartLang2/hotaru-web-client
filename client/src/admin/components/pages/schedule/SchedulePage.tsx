@@ -22,6 +22,10 @@ import {NameUtils} from "../../../../core/utils/NameUtils";
 import LocaleHolder from "../../../../core/utils/LocaleHolder";
 import {LocaleUtils} from "../../../../core/enum/LocaleType";
 import MessageResource from "../../../../core/message/MessageResource";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
+import TypedConnectedSelect from "../../../../core/components/ConnectedSelect/TypedConnectedSelect";
 
 var styles = require("./styles.css")
 
@@ -30,27 +34,27 @@ export default class SchedulePage extends React.Component<Properties, State> {
         super(props)
 
         this.state = {
-            [StateProperty.AppointmentList]: [],
-            [StateProperty.SelectedDate]: new Date(),
+            appointmentsList: [],
+            selectedDate: new Date(),
         }
     }
 
     render() {
-        const currentDate = this.state[StateProperty.SelectedDate]
+        const currentDate = this.state.selectedDate
         const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
-        const schedulerData = this.state[StateProperty.AppointmentList]
-        const actions = this.props.controller.appointmentActions
+        const schedulerData = this.state.appointmentsList
+        const actions = this.props.controller.scheduleActions
         return (<>
             <PageHeader
                 label={(<Message messageKey={"page.schedule.title"}/>)}
                 hasButton={false}
             />
             <div className={styles.medicSelect}>
-                <ConnectedSelect<Employee>
+                <TypedConnectedSelect<Employee, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     variant={"outlined"}
-                    mapProperty={AdminStateProperty.MedicsListById}
-                    selectedItemProperty={AdminStateProperty.SelectedEmployeeForSchedulePage}
+                    mapProperty={"medicsListById"}
+                    selectedItemProperty={"selectedEmployeeForSchedulePage"}
                     itemToString={medic => NameUtils.formatName(medic)}
                     getKey={medic => medic && medic.id ? medic.id : 0}
                     label={<Message messageKey={"page.schedule.medicSelection.label"}/>}
@@ -99,10 +103,10 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribeBatched(this, [
-            {propertyName: AdminStateProperty.AppointmentModelsList, propertyAlias: StateProperty.AppointmentList},
-            {propertyName: AdminStateProperty.SchedulePageDate, propertyAlias: StateProperty.SelectedDate}
-        ])
+        this.props.controller.subscribe(this, {
+            appointmentsModelList: "appointmentsList",
+            schedulePageDate: "selectedDate",
+        })
     }
 
     componentWillUnmount(): void {
@@ -110,16 +114,11 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 }
 
-enum StateProperty {
-    AppointmentList = "appointmentList",
-    SelectedDate = "selectedDate",
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.AppointmentList]: AppointmentModel[]
-    [StateProperty.SelectedDate]: Date
+    appointmentsList: AppointmentModel[]
+    selectedDate: Date
 }

@@ -2,12 +2,17 @@ import {Checkbox, FormControlLabel, FormGroup, InputLabel} from "@material-ui/co
 import * as React from "react";
 import ApplicationController from "../../mvc/ApplicationController";
 import {ReactNode} from "react";
+import {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
+import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import {CommonUtils} from "../../utils/CommonUtils";
 
-export default class ConnectedCheckbox extends React.Component<Properties, State> {
-    constructor(props: Properties) {
+export default class ConnectedCheckbox<ApplicationState extends DefaultStateType>
+    extends React.Component<Properties<ApplicationState>, State> {
+
+    constructor(props: Properties<ApplicationState>) {
         super(props)
         this.state = {
-            [StateProperty.IsChecked]: false
+            isChecked: false
         }
     }
 
@@ -17,9 +22,10 @@ export default class ConnectedCheckbox extends React.Component<Properties, State
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={this.state[StateProperty.IsChecked]}
+                            checked={this.state.isChecked}
                             onChange={(event) =>
-                                this.props.controller.setPropertyValue(this.props.propertyName, event.target.checked)}
+                                this.props.controller.setState({[this.props.propertyName]: event.target.checked})
+                            }
                             color="primary"
                         />}
                     label={
@@ -37,7 +43,7 @@ export default class ConnectedCheckbox extends React.Component<Properties, State
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this.props.propertyName, this, StateProperty.IsChecked)
+        this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.propertyName, "isChecked"]]))
     }
 
     componentWillUnmount(): void {
@@ -45,16 +51,12 @@ export default class ConnectedCheckbox extends React.Component<Properties, State
     }
 }
 
-enum StateProperty {
-    IsChecked = "isChecked",
-}
-
-type Properties = {
-    controller: ApplicationController,
-    propertyName: string,
+type Properties<ApplicationState> = {
+    controller: TypedApplicationController,
+    propertyName: keyof ApplicationState,
     label: ReactNode,
 }
 
 type State = {
-    [StateProperty.IsChecked]: boolean
+    isChecked: boolean
 }

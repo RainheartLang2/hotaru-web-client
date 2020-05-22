@@ -4,6 +4,9 @@ import AdminAppController from "../../../../controller/AdminAppController";
 import {AdminStateProperty} from "../../../../state/AdminApplicationState";
 import {Message} from "../../../../../core/components/Message";
 import PetInfoForm from "./PetInfoForm";
+import EmployeeAppController from "../../../../controller/EmployeeAppController";
+import TypedConnectedTextField from "../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../../state/EmployeeApplicationStore";
 
 const styles = require("../styles.css");
 
@@ -12,46 +15,46 @@ export default class ClientInfoForm extends React.Component<Properties> {
         return (<>
             <div className={styles.row}>
                 <div className={styles.nameField}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoLastName}
+                        fieldKey={{editedClientInfoLastName: "editedClientInfoLastNameField"}}
                         label={<Message messageKey={"dialog.appointment.field.lastName.label"}/>}
                     />
                 </div>
                 <div className={styles.nameField}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoFirstName}
+                        fieldKey={{editedClientInfoFirstName: "editedClientInfoFirstNameField"}}
                         label={<Message messageKey={"dialog.appointment.field.firstName.label"}/>}
                     />
                 </div>
                 <div className={styles.nameField}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoMiddleName}
+                        fieldKey={{editedClientInfoMiddleName: "editedClientInfoMiddleNameField"}}
                         label={<Message messageKey={"dialog.appointment.field.middleName.label"}/>}
                     />
                 </div>
             </div>
             <div className={styles.row}>
                 <div className={"addressField"}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoPhone}
+                        fieldKey={{editedClientInfoPhone: "editedClientInfoPhoneField"}}
                         label={<Message messageKey={"dialog.appointment.field.phone.label"}/>}
                     />
                 </div>
                 <div className={"addressField"}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoMail}
+                        fieldKey={{editedClientInfoMail: "editedClientInfoMailField"}}
                         label={<Message messageKey={"dialog.appointment.field.email.label"}/>}
                     />
                 </div>
                 <div className={"addressField"}>
-                    <ConnectedTextField
+                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldPropertyName={AdminStateProperty.EditedClientInfoAddress}
+                        fieldKey={{editedClientInfoAddress: "editedClientInfoAddressField"}}
                         label={<Message messageKey={"dialog.appointment.field.address.label"}/>}
                     />
                 </div>
@@ -62,5 +65,5 @@ export default class ClientInfoForm extends React.Component<Properties> {
 }
 
 type Properties = {
-    controller: AdminAppController,
+    controller: EmployeeAppController,
 }

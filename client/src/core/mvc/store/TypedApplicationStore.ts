@@ -54,7 +54,6 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
             dependsOn: [originalProperty],
             get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field) => {
                 const originalValue = args[originalProperty]
-                console.log(originalProperty)
                 const validationResult = this.validateField(originalValue, validators)
                 return {
                     value: originalValue,

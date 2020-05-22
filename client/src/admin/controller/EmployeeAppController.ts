@@ -11,6 +11,8 @@ import CacheManager from "./AdminApplicationCacheManager";
 import TypedClinicActions from "./actions/TypedClinicActions";
 import TypedSpeciesActions from "./actions/TypedSpeciesActions";
 import TypedBreedActions from "./actions/TypedBreedActions";
+import TypedScheduleActions from "./actions/TypedScheduleActions";
+import TypedClientActions from "./actions/TypedClientActions";
 
 export default class EmployeeAppController extends TypedApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -18,6 +20,8 @@ export default class EmployeeAppController extends TypedApplicationController<Em
     private _clinicActions: TypedClinicActions
     private _speciesActions: TypedSpeciesActions
     private _breedActions: TypedBreedActions
+    private _scheduleActions: TypedScheduleActions
+    private _clientActions: TypedClientActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -27,6 +31,8 @@ export default class EmployeeAppController extends TypedApplicationController<Em
         this._clinicActions = new TypedClinicActions(this)
         this._speciesActions = new TypedSpeciesActions(this)
         this._breedActions = new TypedBreedActions(this)
+        this._scheduleActions = new TypedScheduleActions(this)
+        this._clientActions = new TypedClientActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -52,6 +58,14 @@ export default class EmployeeAppController extends TypedApplicationController<Em
 
     public get breedActions(): TypedBreedActions {
         return this._breedActions
+    }
+
+    public get scheduleActions(): TypedScheduleActions {
+        return this._scheduleActions
+    }
+
+    public get clientActions(): TypedClientActions {
+        return this._clientActions
     }
 
     public get cacheManager(): CacheManager {
@@ -88,7 +102,9 @@ export default class EmployeeAppController extends TypedApplicationController<Em
                     callback()
                 })
             },
-            () => this.store.setState({isPageLoading: false})
+            () => {
+                this.store.setState({isPageLoading: false})
+            }
         )
     }
 
@@ -113,16 +129,18 @@ export default class EmployeeAppController extends TypedApplicationController<Em
     }
 
     public openSchedulePage(): void {
-    //     this.openPage(PageType.Schedule, (setPageLoad: Function) => {
-    //         this._employeeActions.loadUsersList((employees) => {
-    //             this.setPropertyValue(AdminStateProperty.SelectedEmployeeForSchedulePage, employees.length > 0 ? employees[0] : null)
-    //             this._speciesActions.loadList([], () => {
-    //                 this._breedActions.loadList([], () => {
-    //                     this._appointmentActions.loadAppointmentsWithClients(() => setPageLoad())
-    //                 })
-    //             })
-    //         })
-    //     })
+        this.openPage(PageType.Schedule, (setPageLoad: Function) => {
+            this._employeeActions.loadUsersList((employees) => {
+                this.setState({
+                    selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
+                })
+                this._speciesActions.loadList([], () => {
+                    this._breedActions.loadList([], () => {
+                        this._scheduleActions.loadAppointmentsWithClients(() => setPageLoad())
+                    })
+                })
+            })
+        })
     }
 
     public openSettings(): void {

@@ -29,7 +29,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             <LoadingMoire delay={true} visible={isLoading}/>
             {this.isRenderPage(PageType.UserList) && (<UserListPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.ClinicList) && (<ClinicsPage controller={this.props.controller}/>)}
-            {/*{this.isRenderPage(PageType.Schedule) && (<SchedulePage controller={this.props.controller}/>)}*/}
+            {this.isRenderPage(PageType.Schedule) && (<SchedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Species) && (<SpeciesPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Breeds) && (<BreedsPage controller={this.props.controller}/>)}
         </>)

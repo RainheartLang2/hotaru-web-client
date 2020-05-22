@@ -8,6 +8,9 @@ import ConnectedTextField from "../../../../core/components/conntectedTextField/
 import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ClientInfoForm from "./subcomponents/ClientInfoForm";
 import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/ConnectedCheckbox";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 
 const styles = require("./styles.css");
 
@@ -17,14 +20,14 @@ export default class AppointmentDialog extends React.Component<Properties, State
         super(props)
 
         this.state = {
-            [StateProperty.Mode]: 'none',
-            [StateProperty.HasErrors]: false,
-            [StateProperty.ShowClientInfoForm]: false,
+            mode: 'none',
+            hasErrors: false,
+            showClientInfoForm: false,
         }
     }
 
     private getTitleMessageKey(): string {
-        switch (this.state[StateProperty.Mode]) {
+        switch (this.state.mode) {
             case "create":
                 return "dialog.appointment.create.label"
             case "edit":
@@ -35,10 +38,10 @@ export default class AppointmentDialog extends React.Component<Properties, State
     }
 
     private onSubmitClick(): void {
-        if (this.state[StateProperty.Mode]) {
-            this.props.controller.appointmentActions.submitCreateItem(() => this.props.controller.closeCurrentDialog())
+        if (this.state.mode) {
+            this.props.controller.scheduleActions.submitCreateItem(() => this.props.controller.closeCurrentDialog())
         } else {
-            this.props.controller.appointmentActions.submitEditItem(() => this.props.controller.closeCurrentDialog())
+            this.props.controller.scheduleActions.submitEditItem(() => this.props.controller.closeCurrentDialog())
         }
     }
 
@@ -51,9 +54,9 @@ export default class AppointmentDialog extends React.Component<Properties, State
                 <div className={styles.dialogContent}>
                     <div className={styles.row}>
                         <div className={styles.titleField}>
-                            <ConnectedTextField
+                            <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                 controller={this.props.controller}
-                                fieldPropertyName={AdminStateProperty.EditedAppointmentTitle}
+                                fieldKey={{editedAppointmentTitle: "editedAppointmentTitleField"}}
                             />
                         </div>
                     </div>
@@ -64,9 +67,9 @@ export default class AppointmentDialog extends React.Component<Properties, State
                                 Время приёма:
                             </div>
                             <div className={styles.dateField}>
-                                <ConnectedTextField
+                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
-                                    fieldPropertyName={AdminStateProperty.EditedAppointmentStartTime}
+                                    fieldKey={{editedAppointmentStartTime: "editedAppointmentStartTimeField"}}
                                     type={"time"}
                                 />
                             </div>
@@ -74,38 +77,41 @@ export default class AppointmentDialog extends React.Component<Properties, State
                                 -
                             </div>
                             <div className={styles.dateField}>
-                                <ConnectedTextField
+                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
-                                    fieldPropertyName={AdminStateProperty.EditedAppointmentEndTime}
+                                    fieldKey={{editedAppointmentEndTime: "editedAppointmentEndTimeField"}}
                                     type={"time"}
                                 />
                             </div>
                         </div>
                     </div>
                     <div className={styles.row}>
-                        <ConnectedCheckbox
-                            propertyName={AdminStateProperty.CreateClientInfo}
+                        <ConnectedCheckbox<EmployeeAppState>
+                            propertyName={"createClientInfo"}
                             label={<Message messageKey={"dialog.appointment.checkbox.createClient.label"}/>}
                             controller={this.props.controller}
                         />
                     </div>
-                    {this.state[StateProperty.ShowClientInfoForm]
+                    {this.state.showClientInfoForm
                         && (<ClientInfoForm controller={this.props.controller}/>)}
                 </div>
-                {/*<DialogFooter*/}
-                    {/*controller = {this.props.controller}*/}
-                    {/*submitDisabled={this.state[StateProperty.HasErrors]}*/}
-                    {/*onSubmitClick={() => this.onSubmitClick()}*/}
-                    {/*onCancelClick={() => this.props.controller.closeCurrentDialog()}*/}
-                {/*/>*/}
+                <DialogFooter
+                    controller = {this.props.controller}
+                    submitDisabled={this.state.hasErrors}
+                    onSubmitClick={() => this.onSubmitClick()}
+                    onCancelClick={() => this.props.controller.closeCurrentDialog()}
+                />
             </DialogContent>
         </>)
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(AdminStateProperty.AppointmentDialogMode, this, StateProperty.Mode)
-        this.props.controller.subscribe(AdminStateProperty.CreateClientInfo, this, StateProperty.ShowClientInfoForm)
-        this.props.controller.subscribe(AdminStateProperty.AppointmentFormHasErrors, this, StateProperty.HasErrors)
+        this.props.controller.subscribe(this, {
+                appointmentDialogMode: "mode",
+                createClientInfo: "showClientInfoForm",
+                appointmentFormHasErrors: "hasErrors",
+            }
+        )
     }
 
     componentWillUnmount(): void {
@@ -113,18 +119,12 @@ export default class AppointmentDialog extends React.Component<Properties, State
     }
 }
 
-enum StateProperty {
-    Mode = "mode",
-    HasErrors = "hasErrors",
-    ShowClientInfoForm = "showClientInfoForm"
-}
-
 type Properties = {
-    controller: AdminAppController
+    controller: EmployeeAppController
 }
 
 type State = {
-    [StateProperty.Mode]: ConfigureDialogType,
-    [StateProperty.HasErrors]: boolean,
-    [StateProperty.ShowClientInfoForm]: boolean,
+    mode: ConfigureDialogType,
+    hasErrors: boolean,
+    showClientInfoForm: boolean,
 }

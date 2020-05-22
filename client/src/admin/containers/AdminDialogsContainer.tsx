@@ -1,7 +1,6 @@
 import * as React from "react";
 import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeDialog";
 import {DialogType} from "../state/enum/DialogType";
-import AdminAppController from "../controller/AdminAppController";
 import {AdminStateProperty} from "../state/AdminApplicationState";
 import {Dialog} from "@material-ui/core";
 import ClinicDialog from "../components/dialogs/clinic/ClinicDialog";
@@ -38,8 +37,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
 
                     {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
                         && (<ClinicDialog controller={this.props.controller}/>)}
-                    {/*{(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)*/}
-                        {/*&& (<AppointmentDialog controller={this.controller}/>)}*/}
+                    {(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)
+                        && (<AppointmentDialog controller={this.props.controller}/>)}
                 </Dialog>
             </>
         )
