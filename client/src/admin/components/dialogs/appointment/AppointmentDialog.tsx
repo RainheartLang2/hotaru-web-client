@@ -1,11 +1,8 @@
 import * as React from "react";
-import AdminAppController from "../../../controller/AdminAppController";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
-import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ClientInfoForm from "./subcomponents/ClientInfoForm";
 import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/ConnectedCheckbox";
 import EmployeeAppController from "../../../controller/EmployeeAppController";

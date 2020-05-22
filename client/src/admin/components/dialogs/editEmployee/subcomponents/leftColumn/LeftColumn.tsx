@@ -1,9 +1,6 @@
 import * as React from "react";
-import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
-import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import CredentialsSection from "../credentialsSection/CredentialsSection";
-import AdminAppController from "../../../../../controller/AdminAppController";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
 import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../../../state/EmployeeApplicationStore";

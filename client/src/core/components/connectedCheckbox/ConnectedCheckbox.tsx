@@ -1,6 +1,5 @@
 import {Checkbox, FormControlLabel, FormGroup, InputLabel} from "@material-ui/core";
 import * as React from "react";
-import ApplicationController from "../../mvc/ApplicationController";
 import {ReactNode} from "react";
 import {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";

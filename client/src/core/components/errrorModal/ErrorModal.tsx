@@ -1,7 +1,5 @@
 import * as React from "react";
 import {DialogContent} from "@material-ui/core";
-import ApplicationController from "../../mvc/ApplicationController";
-import {GlobalStateProperty} from "../../mvc/store/ApplicationStore";
 import {Message} from "../Message";
 import Dialog from "@material-ui/core/Dialog";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";

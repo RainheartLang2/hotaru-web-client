@@ -1,10 +1,7 @@
 import * as React from "react";
 import {Tab, Tabs} from "@material-ui/core";
-import AdminAppController from "../../../controller/AdminAppController";
 import {DictionaryMenuItemType} from "../../../state/enum/DictionaryMenuItemType";
 import {Message} from "../../../../core/components/Message";
-import {NavigationMenuItemType} from "../../../state/enum/NavigationMenuItemType";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 
 export default class DictionariesNavigationMenu extends React.Component<Properties, State> {

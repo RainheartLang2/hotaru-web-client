@@ -1,7 +1,6 @@
 import * as React from "react";
 import EditEmployeeDialog from "../components/dialogs/editEmployee/EditEmployeeDialog";
 import {DialogType} from "../state/enum/DialogType";
-import {AdminStateProperty} from "../state/AdminApplicationState";
 import {Dialog} from "@material-ui/core";
 import ClinicDialog from "../components/dialogs/clinic/ClinicDialog";
 import AppointmentDialog from "../components/dialogs/appointment/AppointmentDialog";
@@ -23,7 +22,7 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
     }
 
     render() {
-        const dialogType = this.state[AdminStateProperty.DialogType]
+        const dialogType = this.state.dialogType
         return (
             <>
                 <Dialog open={dialogType != DialogType.None}

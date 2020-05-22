@@ -13,10 +13,7 @@ import {
     WeekView
 } from "@devexpress/dx-react-scheduler-material-ui";
 import {AppointmentModel, ChangeSet, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
-import AdminAppController from "../../../controller/AdminAppController";
 import AppointmentMockForm from "./subcomponents/mockForm/AppointmentMockForm";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
-import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {Employee} from "../../../../common/beans/Employee";
 import {NameUtils} from "../../../../core/utils/NameUtils";
 import LocaleHolder from "../../../../core/utils/LocaleHolder";

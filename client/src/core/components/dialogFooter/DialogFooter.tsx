@@ -1,10 +1,6 @@
 import * as React from "react";
 import {Message} from "../Message";
-import ApplicationController from "../../mvc/ApplicationController";
-import CustomButton from "../customButton/CustomButton";
-import EmployeeAppController from "../../../admin/controller/EmployeeAppController";
-import {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
-import TypedApplicationStore from "../../mvc/store/TypedApplicationStore";
+import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
 import TypedCustomButton from "../customButton/TypedCustomButton";
 import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
 

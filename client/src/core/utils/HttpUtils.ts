@@ -1,7 +1,6 @@
 import {RemoteMethod} from "../http/RemoteMethod";
 import HttpTransportError from "../errors/HttpTransportError";
 import BusinessLogicError from "../errors/BusinessLogicError";
-import ApplicationControllerHolder from "./ApplicationControllerHolder";
 import TypedApplicationControllerHolder from "./TypedApplicationControllerHolder";
 
 const SERVER_APP_USER_ZONE_URL = "http://localhost:8080/web/user/req"
@@ -82,7 +81,7 @@ function handleError(e: any, setError: (errorType: string) => void): void {
         setError(e.message)
         return
     }
-    const controller = ApplicationControllerHolder.instance.controller
+    const controller = TypedApplicationControllerHolder.instance.controller
     let errorMessageKey = "error.message.unknown"
     if (e instanceof HttpTransportError) {
         if (e.code == 401) {

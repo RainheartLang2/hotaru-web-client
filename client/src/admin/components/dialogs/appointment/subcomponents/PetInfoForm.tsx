@@ -1,5 +1,4 @@
 import * as React from "react";
-import {AdminStateProperty} from "../../../../state/AdminApplicationState";
 import Species from "../../../../../common/beans/Species";
 import {Message} from "../../../../../core/components/Message";
 import Breed from "../../../../../common/beans/Breed";
@@ -27,8 +26,8 @@ export default class PetInfoForm extends React.Component<Properties> {
                 <div className={styles.petSpeciesSelect}>
                     <TypedConnectedSelect<Species, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        mapProperty={AdminStateProperty.EditedClientPetSpecies}
-                        selectedItemProperty={AdminStateProperty.EditedClientSelectedSpecies}
+                        mapProperty={"editedClientPetSpecies"}
+                        selectedItemProperty={"editedClientSelectedSpecies"}
                         itemToString={species => species.name ? species.name : ""}
                         getKey={species => species && species.id ? species.id : 0}
                     />
@@ -36,8 +35,8 @@ export default class PetInfoForm extends React.Component<Properties> {
                 <div className={styles.petBreedSelect}>
                     <TypedConnectedSelect<Breed, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        mapProperty={AdminStateProperty.EditedClientPetBreeds}
-                        selectedItemProperty={AdminStateProperty.EditedClientSelectedBreed}
+                        mapProperty={"editedClientPetBreeds"}
+                        selectedItemProperty={"editedClientSelectedBreed"}
                         itemToString={breed => breed.name ? breed.name : ""}
                         getKey={breed => breed && breed.id ? breed.id : 0}
                     />

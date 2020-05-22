@@ -4,11 +4,8 @@ import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {TableBodyCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../../core/components";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
 import {Clinic} from "../../../../common/beans/Clinic";
-import AdminAppController from "../../../controller/AdminAppController";
-import {AdminStateProperty} from "../../../state/AdminApplicationState";
 import ActivityCell from "../../../../core/components/activityCell/ActivityCell";
 import {Link} from "@material-ui/core";
-import ClinicActions from "../../../controller/actions/ClinicActions";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 import TypedClinicActions from "../../../controller/actions/TypedClinicActions";
 

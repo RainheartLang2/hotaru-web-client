@@ -1,7 +1,5 @@
 import * as React from "react";
-import AdminAppController from "../../controller/AdminAppController";
 import {SecondLevelNavigationMenuType} from "../../state/enum/SecondLevelNavigationMenuType";
-import {AdminStateProperty} from "../../state/AdminApplicationState";
 import DictionariesNavigationMenu from "./dictionaries/DictionariesNavigationMenu";
 import EmployeeAppController from "../../controller/EmployeeAppController";
 

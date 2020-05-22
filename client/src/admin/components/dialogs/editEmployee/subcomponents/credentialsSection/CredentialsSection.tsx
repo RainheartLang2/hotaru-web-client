@@ -1,7 +1,4 @@
 import * as React from "react";
-import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
-import AdminAppController from "../../../../../controller/AdminAppController";
-import {AdminStateProperty} from "../../../../../state/AdminApplicationState";
 import {Message} from "../../../../../../core/components/Message";
 import {ButtonComponent} from "../../../../../../core/components";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";

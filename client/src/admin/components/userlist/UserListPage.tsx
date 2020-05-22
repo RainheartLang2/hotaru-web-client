@@ -1,7 +1,6 @@
 import * as React from "react";
 import {TableBodyCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../core/components";
 import {Employee} from "../../../common/beans/Employee";
-import AdminAppController from "../../controller/AdminAppController";
 import PageHeader from "../../../common/components/pageHeader/PageHeader";
 import {Link} from "@material-ui/core";
 import {Message} from "../../../core/components/Message";
@@ -96,7 +95,7 @@ export default class UserListPage extends React.Component<Properties, State> {
     }
 
     componentWillUnmount(): void {
-        AdminAppController.instance.unsubscribe(this)
+        this.props.controller.unsubscribe(this)
     }
 }
 

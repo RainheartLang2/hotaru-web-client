@@ -1,9 +1,7 @@
 import * as React from "react";
-import AdminAppController from "../../controller/AdminAppController";
 import {PageType} from "../../state/enum/PageType";
 import UserListPage from "../userlist/UserListPage";
 import ClinicsPage from "./clinics/ClinicsPage";
-import {AdminStateProperty} from "../../state/AdminApplicationState";
 import LoadingMoire from "../../../core/components/loadingMoire/LoadingMoire";
 import SchedulePage from "./schedule/SchedulePage";
 import SpeciesPage from "./species/SpeciesPage";

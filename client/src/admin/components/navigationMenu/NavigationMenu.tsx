@@ -1,8 +1,6 @@
 import {MenuItem, Tab, Tabs} from "@material-ui/core";
 import * as React from "react";
 import {NavigationMenuItemType} from "../../state/enum/NavigationMenuItemType";
-import AdminAppController from "../../controller/AdminAppController";
-import {AdminStateProperty} from "../../state/AdminApplicationState";
 import {Message} from "../../../core/components/Message";
 import Menu from "@material-ui/core/Menu";
 import EmployeeAppController from "../../controller/EmployeeAppController";
