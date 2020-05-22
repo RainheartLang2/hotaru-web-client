@@ -7,8 +7,8 @@ import EmployeeApplicationStore, {
     EmployeeAppSelectors,
     EmployeeAppState
 } from "../../../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
-import TypedConnectedSelect from "../../../../../../core/components/ConnectedSelect/TypedConnectedSelect";
+import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
+import ConnectedSelect from "../../../../../../core/components/ConnectedSelect/ConnectedSelect";
 
 export default class RightColumn extends React.Component<Properties> {
     render() {
@@ -30,7 +30,7 @@ export default class RightColumn extends React.Component<Properties> {
                 }
                 <div className={styles.row}>
                     <div className={styles.selector}>
-                        <TypedConnectedSelect<Clinic, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                        <ConnectedSelect<Clinic, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                             controller={this.props.controller}
                             label={<Message messageKey={"dialog.employee.field.clinic"}/>}
                             mapProperty={"clinicListByIdWithMock"}
@@ -41,21 +41,21 @@ export default class RightColumn extends React.Component<Properties> {
                     </div>
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeePhone: "editedEmployeePhoneField"}}
                         label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeMail: "editedEmployeeMailField"}}
                         label={(<Message messageKey="dialog.employee.field.email.label"/>)}
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeAddress: "editedEmployeeAddressField"}}
                         label={(<Message messageKey="dialog.employee.field.address.label"/>)}

@@ -6,9 +6,9 @@ import EmployeeApplicationStore, {
     EmployeeAppSelectors,
     EmployeeAppState
 } from "../../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeAppController from "../../../../controller/EmployeeAppController";
-import TypedConnectedSelect from "../../../../../core/components/ConnectedSelect/TypedConnectedSelect";
+import ConnectedSelect from "../../../../../core/components/ConnectedSelect/ConnectedSelect";
 
 const styles = require("../styles.css");
 
@@ -17,14 +17,14 @@ export default class PetInfoForm extends React.Component<Properties> {
         return (<>
             <div className={styles.row}>
                 <div className={styles.petNameField}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         label={<Message messageKey={"dialog.appointment.field.petName.label"}/>}
                         fieldKey={{editedClientPetName: "editedClientPetNameField"}}
                     />
                 </div>
                 <div className={styles.petSpeciesSelect}>
-                    <TypedConnectedSelect<Species, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedSelect<Species, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         mapProperty={"editedClientPetSpecies"}
                         selectedItemProperty={"editedClientSelectedSpecies"}
@@ -33,7 +33,7 @@ export default class PetInfoForm extends React.Component<Properties> {
                     />
                 </div>
                 <div className={styles.petBreedSelect}>
-                    <TypedConnectedSelect<Breed, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedSelect<Breed, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         mapProperty={"editedClientPetBreeds"}
                         selectedItemProperty={"editedClientSelectedBreed"}

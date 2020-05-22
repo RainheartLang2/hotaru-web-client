@@ -1,7 +1,7 @@
 import {RemoteMethod} from "../http/RemoteMethod";
 import HttpTransportError from "../errors/HttpTransportError";
 import BusinessLogicError from "../errors/BusinessLogicError";
-import TypedApplicationControllerHolder from "./TypedApplicationControllerHolder";
+import ApplicationControllerHolder from "./ApplicationControllerHolder";
 
 const SERVER_APP_USER_ZONE_URL = "http://localhost:8080/web/user/req"
 const SERVER_APP_PRELOGIN_ZONE_URL = "http://localhost:8080/web/login/req"
@@ -59,7 +59,7 @@ function fetchServerRpc(url: string,
                         errorProperty: string = "",
                         ): void {
     let setError = (value: string) => {}
-    const controller = TypedApplicationControllerHolder.instance.controller
+    const controller = ApplicationControllerHolder.instance.controller
     setError = errorProperty
             ? (value: string) => {controller.setError(value)}
             : (value: string) => {}
@@ -81,7 +81,7 @@ function handleError(e: any, setError: (errorType: string) => void): void {
         setError(e.message)
         return
     }
-    const controller = TypedApplicationControllerHolder.instance.controller
+    const controller = ApplicationControllerHolder.instance.controller
     let errorMessageKey = "error.message.unknown"
     if (e instanceof HttpTransportError) {
         if (e.code == 401) {

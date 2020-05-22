@@ -7,7 +7,7 @@ import {Message} from "../../../core/components/Message";
 import CustomTableCell from "../../../core/components/tableCell/CustomTableCell";
 import ActivityCell from "../../../core/components/activityCell/ActivityCell";
 import EmployeeAppController from "../../controller/EmployeeAppController";
-import TypedEmployeeActions from "../../controller/actions/TypedEmployeeActions";
+import EmployeeActions from "../../controller/actions/EmployeeActions";
 
 var styles = require("./styles.css");
 
@@ -20,7 +20,7 @@ export default class UserListPage extends React.Component<Properties, State> {
         }
     }
 
-    private getActions(): TypedEmployeeActions {
+    private getActions(): EmployeeActions {
         return this.props.controller.employeeActions
     }
 

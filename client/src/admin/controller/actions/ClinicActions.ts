@@ -5,7 +5,7 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {DialogType} from "../../state/enum/DialogType";
 
-export default class TypedClinicActions {
+export default class ClinicActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {

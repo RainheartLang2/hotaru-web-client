@@ -1,17 +1,17 @@
-import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
 import {Field} from "../../../core/mvc/store/Field";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import Species from "../../../common/beans/Species";
-import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
+import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
-export default class TypedSpeciesNode {
-    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
+export default class SpeciesNode {
+    private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
+    constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 

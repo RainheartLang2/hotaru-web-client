@@ -10,7 +10,7 @@ import ActionSeparator from "../../../../common/components/actionSeparator/Actio
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 
 var styles = require("./styles.css")
 
@@ -73,7 +73,7 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                             root: styles.additionalRow
                         }}>
                             <CustomTableCell style={styles.nameCell}>
-                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     size={"small"}
                                     fieldKey={{addedSpeciesName: "addedSpeciesNameField"}}

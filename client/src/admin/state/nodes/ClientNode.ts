@@ -1,15 +1,14 @@
-import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
-import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
-import {PetSelectors, PetState} from "./TypedPetNode";
+import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {Client} from "../../../common/beans/Client";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
-export default class TypedClientNode {
-    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
+export default class ClientNode {
+    private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
+    constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 

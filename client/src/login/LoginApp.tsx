@@ -7,7 +7,7 @@ import {ApplicationType} from "../core/enum/ApplicationType";
 import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import LoginApplicationController from "./controller/LoginApplicationController";
-import TypedApplicationControllerHolder from "../core/utils/TypedApplicationControllerHolder";
+import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 
 export default class LoginApp extends React.Component<Properties, State> {
 
@@ -22,7 +22,7 @@ export default class LoginApp extends React.Component<Properties, State> {
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = LoginApplicationController.instance
-        TypedApplicationControllerHolder.initialize(this.controller)
+        ApplicationControllerHolder.initialize(this.controller)
     }
 
     render() {

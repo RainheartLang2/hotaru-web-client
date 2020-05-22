@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Message} from "../../../../../../core/components/Message";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
-import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {
     EmployeeAppSelectors,
     EmployeeAppState
@@ -13,7 +13,7 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
     render() {
         return (<>
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicName: "editedClinicNameField"}}
                     label={(<Message messageKey={"page.clinics.name.title"}/>)}
@@ -23,7 +23,7 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicSiteUrl: "editedClinicSiteUrlField"}}
                     label={(<Message messageKey={"dialog.clinic.siteUrl.label"}/>)}
@@ -33,7 +33,7 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicCity: "editedClinicCityField"}}
                     label={(<Message messageKey={"dialog.clinic.city.label"}/>)}
@@ -43,7 +43,7 @@ export default class ClinicLeftColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicAddress: "editedClinicAddressField"}}
                     label={(<Message messageKey={"dialog.clinic.address.label"}/>)}

@@ -2,13 +2,13 @@ import * as React from "react";
 import {ButtonComponent} from "../../components";
 import {CircularProgress, PropTypes} from "@material-ui/core";
 import {MouseEventHandler} from "react";
-import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
-import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
+import ApplicationController from "../../mvc/controllers/ApplicationController";
 import {CommonUtils} from "../../utils/CommonUtils";
 
 var styles = require("./styles.css");
 
-export default class TypedCustomButton<GlobalState extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<GlobalState, DerivationType>>
+export default class CustomButton<GlobalState extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<GlobalState, DerivationType>>
     extends React.Component<Properties<GlobalState, DerivationType, StoreType>, State> {
 
     constructor(props: Properties<GlobalState, DerivationType, StoreType>) {
@@ -60,8 +60,8 @@ export default class TypedCustomButton<GlobalState extends DefaultStateType, Der
     }
 }
 
-type Properties<GlobalState extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<GlobalState, DerivationType>> = {
-    controller: TypedApplicationController<GlobalState, DerivationType, StoreType>
+type Properties<GlobalState extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<GlobalState, DerivationType>> = {
+    controller: ApplicationController<GlobalState, DerivationType, StoreType>
     color?: PropTypes.Color
     disabled?: boolean
     onClick?: MouseEventHandler

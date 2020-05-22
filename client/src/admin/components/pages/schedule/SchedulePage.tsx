@@ -20,9 +20,9 @@ import LocaleHolder from "../../../../core/utils/LocaleHolder";
 import {LocaleUtils} from "../../../../core/enum/LocaleType";
 import MessageResource from "../../../../core/message/MessageResource";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
-import TypedConnectedSelect from "../../../../core/components/ConnectedSelect/TypedConnectedSelect";
+import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 
 var styles = require("./styles.css")
 
@@ -47,7 +47,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
                 hasButton={false}
             />
             <div className={styles.medicSelect}>
-                <TypedConnectedSelect<Employee, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedSelect<Employee, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     variant={"outlined"}
                     mapProperty={"medicsListById"}

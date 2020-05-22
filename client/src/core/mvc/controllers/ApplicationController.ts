@@ -1,9 +1,9 @@
-import TypedApplicationStore, {DefaultStateType, PropertyAliasInfo} from "../store/TypedApplicationStore";
+import ApplicationStore, {DefaultStateType, PropertyAliasInfo} from "../store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
 
-export default abstract class TypedApplicationController<StateType extends DefaultStateType = any,
+export default abstract class ApplicationController<StateType extends DefaultStateType = any,
                                                 SelectorsType = any,
-                                                StoreType extends TypedApplicationStore<StateType, SelectorsType> = any> {
+                                                StoreType extends ApplicationStore<StateType, SelectorsType> = any> {
 
     protected store: StoreType
     private onErrorEvent: Function = () => {}

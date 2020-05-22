@@ -3,13 +3,13 @@ import {TextField} from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import {Field} from "../../mvc/store/Field";
 import MaskTransformer from "../../utils/MaskTransformer";
-import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
-import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
+import ApplicationController from "../../mvc/controllers/ApplicationController";
+import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
 
-export default class TypedConnectedTextField<StateType extends DefaultStateType,
+export default class ConnectedTextField<StateType extends DefaultStateType,
                                             SelectorsType,
-                                            StoreType extends TypedApplicationStore<StateType, SelectorsType>>
+                                            StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<StateType, SelectorsType, StoreType>, State> {
 
     private maskTransformer: MaskTransformer = new MaskTransformer("")
@@ -121,8 +121,8 @@ type FieldCorrelationRecord<StateType, SelectorsType> = {
 
 export type FieldInfo<StateType, SelectorsType> = Partial<FieldCorrelationRecord<StateType, SelectorsType>>
 
-type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends TypedApplicationStore<StateType, DerivationType>> = {
-    controller: TypedApplicationController<StateType, DerivationType, StoreType>,
+type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<StateType, DerivationType>> = {
+    controller: ApplicationController<StateType, DerivationType, StoreType>,
     fieldKey: FieldInfo<StateType, DerivationType>,
     label?: React.ReactNode,
     disabled?: boolean,

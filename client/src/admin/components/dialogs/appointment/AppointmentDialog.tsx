@@ -6,7 +6,7 @@ import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter"
 import ClientInfoForm from "./subcomponents/ClientInfoForm";
 import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/ConnectedCheckbox";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 
 const styles = require("./styles.css");
@@ -51,7 +51,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
                 <div className={styles.dialogContent}>
                     <div className={styles.row}>
                         <div className={styles.titleField}>
-                            <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                            <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                 controller={this.props.controller}
                                 fieldKey={{editedAppointmentTitle: "editedAppointmentTitleField"}}
                             />
@@ -64,7 +64,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
                                 Время приёма:
                             </div>
                             <div className={styles.dateField}>
-                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     fieldKey={{editedAppointmentStartTime: "editedAppointmentStartTimeField"}}
                                     type={"time"}
@@ -74,7 +74,7 @@ export default class AppointmentDialog extends React.Component<Properties, State
                                 -
                             </div>
                             <div className={styles.dateField}>
-                                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     fieldKey={{editedAppointmentEndTime: "editedAppointmentEndTimeField"}}
                                     type={"time"}

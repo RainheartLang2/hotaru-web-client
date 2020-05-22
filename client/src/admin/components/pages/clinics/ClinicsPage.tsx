@@ -7,13 +7,13 @@ import {Clinic} from "../../../../common/beans/Clinic";
 import ActivityCell from "../../../../core/components/activityCell/ActivityCell";
 import {Link} from "@material-ui/core";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import TypedClinicActions from "../../../controller/actions/TypedClinicActions";
+import ClinicActions from "../../../controller/actions/ClinicActions";
 
 var styles = require("./styles.css")
 
 export default class ClinicsPage extends React.Component<Properties, State> {
 
-    private actions: TypedClinicActions
+    private actions: ClinicActions
     constructor(props: Properties) {
         super(props)
         this.state = {

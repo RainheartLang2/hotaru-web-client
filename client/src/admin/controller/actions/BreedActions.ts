@@ -5,7 +5,7 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import Breed from "../../../common/beans/Breed";
 
-export default class TypedBreedActions {
+export default class BreedActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {

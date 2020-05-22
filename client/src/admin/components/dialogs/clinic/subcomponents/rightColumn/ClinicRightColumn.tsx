@@ -7,7 +7,7 @@ import EmployeeApplicationStore, {
     EmployeeAppSelectors,
     EmployeeAppState
 } from "../../../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 
 var styles = require("../../styles.css")
 
@@ -31,7 +31,7 @@ export default class ClinicRightColumn extends React.Component<Properties> {
                 ? this.getActiveSwitch()
                 : ""}
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicPhone:"editedClinicPhoneField"}}
                     label={(<Message messageKey={"dialog.clinic.phone.label"}/>)}
@@ -41,7 +41,7 @@ export default class ClinicRightColumn extends React.Component<Properties> {
                 />
             </div>
             <div className={styles.row}>
-                <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{editedClinicEmail: "editedClinicEmailField"}}
                     label={(<Message messageKey={"dialog.clinic.email.label"}/>)}

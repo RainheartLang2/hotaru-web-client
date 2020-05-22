@@ -1,21 +1,21 @@
 import {Employee} from "../../../common/beans/Employee";
 import {Clinic} from "../../../common/beans/Clinic";
 import {Field} from "../../../core/mvc/store/Field";
-import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
+import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
 import {DialogType} from "../enum/DialogType";
-import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 
-export default class TypedEmployeeNode {
-    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
+export default class EmployeeNode {
+    private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
+    constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 

@@ -1,9 +1,9 @@
 import * as React from "react";
 import {Message} from "../../../core/components/Message";
 import LoginApplicationController from "../../controller/LoginApplicationController";
-import TypedConnectedTextField from "../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../core/components/conntectedTextField/ConnectedTextField";
 import LoginApplicationStore, {LoginDerivationState, LoginState} from "../../state/LoginApplicationStore";
-import TypedCustomButton from "../../../core/components/customButton/TypedCustomButton";
+import CustomButton from "../../../core/components/customButton/CustomButton";
 
 var styles = require("./styles.css");
 
@@ -21,7 +21,7 @@ export default class LoginForm extends React.Component<Properties, State> {
         const loginFormError = this.state.hasError
         return (<div className={styles.loginForm}>
             <div className={styles.loginField}>
-                <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
+                <ConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{login: "loginField"}}
                     variant="outlined"
@@ -31,7 +31,7 @@ export default class LoginForm extends React.Component<Properties, State> {
             </div>
 
             <div className={styles.passwordField}>
-                <TypedConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
+                <ConnectedTextField<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
                     fieldKey={{password: "passwordField"}}
                     variant="outlined"
@@ -45,7 +45,7 @@ export default class LoginForm extends React.Component<Properties, State> {
                 {loginFormError && (<Message messageKey={"error.message." + loginFormError}/>)}
             </div>
             <div className={styles.buttonsArea}>
-                <TypedCustomButton<LoginState, LoginDerivationState, LoginApplicationStore>
+                <CustomButton<LoginState, LoginDerivationState, LoginApplicationStore>
                     controller={this.props.controller}
                     variant="contained"
                     color="primary"
@@ -54,7 +54,7 @@ export default class LoginForm extends React.Component<Properties, State> {
                     loadingProperty={"isLoginButtonLoading"}
                 >
                     <Message messageKey="login.title"/>
-                </TypedCustomButton>
+                </CustomButton>
             </div>
         </div>)
     }

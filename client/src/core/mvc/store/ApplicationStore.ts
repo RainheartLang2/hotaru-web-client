@@ -1,9 +1,9 @@
 import {CommonUtils} from "../../utils/CommonUtils";
 import FieldValidator from "../validators/FieldValidator";
 import {Field} from "./Field";
-import TypedApplicationStoreFriend from "./TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "./ApplicationStoreFriend";
 
-export default abstract class TypedApplicationStore<StateType extends DefaultStateType, SelectorsType> {
+export default abstract class ApplicationStore<StateType extends DefaultStateType, SelectorsType> {
     private originalState!: StateType
     private selectors!: SelectorsInfo<StateType, SelectorsType>
     private readableState!: StateType & SelectorsType
@@ -246,9 +246,9 @@ export default abstract class TypedApplicationStore<StateType extends DefaultSta
         executableBody()
     }
 
-    protected createFriend(): TypedApplicationStoreFriend<StateType, SelectorsType> {
+    protected createFriend(): ApplicationStoreFriend<StateType, SelectorsType> {
         const store = this
-        return new class implements TypedApplicationStoreFriend<StateType, SelectorsType> {
+        return new class implements ApplicationStoreFriend<StateType, SelectorsType> {
             public createField(originalProperty: keyof(StateType & SelectorsType),
                                         defaultValue: string = "",
                                         validators: FieldValidator[] = [],

@@ -2,7 +2,7 @@ import * as React from "react";
 import {Message} from "../../../../../../core/components/Message";
 import CredentialsSection from "../credentialsSection/CredentialsSection";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
-import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../../../state/EmployeeApplicationStore";
 
 export default class LeftColumn extends React.Component<Properties> {
@@ -10,7 +10,7 @@ export default class LeftColumn extends React.Component<Properties> {
         return (
             <>
                 <div className={this.props.rowStyle}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeLastName: "editedEmployeeLastNameField"}}
                         label={(<Message messageKey={"dialog.employee.field.lastName.label"}/>)}
@@ -20,7 +20,7 @@ export default class LeftColumn extends React.Component<Properties> {
                     />
                 </div>
                 <div className={this.props.rowStyle}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeFirstName: "editedEmployeeFirstNameField"}}
                         label={(<Message messageKey={"dialog.employee.field.firstName.label"}/>)}
@@ -30,7 +30,7 @@ export default class LeftColumn extends React.Component<Properties> {
                     />
                 </div>
                 <div className={this.props.rowStyle}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeMiddleName: "editedEmployeeMiddleNameField"}}
                         label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}

@@ -1,42 +1,42 @@
-import TypedApplicationStore, {DefaultStateType, SelectorsInfo} from "../../core/mvc/store/TypedApplicationStore";
+import ApplicationStore, {DefaultStateType, SelectorsInfo} from "../../core/mvc/store/ApplicationStore";
 import {Employee} from "../../common/beans/Employee";
 import {NavigationMenuItemType} from "./enum/NavigationMenuItemType";
 import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuType";
 import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import {PageType} from "./enum/PageType";
 import {DialogType} from "./enum/DialogType";
-import TypedEmployeeNode, {UserSelectors, UserPageEmployeeState} from "./nodes/TypedEmployeeNode";
+import EmployeeNode, {UserSelectors, UserPageEmployeeState} from "./nodes/EmployeeNode";
 import {CommonUtils} from "../../core/utils/CommonUtils";
 import mergeTypes = CommonUtils.mergeTypes;
-import TypedClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/TypedClinicNode";
-import TypedSpeciesNode, {SpeciesPageSelector, SpeciesPageState} from "./nodes/TypedSpeciesNode";
-import TypedBreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/TypedBreedNode";
-import TypedScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/TypedScheduleNode";
-import TypedPetNode, {PetSelectors, PetState} from "./nodes/TypedPetNode";
-import TypedClientNode, {ClientSelectors, ClientState} from "./nodes/TypedClientNode";
+import ClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/ClinicNode";
+import SpeciesNode, {SpeciesPageSelector, SpeciesPageState} from "./nodes/SpeciesNode";
+import BreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/BreedNode";
+import ScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/ScheduleNode";
+import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
+import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
 
-export default class EmployeeApplicationStore extends TypedApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
+export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
     private static _instance: EmployeeApplicationStore
 
-    private employeeNode!: TypedEmployeeNode
-    private clinicNode!: TypedClinicNode
-    private speciesNode!: TypedSpeciesNode
-    private breedNode!: TypedBreedNode
-    private scheduleNode!: TypedScheduleNode
-    private petNode!: TypedPetNode
-    private clientNode!: TypedClientNode
+    private employeeNode!: EmployeeNode
+    private clinicNode!: ClinicNode
+    private speciesNode!: SpeciesNode
+    private breedNode!: BreedNode
+    private scheduleNode!: ScheduleNode
+    private petNode!: PetNode
+    private clientNode!: ClientNode
 
     constructor() {
         super()
         const friend = this.createFriend()
-        this.employeeNode = new TypedEmployeeNode(friend)
-        this.clinicNode = new TypedClinicNode(friend)
-        this.speciesNode = new TypedSpeciesNode(friend)
-        this.breedNode = new TypedBreedNode(friend)
-        this.scheduleNode = new TypedScheduleNode(friend)
-        this.petNode = new TypedPetNode(friend)
-        this.clientNode = new TypedClientNode(friend)
+        this.employeeNode = new EmployeeNode(friend)
+        this.clinicNode = new ClinicNode(friend)
+        this.speciesNode = new SpeciesNode(friend)
+        this.breedNode = new BreedNode(friend)
+        this.scheduleNode = new ScheduleNode(friend)
+        this.petNode = new PetNode(friend)
+        this.clientNode = new ClientNode(friend)
         this.initialize()
     }
 

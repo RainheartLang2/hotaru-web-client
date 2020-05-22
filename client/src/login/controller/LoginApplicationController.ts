@@ -1,9 +1,9 @@
 import LoginApplicationStore, {LoginDerivationState, LoginState} from "../state/LoginApplicationStore";
 import {fetchPreloginRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
-import TypedApplicationController from "../../core/mvc/controllers/TypedApplicationController";
+import ApplicationController from "../../core/mvc/controllers/ApplicationController";
 
-export default class LoginApplicationController extends TypedApplicationController<LoginState, LoginDerivationState, LoginApplicationStore> {
+export default class LoginApplicationController extends ApplicationController<LoginState, LoginDerivationState, LoginApplicationStore> {
     private static _instance: LoginApplicationController
 
     private constructor() {

@@ -1,8 +1,8 @@
 import {Checkbox, FormControlLabel, FormGroup, InputLabel} from "@material-ui/core";
 import * as React from "react";
 import {ReactNode} from "react";
-import {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
-import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import {DefaultStateType} from "../../mvc/store/ApplicationStore";
+import ApplicationController from "../../mvc/controllers/ApplicationController";
 import {CommonUtils} from "../../utils/CommonUtils";
 
 export default class ConnectedCheckbox<ApplicationState extends DefaultStateType>
@@ -51,7 +51,7 @@ export default class ConnectedCheckbox<ApplicationState extends DefaultStateType
 }
 
 type Properties<ApplicationState> = {
-    controller: TypedApplicationController,
+    controller: ApplicationController,
     propertyName: keyof ApplicationState,
     label: ReactNode,
 }

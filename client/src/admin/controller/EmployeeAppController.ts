@@ -1,38 +1,38 @@
-import TypedApplicationController from "../../core/mvc/controllers/TypedApplicationController";
+import ApplicationController from "../../core/mvc/controllers/ApplicationController";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../state/EmployeeApplicationStore";
 import {PageType} from "../state/enum/PageType";
 import {DialogType} from "../state/enum/DialogType";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import {Employee} from "../../common/beans/Employee";
-import TypedEmployeeActions from "./actions/TypedEmployeeActions";
+import EmployeeActions from "./actions/EmployeeActions";
 import AdminApplicationCacheManager from "./AdminApplicationCacheManager";
 import CacheManager from "./AdminApplicationCacheManager";
-import TypedClinicActions from "./actions/TypedClinicActions";
-import TypedSpeciesActions from "./actions/TypedSpeciesActions";
-import TypedBreedActions from "./actions/TypedBreedActions";
-import TypedScheduleActions from "./actions/TypedScheduleActions";
-import TypedClientActions from "./actions/TypedClientActions";
+import ClinicActions from "./actions/ClinicActions";
+import SpeciesActions from "./actions/SpeciesActions";
+import BreedActions from "./actions/BreedActions";
+import ScheduleActions from "./actions/ScheduleActions";
+import ClientActions from "./actions/ClientActions";
 
-export default class EmployeeAppController extends TypedApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
+export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
-    private _employeeActions: TypedEmployeeActions
-    private _clinicActions: TypedClinicActions
-    private _speciesActions: TypedSpeciesActions
-    private _breedActions: TypedBreedActions
-    private _scheduleActions: TypedScheduleActions
-    private _clientActions: TypedClientActions
+    private _employeeActions: EmployeeActions
+    private _clinicActions: ClinicActions
+    private _speciesActions: SpeciesActions
+    private _breedActions: BreedActions
+    private _scheduleActions: ScheduleActions
+    private _clientActions: ClientActions
 
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
         super(EmployeeApplicationStore.instance)
-        this._employeeActions = new TypedEmployeeActions(this)
-        this._clinicActions = new TypedClinicActions(this)
-        this._speciesActions = new TypedSpeciesActions(this)
-        this._breedActions = new TypedBreedActions(this)
-        this._scheduleActions = new TypedScheduleActions(this)
-        this._clientActions = new TypedClientActions(this)
+        this._employeeActions = new EmployeeActions(this)
+        this._clinicActions = new ClinicActions(this)
+        this._speciesActions = new SpeciesActions(this)
+        this._breedActions = new BreedActions(this)
+        this._scheduleActions = new ScheduleActions(this)
+        this._clientActions = new ClientActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -44,27 +44,27 @@ export default class EmployeeAppController extends TypedApplicationController<Em
         return EmployeeAppController._instance
     }
 
-    public get employeeActions(): TypedEmployeeActions {
+    public get employeeActions(): EmployeeActions {
         return this._employeeActions
     }
 
-    public get clinicActions(): TypedClinicActions {
+    public get clinicActions(): ClinicActions {
         return this._clinicActions
     }
 
-    public get speciesActions(): TypedSpeciesActions {
+    public get speciesActions(): SpeciesActions {
         return this._speciesActions
     }
 
-    public get breedActions(): TypedBreedActions {
+    public get breedActions(): BreedActions {
         return this._breedActions
     }
 
-    public get scheduleActions(): TypedScheduleActions {
+    public get scheduleActions(): ScheduleActions {
         return this._scheduleActions
     }
 
-    public get clientActions(): TypedClientActions {
+    public get clientActions(): ClientActions {
         return this._clientActions
     }
 

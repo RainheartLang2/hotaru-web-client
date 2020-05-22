@@ -1,21 +1,21 @@
 import * as React from "react";
 import {Message} from "../Message";
-import TypedApplicationStore, {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
-import TypedCustomButton from "../customButton/TypedCustomButton";
-import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
+import CustomButton from "../customButton/CustomButton";
+import ApplicationController from "../../mvc/controllers/ApplicationController";
 
 var styles = require("./styles.css");
 
 export default class DialogFooter<StateType extends DefaultStateType,
                                   SelectorsType,
-                                  StoreType extends TypedApplicationStore<StateType, SelectorsType>>
+                                  StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<StateType, SelectorsType, StoreType>> {
     render() {
         return (
             <>
                 <div className={styles.footer}>
                     <div className={styles.footerButton}>
-                        <TypedCustomButton<StateType, SelectorsType, StoreType>
+                        <CustomButton<StateType, SelectorsType, StoreType>
                             controller={this.props.controller}
                             variant="contained"
                             color="primary"
@@ -25,10 +25,10 @@ export default class DialogFooter<StateType extends DefaultStateType,
                             loadingProperty={"isDialogSubmitButtonLoading"}
                         >
                             <Message messageKey={"common.button.save"}/>
-                        </TypedCustomButton>
+                        </CustomButton>
                     </div>
                     <div className={styles.footerButton}>
-                        <TypedCustomButton<StateType, SelectorsType, StoreType>
+                        <CustomButton<StateType, SelectorsType, StoreType>
                             controller={this.props.controller}
                             variant="contained"
                             color="secondary"
@@ -36,7 +36,7 @@ export default class DialogFooter<StateType extends DefaultStateType,
                             onClick={() => this.props.onCancelClick()}
                         >
                             <Message messageKey={"common.button.back"}/>
-                        </TypedCustomButton>
+                        </CustomButton>
                     </div>
                 </div>
             </>
@@ -44,8 +44,8 @@ export default class DialogFooter<StateType extends DefaultStateType,
     }
 }
 
-type Properties<StateType extends DefaultStateType, SelectorsType, StoreType extends TypedApplicationStore<StateType, SelectorsType>> = {
-    controller: TypedApplicationController<StateType, SelectorsType, StoreType>,
+type Properties<StateType extends DefaultStateType, SelectorsType, StoreType extends ApplicationStore<StateType, SelectorsType>> = {
+    controller: ApplicationController<StateType, SelectorsType, StoreType>,
     submitDisabled: boolean,
     onSubmitClick: () => void,
     onCancelClick: () => void,

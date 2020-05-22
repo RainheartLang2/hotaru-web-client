@@ -4,7 +4,7 @@ import {ButtonComponent} from "../../../../../../core/components";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
 import {EmployeeAppSelectors, EmployeeAppState} from "../../../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../../../core/components/conntectedTextField/TypedConnectedTextField";
+import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 
 var styles = require("./styles.css");
 
@@ -25,7 +25,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
         return (
             <div className={styles.section}>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeLogin: "editedEmployeeLoginField"}}
                         label={(<Message messageKey={"field.login.label"}/>)}
@@ -33,7 +33,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeePassword: "editedEmployeePasswordField"}}
                         label={(<Message messageKey={"field.password.label"}/>)}
@@ -42,7 +42,7 @@ export default class CredentialsSection extends React.Component<Properties, Stat
                     />
                 </div>
                 <div className={styles.row}>
-                    <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeConfirmPassword: "editedEmployeeConfirmPasswordField"}}
                         label={(<Message messageKey={"field.password.repeat.label"}/>)}

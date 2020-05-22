@@ -15,7 +15,7 @@ import {Employee} from "../common/beans/Employee";
 import AdminPagesContainer from "./components/pages/AdminPagesContainer";
 import NavigationMenu from "./components/navigationMenu/NavigationMenu";
 import {AdminSecondLevelNavigationContainer} from "./components/secondLevelNavigation/AdminSecondLevelNavigationContainer";
-import TypedApplicationControllerHolder from "../core/utils/TypedApplicationControllerHolder";
+import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import EmployeeAppController from "./controller/EmployeeAppController";
 
 export let CURRENT_THEME: Theme = vetTheme;
@@ -34,7 +34,7 @@ export default class AdminApp extends React.Component<Properties, State> {
         //TODO: remove from here
         LocaleHolder.initialize(DEFAULT_LOCALE)
         this.controller = EmployeeAppController.instance
-        TypedApplicationControllerHolder.initialize(this.controller)
+        ApplicationControllerHolder.initialize(this.controller)
     }
 
     render() {

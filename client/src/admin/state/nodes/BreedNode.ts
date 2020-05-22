@@ -1,6 +1,6 @@
-import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
-import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
+import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import Species from "../../../common/beans/Species";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
@@ -8,11 +8,11 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import {Field} from "../../../core/mvc/store/Field";
 import Breed from "../../../common/beans/Breed";
 
-export default class TypedBreedNode {
-    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
+export default class BreedNode {
+    private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
+    constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 

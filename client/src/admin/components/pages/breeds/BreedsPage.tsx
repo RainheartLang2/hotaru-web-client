@@ -11,8 +11,8 @@ import EmployeeApplicationStore, {
     EmployeeAppSelectors,
     EmployeeAppState
 } from "../../../state/EmployeeApplicationStore";
-import TypedConnectedTextField from "../../../../core/components/conntectedTextField/TypedConnectedTextField";
-import TypedConnectedSelect from "../../../../core/components/ConnectedSelect/TypedConnectedSelect";
+import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
+import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 
 var styles = require("./styles.css")
 
@@ -38,7 +38,7 @@ export default class BreedsPage extends React.Component<Properties, State> {
                     <Message messageKey={"page.breeds.speciesSelector.title"}/>
                 </div>
                 <div className={styles.selector}>
-                    <TypedConnectedSelect<Species, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                    <ConnectedSelect<Species, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         variant={"outlined"}
                         controller={this.props.controller}
                         mapProperty={"speciesListById"}
@@ -81,7 +81,7 @@ export default class BreedsPage extends React.Component<Properties, State> {
                         root: styles.additionalRow
                     }}>
                         <CustomTableCell style={styles.nameCell}>
-                            <TypedConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                            <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                 controller={this.props.controller}
                                 size={"small"}
                                 fieldKey={{addedBreedName: "addedBreedNameField"}}

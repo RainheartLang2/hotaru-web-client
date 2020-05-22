@@ -2,7 +2,7 @@ import * as React from "react";
 import {DialogContent} from "@material-ui/core";
 import {Message} from "../Message";
 import Dialog from "@material-ui/core/Dialog";
-import TypedApplicationController from "../../mvc/controllers/TypedApplicationController";
+import ApplicationController from "../../mvc/controllers/ApplicationController";
 
 var styles = require("./styles.css");
 
@@ -46,7 +46,7 @@ export default class ErrorModal extends React.Component<Properties, State> {
 }
 
 type Properties = {
-    controller: TypedApplicationController,
+    controller: ApplicationController,
 }
 
 type State = {

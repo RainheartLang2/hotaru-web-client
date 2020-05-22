@@ -13,7 +13,7 @@ import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Employee} from "../../../common/beans/Employee";
 import Time = DateUtils.Time;
 
-export default class TypedScheduleActions {
+export default class ScheduleActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {

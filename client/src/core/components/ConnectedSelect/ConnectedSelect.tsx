@@ -1,15 +1,15 @@
-import {DefaultStateType} from "../../mvc/store/TypedApplicationStore";
-import TypedApplicationStore from "../../mvc/store/TypedApplicationStore";
+import {DefaultStateType} from "../../mvc/store/ApplicationStore";
+import ApplicationStore from "../../mvc/store/ApplicationStore";
 import * as React from "react";
 import {ReactNode} from "react";
 import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import EmployeeAppController from "../../../admin/controller/EmployeeAppController";
 import {CommonUtils} from "../../utils/CommonUtils";
 
-export default class TypedConnectedSelect<ItemType,
+export default class ConnectedSelect<ItemType,
                                           StateType extends DefaultStateType,
                                           SelectorsType,
-                                          StoreType extends TypedApplicationStore<StateType, SelectorsType>>
+                                          StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<ItemType, StateType, SelectorsType>, State<ItemType>> {
 
     static defaultProps = {

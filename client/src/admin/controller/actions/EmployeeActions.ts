@@ -7,7 +7,7 @@ import {Clinic} from "../../../common/beans/Clinic";
 import {Login} from "../../../common/beans/Login";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
-export default class TypedEmployeeActions {
+export default class EmployeeActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {

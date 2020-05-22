@@ -4,7 +4,7 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {Client} from "../../../common/beans/Client";
 import {Pet} from "../../../common/beans/Pet";
 
-export default class TypedClientActions {
+export default class ClientActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {

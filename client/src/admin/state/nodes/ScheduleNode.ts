@@ -1,6 +1,6 @@
-import TypedApplicationStoreFriend from "../../../core/mvc/store/TypedApplicationStoreFriend";
+import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
-import {SelectorsInfo} from "../../../core/mvc/store/TypedApplicationStore";
+import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {DialogType} from "../enum/DialogType";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
@@ -11,11 +11,11 @@ import Breed from "../../../common/beans/Breed";
 import {MedicalAppointment} from "../../../common/beans/MedicalAppointment";
 import {Field} from "../../../core/mvc/store/Field";
 
-export default class TypedScheduleNode {
-    private _store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
+export default class ScheduleNode {
+    private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
 
 
-    constructor(store: TypedApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
+    constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
     }
 

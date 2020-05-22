@@ -1,9 +1,9 @@
 import {Login} from "../../common/beans/Login";
-import TypedApplicationStore, {DefaultStateType, SelectorsInfo} from "../../core/mvc/store/TypedApplicationStore";
+import ApplicationStore, {DefaultStateType, SelectorsInfo} from "../../core/mvc/store/ApplicationStore";
 import {Field} from "../../core/mvc/store/Field";
 import RequiredFieldValidator from "../../core/mvc/validators/RequiredFieldValidator";
 
-export default class LoginApplicationStore extends TypedApplicationStore<LoginState, LoginDerivationState> {
+export default class LoginApplicationStore extends ApplicationStore<LoginState, LoginDerivationState> {
     private static _instance: LoginApplicationStore
 
     constructor() {

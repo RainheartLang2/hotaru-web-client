@@ -4,7 +4,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
-export default class TypedSpeciesActions {
+export default class SpeciesActions {
 
     private controller: EmployeeAppController
 
