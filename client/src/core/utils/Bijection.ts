@@ -1,4 +1,4 @@
-export default class RevertableMap<FirstType, SecondType> {
+export default class Bijection<FirstType, SecondType> {
     private firstToSecond: Map<FirstType, SecondType> = new Map()
     private secondToFirst: Map<SecondType, FirstType> = new Map()
 

@@ -9,10 +9,24 @@ import EmployeeApplicationStore, {
 } from "../../../../../state/EmployeeApplicationStore";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import ConnectedSelect from "../../../../../../core/components/ConnectedSelect/ConnectedSelect";
+import NumberFormat from 'react-number-format';
+import {TextField} from "@material-ui/core";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/material.css'
 
 export default class RightColumn extends React.Component<Properties> {
+
+    private PhoneField = () => {
+        return <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+        controller={this.props.controller}
+        fieldKey={{editedEmployeePhone: "editedEmployeePhoneField"}}
+        label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
+        />
+    }
+
     render() {
         const styles = this.props.styles
+        const PhoneField = this.PhoneField
         return (
             <>
                 {this.props.showActiveSwitch
@@ -45,6 +59,7 @@ export default class RightColumn extends React.Component<Properties> {
                         controller={this.props.controller}
                         fieldKey={{editedEmployeePhone: "editedEmployeePhoneField"}}
                         label={(<Message messageKey="dialog.employee.field.phone.label"/>)}
+                        mask={"+7(???)-???-??-??"}
                     />
                 </div>
                 <div className={styles.row}>

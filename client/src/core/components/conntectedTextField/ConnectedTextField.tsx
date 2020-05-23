@@ -6,6 +6,7 @@ import MaskTransformer from "../../utils/MaskTransformer";
 import ApplicationController from "../../mvc/controllers/ApplicationController";
 import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
+import {StringUtils} from "../../utils/StringUtils";
 
 export default class ConnectedTextField<StateType extends DefaultStateType,
                                             SelectorsType,
@@ -18,7 +19,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         super(props)
         this.checkFieldKey()
         if (props.mask) {
-            this.maskTransformer = new MaskTransformer(props.mask)
+            this.maskTransformer = new MaskTransformer(props.mask, "_", "*")
         }
         this.state = {
             field: {
@@ -58,15 +59,38 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
             && this.state.field.errors.length > 0
     }
 
-    private onChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const eventValue = event.target.value
-        const settedValue = this.props.mask
-            ? this.maskTransformer.fromMaskToPure(eventValue)
-            : eventValue
+    private postValueChangeToStore(value: string): void {
         const keys = this.getKeys()
         this.props.controller
-            .setState({[keys[0]]: settedValue} as unknown as Partial<StateType>)
+            .setState({[keys[0]]: value} as unknown as Partial<StateType>)
         this.props.controller.toggleFieldValidation(keys[1], true)
+    }
+
+    private onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        let settedValue = event.target.value
+
+        if (this.props.mask) {
+            const caretPosition = event.target.selectionStart
+            if (caretPosition == null) {
+                throw new Error()
+            }
+            const nextMaskedCharacterPosition = this.maskTransformer
+                .getNextMaskedCharacterPosition(caretPosition -1)
+            if (nextMaskedCharacterPosition != -1) {
+                const enteredCharacter = settedValue.charAt(caretPosition - 1)
+                settedValue = StringUtils.deleteCharAt(settedValue, caretPosition - 1)
+                settedValue = StringUtils.setCharAt(settedValue,
+                    this.maskTransformer.getNextMaskedCharacterPosition(caretPosition -1 ),
+                    enteredCharacter)
+                event.target.value = settedValue
+                // event.target.selectionStart = event.target.selectionEnd = nextMaskedCharacterPosition + 1
+                event.target.selectionStart = event.target.selectionEnd = (nextMaskedCharacterPosition != -1
+                                            ? this.maskTransformer.getNextMaskedCharacterPosition(nextMaskedCharacterPosition + 1)
+                                            : event.target.value.length)
+                settedValue = this.maskTransformer.fromMaskToPure(settedValue)
+            }
+        }
+        this.postValueChangeToStore(settedValue)
     }
 
     private getValue(): string {

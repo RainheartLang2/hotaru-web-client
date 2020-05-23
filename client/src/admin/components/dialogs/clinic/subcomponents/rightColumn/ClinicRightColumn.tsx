@@ -38,6 +38,7 @@ export default class ClinicRightColumn extends React.Component<Properties> {
                     required={true}
                     size="small"
                     fullWidth={true}
+                    mask={"+7(???)-???-??-??"}
                 />
             </div>
             <div className={styles.row}>

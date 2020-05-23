@@ -9,6 +9,7 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import {ConfigureDialogType} from "../../../core/types/ConfigureDialogType";
 import {DialogType} from "../enum/DialogType";
+import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 
 export default class ClinicNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -51,7 +52,10 @@ export default class ClinicNode {
             },
             editedClinicNameField: this._store.createField("editedClinicName", "",
                 [new RequiredFieldValidator(), new MaximalLengthValidator(200)]),
-            editedClinicPhoneField: this._store.createField("editedClinicPhone", "", [new MaximalLengthValidator(15)]),
+            editedClinicPhoneField: this._store.createField("editedClinicPhone", "", [
+                new MaximalLengthValidator(15),
+                new DigitsOnlyValidator("\\*"),
+            ]),
             editedClinicEmailField: this._store.createField("editedClinicEmail", "",
                 [new EmailFormatValidator(), new MaximalLengthValidator(254)]),
             editedClinicAddressField: this._store.createField("editedClinicAddress", "",

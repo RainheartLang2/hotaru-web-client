@@ -8,7 +8,7 @@ import {DialogType} from "../enum/DialogType";
 import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
-import OnlyDigitsValidator from "../../../core/mvc/validators/OnlyDigitsValidator";
+import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 
 export default class EmployeeNode {
@@ -91,7 +91,7 @@ export default class EmployeeNode {
             ),
             editedEmployeePhoneField: this._store.createField("editedEmployeePhone", "",
                 [new MaximalLengthValidator(15),
-                new OnlyDigitsValidator()]
+                new DigitsOnlyValidator("\\*")]
             ),
             editedEmployeeLoginField: this._store.createField("editedEmployeeLogin", "", []),
             editedEmployeePasswordField: this._store.createField("editedEmployeePassword", "", []),
