@@ -1,5 +1,6 @@
 export class Employee {
     id?: number
+    photo?: string | null
     firstName?: string
     middleName?: string
     lastName?: string

@@ -66,6 +66,7 @@
       "dialog.employee.create.label": "Создание нового сотрудника",
       "dialog.employee.edit.label": "Редактирование сотрудника",
       "dialog.employee.profile.label": "Ваш профиль",
+      "dialog.employee.dropzone.note": "Загрузите фотографию сотрудника",
       "dialog.employee.field.firstName.label": "Имя",
       "dialog.employee.field.middleName.label": "Отчество",
       "dialog.employee.field.lastName.label": "Фамилия",

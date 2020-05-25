@@ -27,6 +27,7 @@ export default class EmployeeActions {
     public openCreateEmployeeDialog(): void {
         this.controller.setState({
             dialogType: DialogType.CreateEmployee,
+            employeePhoto: null,
             editedEmployeeFirstName: "",
             editedEmployeeMiddleName: "",
             editedEmployeeLastName: "",
@@ -50,6 +51,7 @@ export default class EmployeeActions {
         this.controller.setState({
             dialogType: DialogType.EditEmployee,
             editedEmployeeId: user.id,
+            employeePhoto: user.photo,
             editedEmployeeFirstName: user.firstName,
             editedEmployeeMiddleName: user.middleName,
             editedEmployeeLastName: user.lastName,
@@ -70,6 +72,7 @@ export default class EmployeeActions {
         const state = this.controller.state
         return {
             id: state.editedEmployeeId,
+            photo: state.employeePhoto,
             firstName: state.editedEmployeeFirstName,
             middleName: state.editedEmployeeMiddleName,
             lastName: state.editedEmployeeLastName,

@@ -4,11 +4,30 @@ import CredentialsSection from "../credentialsSection/CredentialsSection";
 import EmployeeAppController from "../../../../../controller/EmployeeAppController";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../../../state/EmployeeApplicationStore";
+import ImageDropZone from "../../../../../../core/components/imageDropZone/ImageDropZone";
 
-export default class LeftColumn extends React.Component<Properties> {
+var styles = require("./../../styles.css")
+
+export default class LeftColumn extends React.Component<Properties, State> {
+
+    constructor(props: Properties) {
+        super(props)
+        this.state = {
+            employeePhoto: null,
+        }
+    }
     render() {
         return (
             <>
+                <div className={styles.photoDropZone}>
+                    <ImageDropZone
+                        dropZoneNoteKey={"dialog.employee.dropzone.note"}
+                        image={this.state.employeePhoto}
+                        onImageChange={(image: string) => {
+                            this.props.controller.setState({employeePhoto: image})
+                        }}/>
+
+                </div>
                 <div className={this.props.rowStyle}>
                     <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
@@ -30,7 +49,7 @@ export default class LeftColumn extends React.Component<Properties> {
                     />
                 </div>
                 <div className={this.props.rowStyle}>
-                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                     <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
                         fieldKey={{editedEmployeeMiddleName: "editedEmployeeMiddleNameField"}}
                         label={(<Message messageKey={"dialog.employee.field.middleName.label"}/>)}
@@ -42,6 +61,16 @@ export default class LeftColumn extends React.Component<Properties> {
             </>
         )
     }
+
+    componentDidMount(): void {
+        this.props.controller.subscribe(this, {
+            employeePhoto: "employeePhoto",
+        })
+    }
+}
+
+export type State = {
+   employeePhoto: string | null,
 }
 
 export type Properties = {

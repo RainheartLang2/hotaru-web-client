@@ -9,9 +9,6 @@ import EmployeeApplicationStore, {
 } from "../../../../../state/EmployeeApplicationStore";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
 import ConnectedSelect from "../../../../../../core/components/ConnectedSelect/ConnectedSelect";
-import NumberFormat from 'react-number-format';
-import {TextField} from "@material-ui/core";
-import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/material.css'
 
 export default class RightColumn extends React.Component<Properties> {

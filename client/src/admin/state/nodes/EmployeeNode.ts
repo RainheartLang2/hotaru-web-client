@@ -23,6 +23,7 @@ export default class EmployeeNode {
         return {
             userList: [],
             editedEmployeeId: 0,
+            employeePhoto: null,
             editedEmployeeFirstName: "",
             editedEmployeeMiddleName: "",
             editedEmployeeLastName: "",
@@ -126,6 +127,7 @@ export default class EmployeeNode {
 export type UserPageEmployeeState = {
     userList: Employee[],
     editedEmployeeId: number,
+    employeePhoto: string | null,
     editedEmployeeFirstName: string,
     editedEmployeeMiddleName: string,
     editedEmployeeLastName: string,
