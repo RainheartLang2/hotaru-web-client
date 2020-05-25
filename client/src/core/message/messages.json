@@ -29,6 +29,7 @@
       "navigationMenu.schedule.title": "Расписание",
       "navigationMenu.settings.title": "Настройки",
       "navigationMenu.settings.dialog.dictionaries": "Справочники",
+      "navigationMenu.clients.title": "Клиенты",
       "second.navigation.dictionaries.species.label": "Виды животных",
       "second.navigation.dictionaries.breed.label": "Породы",
       "page.schedule.title": "Расписание",
@@ -40,6 +41,7 @@
       "page.breeds.title": "Справочник пород",
       "page.breeds.speciesSelector.title": "Вид животных",
       "page.clinics.name.title": "Название клиники",
+      "page.clients.title": "Клиенты",
 
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",
@@ -51,6 +53,13 @@
       "dialog.appointment.field.address.label": "Адрес",
       "dialog.appointment.field.petName.label": "Кличка",
       "dialog.appointment.checkbox.createClient.label": "Подробная информация о клиенте",
+
+      "dialog.client.create.label": "Создание записи о клиенте",
+      "dialog.client.edit.label": "Редактирование данных клиента",
+      "dialog.client.field.name.label": "Имя",
+      "dialog.client.field.phone.label": "Телефон",
+      "dialog.client.field.address.label": "Адрес",
+      "dialog.client.field.mail.label": "E-mail",
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",

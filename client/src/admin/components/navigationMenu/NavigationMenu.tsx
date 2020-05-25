@@ -44,6 +44,11 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                     value={NavigationMenuItemType.SettingsMenu}
                     onClick={(event) => this.setState({settingsMenuAnchor: event.currentTarget})}
                 />
+                <Tab
+                    label={<Message messageKey={"navigationMenu.clients.title"}/>}
+                    value={NavigationMenuItemType.ClientsList}
+                    onClick={() => this.props.controller.openClientsPage()}
+                />
                 <Menu
                     open={!!this.state.settingsMenuAnchor}
                     anchorEl={this.state.settingsMenuAnchor}

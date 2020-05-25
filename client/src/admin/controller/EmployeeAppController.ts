@@ -164,6 +164,14 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openClientsPage(): void {
+        this.openPage(PageType.Clients, (setPageLoad: Function) => {
+            this._clientActions.loadPermanentClientsWithPets(() => {
+                setPageLoad()
+            })
+        })
+    }
+
     public setShowDialog(dialogType: DialogType): void {
         this.store.setState({dialogType})
     }

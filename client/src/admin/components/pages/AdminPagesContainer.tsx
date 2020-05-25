@@ -7,6 +7,7 @@ import SchedulePage from "./schedule/SchedulePage";
 import SpeciesPage from "./species/SpeciesPage";
 import BreedsPage from "./breeds/BreedsPage";
 import EmployeeAppController from "../../controller/EmployeeAppController";
+import ClientsPage from "./clients/ClientsPage";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -30,6 +31,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {this.isRenderPage(PageType.Schedule) && (<SchedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Species) && (<SpeciesPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Breeds) && (<BreedsPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.Clients) && <ClientsPage controller={this.props.controller}/>}
         </>)
     }
 

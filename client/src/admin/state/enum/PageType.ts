@@ -4,5 +4,6 @@ export enum PageType {
     Schedule,
     Species,
     Breeds,
+    Clients,
     None,
 }

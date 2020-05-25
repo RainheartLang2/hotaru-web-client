@@ -53,6 +53,10 @@ export namespace RemoteMethods {
     export const deleteAppointment = new RemoteMethod(appointmentService, deleteAction)
 
     export const getAllClients = new RemoteMethod(clientService, getAllAction)
+    export const getPermanentClients = new RemoteMethod(clientService, new ServerAppAction("getAllPermanent"))
+    export const addClient = new RemoteMethod(clientService, addAction)
+    export const editClient = new RemoteMethod(clientService, editAction)
+    export const deleteClient = new RemoteMethod(clientService, deleteAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

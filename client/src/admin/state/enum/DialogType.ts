@@ -7,4 +7,6 @@ export enum DialogType {
     EditClinic,
     CreateAppointment,
     EditAppointment,
+    CreateClient,
+    EditClient,
 }
