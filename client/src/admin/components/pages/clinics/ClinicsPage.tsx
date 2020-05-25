@@ -38,6 +38,7 @@ export default class ClinicsPage extends React.Component<Properties, State> {
             <TableCmp>
                 <TableHeaderCmp>
                     <TableRowCmp>
+                        <CustomTableCell style={styles.logoCellTitle}/>
                         <CustomTableCell style={styles.nameCell}>
                             <Message messageKey={"page.clinics.name.title"}/>
                         </CustomTableCell>
@@ -53,6 +54,9 @@ export default class ClinicsPage extends React.Component<Properties, State> {
                     {this.state.clinics.map(clinic => {
                         return (
                             <TableRowCmp key={clinic.id}>
+                                <CustomTableCell style={styles.logoCell}>
+                                    {clinic.logo && <img width={50} height={50} src={clinic.logo}/>}
+                                </CustomTableCell>
                                 <CustomTableCell style={styles.nameCell}>
                                     <Link
                                         color="primary"

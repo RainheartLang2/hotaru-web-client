@@ -8,10 +8,18 @@ import EmployeeApplicationStore, {
     EmployeeAppState
 } from "../../../../../state/EmployeeApplicationStore";
 import ConnectedTextField from "../../../../../../core/components/conntectedTextField/ConnectedTextField";
+import ImageDropZone from "../../../../../../core/components/imageDropZone/ImageDropZone";
 
 var styles = require("../../styles.css")
 
-export default class ClinicRightColumn extends React.Component<Properties> {
+export default class ClinicRightColumn extends React.Component<Properties, State> {
+    constructor(props: Properties) {
+        super(props)
+        this.state = {
+            logoImage: null,
+        }
+    }
+
     private getActiveSwitch(): ReactNode {
         return (
             <div className={styles.row}>
@@ -27,6 +35,13 @@ export default class ClinicRightColumn extends React.Component<Properties> {
 
     render() {
         return (<>
+            <div className={styles.logoDropZone}>
+                <ImageDropZone
+                    dropZoneNoteKey={"dialog.clinic.logo.dropzone.note"}
+                    image={this.state.logoImage}
+                    onImageChange={(image: string) => this.props.controller.setState({editedClinicLogo: image})}
+                />
+            </div>
             {this.props.showActiveSwitch
                 ? this.getActiveSwitch()
                 : ""}
@@ -53,10 +68,20 @@ export default class ClinicRightColumn extends React.Component<Properties> {
             </div>
         </>)
     }
+
+    componentDidMount(): void {
+        this.props.controller.subscribe(this, {
+            editedClinicLogo: "logoImage",
+        })
+    }
 }
 
 export type Properties = {
     controller: EmployeeAppController,
     active: boolean,
     showActiveSwitch: boolean,
+}
+
+export type State = {
+   logoImage: string | null,
 }

@@ -20,6 +20,7 @@ export default class ClinicActions {
         this.controller.setState({
             dialogType: DialogType.CreateClinic,
             editedClinicId: 0,
+            editedClinicLogo: null,
             editedClinicName: "",
             editedClinicSiteUrl: "",
             editedClinicCity: "",
@@ -36,6 +37,7 @@ export default class ClinicActions {
         this.controller.setState({
             dialogType: DialogType.EditClinic,
             editedClinicId: clinic.id,
+            editedClinicLogo: clinic.logo,
             editedClinicName: clinic.name,
             editedClinicSiteUrl: clinic.siteUrl,
             editedClinicCity: clinic.city,
@@ -51,6 +53,7 @@ export default class ClinicActions {
         return {
             id: state.editedClinicId,
             name: state.editedClinicNameField.value,
+            logo: state.editedClinicLogo,
             siteUrl: state.editedClinicSiteUrlField.value,
             city: state.editedClinicCityField.value,
             address: state.editedClinicAddressField.value,

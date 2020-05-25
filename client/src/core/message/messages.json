@@ -54,6 +54,7 @@
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",
+      "dialog.clinic.logo.dropzone.note": "Загрузите логотип клиники",
       "dialog.clinic.siteUrl.label": "Сайт",
       "dialog.clinic.city.label": "Город",
       "dialog.clinic.address.label": "Адрес",

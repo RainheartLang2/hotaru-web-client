@@ -2,6 +2,7 @@ import MessageResource from "../../core/message/MessageResource";
 
 export class Clinic {
     id?: number
+    logo?: string | null
     name?: string
     active?: boolean
     phone?: string

@@ -23,6 +23,7 @@ export default class ClinicNode {
         return {
             clinicList: [],
             editedClinicId: 0,
+            editedClinicLogo: null,
             editedClinicName: "",
             editedClinicActive: false,
             editedClinicPhone: "",
@@ -90,6 +91,7 @@ export default class ClinicNode {
 export type ClinicPageState = {
     clinicList: Clinic[],
     editedClinicId: number,
+    editedClinicLogo: string | null,
     editedClinicName: string,
     editedClinicActive: boolean,
     editedClinicPhone: string,
