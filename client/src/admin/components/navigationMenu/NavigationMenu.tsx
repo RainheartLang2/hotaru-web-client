@@ -18,6 +18,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
     }
 
     render() {
+        console.log(this.state.selectedItem)
         return (
             <Tabs
                 variant="fullWidth"
@@ -68,7 +69,7 @@ export default class NavigationMenu extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            secondLevelNavigationMenuType: "selectedItem",
+            navigationMenuItemType: "selectedItem",
         })
     }
 

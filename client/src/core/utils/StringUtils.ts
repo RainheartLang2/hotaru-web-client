@@ -8,6 +8,13 @@ export namespace StringUtils {
 
     export const deleteCharAt = (str: string, index: number): string => setCharAt(str, index, "")
 
+    export const deleteChars = (str: string, from: number, size: number): string => {
+        if (from + size > str.length) {
+            throw new Error("")
+        }
+        return str.substr(0, from) + str.substr(from + size, str.length)
+    }
+
     export const clone = (str: string): string => {
         return (" " + str).slice(1)
     }
@@ -36,5 +43,86 @@ export namespace StringUtils {
             }
         })
         return result
+    }
+
+
+    const reverse = (str: string): string => {
+        return str.split("").reverse().join("");
+    }
+
+    const getPrefixNumber  = (firstString: string, secondString: string): number => {
+        for (let i = 0; i < firstString.length; i++) {
+            if (secondString.length <= i || firstString.charAt(i) != secondString.charAt(i)) {
+                return i;
+            }
+        }
+        return firstString.length
+    }
+
+    const getPostfixNumber = (firstString: string, secondString: string): number => {
+        return getPrefixNumber(reverse(firstString), reverse(secondString))
+    }
+
+    const getIntersectionNumber = (str: string, prefixNumber: number, postfix: number) => {
+        let prefixIndex = prefixNumber
+        let postfixIndex = str.length - postfix
+        while (prefixIndex < str.length && postfixIndex >=0 && str.charAt(prefixNumber) == str.charAt(postfixIndex)) {
+            prefixIndex--
+            postfixIndex++
+        }
+        return prefixNumber - prefixIndex
+    }
+
+    export const getDifference = (firstString: string, secondString: string): Difference => {
+        if (firstString == secondString) {
+            return {
+                type: DifferenceType.None,
+                position: 0,
+                size: 0,
+            }
+        }
+        let majorString
+        let minorString
+        let type
+        if (secondString.length > firstString.length) {
+            majorString = secondString
+            minorString = firstString
+            type = DifferenceType.Addition
+        } else {
+            majorString = firstString
+            minorString = secondString
+            type = DifferenceType.Deletion
+        }
+
+        const lengthDifference = majorString.length - minorString.length
+        const prefixNumber = getPrefixNumber(minorString, majorString)
+        const postfixNumber = getPostfixNumber(minorString, majorString)
+        if (prefixNumber + postfixNumber + lengthDifference >= majorString.length) {
+            return {
+                type,
+                position: prefixNumber,
+                size: lengthDifference
+            }
+        } else {
+            return {
+                type: DifferenceType.Unknown,
+                position: 0,
+                size: 0,
+            }
+        }
+    }
+
+
+    export enum DifferenceType {
+        Addition,
+        Deletion,
+        None,
+        Unknown,
+    }
+
+    export type Difference = {
+        type: DifferenceType,
+        position: number,
+        size: number,
     }
 }

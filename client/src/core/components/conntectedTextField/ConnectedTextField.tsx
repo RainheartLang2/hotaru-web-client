@@ -7,12 +7,14 @@ import ApplicationController from "../../mvc/controllers/ApplicationController";
 import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
 import {StringUtils} from "../../utils/StringUtils";
+import DifferenceType = StringUtils.DifferenceType;
 
 export default class ConnectedTextField<StateType extends DefaultStateType,
                                             SelectorsType,
                                             StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<StateType, SelectorsType, StoreType>, State> {
 
+    private prevValue: string
     private maskTransformer: MaskTransformer = new MaskTransformer("")
 
     constructor(props: Properties<StateType, SelectorsType, StoreType>) {
@@ -21,6 +23,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         if (props.mask) {
             this.maskTransformer = new MaskTransformer(props.mask, "_", "*")
         }
+        this.prevValue = this.props.defaultValue || "",
         this.state = {
             field: {
                 value: this.props.defaultValue || "",
@@ -70,25 +73,55 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         let settedValue = event.target.value
 
         if (this.props.mask) {
-            const caretPosition = event.target.selectionStart
-            if (caretPosition == null) {
-                throw new Error()
+            const difference = StringUtils.getDifference(this.prevValue, event.target.value)
+            if (difference.type == DifferenceType.None || difference.type == DifferenceType.Unknown) {
+                return
             }
-            const nextMaskedCharacterPosition = this.maskTransformer
-                .getNextMaskedCharacterPosition(caretPosition -1)
-            if (nextMaskedCharacterPosition != -1) {
-                const enteredCharacter = settedValue.charAt(caretPosition - 1)
-                settedValue = StringUtils.deleteCharAt(settedValue, caretPosition - 1)
-                settedValue = StringUtils.setCharAt(settedValue,
-                    this.maskTransformer.getNextMaskedCharacterPosition(caretPosition -1 ),
-                    enteredCharacter)
-                event.target.value = settedValue
-                // event.target.selectionStart = event.target.selectionEnd = nextMaskedCharacterPosition + 1
-                event.target.selectionStart = event.target.selectionEnd = (nextMaskedCharacterPosition != -1
-                                            ? this.maskTransformer.getNextMaskedCharacterPosition(nextMaskedCharacterPosition + 1)
-                                            : event.target.value.length)
-                settedValue = this.maskTransformer.fromMaskToPure(settedValue)
+
+            let caretPosition = 0
+            if (difference.type == DifferenceType.Addition) {
+                const addedCharacters = settedValue.substr(difference.position, difference.position + difference.size)
+                settedValue = StringUtils.deleteChars(settedValue, difference.position, difference.size)
+                let potentialPosition = difference.position
+                if (event.target.selectionEnd) {
+                    caretPosition = event.target.selectionEnd - difference.size
+                    caretPosition+= this.maskTransformer.getMaskedDistance(caretPosition, difference.size)
+                }
+                for (let i = 0; i < difference.size; i++) {
+                    if (potentialPosition != -1) {
+                        const nextMaskedCharacterPosition = this.maskTransformer.getNextMaskedCharacterPosition(potentialPosition)
+                        if (nextMaskedCharacterPosition == -1) {
+                            potentialPosition = -1
+                        } else {
+                            settedValue = StringUtils.setCharAt(settedValue, nextMaskedCharacterPosition, addedCharacters.charAt(i))
+                        }
+                        potentialPosition = nextMaskedCharacterPosition + 1
+                    }
+                }
+
             }
+            event.target.value = settedValue
+            event.target.selectionStart = event.target.selectionEnd = this.maskTransformer.getNextMaskedCharacterPosition(caretPosition)
+            settedValue = this.maskTransformer.fromMaskToPure(settedValue)
+            // const caretPosition = event.target.selectionStart
+            // if (caretPosition == null) {
+            //     throw new Error()
+            // }
+            // const nextMaskedCharacterPosition = this.maskTransformer
+            //     .getNextMaskedCharacterPosition(caretPosition -1)
+            // if (nextMaskedCharacterPosition != -1) {
+            //     const enteredCharacter = settedValue.charAt(caretPosition - 1)
+            //     settedValue = StringUtils.deleteCharAt(settedValue, caretPosition - 1)
+            //     settedValue = StringUtils.setCharAt(settedValue,
+            //         this.maskTransformer.getNextMaskedCharacterPosition(caretPosition -1 ),
+            //         enteredCharacter)
+            //     event.target.value = settedValue
+            //     // event.target.selectionStart = event.target.selectionEnd = nextMaskedCharacterPosition + 1
+            //     event.target.selectionStart = event.target.selectionEnd = (nextMaskedCharacterPosition != -1
+            //                                 ? this.maskTransformer.getNextMaskedCharacterPosition(nextMaskedCharacterPosition + 1)
+            //                                 : event.target.value.length)
+            //     settedValue = this.maskTransformer.fromMaskToPure(settedValue)
+            // }
         }
         this.postValueChangeToStore(settedValue)
     }
@@ -101,6 +134,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
     }
 
     render() {
+        this.prevValue = this.getValue()
         return (
             <>
                 <Tooltip
@@ -120,7 +154,6 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
                         type={this.props.type ? this.props.type : "text"}
                         variant={this.props.variant ? this.props.variant : "standard"}
                         disabled={this.props.disabled != null ? this.props.disabled : false}
-
                         value={this.getValue()}
                         error={this.hasErrors()}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.onChange(event)}

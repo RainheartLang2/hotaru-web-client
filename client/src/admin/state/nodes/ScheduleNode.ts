@@ -131,9 +131,12 @@ export default class ScheduleNode {
                 value: false,
             },
             appointmentDialogErrorMessage: {
-                dependsOn: ["clientNameOrPhoneNotEntered", "createClientInfo"],
-                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "clientNameOrPhoneNotEntered" | "createClientInfo">) => {
-                    if (state.createClientInfo && state.clientNameOrPhoneNotEntered) {
+                dependsOn: ["clientNameOrPhoneNotEntered", "createClientInfo", "saveClientAsPermanent"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "clientNameOrPhoneNotEntered"
+                    | "createClientInfo"
+                    | "saveClientAsPermanent"
+                    >) => {
+                    if (state.createClientInfo && state.saveClientAsPermanent && state.clientNameOrPhoneNotEntered) {
                         return MessageResource.getMessage("dialog.appointment.permanentClient.nameOrPhone.error")
                     }
                     return ""

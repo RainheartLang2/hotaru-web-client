@@ -65,11 +65,27 @@ export default class MaskTransformer {
         return -1
     }
 
+    public getMaskedDistance(start: number, charactersNumber: number): number {
+        let index = start
+        let charactersRemain = charactersNumber
+        while (index < this.mask.length && charactersRemain > 0) {
+            if (!this.isCharacterPartOfMask(index)) {
+                charactersRemain--
+            }
+            index++
+        }
+        return index - start
+    }
+
     public getPureIndexByMasked(maskedIndex: number): number {
         const pureIndex = this.correlationMap.getBySecond(maskedIndex)
         if (pureIndex == null) {
             throw new Error("no pure index for masked " + maskedIndex)
         }
         return pureIndex
+    }
+
+    private isCharacterPartOfMask(characterIndex: number): boolean {
+        return this.correlationMap.getBySecond(characterIndex) == null
     }
 }
