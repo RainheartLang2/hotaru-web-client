@@ -9,7 +9,6 @@ export default abstract class ApplicationStoreFriend<StateType, SelectorsType> {
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field>
 
     public abstract createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
-                                                additionalCondition?: () => boolean,
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean>
 
     public abstract get state(): Readonly<StateType & SelectorsType>

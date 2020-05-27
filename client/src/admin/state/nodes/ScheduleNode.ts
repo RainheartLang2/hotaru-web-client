@@ -10,6 +10,8 @@ import Species from "../../../common/beans/Species";
 import Breed from "../../../common/beans/Breed";
 import {MedicalAppointment} from "../../../common/beans/MedicalAppointment";
 import {Field} from "../../../core/mvc/store/Field";
+import MessageResource from "../../../core/message/MessageResource";
+import {CommonUtils} from "../../../core/utils/CommonUtils";
 
 export default class ScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -30,11 +32,8 @@ export default class ScheduleNode {
             editedAppointmentStartTime: "00:00",
             editedAppointmentEndTime: "00:00",
             createClientInfo: false,
+            saveClientAsPermanent: false,
             editedClientInfoId: 0,
-            editedClientInfoFirstName: "",
-            editedClientInfoPhone: "",
-            editedClientInfoMail: "",
-            editedClientInfoAddress: "",
             editedClientPetId: 0,
             editedClientPetName: "",
             editedClientSelectedSpecies: Species.getMock(),
@@ -109,14 +108,38 @@ export default class ScheduleNode {
                 value: new Map<number, Breed>(),
             },
             editedAppointmentTitleField: this._store.createField("editedAppointmentTitle", "", []),
-            editedClientInfoFirstNameField: this._store.createField("editedClientInfoFirstName", "", []),
-            editedClientInfoPhoneField: this._store.createField("editedClientInfoPhone", "", []),
-            editedClientInfoMailField: this._store.createField("editedClientInfoMail", "", []),
-            editedClientInfoAddressField: this._store.createField("editedClientInfoAddress", "", []),
             editedClientPetNameField: this._store.createField("editedClientPetName", "", []),
             editedAppointmentStartTimeField: this._store.createField("editedAppointmentStartTime", "", []),
             editedAppointmentEndTimeField: this._store.createField("editedAppointmentEndTime", "", []),
-            appointmentFormHasErrors: this._store.createFormHasErrorsSelector([]),
+            appointmentFormHasStandardErrors: this._store.createFormHasErrorsSelector([
+                "editedAppointmentStartTimeField",
+                "editedAppointmentEndTimeField"]),
+            appointmentFormHasErrors: {
+                dependsOn: ["appointmentFormHasStandardErrors",
+                    "saveClientAsPermanent",
+                    "editedClientNameField",
+                    "editedClientPhoneField"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "appointmentFormHasStandardErrors"
+                    | "saveClientAsPermanent"
+                    | "editedClientNameField"
+                    | "editedClientPhoneField">) => {
+                    return state.appointmentFormHasStandardErrors
+                        || (state.saveClientAsPermanent
+                            && CommonUtils.allFieldsAreEmpty([state.editedClientPhoneField,
+                                state.editedClientNameField]))
+                },
+                value: false,
+            },
+            appointmentDialogErrorMessage: {
+                dependsOn: ["clientNameOrPhoneNotEntered", "createClientInfo"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "clientNameOrPhoneNotEntered" | "createClientInfo">) => {
+                    if (state.createClientInfo && state.clientNameOrPhoneNotEntered) {
+                        return MessageResource.getMessage("dialog.appointment.permanentClient.nameOrPhone.error")
+                    }
+                    return ""
+                },
+                value: "",
+            }
         }
     }
 }
@@ -131,11 +154,8 @@ export type ScheduleState = {
     editedAppointmentStartTime: string,
     editedAppointmentEndTime: string,
     createClientInfo: boolean,
+    saveClientAsPermanent: boolean,
     editedClientInfoId: number,
-    editedClientInfoFirstName: string,
-    editedClientInfoPhone: string,
-    editedClientInfoMail: string,
-    editedClientInfoAddress: string,
     editedClientPetId: number,
     editedClientPetName: string,
     editedClientSelectedSpecies: Species,
@@ -152,10 +172,8 @@ export type ScheduleSelectors = {
     editedAppointmentStartTimeField: Field,
     editedAppointmentEndTimeField: Field,
     editedAppointmentTitleField: Field,
-    editedClientInfoFirstNameField: Field,
-    editedClientInfoPhoneField: Field,
-    editedClientInfoMailField: Field,
-    editedClientInfoAddressField: Field,
     editedClientPetNameField: Field,
+    appointmentFormHasStandardErrors: boolean,
     appointmentFormHasErrors: boolean,
+    appointmentDialogErrorMessage: string,
 }

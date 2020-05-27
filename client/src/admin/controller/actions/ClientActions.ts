@@ -86,7 +86,7 @@ export default class ClientActions {
         this.controller.toggleFieldValidation("editedClientPhoneField", false)
     }
 
-    private buildClientByFields(): Client {
+    public buildClientByFields(type: ClientType = ClientType.Permanent): Client {
         const state = this.controller.state
         return {
             id: state.editedClientId,

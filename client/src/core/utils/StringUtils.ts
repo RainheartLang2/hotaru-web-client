@@ -1,3 +1,5 @@
+import {Field} from "../mvc/store/Field";
+
 export namespace StringUtils {
     export const setCharAt = (str: string, index: number, chr: string): string => {
         if (index > str.length - 1) return str
@@ -22,6 +24,17 @@ export namespace StringUtils {
         for (let index = value.length; index < requiredLength; index++) {
             result += fillCharacter
         }
+        return result
+    }
+
+    export const allStringsAreEmpty = (strings: string[]): boolean => {
+        let result = true
+        strings.forEach(value => {
+            if (value.length > 0) {
+                result = false
+                return
+            }
+        })
         return result
     }
 }

@@ -1,3 +1,5 @@
+import {Field} from "../mvc/store/Field";
+
 export namespace CommonUtils {
     export function valueIfDiffers<ValueType>(value: ValueType, source: ValueType): ValueType | null {
         return value === source ? null : value
@@ -31,6 +33,17 @@ export namespace CommonUtils {
     export function createLooseObject<Type>(properties: [any, any][]): Partial<Type> {
         const result: any = {}
         properties.forEach(propertyEntry => result[propertyEntry[0]] = propertyEntry[1])
+        return result
+    }
+
+    export function allFieldsAreEmpty(fields: Field[]): boolean {
+        let result = true
+        fields.forEach(field => {
+            if (field.value.length > 0) {
+                result = false
+                return
+            }
+        })
         return result
     }
 }

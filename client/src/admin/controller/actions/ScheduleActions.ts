@@ -11,6 +11,7 @@ import {ChangeSet} from "@devexpress/dx-react-scheduler";
 import {Client} from "../../../common/beans/Client";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Employee} from "../../../common/beans/Employee";
+import {ClientType} from "../../../common/beans/enums/ClientType";
 import Time = DateUtils.Time;
 
 export default class ScheduleActions {
@@ -42,12 +43,13 @@ export default class ScheduleActions {
 
     private initializeClientInfo(): void {
         this.controller.setState({
-            editedClientInfoId: 0,
-            editedClientInfoFirstName: "",
-            editedClientInfoMail: "",
-            editedClientInfoPhone: "",
-            editedClientInfoAddress: "",
+            editedClientId: 0,
+            editedClientName: "",
+            editedClientPhone: "",
+            editedClientAddress: "",
+            editedClientMail: "",
             createClientInfo: false,
+            saveClientAsPermanent: false,
             editedClientPetId: 0,
             editedClientPetName: "",
             editedClientSelectedSpecies: Species.getMock(),
@@ -72,9 +74,10 @@ export default class ScheduleActions {
 
     public openEditAppointmentDialog(editedAppointment: Object): void {
         const appointment = editedAppointment as AppointmentInfo
-        const startDate = appointment.startDate
-        const endDate = appointment.endDate
+        const startDate = new Date(appointment.startDate)
+        const endDate = new Date(appointment.endDate)
 
+        console.log(startDate)
         this.controller.setState({
             editedAppointmentId: appointment.id,
             editedAppointmentTitle: appointment.title,
@@ -85,15 +88,16 @@ export default class ScheduleActions {
         const medicalAppointment = appointment.id ? this.controller.state.appointmentsListById.get(appointment.id) : null
 
         if (medicalAppointment && medicalAppointment.clientId) {
-            const client = this.controller.state.userListById.get(medicalAppointment.clientId)
+            const client = this.controller.state.clientsListById.get(medicalAppointment.clientId)
             if (client) {
                 this.controller.setState({
-                    editedClientInfoId: client.id,
-                    editedClientInfoFirstName: client.firstName,
-                    editedClientInfoPhone: client.phone,
-                    editedClientInfoMail: client.email,
-                    editedClientInfoAddress: client.address,
+                    editedClientId: client.id,
+                    editedClientName: client.firstName,
+                    editedClientPhone: client.phone,
+                    editedClientAddress: client.address,
+                    editedClientMail: client.email,
                     createClientInfo: true,
+                    saveClientAsPermanent: false,
                 })
             } else {
                 this.initializeClientInfo()
@@ -101,6 +105,8 @@ export default class ScheduleActions {
         } else {
             this.initializeClientInfo()
         }
+        this.controller.toggleFieldValidation("editedClientNameField", false)
+        this.controller.toggleFieldValidation("editedClientPhoneField", false)
         this.controller.setState({
             dialogType: DialogType.EditAppointment
         })
@@ -128,13 +134,11 @@ export default class ScheduleActions {
         if (!state.createClientInfo) {
             return null
         }
-        return {
-            id: state.editedClientInfoId,
-            firstName: state.editedClientInfoFirstNameField.value,
-            phone: state.editedClientInfoPhoneField.value,
-            email: state.editedClientInfoMailField.value,
-            address: state.editedClientInfoAddressField.value,
-        }
+        return this.controller
+            .clientActions
+            .buildClientByFields(state.saveClientAsPermanent
+                ? ClientType.Permanent
+                : ClientType.Temporary)
     }
 
     public submitCreateItem(callback: Function = () => {}): void {

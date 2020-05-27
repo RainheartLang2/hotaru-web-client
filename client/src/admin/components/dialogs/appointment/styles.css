@@ -52,3 +52,9 @@
 .petBreedSelect {
     width: 250px;
 }
+
+.error {
+    height: 24px;
+    display: flex;
+    justify-content: center;
+}

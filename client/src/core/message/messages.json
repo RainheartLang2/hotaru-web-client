@@ -53,6 +53,8 @@
       "dialog.appointment.field.address.label": "Адрес",
       "dialog.appointment.field.petName.label": "Кличка",
       "dialog.appointment.checkbox.createClient.label": "Подробная информация о клиенте",
+      "dialog.appointment.checkbox.saveClient.label": "Сохранить данные о клиенте",
+      "dialog.appointment.permanentClient.nameOrPhone.error": "Для сохраняемого клиента необходимо указать имя или телефон",
 
       "dialog.client.create.label": "Создание записи о клиенте",
       "dialog.client.edit.label": "Редактирование данных клиента",

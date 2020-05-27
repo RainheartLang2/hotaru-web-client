@@ -14,5 +14,5 @@ export default class ErrorArea extends React.Component<Properties> {
 }
 
 type Properties =  {
-    message: ReactNode,
+    message: ReactNode | string,
 }

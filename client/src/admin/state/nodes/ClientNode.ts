@@ -11,6 +11,9 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
 import SimpleComplexValidator from "../../../core/mvc/validators/SimpleComplexValidator";
+import MessageResource from "../../../core/message/MessageResource";
+import {CommonUtils} from "../../../core/utils/CommonUtils";
+import {StringUtils} from "../../../core/utils/StringUtils";
 
 export default class ClientNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -31,13 +34,11 @@ export default class ClientNode {
         }
     }
 
+    public clientObligatoryDataNotEntered(nameField: Field, phoneField: Field) {
+
+    }
+
     public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, ClientSelectors> {
-        const obligatoryNameOrFieldValidator = new SimpleComplexValidator(() => {
-                const result = this._store.state.editedClientName.length > 0
-                || this._store.state.editedClientPhone.length > 0
-                return result
-            },
-            "dialog.client.field.nameOrPhone.error")
         return {
             clientsListById: {
                 dependsOn: ["clientsList"],
@@ -78,16 +79,28 @@ export default class ClientNode {
                     new EmailFormatValidator(),
                 ]
             ),
-            clientFormHasErrors: this._store.createFormHasErrorsSelector([
+            clientFormHasStandardErrors: this._store.createFormHasErrorsSelector([
                 "editedClientNameField",
                 "editedClientPhoneField",
                 "editedClientMailField",
-            ],
-                () => {
-                    return this._store.state.editedClientName.length == 0
-                    && this._store.state.editedClientPhone.length == 0
-                }
-                ),
+            ]),
+            clientFormHasErrors: {
+                dependsOn: [
+                    "clientFormHasStandardErrors",
+                    "editedClientNameField",
+                    "editedClientPhoneField",
+                ],
+                get: (state: Pick<ClientState & ClientSelectors, "clientFormHasStandardErrors"
+                    | "editedClientNameField"
+                    | "editedClientPhoneField">) => {
+                    return state.clientFormHasStandardErrors
+                        || CommonUtils.allFieldsAreEmpty([
+                            state.editedClientNameField,
+                            state.editedClientPhoneField,
+                        ])
+                },
+                value: false,
+            },
             clientNameOrPhoneNotEntered: {
                 dependsOn: ["editedClientNameField", "editedClientPhoneField"],
                 get: (state: Pick<ClientSelectors, "editedClientNameField" | "editedClientPhoneField">) => {
@@ -95,6 +108,16 @@ export default class ClientNode {
                             || (state.editedClientNameField.value.length == 0 && state.editedClientNameField.validationActive)
                 },
                 value: false,
+            },
+            clientDialogErrorText: {
+                dependsOn: ["clientNameOrPhoneNotEntered"],
+                get: (state: Pick<ClientSelectors, "clientNameOrPhoneNotEntered">) => {
+                    if (state.clientNameOrPhoneNotEntered) {
+                        return MessageResource.getMessage("dialog.client.field.nameOrPhone.error")
+                    }
+                    return ""
+                },
+                value: ""
             }
         }
     }
@@ -117,6 +140,8 @@ export type ClientSelectors = {
     editedClientPhoneField: Field,
     editedClientAddressField: Field,
     editedClientMailField: Field,
+    clientFormHasStandardErrors: boolean,
     clientFormHasErrors: boolean,
     clientNameOrPhoneNotEntered: boolean,
+    clientDialogErrorText: string,
 }

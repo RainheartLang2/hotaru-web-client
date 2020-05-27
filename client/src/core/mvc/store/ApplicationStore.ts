@@ -19,6 +19,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         this.dependencies = this.createDependencies()
         this.checkSelectors(this.selectors)
         this.readableState = this.createReadableState()
+        console.log(this.readableState)
 
         this.subscriptionDataByPropertyKey = new Map()
         this.propertyKeysBySubscriber = new Map()
@@ -50,6 +51,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                                     defaultValue: string = "",
                                     validators: FieldValidator[] = [],
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
+
         return {
             dependsOn: [originalProperty],
             get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field) => {
@@ -72,7 +74,6 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     }
 
     protected createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
-                                          additionalCondition: () => boolean = () => false,
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
         return {
             dependsOn: fieldsKeys,
@@ -85,9 +86,6 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                         return
                     }
                 })
-                if (additionalCondition()) {
-                    return true
-                }
                 return result
             },
             value: false,
@@ -262,9 +260,8 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
             }
 
             public createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
-                                               additionalCondition: () => boolean = () => false,
             ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
-                return store.createFormHasErrorsSelector(fieldsKeys, additionalCondition)
+                return store.createFormHasErrorsSelector(fieldsKeys)
             }
 
             public get state(): Readonly<StateType & SelectorsType> {
