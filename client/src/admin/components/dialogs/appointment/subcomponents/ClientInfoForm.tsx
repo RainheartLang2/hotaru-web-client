@@ -14,22 +14,8 @@ export default class ClientInfoForm extends React.Component<Properties> {
                 <div className={styles.nameField}>
                     <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                         controller={this.props.controller}
-                        fieldKey={{editedClientInfoLastName: "editedClientInfoLastNameField"}}
-                        label={<Message messageKey={"dialog.appointment.field.lastName.label"}/>}
-                    />
-                </div>
-                <div className={styles.nameField}>
-                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                        controller={this.props.controller}
                         fieldKey={{editedClientInfoFirstName: "editedClientInfoFirstNameField"}}
                         label={<Message messageKey={"dialog.appointment.field.firstName.label"}/>}
-                    />
-                </div>
-                <div className={styles.nameField}>
-                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                        controller={this.props.controller}
-                        fieldKey={{editedClientInfoMiddleName: "editedClientInfoMiddleNameField"}}
-                        label={<Message messageKey={"dialog.appointment.field.middleName.label"}/>}
                     />
                 </div>
             </div>

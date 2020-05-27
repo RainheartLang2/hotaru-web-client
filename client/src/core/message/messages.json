@@ -60,6 +60,7 @@
       "dialog.client.field.phone.label": "Телефон",
       "dialog.client.field.address.label": "Адрес",
       "dialog.client.field.mail.label": "E-mail",
+      "dialog.client.field.nameOrPhone.error": "Для клиента необходимо указать имя или телефон",
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",

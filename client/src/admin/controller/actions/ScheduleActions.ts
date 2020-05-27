@@ -44,8 +44,6 @@ export default class ScheduleActions {
         this.controller.setState({
             editedClientInfoId: 0,
             editedClientInfoFirstName: "",
-            editedClientInfoMiddleName: "",
-            editedClientInfoLastName: "",
             editedClientInfoMail: "",
             editedClientInfoPhone: "",
             editedClientInfoAddress: "",
@@ -92,8 +90,6 @@ export default class ScheduleActions {
                 this.controller.setState({
                     editedClientInfoId: client.id,
                     editedClientInfoFirstName: client.firstName,
-                    editedClientInfoMiddleName: client.middleName,
-                    editedClientInfoLastName: client.lastName,
                     editedClientInfoPhone: client.phone,
                     editedClientInfoMail: client.email,
                     editedClientInfoAddress: client.address,
@@ -135,8 +131,6 @@ export default class ScheduleActions {
         return {
             id: state.editedClientInfoId,
             firstName: state.editedClientInfoFirstNameField.value,
-            middleName: state.editedClientInfoMiddleNameField.value,
-            lastName: state.editedClientInfoLastNameField.value,
             phone: state.editedClientInfoPhoneField.value,
             email: state.editedClientInfoMailField.value,
             address: state.editedClientInfoAddressField.value,

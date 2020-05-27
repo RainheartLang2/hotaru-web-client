@@ -1,0 +1,8 @@
+.errorsArea {
+    min-height: 24px;
+    font-size: 14px;
+    color: red;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    line-height: 1.75;
+}

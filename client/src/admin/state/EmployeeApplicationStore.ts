@@ -5,15 +5,15 @@ import {SecondLevelNavigationMenuType} from "./enum/SecondLevelNavigationMenuTyp
 import {DictionaryMenuItemType} from "./enum/DictionaryMenuItemType";
 import {PageType} from "./enum/PageType";
 import {DialogType} from "./enum/DialogType";
-import EmployeeNode, {UserSelectors, UserPageEmployeeState} from "./nodes/EmployeeNode";
+import EmployeeNode, {UserPageEmployeeState, UserSelectors} from "./nodes/EmployeeNode";
 import {CommonUtils} from "../../core/utils/CommonUtils";
-import mergeTypes = CommonUtils.mergeTypes;
 import ClinicNode, {ClinicPageState, ClinicSelectors} from "./nodes/ClinicNode";
 import SpeciesNode, {SpeciesPageSelector, SpeciesPageState} from "./nodes/SpeciesNode";
 import BreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/BreedNode";
 import ScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/ScheduleNode";
 import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
 import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
+import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -117,6 +117,8 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Species:
             case PageType.Breeds:
                 return NavigationMenuItemType.SettingsMenu
+            case PageType.Clients:
+                return NavigationMenuItemType.ClientsList
             default: return NavigationMenuItemType.None
         }
     }

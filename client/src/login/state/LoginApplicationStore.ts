@@ -29,12 +29,8 @@ export default class LoginApplicationStore extends ApplicationStore<LoginState, 
         return {
             loginField: this.createField("login", "", [new RequiredFieldValidator()]),
             passwordField: this.createField("password", "", [new RequiredFieldValidator()]),
-            isAllowedToSubmit: {
-                dependsOn: ["loginField", "passwordField"],
-                get: (args: Pick<LoginState & LoginDerivationState, "loginField" | "passwordField">) => args.loginField.value && args.passwordField.value,
-                value: false,
-            }
-        };
+            isSubmitDisallowed: this.createFormHasErrorsSelector(["loginField", "passwordField"]),
+        }
     }
 
     protected getDefaultState(): LoginState {
@@ -63,5 +59,5 @@ export type LoginState = CommonLoginState & DefaultStateType
 export type LoginDerivationState = {
     loginField: Field,
     passwordField: Field,
-    isAllowedToSubmit: boolean,
+    isSubmitDisallowed: boolean,
 }

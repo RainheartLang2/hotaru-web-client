@@ -64,11 +64,11 @@ export default class ClinicNode {
             editedClinicCityField: this._store.createField("editedClinicCity", "", []),
             editedClinicSiteUrlField: this._store.createField("editedClinicSiteUrl", "",
                 [new MaximalLengthValidator(256)]),
-            editedClinicFormHasErrors: this._store.createFormHasErrorsSelector(["editedClinicName",
-                "editedClinicPhone",
-                "editedClinicEmail",
-                "editedClinicAddress",
-                "editedClinicSiteUrl"
+            editedClinicFormHasErrors: this._store.createFormHasErrorsSelector(["editedClinicNameField",
+                "editedClinicPhoneField",
+                "editedClinicEmailField",
+                "editedClinicAddressField",
+                "editedClinicSiteUrlField"
             ]),
             clinicDialogType: {
                 dependsOn: ["dialogType"],

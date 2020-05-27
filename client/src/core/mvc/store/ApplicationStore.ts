@@ -71,7 +71,8 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         }
     }
 
-    protected createFormHasErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+    protected createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
+                                          additionalCondition: () => boolean = () => false,
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
         return {
             dependsOn: fieldsKeys,
@@ -84,6 +85,9 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                         return
                     }
                 })
+                if (additionalCondition()) {
+                    return true
+                }
                 return result
             },
             value: false,
@@ -93,6 +97,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean): void {
         const field = this.readableState[fieldKey] as unknown as Field
         field.validationActive = value
+        this.refreshSelector(fieldKey)
     }
 
     private validateField<ValueType>(value: ValueType,
@@ -256,9 +261,14 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                 return store.createField(originalProperty, defaultValue, validators)
             }
 
-            public createFormHasErrorsSelector(fieldsKeys: (keyof (StateType & SelectorsType))[]
+            public createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
+                                               additionalCondition: () => boolean = () => false,
             ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
-                return store.createFormHasErrorsSelector(fieldsKeys)
+                return store.createFormHasErrorsSelector(fieldsKeys, additionalCondition)
+            }
+
+            public get state(): Readonly<StateType & SelectorsType> {
+                return store.readableState
             }
         }
     }
@@ -294,8 +304,6 @@ type ValidationResult = {
 }
 
 type KeysJunction<FirstType, SecondType> = keyof (FirstType & SecondType)
-
-export type SingleProperty<A> = A[keyof A]
 
 class AbortError extends Error {}
 

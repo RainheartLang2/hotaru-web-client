@@ -1,6 +1,6 @@
 import FieldValidator from "../validators/FieldValidator";
 
-export type Field<T = any> = {
+export type Field<T = string> = {
     value: T,
     errors: string[],
     validators: FieldValidator[],

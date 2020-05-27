@@ -10,6 +10,7 @@ import {Field} from "../../../core/mvc/store/Field";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
+import SimpleComplexValidator from "../../../core/mvc/validators/SimpleComplexValidator";
 
 export default class ClientNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -31,6 +32,12 @@ export default class ClientNode {
     }
 
     public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, ClientSelectors> {
+        const obligatoryNameOrFieldValidator = new SimpleComplexValidator(() => {
+                const result = this._store.state.editedClientName.length > 0
+                || this._store.state.editedClientPhone.length > 0
+                return result
+            },
+            "dialog.client.field.nameOrPhone.error")
         return {
             clientsListById: {
                 dependsOn: ["clientsList"],
@@ -57,7 +64,9 @@ export default class ClientNode {
                 },
                 value: "none",
             },
-            editedClientNameField: this._store.createField("editedClientName", "", [new MaximalLengthValidator(100)]),
+            editedClientNameField: this._store.createField("editedClientName", "", [
+                new MaximalLengthValidator(100),
+            ]),
             editedClientPhoneField: this._store.createField("editedClientPhone", "",
                 [new MaximalLengthValidator(15),
                     new DigitsOnlyValidator("\\*")]
@@ -69,6 +78,24 @@ export default class ClientNode {
                     new EmailFormatValidator(),
                 ]
             ),
+            clientFormHasErrors: this._store.createFormHasErrorsSelector([
+                "editedClientNameField",
+                "editedClientPhoneField",
+                "editedClientMailField",
+            ],
+                () => {
+                    return this._store.state.editedClientName.length == 0
+                    && this._store.state.editedClientPhone.length == 0
+                }
+                ),
+            clientNameOrPhoneNotEntered: {
+                dependsOn: ["editedClientNameField", "editedClientPhoneField"],
+                get: (state: Pick<ClientSelectors, "editedClientNameField" | "editedClientPhoneField">) => {
+                    return (state.editedClientPhoneField.value.length == 0 && state.editedClientPhoneField.validationActive)
+                            || (state.editedClientNameField.value.length == 0 && state.editedClientNameField.validationActive)
+                },
+                value: false,
+            }
         }
     }
 }
@@ -90,4 +117,6 @@ export type ClientSelectors = {
     editedClientPhoneField: Field,
     editedClientAddressField: Field,
     editedClientMailField: Field,
+    clientFormHasErrors: boolean,
+    clientNameOrPhoneNotEntered: boolean,
 }

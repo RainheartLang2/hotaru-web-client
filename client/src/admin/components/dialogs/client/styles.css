@@ -17,3 +17,9 @@
     padding-bottom: 10px;
     width: 400px;
 }
+
+.error {
+    height: 24px;
+    display: flex;
+    justify-content: center;
+}

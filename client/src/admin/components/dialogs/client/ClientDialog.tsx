@@ -7,6 +7,7 @@ import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApp
 import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import ErrorArea from "../../../../common/components/errorArea/ErrorArea";
 
 var styles = require("./styles.css")
 
@@ -16,6 +17,7 @@ export default class ClientDialog extends React.Component<Properties, State> {
         this.state = {
             mode: "none",
             hasErrors: false,
+            nameAndPhoneNotEntered: false,
         }
     }
 
@@ -36,6 +38,7 @@ export default class ClientDialog extends React.Component<Properties, State> {
     }
 
     render() {
+        console.log(this.state.hasErrors)
         return (
             <>
                 <DialogTitle>
@@ -43,6 +46,9 @@ export default class ClientDialog extends React.Component<Properties, State> {
                     />
                 </DialogTitle>
                 <DialogContent>
+                    <div className={styles.error}>
+                        {this.state.nameAndPhoneNotEntered && <ErrorArea message={<Message messageKey={"dialog.client.field.nameOrPhone.error"}/>}/>}
+                    </div>
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
                             <div className={styles.row}>
@@ -93,7 +99,7 @@ export default class ClientDialog extends React.Component<Properties, State> {
                     </div>
                     <DialogFooter
                         controller={this.props.controller}
-                        submitDisabled={false}
+                        submitDisabled={this.state.hasErrors}
                         onSubmitClick={() => this.submitForm()}
                         onCancelClick={() => this.props.controller.closeCurrentDialog()}
                     />
@@ -105,6 +111,8 @@ export default class ClientDialog extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             clientDialogType: "mode",
+            clientFormHasErrors: "hasErrors",
+            clientNameOrPhoneNotEntered: "nameAndPhoneNotEntered",
         })
     }
 }
@@ -116,4 +124,5 @@ type Properties = {
 type State = {
     mode: ConfigureDialogType,
     hasErrors: boolean,
+    nameAndPhoneNotEntered: boolean,
 }

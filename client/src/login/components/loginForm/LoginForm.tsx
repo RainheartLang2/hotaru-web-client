@@ -13,7 +13,7 @@ export default class LoginForm extends React.Component<Properties, State> {
         super(props)
         this.state = {
             hasError: "",
-            isSubmitAllowed: false,
+            isSubmitDisallowed: false,
         }
     }
 
@@ -49,7 +49,7 @@ export default class LoginForm extends React.Component<Properties, State> {
                     controller={this.props.controller}
                     variant="contained"
                     color="primary"
-                    disabled={!this.state.isSubmitAllowed}
+                    disabled={this.state.isSubmitDisallowed}
                     onClick={() => this.props.controller.submitLoginForm()}
                     loadingProperty={"isLoginButtonLoading"}
                 >
@@ -62,7 +62,7 @@ export default class LoginForm extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             hasError: "hasError",
-            isAllowedToSubmit: "isSubmitAllowed",
+            isSubmitDisallowed: "isSubmitDisallowed",
         })
     }
 
@@ -77,5 +77,5 @@ type Properties = {
 
 type State = {
     hasError: "",
-    isSubmitAllowed: false,
+    isSubmitDisallowed: false,
 }

@@ -69,6 +69,8 @@ export default class ClientActions {
             editedClientAddress: "",
             editedClientMail: "",
         })
+        this.controller.toggleFieldValidation("editedClientNameField", false)
+        this.controller.toggleFieldValidation("editedClientPhoneField", false)
     }
 
     public openEditDialog(client: Client): void {
@@ -80,6 +82,8 @@ export default class ClientActions {
             editedClientAddress: client.address,
             editedClientMail: client.email,
         })
+        this.controller.toggleFieldValidation("editedClientNameField", false)
+        this.controller.toggleFieldValidation("editedClientPhoneField", false)
     }
 
     private buildClientByFields(): Client {
