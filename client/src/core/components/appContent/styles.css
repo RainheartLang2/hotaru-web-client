@@ -2,6 +2,18 @@
     display: flex;
     justify-content: center;
     min-width: 800px;
+    width: 100%;
+}
+
+.superWrapper {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.leftMenuWrapper {
+    width: 300px;
+    margin-top: 150px;
+    margin-left: 50px;
 }
 
 .appContent {

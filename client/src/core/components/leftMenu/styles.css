@@ -1,0 +1,19 @@
+.listWrapper {
+    width: 250px;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.entry {
+    padding: 12px 20px;
+    color: #777;
+    height: 36px;
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.entry:hover {
+    background-color: #ddebff;
+}

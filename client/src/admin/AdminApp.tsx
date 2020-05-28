@@ -52,7 +52,7 @@ export default class AdminApp extends React.Component<Properties, State> {
                     <NavigationMenu controller={this.controller}/>
                 </ApplicationHeader>
                 <AdminSecondLevelNavigationContainer controller={this.controller}/>
-                <AppContent visible={!this.state.isLoading}>
+                <AppContent pageVisible={!this.state.isLoading}>
                     <AdminPagesContainer controller={this.controller}/>
                 </AppContent>
                 <AdminDialogsContainer controller={this.controller}/>
