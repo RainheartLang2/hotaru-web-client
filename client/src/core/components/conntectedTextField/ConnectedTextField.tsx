@@ -102,7 +102,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
             }
             event.target.value = settedValue
             event.target.selectionStart = event.target.selectionEnd = this.maskTransformer.getNextMaskedCharacterPosition(caretPosition)
-            settedValue = this.maskTransformer.fromMaskToPure(settedValue)
+            settedValue = this.maskTransformer.unmaskValue(settedValue)
             // const caretPosition = event.target.selectionStart
             // if (caretPosition == null) {
             //     throw new Error()
@@ -129,7 +129,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
     private getValue(): string {
         const value = this.state.field.value
         return this.props.mask
-            ? this.maskTransformer.fromPureToMask(value)
+            ? this.maskTransformer.maskValue(value)
             : value
     }
 

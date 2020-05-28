@@ -22,7 +22,7 @@ export default class MaskTransformer {
         }
     }
 
-    public fromPureToMask(value: string): string {
+    public maskValue(value: string): string {
         if (!this.mask) {
             return value
         }
@@ -39,7 +39,7 @@ export default class MaskTransformer {
         return StringUtils.replaceAll(result,'?', this.emptyPlaceCharacter)
     }
 
-    public fromMaskToPure(value: string): string {
+    public unmaskValue(value: string): string {
         if (!this.mask) {
             return value
         }
@@ -56,6 +56,20 @@ export default class MaskTransformer {
                                         this.innerMaskingChar)
     }
 
+    /**
+     * Получить ближайший от данного номер маскируемого символа
+     * @param caretPosition - текущая позиция
+     * @example - для маски (???)-???-??-??
+     *  f(0) = 1
+     *  f(1) = 1
+     *  f(2) = 2
+     *  f(3) = 3
+     *  f(4) = 6
+     *  f(5) = 6
+     *  f(6) = 6
+     *  ...
+     *  Таким образом функция неубывающая и f(x) = x, если x - номер маскируемого символа в текущей маске
+     */
     public getNextMaskedCharacterPosition(caretPosition: number): number {
         for (let index = caretPosition; index < this.mask.length; index++) {
             if (this.correlationMap.getBySecond(index) != null) {
@@ -65,6 +79,11 @@ export default class MaskTransformer {
         return -1
     }
 
+    /**
+     * Получить количество всех символов в текущей маске, соответствующее указанному количеству маскированных символов
+     * @param start - индекс начало последовательности для которой производится подсчёт
+     * @param charactersNumber - количество маскируемых символов в потенциальной последовательности
+     */
     public getMaskedDistance(start: number, charactersNumber: number): number {
         let index = start
         let charactersRemain = charactersNumber
@@ -77,6 +96,10 @@ export default class MaskTransformer {
         return index - start
     }
 
+    /**
+     * Получить индекс символа в размаскированном состоянии по его индексу в маскированном состоянии
+      * @param maskedIndex
+     */
     public getPureIndexByMasked(maskedIndex: number): number {
         const pureIndex = this.correlationMap.getBySecond(maskedIndex)
         if (pureIndex == null) {
@@ -85,6 +108,10 @@ export default class MaskTransformer {
         return pureIndex
     }
 
+    /**
+     * Является ли символ немаскируемым
+     * @param characterIndex
+     */
     private isCharacterPartOfMask(characterIndex: number): boolean {
         return this.correlationMap.getBySecond(characterIndex) == null
     }
