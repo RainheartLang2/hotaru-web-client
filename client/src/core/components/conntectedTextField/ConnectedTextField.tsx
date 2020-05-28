@@ -9,6 +9,8 @@ import {CommonUtils} from "../../utils/CommonUtils";
 import {StringUtils} from "../../utils/StringUtils";
 import DifferenceType = StringUtils.DifferenceType;
 
+const EmptyCharacter = "_"
+
 export default class ConnectedTextField<StateType extends DefaultStateType,
                                             SelectorsType,
                                             StoreType extends ApplicationStore<StateType, SelectorsType>>
@@ -21,7 +23,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         super(props)
         this.checkFieldKey()
         if (props.mask) {
-            this.maskTransformer = new MaskTransformer(props.mask, "_", "*")
+            this.maskTransformer = new MaskTransformer(props.mask, EmptyCharacter, "*")
         }
         this.prevValue = this.props.defaultValue || "",
         this.state = {
@@ -69,6 +71,42 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         this.props.controller.toggleFieldValidation(keys[1], true)
     }
 
+    private insertCharactersToMask(value: string,
+                                   addedCharacters: string,
+                                   position: number,
+                                   size: number): string {
+        let potentialPosition = position
+        let result = value
+        for (let i = 0; i < size; i++) {
+            if (potentialPosition != -1) {
+                const nextMaskedCharacterPosition = this.maskTransformer.getNextMaskedCharacterPosition(potentialPosition)
+                if (nextMaskedCharacterPosition == -1) {
+                    potentialPosition = -1
+                } else {
+                    result = StringUtils.setCharAt(result, nextMaskedCharacterPosition, addedCharacters.charAt(i))
+                }
+                potentialPosition = nextMaskedCharacterPosition + 1
+            }
+        }
+        return result
+    }
+
+    private handleAddition(value: string,
+                           position: number,
+                           size: number
+    ): string {
+        const addedCharacters = value.substr(position, position + size)
+        const settedValue = StringUtils.deleteChars(value, position, size)
+        return this.insertCharactersToMask(settedValue, addedCharacters, position, size)
+    }
+
+    private handleDeletion(value: string,
+                           position: number,
+                           size: number
+    ): string {
+        return this.maskTransformer.restoreMaskedValueAfterDeletion(value, position, size)
+    }
+
     private onChange(event: React.ChangeEvent<HTMLInputElement>): void {
         let settedValue = event.target.value
 
@@ -79,49 +117,29 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
             }
 
             let caretPosition = 0
+            if (event.target.selectionEnd == null) {
+                throw new Error("selectionEnd can not be null, while input is changed")
+            }
             if (difference.type == DifferenceType.Addition) {
-                const addedCharacters = settedValue.substr(difference.position, difference.position + difference.size)
-                settedValue = StringUtils.deleteChars(settedValue, difference.position, difference.size)
-                let potentialPosition = difference.position
-                if (event.target.selectionEnd) {
-                    caretPosition = event.target.selectionEnd - difference.size
-                    caretPosition+= this.maskTransformer.getMaskedDistance(caretPosition, difference.size)
-                }
-                for (let i = 0; i < difference.size; i++) {
-                    if (potentialPosition != -1) {
-                        const nextMaskedCharacterPosition = this.maskTransformer.getNextMaskedCharacterPosition(potentialPosition)
-                        if (nextMaskedCharacterPosition == -1) {
-                            potentialPosition = -1
-                        } else {
-                            settedValue = StringUtils.setCharAt(settedValue, nextMaskedCharacterPosition, addedCharacters.charAt(i))
-                        }
-                        potentialPosition = nextMaskedCharacterPosition + 1
+                caretPosition = event.target.selectionEnd - difference.size
+                caretPosition += this.maskTransformer.getMaskedDistance(caretPosition, difference.size)
+                settedValue = this.handleAddition(settedValue, difference.position, difference.size)
+            } else if (difference.type == DifferenceType.Deletion) {
+                if (difference.size == 1) {
+                    const position = this.maskTransformer.getPreviousMaskedCharacterPosition(difference.position)
+                    if (position != -1) {
+                        settedValue = StringUtils.setCharAt(this.prevValue, position, EmptyCharacter)
+                        console.log(settedValue)
+                        caretPosition = position
                     }
+                } else {
+                    caretPosition = event.target.selectionEnd
+                    settedValue = this.handleDeletion(settedValue, difference.position, difference.size)
                 }
-
             }
             event.target.value = settedValue
             event.target.selectionStart = event.target.selectionEnd = this.maskTransformer.getNextMaskedCharacterPosition(caretPosition)
             settedValue = this.maskTransformer.unmaskValue(settedValue)
-            // const caretPosition = event.target.selectionStart
-            // if (caretPosition == null) {
-            //     throw new Error()
-            // }
-            // const nextMaskedCharacterPosition = this.maskTransformer
-            //     .getNextMaskedCharacterPosition(caretPosition -1)
-            // if (nextMaskedCharacterPosition != -1) {
-            //     const enteredCharacter = settedValue.charAt(caretPosition - 1)
-            //     settedValue = StringUtils.deleteCharAt(settedValue, caretPosition - 1)
-            //     settedValue = StringUtils.setCharAt(settedValue,
-            //         this.maskTransformer.getNextMaskedCharacterPosition(caretPosition -1 ),
-            //         enteredCharacter)
-            //     event.target.value = settedValue
-            //     // event.target.selectionStart = event.target.selectionEnd = nextMaskedCharacterPosition + 1
-            //     event.target.selectionStart = event.target.selectionEnd = (nextMaskedCharacterPosition != -1
-            //                                 ? this.maskTransformer.getNextMaskedCharacterPosition(nextMaskedCharacterPosition + 1)
-            //                                 : event.target.value.length)
-            //     settedValue = this.maskTransformer.fromMaskToPure(settedValue)
-            // }
         }
         this.postValueChangeToStore(settedValue)
     }
@@ -197,3 +215,7 @@ type State = {
     field: Field
 }
 
+type ChangeHandleResult = {
+    caretPosition: number,
+    value: string,
+}

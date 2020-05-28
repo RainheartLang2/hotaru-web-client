@@ -58,7 +58,7 @@ export default class MaskTransformer {
 
     /**
      * Получить ближайший от данного номер маскируемого символа
-     * @param caretPosition - текущая позиция
+     * @param currentPosition - текущая позиция
      * @example - для маски (???)-???-??-??
      *  f(0) = 1
      *  f(1) = 1
@@ -70,10 +70,19 @@ export default class MaskTransformer {
      *  ...
      *  Таким образом функция неубывающая и f(x) = x, если x - номер маскируемого символа в текущей маске
      */
-    public getNextMaskedCharacterPosition(caretPosition: number): number {
-        for (let index = caretPosition; index < this.mask.length; index++) {
-            if (this.correlationMap.getBySecond(index) != null) {
+    public getNextMaskedCharacterPosition(currentPosition: number): number {
+        for (let index = currentPosition; index < this.mask.length; index++) {
+            if (!this.isCharacterPartOfMask(index)) {
                 return index;
+            }
+        }
+        return -1
+    }
+
+    public getPreviousMaskedCharacterPosition(currentPosition: number): number {
+        for (let index = currentPosition; index >= 0; index--) {
+            if (!this.isCharacterPartOfMask(index)) {
+                return index
             }
         }
         return -1
@@ -106,6 +115,16 @@ export default class MaskTransformer {
             throw new Error("no pure index for masked " + maskedIndex)
         }
         return pureIndex
+    }
+
+    public restoreMaskedValueAfterDeletion(value: string, position: number, size: number): string {
+        let result = value
+        for (let i = position; i < position + size; i++) {
+            result = this.isCharacterPartOfMask(i)
+                        ? StringUtils.insertCharAt(result, i, this.mask.charAt(i))
+                        : StringUtils.insertCharAt(result, i, this.emptyPlaceCharacter)
+        }
+        return result
     }
 
     /**
