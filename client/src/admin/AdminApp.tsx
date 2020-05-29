@@ -17,6 +17,7 @@ import NavigationMenu from "./components/navigationMenu/NavigationMenu";
 import {AdminSecondLevelNavigationContainer} from "./components/secondLevelNavigation/AdminSecondLevelNavigationContainer";
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import EmployeeAppController from "./controller/EmployeeAppController";
+import EmployeeLeftMenuContainer from "./containers/EmployeeLeftMenuContainer";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -29,6 +30,7 @@ export default class AdminApp extends React.Component<Properties, State> {
         this.state = {
             isLoading: true,
             loggedInUser: null,
+            leftMenuVisible: false,
         }
         ApplicationHolder.initialize(ApplicationType.Admin)
         //TODO: remove from here
@@ -53,8 +55,11 @@ export default class AdminApp extends React.Component<Properties, State> {
                 >
                     <NavigationMenu controller={this.controller}/>
                 </ApplicationHeader>
-                <AdminSecondLevelNavigationContainer controller={this.controller}/>
-                <AppContent pageVisible={!this.state.isLoading}>
+                <AppContent
+                    leftMenuContainer={<EmployeeLeftMenuContainer controller={this.controller}/>}
+                    leftMenuVisible={this.state.leftMenuVisible}
+                    pageVisible={!this.state.isLoading}
+                >
                     <AdminPagesContainer controller={this.controller}/>
                 </AppContent>
                 <AdminDialogsContainer controller={this.controller}/>
@@ -68,7 +73,8 @@ export default class AdminApp extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.controller.subscribe(this, {
             isApplicationLoading: "isLoading",
-            loggedInEmployee: "loggedInUser"
+            loggedInEmployee: "loggedInUser",
+            showSecondLevelNavigationMenu: "leftMenuVisible",
         })
         this.controller.startApplication()
     }
@@ -83,4 +89,5 @@ type Properties = {}
 type State = {
     isLoading: boolean,
     loggedInUser: Employee | null,
+    leftMenuVisible: boolean,
 }

@@ -46,8 +46,9 @@ export default class CustomPopover extends React.Component<Properties, State> {
                     }}
                     keepMounted
                 >
-
-                    {this.props.popoverContent}
+                    <div className={styles.popover}>
+                        {this.props.popoverContent}
+                    </div>
                 </Popover>
             </div>
         )

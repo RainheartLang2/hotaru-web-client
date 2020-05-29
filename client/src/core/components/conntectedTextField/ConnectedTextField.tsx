@@ -66,6 +66,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
 
     private postValueChangeToStore(value: string): void {
         const keys = this.getKeys()
+        console.log(keys)
         this.props.controller
             .setState({[keys[0]]: value} as unknown as Partial<StateType>)
         this.props.controller.toggleFieldValidation(keys[1], true)

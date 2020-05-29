@@ -13,6 +13,7 @@ import SpeciesActions from "./actions/SpeciesActions";
 import BreedActions from "./actions/BreedActions";
 import ScheduleActions from "./actions/ScheduleActions";
 import ClientActions from "./actions/ClientActions";
+import MeasureActions from "./actions/MeasureActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -22,6 +23,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _breedActions: BreedActions
     private _scheduleActions: ScheduleActions
     private _clientActions: ClientActions
+    private _measureActions: MeasureActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -33,6 +35,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._breedActions = new BreedActions(this)
         this._scheduleActions = new ScheduleActions(this)
         this._clientActions = new ClientActions(this)
+        this._measureActions = new MeasureActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -66,6 +69,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public get clientActions(): ClientActions {
         return this._clientActions
+    }
+
+    public get measureActions(): MeasureActions {
+        return this._measureActions
     }
 
     public get cacheManager(): CacheManager {
@@ -158,6 +165,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public openDictionaries(): void {
         this.openSpeciesPage()
+    }
+
+    public openMeasureUnitsPage(): void {
+        this.openPage(PageType.MeasureUnits, (setPageLoad: Function) => {
+            this._measureActions.loadList([], () => setPageLoad())
+        })
     }
 
     public openSpeciesPage(): void {

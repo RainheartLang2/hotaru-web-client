@@ -1,19 +1,28 @@
 .listWrapper {
     width: 250px;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 0.975rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 5px 0;
 }
 
 .entry {
     padding: 12px 20px;
     color: #777;
-    height: 36px;
     position: relative;
-    border-bottom: 1px solid #ccc;
     cursor: pointer;
 }
 
+.selectedEntry {
+    background-color: #FFCC00;
+    cursor: default;
+}
+
 .entry:hover {
-    background-color: #ddebff;
+    color: orange;
+}
+
+.selectedEntry:hover {
+    color: #777;
 }

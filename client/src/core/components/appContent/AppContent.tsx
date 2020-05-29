@@ -1,4 +1,5 @@
 import * as React from "react";
+import {ReactNode} from "react";
 
 var styles = require("./styles.css");
 
@@ -13,12 +14,19 @@ export default class AppContent extends React.Component<Properties> {
     render() {
         return (
             <div className={styles.superWrapper}>
-                {this.props.leftMenuVisible && this.props.leftMenuContainer}
-                <div className={styles.appContentWrapper}>
-                    <div className={styles.appContent}>
-                        {this.props.pageVisible ? this.props.children : ""}
-                    </div>
-                </div>
+                {this.props.pageVisible
+                    && <>
+                        {this.props.leftMenuVisible &&
+                        <div className={styles.leftMenuWrapper}>
+                            {this.props.leftMenuContainer}
+                        </div>
+                        }
+                        <div className={styles.appContentWrapper}>
+                            <div className={styles.appContent}>
+                                {this.props.children}
+                            </div>
+                        </div>
+                       </>}
             </div>
         )
     }
@@ -26,6 +34,6 @@ export default class AppContent extends React.Component<Properties> {
 
 type Properties = {
     pageVisible: boolean
-    leftMenuContainer: React.Component
+    leftMenuContainer: ReactNode
     leftMenuVisible: boolean
 }

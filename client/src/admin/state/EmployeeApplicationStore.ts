@@ -13,6 +13,7 @@ import BreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/BreedNode"
 import ScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/ScheduleNode";
 import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
 import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
+import MeasureNode, {MeasurePageSelectors, MeasurePageState} from "./nodes/MeasureNode";
 import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
@@ -26,6 +27,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private scheduleNode!: ScheduleNode
     private petNode!: PetNode
     private clientNode!: ClientNode
+    private measureNode!: MeasureNode
 
     constructor() {
         super()
@@ -37,6 +39,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.scheduleNode = new ScheduleNode(friend)
         this.petNode = new PetNode(friend)
         this.clientNode = new ClientNode(friend)
+        this.measureNode = new MeasureNode(friend)
         this.initialize()
     }
 
@@ -82,6 +85,12 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
                 dependsOn: ["pageType"],
                 get: (state: Pick<EmployeeAppState, "pageType">) => this.calcDictionariesNavigationSelectedItem(this.state.pageType),
                 value: DictionaryMenuItemType.None,
+            },
+            showSecondLevelNavigationMenu: {
+                dependsOn: ["secondLevelNavigationMenuType"],
+                get: (state: Pick<CommonEmployeeSelectors, "secondLevelNavigationMenuType">) =>
+                    state.secondLevelNavigationMenuType != SecondLevelNavigationMenuType.None,
+                value: false,
             }
         }
     }
@@ -95,6 +104,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.scheduleNode.getDefaultState())
         state = mergeTypes(state, this.petNode.getDefaultState())
         state = mergeTypes(state, this.clientNode.getDefaultState())
+        state = mergeTypes(state, this.measureNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -106,6 +116,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.scheduleNode.getSelectors())
         selectors = mergeTypes(selectors, this.petNode.getSelectors())
         selectors = mergeTypes(selectors, this.clientNode.getSelectors())
+        selectors = mergeTypes(selectors, this.measureNode.getSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -127,6 +138,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         switch (pageType) {
             case PageType.Species:
             case PageType.Breeds:
+            case PageType.MeasureUnits:
                 return SecondLevelNavigationMenuType.Dictionaries
             default: return SecondLevelNavigationMenuType.None
         }
@@ -136,6 +148,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         switch (pageType) {
             case PageType.Species: return DictionaryMenuItemType.Species
             case PageType.Breeds: return DictionaryMenuItemType.Breed
+            case PageType.MeasureUnits: return DictionaryMenuItemType.MeasureUnits
             default: return DictionaryMenuItemType.None
         }
     }
@@ -161,12 +174,14 @@ export type EmployeeAppState = DefaultStateType
     & ScheduleState
     & PetState
     & ClientState
+    & MeasurePageState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
     navigationMenuItemType: NavigationMenuItemType,
     secondLevelNavigationMenuType: SecondLevelNavigationMenuType,
     dictionariesNavigationSelectedItem: DictionaryMenuItemType,
+    showSecondLevelNavigationMenu: boolean,
 }
 
 export type EmployeeAppSelectors = CommonEmployeeSelectors
@@ -177,3 +192,4 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & ScheduleSelectors
     & PetSelectors
     & ClientSelectors
+    & MeasurePageSelectors

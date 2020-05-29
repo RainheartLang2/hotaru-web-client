@@ -93,7 +93,9 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     }
 
     public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean): void {
+        console.log(fieldKey)
         const field = this.readableState[fieldKey] as unknown as Field
+        console.log(field)
         field.validationActive = value
         this.refreshSelector(fieldKey)
     }
