@@ -48,7 +48,9 @@ export default class AdminApp extends React.Component<Properties, State> {
                         if (loggedInUser) {
                             this.controller.employeeActions.openEditEmployeeDialog(loggedInUser, true)
                         }
-                    }}>
+                    }}
+                    controller={this.controller}
+                >
                     <NavigationMenu controller={this.controller}/>
                 </ApplicationHeader>
                 <AdminSecondLevelNavigationContainer controller={this.controller}/>

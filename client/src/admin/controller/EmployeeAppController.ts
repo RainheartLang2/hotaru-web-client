@@ -85,7 +85,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     public startApplication(): void {
         this.store.setState({isApplicationLoading: true})
         this.loadLoggedInUser(() => {
-            this.openUserListPage(() => {
+            this.openSchedulePage(() => {
                 this.store.setState({isApplicationLoading: false})
             })
         })
@@ -128,7 +128,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
-    public openSchedulePage(): void {
+    public openSchedulePage(callback: Function = () => {}): void {
         this.openPage(PageType.Schedule, (setPageLoad: Function) => {
             this._employeeActions.loadUsersList((employees) => {
                 this.setState({
@@ -137,13 +137,26 @@ export default class EmployeeAppController extends ApplicationController<Employe
                 this._speciesActions.loadList([], () => {
                     this._breedActions.loadList([], () => {
                         this._scheduleActions.loadAppointmentsWithClients(() => setPageLoad())
+                        callback()
                     })
                 })
             })
         })
     }
 
-    public openSettings(): void {
+    public openGlobalSettings(): void {
+
+    }
+
+    public openLocalePage(): void {
+
+    }
+
+    public openAccessPage(): void {
+
+    }
+
+    public openDictionaries(): void {
         this.openSpeciesPage()
     }
 

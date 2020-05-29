@@ -13,12 +13,10 @@ export default class NavigationMenu extends React.Component<Properties, State> {
         super(props)
         this.state = {
             selectedItem: NavigationMenuItemType.None,
-            settingsMenuAnchor: null,
         }
     }
 
     render() {
-        console.log(this.state.selectedItem)
         return (
             <Tabs
                 variant="fullWidth"
@@ -26,43 +24,15 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                 classes={{indicator: styles.indicator}}
             >
                 <Tab
-                    label={<Message messageKey={"navigationMenu.employees.title"}/>}
-                    value={NavigationMenuItemType.UserList}
-                    onClick={() => this.props.controller.openUserListPage()}
-                />
-                <Tab
-                    label={<Message messageKey={"navigationMenu.clinics.title"}/>}
-                    value={NavigationMenuItemType.ClinicList}
-                    onClick={() => this.props.controller.openClinicListPage()}
-                />
-                <Tab
                     label={<Message messageKey={"navigationMenu.schedule.title"}/>}
                     value={NavigationMenuItemType.Schedule}
                     onClick={() => this.props.controller.openSchedulePage()}
-                />
-                <Tab
-                    label={<Message messageKey={"navigationMenu.settings.title"}/>}
-                    value={NavigationMenuItemType.SettingsMenu}
-                    onClick={(event) => this.setState({settingsMenuAnchor: event.currentTarget})}
                 />
                 <Tab
                     label={<Message messageKey={"navigationMenu.clients.title"}/>}
                     value={NavigationMenuItemType.ClientsList}
                     onClick={() => this.props.controller.openClientsPage()}
                 />
-                <Menu
-                    open={!!this.state.settingsMenuAnchor}
-                    anchorEl={this.state.settingsMenuAnchor}
-                    onClose={() => this.setState({settingsMenuAnchor: null})}
-                    keepMounted
-                >
-                    <MenuItem onClick={() => {
-                        this.setState({settingsMenuAnchor: null})
-                        this.props.controller.openSettings()
-                    }}>
-                        <Message messageKey={"navigationMenu.settings.dialog.dictionaries"}/>
-                    </MenuItem>
-                </Menu>
             </Tabs>
         )
     }
@@ -84,5 +54,4 @@ type Properties = {
 
 type State = {
     selectedItem: NavigationMenuItemType
-    settingsMenuAnchor: Element | null
 }

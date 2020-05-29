@@ -1,0 +1,8 @@
+.iconWrapper {
+    padding: 2px;
+    cursor: pointer;
+}
+
+.iconWrapper:hover {
+    color: #ffa500 !important;
+}
