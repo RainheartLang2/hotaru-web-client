@@ -43,6 +43,7 @@
       "second.navigation.dictionaries.species.label": "Виды животных",
       "second.navigation.dictionaries.breed.label": "Породы",
       "second.navigation.dictionaries.measureUnit.label": "Единицы измерений",
+      "second.navigation.dictionaries.visitResult.label": "Результат посещения",
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
       "page.schedule.todayButton.label": "Текущая неделя",
@@ -54,6 +55,7 @@
       "page.clinics.name.title": "Название клиники",
       "page.clients.title": "Клиенты",
       "page.measure.title": "Единицы измерения",
+      "page.visitResult.title": "Результат посещения",
 
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",

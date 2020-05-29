@@ -10,16 +10,21 @@ import CustomTableCell from "../../../../core/components/tableCell/CustomTableCe
 import Link from "@material-ui/core/Link";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import MeasureUnit from "../../../../common/beans/MeasureUnit";
+import VisitResult from "../../../../common/beans/VisitResult";
 
 var styles = require("./styles.css")
 
-export default class MeasurePage extends React.Component<Properties, State> {
+export default class VisitResultPage extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
         this.state = {
-            measureList: [],
+            list: [],
         }
+    }
+
+    private setEditVisitResultId(id: number | undefined) {
+        this.props.controller.setState({editedVisitResultId: id})
     }
 
     render() {
@@ -27,23 +32,23 @@ export default class MeasurePage extends React.Component<Properties, State> {
         return (
             <>
                 <PageHeader
-                    label={(<Message messageKey={"page.measure.title"}/>)}
+                    label={(<Message messageKey={"page.visitResult.title"}/>)}
                     hasButton={false}
                     buttonOnClick={() => {
                     }}
                 />
                 <TableCmp>
                     <TableBodyCmp>
-                        {this.state.measureList.map(item => {
+                        {this.state.list.map(item => {
                             return (<TableRowCmp key={item.id}>
                                     <CustomTableCell style={styles.nameCell}>
                                         <TextField
                                             variant={"outlined"}
                                             size={"small"}
                                             defaultValue={item.name}
-                                            onFocus={() => actions.setEditedMeasureId(item.id)}
-                                            onChange={(event) => actions.setEditedMeasureName(event.target.value)}
-                                            onBlur={(event) => actions.submitEditMeasureUnit(() => actions.setEditedMeasureId(undefined))}
+                                            onFocus={() => this.setEditVisitResultId(item.id)}
+                                            onChange={(event) => this.props.controller.setState({editedVisitResultName: event.target.value})}
+                                            onBlur={(event) => actions.submitEditVisitResult(() => this.setEditVisitResultId(undefined))}
                                         />
                                     </CustomTableCell>
                                     <CustomTableCell style={styles.actions}>
@@ -51,7 +56,7 @@ export default class MeasurePage extends React.Component<Properties, State> {
                                             color="primary"
                                             onClick={() => {
                                                 if (item.id) {
-                                                    actions.deleteMeasure(item.id)
+                                                    actions.deleteVisitResult(item.id)
                                                 }
                                             }}
                                         >
@@ -68,14 +73,14 @@ export default class MeasurePage extends React.Component<Properties, State> {
                                 <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     size={"small"}
-                                    fieldKey={{addedMeasureName: "addedMeasureNameField"}}
+                                    fieldKey={{addedVisitResultName: "addedVisitResultNameField"}}
                                     variant={"outlined"}
                                 />
                             </CustomTableCell>
                             <CustomTableCell style={""}>
                                 <Link
                                     color="primary"
-                                    onClick={() => actions.submitCreateMeasureUnit()}
+                                    onClick={() => actions.submitCreateVisitResult()}
                                 >
                                     <Message messageKey={"common.button.create"}/>
                                 </Link>
@@ -89,7 +94,7 @@ export default class MeasurePage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            measureList: "measureList"
+            visitResultsList: "list",
         })
     }
 
@@ -103,5 +108,5 @@ type Properties = {
 }
 
 type State = {
-    measureList: MeasureUnit[]
+    list: VisitResult[]
 }

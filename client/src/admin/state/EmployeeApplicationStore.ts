@@ -13,7 +13,7 @@ import BreedNode, {BreedsPageSelector, BreedsPageState} from "./nodes/BreedNode"
 import ScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/ScheduleNode";
 import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
 import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
-import MeasureNode, {MeasurePageSelectors, MeasurePageState} from "./nodes/MeasureNode";
+import DictionaryNode, {DictionariesPageSelectors, DictionariesPagesState} from "./nodes/DictionaryNode";
 import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
@@ -27,7 +27,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private scheduleNode!: ScheduleNode
     private petNode!: PetNode
     private clientNode!: ClientNode
-    private measureNode!: MeasureNode
+    private dictionariesNode!: DictionaryNode
 
     constructor() {
         super()
@@ -39,7 +39,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.scheduleNode = new ScheduleNode(friend)
         this.petNode = new PetNode(friend)
         this.clientNode = new ClientNode(friend)
-        this.measureNode = new MeasureNode(friend)
+        this.dictionariesNode = new DictionaryNode(friend)
         this.initialize()
     }
 
@@ -104,7 +104,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.scheduleNode.getDefaultState())
         state = mergeTypes(state, this.petNode.getDefaultState())
         state = mergeTypes(state, this.clientNode.getDefaultState())
-        state = mergeTypes(state, this.measureNode.getDefaultState())
+        state = mergeTypes(state, this.dictionariesNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -116,7 +116,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.scheduleNode.getSelectors())
         selectors = mergeTypes(selectors, this.petNode.getSelectors())
         selectors = mergeTypes(selectors, this.clientNode.getSelectors())
-        selectors = mergeTypes(selectors, this.measureNode.getSelectors())
+        selectors = mergeTypes(selectors, this.dictionariesNode.getSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -139,6 +139,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Species:
             case PageType.Breeds:
             case PageType.MeasureUnits:
+            case PageType.VisitResult:
                 return SecondLevelNavigationMenuType.Dictionaries
             default: return SecondLevelNavigationMenuType.None
         }
@@ -149,6 +150,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Species: return DictionaryMenuItemType.Species
             case PageType.Breeds: return DictionaryMenuItemType.Breed
             case PageType.MeasureUnits: return DictionaryMenuItemType.MeasureUnits
+            case PageType.VisitResult: return DictionaryMenuItemType.VisitResult
             default: return DictionaryMenuItemType.None
         }
     }
@@ -174,7 +176,7 @@ export type EmployeeAppState = DefaultStateType
     & ScheduleState
     & PetState
     & ClientState
-    & MeasurePageState
+    & DictionariesPagesState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -192,4 +194,4 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & ScheduleSelectors
     & PetSelectors
     & ClientSelectors
-    & MeasurePageSelectors
+    & DictionariesPageSelectors
