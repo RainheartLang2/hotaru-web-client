@@ -35,7 +35,12 @@ export default class EmployeeLeftMenuContainer extends React.Component<Propertie
                 key: DictionaryMenuItemType.VisitResult,
                 label: <Message messageKey={"second.navigation.dictionaries.visitResult.label"}/>,
                 onClick: () => this.props.controller.openVisitResultPage()
-            }
+            },
+            {
+                key: DictionaryMenuItemType.Diagnosis,
+                label: <Message messageKey={"second.navigation.dictionaries.diagnosis.label"}/>,
+                onClick: () => this.props.controller.openDiagnosisPage(),
+            },
         ]
     }
 

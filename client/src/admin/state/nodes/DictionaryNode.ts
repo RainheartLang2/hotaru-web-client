@@ -8,6 +8,7 @@ import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import VisitResult from "../../../common/beans/VisitResult";
+import Diagnosis from "../../../common/beans/Diagnosis";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -28,6 +29,11 @@ export default class DictionaryNode {
             editedVisitResultId: undefined,
             editedVisitResultName: "",
             addedVisitResultName: "",
+
+            diagnosisList: [],
+            editedDiagnosisId: undefined,
+            editedDiagnosisName: "",
+            addedDiagnosisName: "",
         }
     }
 
@@ -54,7 +60,18 @@ export default class DictionaryNode {
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(50),
             ],
-                false)
+                false),
+            diagnosisById: {
+                dependsOn: ["diagnosisList"],
+                get: (state: Pick<DictionariesPagesState, "diagnosisList">) =>
+                    CollectionUtils.mapArrayByUniquePredicate(state.diagnosisList, diagnosis => diagnosis.id ? diagnosis.id : 0),
+                value: new Map<number, Diagnosis>()
+            },
+            addedDiagnosisNameField: this._store.createField("addedDiagnosisName", "", [
+                new RequiredFieldValidator(),
+                new MaximalLengthValidator(50),
+            ],
+                false),
         }
     }
 }
@@ -70,6 +87,11 @@ export type DictionariesPagesState = {
     editedVisitResultName: string,
     addedVisitResultName: string,
 
+    diagnosisList: Diagnosis[],
+    editedDiagnosisId: number | undefined,
+    editedDiagnosisName: string,
+    addedDiagnosisName: string,
+
 }
 
 export type DictionariesPageSelectors = {
@@ -78,4 +100,7 @@ export type DictionariesPageSelectors = {
 
     visitResultListById: Map<number, VisitResult>,
     addedVisitResultNameField: Field,
+
+    diagnosisById: Map<number, Diagnosis>,
+    addedDiagnosisNameField: Field,
 }

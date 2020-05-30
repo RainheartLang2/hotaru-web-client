@@ -10,6 +10,7 @@ import EmployeeAppController from "../../controller/EmployeeAppController";
 import ClientsPage from "./clients/ClientsPage";
 import MeasurePage from "./measure/MeasurePage";
 import VisitResultPage from "./visitResult/VisitResultPage";
+import DiagnosisPage from "./diagnosis/DiagnosisPage";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -36,6 +37,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {this.isRenderPage(PageType.Clients) && <ClientsPage controller={this.props.controller}/>}
             {this.isRenderPage(PageType.MeasureUnits) && (<MeasurePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.VisitResult) && (<VisitResultPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.Diagnosis) && (<DiagnosisPage controller={this.props.controller}/>)}
         </>)
     }
 

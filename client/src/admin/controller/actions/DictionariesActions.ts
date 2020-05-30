@@ -7,6 +7,7 @@ import {RemoteMethod} from "../../../core/http/RemoteMethod";
 import {EmployeeAppState} from "../../state/EmployeeApplicationStore";
 import Identifiable from "../../../core/entities/Identifiable";
 import VisitResult from "../../../common/beans/VisitResult";
+import Diagnosis from "../../../common/beans/Diagnosis";
 
 export default class DictionariesActions {
 
@@ -20,8 +21,16 @@ export default class DictionariesActions {
         this.controller.setState({editedMeasureId: id})
     }
 
+    public setEditedDiagnosisId(id?: number) {
+        this.controller.setState({editedDiagnosisId: id})
+    }
+
     public setEditedMeasureName(name: string) {
         this.controller.setState({editedMeasureName: name})
+    }
+
+    public setEditedDiagnosisName(name: string) {
+        this.controller.setState({editedDiagnosisName: name})
     }
 
     private getMeasureById(id: number): MeasureUnit {
@@ -52,6 +61,10 @@ export default class DictionariesActions {
         this.loadList(RemoteMethods.getAllVisitResults, "visitResultsList", callback)
     }
 
+    public loadDiagnosisList(callback: Function = () => {}): void {
+        this.loadList(RemoteMethods.getAllDiagnosis, "diagnosisList", callback)
+    }
+
     private submitCreateItem<Type extends Identifiable>(item: Type,
                                                         method: RemoteMethod,
                                                         setState: (item:Type) => void,
@@ -76,8 +89,9 @@ export default class DictionariesActions {
                 measureList: [...this.controller.state.measureList, item],
                 addedMeasureName: "",
             })
+            this.controller.toggleFieldValidation("addedMeasureNameField", false)
         }
-        this.submitCreateItem(item, RemoteMethods.editMeasure, setState, callback)
+        this.submitCreateItem(item, RemoteMethods.addMeasure, setState, callback)
     }
 
     public submitCreateVisitResult(callback: Function = () => {}): void {
@@ -89,8 +103,23 @@ export default class DictionariesActions {
                 visitResultsList: [...this.controller.state.visitResultsList, item],
                 addedVisitResultName: "",
             })
+            this.controller.toggleFieldValidation("addedVisitResultNameField", false)
         }
-        this.submitCreateItem(item, RemoteMethods.editVisitResult, setState, callback)
+        this.submitCreateItem(item, RemoteMethods.addVisitResult, setState, callback)
+    }
+
+    public submitCreateDiagnosis(callback: Function = () => {}): void {
+        const item: Diagnosis = {
+            name: this.controller.state.addedDiagnosisName
+        }
+        const setState = (item: Diagnosis) => {
+            this.controller.setState({
+                diagnosisList: [...this.controller.state.diagnosisList, item],
+                addedDiagnosisName: "",
+            })
+            this.controller.toggleFieldValidation("addedDiagnosisNameField", false)
+        }
+        this.submitCreateItem(item, RemoteMethods.addDiagnosis, setState, callback)
     }
 
     private submitEditItem<Type extends Identifiable>(item: Type, method: RemoteMethod, listPropertyKey: keyof EmployeeAppState, callback: Function): void {
@@ -122,6 +151,14 @@ export default class DictionariesActions {
         this.submitEditItem(item, RemoteMethods.editVisitResult, "visitResultsList", callback)
     }
 
+    public submitEditDiagnosis(callback: Function = () => {}): void {
+        const item: Diagnosis = {
+            id: this.controller.state.editedDiagnosisId,
+            name: this.controller.state.editedDiagnosisName,
+        }
+        this.submitEditItem(item, RemoteMethods.editDiagnosis, "diagnosisList", callback)
+    }
+
     private deleteItem(id: number, method: RemoteMethod, propertyKey: keyof EmployeeAppState): void {
         fetchUserZoneRpc({
             method,
@@ -138,5 +175,9 @@ export default class DictionariesActions {
 
     public deleteVisitResult(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteVisitResult, "visitResultsList")
+    }
+
+    public deleteDiagnosis(id: number): void {
+        this.deleteItem(id, RemoteMethods.deleteDiagnosis, "diagnosisList")
     }
 }

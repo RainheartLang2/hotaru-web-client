@@ -140,6 +140,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Breeds:
             case PageType.MeasureUnits:
             case PageType.VisitResult:
+            case PageType.Diagnosis:
                 return SecondLevelNavigationMenuType.Dictionaries
             default: return SecondLevelNavigationMenuType.None
         }
@@ -151,6 +152,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Breeds: return DictionaryMenuItemType.Breed
             case PageType.MeasureUnits: return DictionaryMenuItemType.MeasureUnits
             case PageType.VisitResult: return DictionaryMenuItemType.VisitResult
+            case PageType.Diagnosis: return DictionaryMenuItemType.Diagnosis
             default: return DictionaryMenuItemType.None
         }
     }

@@ -1,24 +1,23 @@
 import {Message} from "../../../../core/components/Message";
 import {TableBodyCmp, TableCmp, TableRowCmp} from "../../../../core/components";
-import {TextField} from "@material-ui/core";
+import {Link, TextField} from "@material-ui/core";
 import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
-import EmployeeAppController from "../../../controller/EmployeeAppController";
 import * as React from "react";
-import PageHeader from "../../../../common/components/pageHeader/PageHeader";
+import EmployeeAppController from "../../../controller/EmployeeAppController";
+import Diagnosis from "../../../../common/beans/Diagnosis";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
-import Link from "@material-ui/core/Link";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
-import MeasureUnit from "../../../../common/beans/MeasureUnit";
+import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 
 var styles = require("./styles.css")
 
-export default class MeasurePage extends React.Component<Properties, State> {
+export default class DiagnosisPage extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
         this.state = {
-            measureList: [],
+            diagnosisList: [],
         }
     }
 
@@ -27,32 +26,31 @@ export default class MeasurePage extends React.Component<Properties, State> {
         return (
             <>
                 <PageHeader
-                    label={(<Message messageKey={"page.measure.title"}/>)}
+                    label={(<Message messageKey={"page.diagnosis.title"}/>)}
                     hasButton={false}
                     buttonOnClick={() => {
                     }}
                 />
                 <TableCmp>
                     <TableBodyCmp>
-                        {this.state.measureList.map(item => {
+                        {this.state.diagnosisList.map(item => {
                             return (<TableRowCmp key={item.id}>
                                     <CustomTableCell style={styles.nameCell}>
                                         <TextField
                                             variant={"outlined"}
                                             size={"small"}
                                             defaultValue={item.name}
-                                            onFocus={() => actions.setEditedMeasureId(item.id)}
-                                            onChange={(event) => actions.setEditedMeasureName(event.target.value)}
-                                            onBlur={(event) => actions.submitEditMeasureUnit(() => actions.setEditedMeasureId(undefined))}
+                                            onFocus={() => actions.setEditedDiagnosisId(item.id)}
+                                            onChange={(event) => actions.setEditedDiagnosisName(event.target.value)}
+                                            onBlur={(event) => actions.submitEditDiagnosis(() => actions.setEditedDiagnosisId(undefined))}
                                         />
                                     </CustomTableCell>
                                     <CustomTableCell style={styles.actions}>
                                         <Link
                                             color="primary"
                                             onClick={() => {
-                                                console.log(item.id)
                                                 if (item.id) {
-                                                    actions.deleteMeasure(item.id)
+                                                    actions.deleteDiagnosis(item.id)
                                                 }
                                             }}
                                         >
@@ -69,14 +67,14 @@ export default class MeasurePage extends React.Component<Properties, State> {
                                 <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     size={"small"}
-                                    fieldKey={{addedMeasureName: "addedMeasureNameField"}}
+                                    fieldKey={{addedDiagnosisName: "addedDiagnosisNameField"}}
                                     variant={"outlined"}
                                 />
                             </CustomTableCell>
                             <CustomTableCell style={""}>
                                 <Link
                                     color="primary"
-                                    onClick={() => actions.submitCreateMeasureUnit()}
+                                    onClick={() => actions.submitCreateDiagnosis()}
                                 >
                                     <Message messageKey={"common.button.create"}/>
                                 </Link>
@@ -90,7 +88,7 @@ export default class MeasurePage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            measureList: "measureList"
+            diagnosisList: "diagnosisList"
         })
     }
 
@@ -99,10 +97,11 @@ export default class MeasurePage extends React.Component<Properties, State> {
     }
 }
 
+
 type Properties = {
     controller: EmployeeAppController
 }
 
 type State = {
-    measureList: MeasureUnit[]
+    diagnosisList: Diagnosis[]
 }

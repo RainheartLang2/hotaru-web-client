@@ -7,5 +7,6 @@ export enum PageType {
     Clients,
     MeasureUnits,
     VisitResult,
+    Diagnosis,
     None,
 }

@@ -179,6 +179,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openDiagnosisPage(): void {
+        this.openPage(PageType.Diagnosis, (setPageLoad: Function) => {
+            this._dictionariesActions.loadDiagnosisList(setPageLoad)
+        })
+    }
+
     public openSpeciesPage(): void {
         this.openPage(PageType.Species, (setPageLoad: Function) => {
             this._speciesActions.loadList([], setPageLoad)
