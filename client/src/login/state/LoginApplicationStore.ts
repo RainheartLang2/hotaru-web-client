@@ -27,8 +27,8 @@ export default class LoginApplicationStore extends ApplicationStore<LoginState, 
 
     protected getSelectors(): SelectorsInfo<LoginState, LoginDerivationState> {
         return {
-            loginField: this.createField("login", "", [new RequiredFieldValidator()]),
-            passwordField: this.createField("password", "", [new RequiredFieldValidator()]),
+            loginField: this.createField("login", "", [new RequiredFieldValidator()], false),
+            passwordField: this.createField("password", "", [new RequiredFieldValidator()], false),
             isSubmitDisallowed: this.createFormHasErrorsSelector(["loginField", "passwordField"]),
         }
     }

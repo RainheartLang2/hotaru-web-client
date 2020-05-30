@@ -11,6 +11,7 @@ import EmployeeAppController from "../../../controller/EmployeeAppController";
 import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
+import CustomLink from "../../../../core/components/customLink/CustomLink";
 
 var styles = require("./styles.css")
 
@@ -20,6 +21,7 @@ export default class SpeciesPage extends React.Component<Properties, State> {
 
         this.state = {
             speciesList: [],
+            addedSpeciesNameHasError: false,
         }
     }
 
@@ -81,12 +83,14 @@ export default class SpeciesPage extends React.Component<Properties, State> {
                                 />
                             </CustomTableCell>
                             <CustomTableCell style={""}>
-                                <Link
+                                <CustomLink
                                     color="primary"
                                     onClick={() => actions.submitCreateItem()}
+                                    allowedOnClick={() => this.props.controller.toggleFieldValidation("addedSpeciesNameField", true)}
+                                    disabled={this.state.addedSpeciesNameHasError}
                                 >
                                     <Message messageKey={"common.button.create"}/>
-                                </Link>
+                                </CustomLink>
                             </CustomTableCell>
                         </TableRowCmp>
                     </TableBodyCmp>
@@ -97,7 +101,8 @@ export default class SpeciesPage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            speciesList: "speciesList"
+            speciesList: "speciesList",
+            addedSpeciesNameHasError: "addedSpeciesNameHasError",
         })
     }
 
@@ -112,4 +117,5 @@ type Properties = {
 
 type State = {
     speciesList: Species[]
+    addedSpeciesNameHasError: boolean
 }

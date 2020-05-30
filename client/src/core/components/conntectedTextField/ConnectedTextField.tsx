@@ -66,7 +66,6 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
 
     private postValueChangeToStore(value: string): void {
         const keys = this.getKeys()
-        console.log(keys)
         this.props.controller
             .setState({[keys[0]]: value} as unknown as Partial<StateType>)
         this.props.controller.toggleFieldValidation(keys[1], true)
@@ -130,7 +129,6 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
                     const position = this.maskTransformer.getPreviousMaskedCharacterPosition(difference.position)
                     if (position != -1) {
                         settedValue = StringUtils.setCharAt(this.prevValue, position, EmptyCharacter)
-                        console.log(settedValue)
                         caretPosition = position
                     }
                 } else {

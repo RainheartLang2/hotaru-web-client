@@ -42,7 +42,8 @@ export default class DictionaryNode {
             addedMeasureNameField: this._store.createField("addedMeasureName", "", [
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(50),
-            ]),
+            ],
+                false),
             visitResultListById: {
                 dependsOn: ["visitResultsList"],
                 get: (state: Pick<DictionariesPagesState, "visitResultsList">) =>
@@ -52,7 +53,8 @@ export default class DictionaryNode {
             addedVisitResultNameField: this._store.createField("addedVisitResultName", "", [
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(50),
-            ])
+            ],
+                false)
         }
     }
 }

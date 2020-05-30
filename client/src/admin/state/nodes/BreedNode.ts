@@ -62,7 +62,8 @@ export default class BreedNode {
             addedBreedNameField: this._store.createField("addedBreedName", "", [
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(200),
-            ])
+            ],
+                false)
         }
     }
 }

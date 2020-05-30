@@ -6,6 +6,7 @@ export default abstract class ApplicationStoreFriend<StateType, SelectorsType> {
     public abstract createField(originalProperty: keyof (StateType & SelectorsType),
                                 defaultValue?: string,
                                 validators?: FieldValidator[],
+                                validationActive?: boolean,
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field>
 
     public abstract createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],

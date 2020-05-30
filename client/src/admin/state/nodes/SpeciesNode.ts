@@ -35,7 +35,8 @@ export default class SpeciesNode {
             addedSpeciesNameField: this._store.createField("addedSpeciesName", "", [
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(200),
-            ])
+            ], false),
+            addedSpeciesNameHasError: this._store.createFormHasErrorsSelector(["addedSpeciesNameField"])
         }
     }
 }
@@ -50,4 +51,5 @@ export type SpeciesPageState = {
 export type SpeciesPageSelector = {
     speciesListById: Map<number, Species>,
     addedSpeciesNameField: Field,
+    addedSpeciesNameHasError: boolean,
 }

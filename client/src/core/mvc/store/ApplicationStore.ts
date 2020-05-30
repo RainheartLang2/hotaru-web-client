@@ -19,7 +19,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         this.dependencies = this.createDependencies()
         this.checkSelectors(this.selectors)
         this.readableState = this.createReadableState()
-        console.log(this.readableState)
+        this.initializeSelectors()
 
         this.subscriptionDataByPropertyKey = new Map()
         this.propertyKeysBySubscriber = new Map()
@@ -36,6 +36,13 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
 
     protected abstract getSelectors(): SelectorsInfo<StateType, SelectorsType>
 
+    private initializeSelectors(): void {
+        //TODO: optimize
+        for (let selectorKey in this.selectors) {
+            this.refreshSelector(selectorKey, false)
+        }
+    }
+
     protected createDefaultStateTypeEntry(): DefaultStateType {
         return {
             isDialogSubmitButtonLoading: false,
@@ -50,6 +57,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     protected createField(originalProperty: keyof(StateType & SelectorsType),
                                     defaultValue: string = "",
                                     validators: FieldValidator[] = [],
+                                    validationActive: boolean = true,
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
 
         return {
@@ -68,7 +76,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                 value: defaultValue,
                 errors: [],
                 validators,
-                validationActive: true,
+                validationActive,
             },
         }
     }
@@ -93,9 +101,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     }
 
     public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean): void {
-        console.log(fieldKey)
         const field = this.readableState[fieldKey] as unknown as Field
-        console.log(field)
         field.validationActive = value
         this.refreshSelector(fieldKey)
     }
@@ -180,14 +186,14 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         })
     }
 
-    private refreshDependencies(key: keyof (StateType & SelectorsType)): void {
+    private refreshDependencies(key: keyof (StateType & SelectorsType), postChanges: boolean = true): void {
         const propertyDependencies = this.dependencies.get(key)
         if (!propertyDependencies) {
             throw new Error("no dependencies for key " + key)
         }
         propertyDependencies.forEach(dependency => {
             try {
-                this.refreshSelector(dependency)
+                this.refreshSelector(dependency, postChanges)
             } catch (e) {
             }
         })
@@ -205,14 +211,16 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         }
     }
 
-    private refreshSelector(selectorKey: keyof SelectorsType): void {
+    private refreshSelector(selectorKey: keyof SelectorsType, postChanges: boolean = true): void {
         const record = this.selectors[selectorKey]
         record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
         this.readableState[selectorKey] = record.value
-        this.postChanges(selectorKey, record.value)
+        if (postChanges) {
+            this.postChanges(selectorKey, record.value)
+        }
 
-        this.refreshDependencies(selectorKey)
+        this.refreshDependencies(selectorKey, postChanges)
     }
 
     private createDependencies(): Map<KeysJunction<StateType, SelectorsType>, (keyof SelectorsType)[]> {
@@ -257,8 +265,9 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
             public createField(originalProperty: keyof(StateType & SelectorsType),
                                         defaultValue: string = "",
                                         validators: FieldValidator[] = [],
+                                        validationActive: boolean = true,
             ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
-                return store.createField(originalProperty, defaultValue, validators)
+                return store.createField(originalProperty, defaultValue, validators, validationActive)
             }
 
             public createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
