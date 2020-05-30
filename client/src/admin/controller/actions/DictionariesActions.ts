@@ -8,6 +8,7 @@ import {EmployeeAppState} from "../../state/EmployeeApplicationStore";
 import Identifiable from "../../../core/entities/Identifiable";
 import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
+import VisitPurpose from "../../../common/beans/VisitPurpose";
 
 export default class DictionariesActions {
 
@@ -25,12 +26,20 @@ export default class DictionariesActions {
         this.controller.setState({editedDiagnosisId: id})
     }
 
+    public setEditedVisitPurposeId(id?: number) {
+        this.controller.setState({editedVisitPurposeId: id})
+    }
+
     public setEditedMeasureName(name: string) {
         this.controller.setState({editedMeasureName: name})
     }
 
     public setEditedDiagnosisName(name: string) {
         this.controller.setState({editedDiagnosisName: name})
+    }
+
+    public setEditedVisitPurposeName(name: string) {
+        this.controller.setState({editedVisitPurposeName: name})
     }
 
     private getMeasureById(id: number): MeasureUnit {
@@ -59,6 +68,10 @@ export default class DictionariesActions {
 
     public loadVisitResult(callback: Function = () => {}): void {
         this.loadList(RemoteMethods.getAllVisitResults, "visitResultsList", callback)
+    }
+
+    public loadVisitPurposes(callback: Function = () => {}): void {
+        this.loadList(RemoteMethods.getAllVisitPurposes, "visitPurposesList", callback)
     }
 
     public loadDiagnosisList(callback: Function = () => {}): void {
@@ -108,6 +121,20 @@ export default class DictionariesActions {
         this.submitCreateItem(item, RemoteMethods.addVisitResult, setState, callback)
     }
 
+    public submitCreateVisitPurpose(callback: Function = () => {}): void {
+        const item: VisitPurpose = {
+            name: this.controller.state.addedVisitPurposeName
+        }
+        const setState = (item: VisitPurpose) => {
+            this.controller.setState({
+                visitPurposesList: [...this.controller.state.visitPurposesList, item],
+                addedVisitPurposeName: "",
+            })
+            this.controller.toggleFieldValidation("addedVisitPurposeNameField", false)
+        }
+        this.submitCreateItem(item, RemoteMethods.addVisitPurpose, setState, callback)
+    }
+
     public submitCreateDiagnosis(callback: Function = () => {}): void {
         const item: Diagnosis = {
             name: this.controller.state.addedDiagnosisName
@@ -151,6 +178,14 @@ export default class DictionariesActions {
         this.submitEditItem(item, RemoteMethods.editVisitResult, "visitResultsList", callback)
     }
 
+    public submitEditVisitPurpose(callback: Function = () => {}): void {
+        const item: VisitPurpose = {
+            id: this.controller.state.editedVisitPurposeId,
+            name: this.controller.state.editedVisitPurposeName,
+        }
+        this.submitEditItem(item, RemoteMethods.editVisitPurpose, "visitPurposesList", callback)
+    }
+
     public submitEditDiagnosis(callback: Function = () => {}): void {
         const item: Diagnosis = {
             id: this.controller.state.editedDiagnosisId,
@@ -175,6 +210,10 @@ export default class DictionariesActions {
 
     public deleteVisitResult(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteVisitResult, "visitResultsList")
+    }
+
+    public deleteVisitPurpose(id: number): void {
+        this.deleteItem(id, RemoteMethods.deleteVisitPurpose, "visitPurposesList")
     }
 
     public deleteDiagnosis(id: number): void {

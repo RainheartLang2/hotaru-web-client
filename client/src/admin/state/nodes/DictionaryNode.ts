@@ -9,6 +9,7 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
+import VisitPurpose from "../../../common/beans/VisitPurpose";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -30,6 +31,11 @@ export default class DictionaryNode {
             editedVisitResultName: "",
             addedVisitResultName: "",
 
+            visitPurposesList: [],
+            editedVisitPurposeId: undefined,
+            editedVisitPurposeName: "",
+            addedVisitPurposeName: "",
+
             diagnosisList: [],
             editedDiagnosisId: undefined,
             editedDiagnosisName: "",
@@ -42,7 +48,7 @@ export default class DictionaryNode {
             measureListById: {
                 dependsOn: ["measureList"],
                 get: (state: Pick<DictionariesPagesState, "measureList">) =>
-                    CollectionUtils.mapArrayByUniquePredicate(state.measureList, measure => measure.id ? measure.id : 0),
+                    CollectionUtils.mapIdentifiableArray(state.measureList),
                 value: new Map<number, MeasureUnit>(),
             },
             addedMeasureNameField: this._store.createField("addedMeasureName", "", [
@@ -53,7 +59,7 @@ export default class DictionaryNode {
             visitResultListById: {
                 dependsOn: ["visitResultsList"],
                 get: (state: Pick<DictionariesPagesState, "visitResultsList">) =>
-                    CollectionUtils.mapArrayByUniquePredicate(state.visitResultsList, visitResult => visitResult.id ? visitResult.id : 0),
+                    CollectionUtils.mapIdentifiableArray(state.visitResultsList),
                 value: new Map<number, VisitResult>(),
             },
             addedVisitResultNameField: this._store.createField("addedVisitResultName", "", [
@@ -61,10 +67,20 @@ export default class DictionaryNode {
                 new MaximalLengthValidator(50),
             ],
                 false),
+            visitPurposesListById: {
+                dependsOn: ["visitPurposesList"],
+                get: (state: Pick<DictionariesPagesState, "visitPurposesList">) => CollectionUtils.mapIdentifiableArray(state.visitPurposesList),
+                value: new Map<number, VisitResult>(),
+            },
+            addedVisitPurposeNameField: this._store.createField("addedVisitPurposeName", "", [
+                new RequiredFieldValidator(),
+                new MaximalLengthValidator(50),
+            ],
+                false),
             diagnosisById: {
                 dependsOn: ["diagnosisList"],
                 get: (state: Pick<DictionariesPagesState, "diagnosisList">) =>
-                    CollectionUtils.mapArrayByUniquePredicate(state.diagnosisList, diagnosis => diagnosis.id ? diagnosis.id : 0),
+                    CollectionUtils.mapIdentifiableArray(state.diagnosisList),
                 value: new Map<number, Diagnosis>()
             },
             addedDiagnosisNameField: this._store.createField("addedDiagnosisName", "", [
@@ -87,6 +103,11 @@ export type DictionariesPagesState = {
     editedVisitResultName: string,
     addedVisitResultName: string,
 
+    visitPurposesList: VisitPurpose[],
+    editedVisitPurposeId: number | undefined,
+    editedVisitPurposeName: string,
+    addedVisitPurposeName: string,
+
     diagnosisList: Diagnosis[],
     editedDiagnosisId: number | undefined,
     editedDiagnosisName: string,
@@ -100,6 +121,9 @@ export type DictionariesPageSelectors = {
 
     visitResultListById: Map<number, VisitResult>,
     addedVisitResultNameField: Field,
+
+    visitPurposesListById: Map<number, VisitPurpose>,
+    addedVisitPurposeNameField: Field,
 
     diagnosisById: Map<number, Diagnosis>,
     addedDiagnosisNameField: Field,

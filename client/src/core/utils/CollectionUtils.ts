@@ -1,3 +1,5 @@
+import Identifiable from "../entities/Identifiable";
+
 export namespace CollectionUtils {
     export function mapArrayByUniquePredicate<ItemType, KeyType>(
         array: ItemType[],
@@ -15,6 +17,10 @@ export namespace CollectionUtils {
             result.set(predicateResult, item)
         })
         return result
+    }
+
+    export function mapIdentifiableArray(array: Identifiable[]) {
+        return mapArrayByUniquePredicate(array, item => item.id ? item.id : 0)
     }
 
     export function mapArrayByPredicate<ItemType, KeyType>(

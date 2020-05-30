@@ -179,6 +179,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openVisitPurposePage(): void {
+        this.openPage(PageType.VisitPurpose, (setPageLoad: Function) => {
+            this._dictionariesActions.loadVisitPurposes(setPageLoad)
+        })
+    }
+
     public openDiagnosisPage(): void {
         this.openPage(PageType.Diagnosis, (setPageLoad: Function) => {
             this._dictionariesActions.loadDiagnosisList(setPageLoad)

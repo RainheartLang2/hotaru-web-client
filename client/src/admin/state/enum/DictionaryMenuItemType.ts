@@ -4,5 +4,6 @@ export enum DictionaryMenuItemType {
     Breed,
     MeasureUnits,
     VisitResult,
+    VisitPurpose,
     Diagnosis,
 }

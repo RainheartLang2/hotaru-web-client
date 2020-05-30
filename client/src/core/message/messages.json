@@ -44,6 +44,7 @@
       "second.navigation.dictionaries.breed.label": "Породы",
       "second.navigation.dictionaries.measureUnit.label": "Единицы измерений",
       "second.navigation.dictionaries.visitResult.label": "Результат посещения",
+      "second.navigation.dictionaries.visitPurpose.label": "Цель посещения",
       "second.navigation.dictionaries.diagnosis.label": "Диагнозы",
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
@@ -57,6 +58,7 @@
       "page.clients.title": "Клиенты",
       "page.measure.title": "Единицы измерения",
       "page.visitResult.title": "Результат посещения",
+      "page.visitPurpose.title": "Цель посещения",
       "page.diagnosis.title": "Диагнозы",
 
       "dialog.appointment.create.label": "Создание приёма",
