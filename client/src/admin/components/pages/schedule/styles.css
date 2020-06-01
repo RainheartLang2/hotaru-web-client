@@ -2,3 +2,8 @@
     margin-top: 15px;
     width: 250px;
 }
+
+.timeTableCell {
+    width: 100%;
+    height: 100%;
+}

@@ -4,7 +4,7 @@ import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
     AppointmentForm,
-    Appointments,
+    Appointments, AppointmentTooltip,
     DateNavigator,
     DragDropProvider,
     Scheduler,
@@ -20,9 +20,9 @@ import LocaleHolder from "../../../../core/utils/LocaleHolder";
 import {LocaleUtils} from "../../../../core/enum/LocaleType";
 import MessageResource from "../../../../core/message/MessageResource";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
+import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
 
 var styles = require("./styles.css")
 
@@ -36,11 +36,63 @@ export default class SchedulePage extends React.Component<Properties, State> {
         }
     }
 
+    private getTimeTableCell(onClick: (appointment: AppointmentInfo) => void): React.ComponentType<WeekView.TimeTableCellProps> {
+        return class extends React.Component<WeekView.TimeTableCellProps> {
+            render() {
+                return (
+                    <WeekView.TimeTableCell
+                        {...this.props}>
+                        <div className={styles.timeTableCell} onClick={() => {
+                            onClick({
+                                startDate: this.props.startDate!,
+                                endDate: this.props.endDate!,
+                            })
+                        }}></div>
+                    </WeekView.TimeTableCell>
+                )
+            }
+        }
+    }
+
+    private getAppointmentTooltipHeader(onOpenButtonClick: (info: AppointmentInfo) => void,
+                                        onDeleteButtonClick: (info: AppointmentInfo, callback: Function) => void
+    ): React.ComponentType<AppointmentTooltip.HeaderProps > {
+        return class extends React.Component<AppointmentTooltip.HeaderProps> {
+            render() {
+                const appointmentInfo = this.props.appointmentData as AppointmentInfo
+                return (
+                    // @ts-ignore
+                    <AppointmentTooltip.Header
+                        {...this.props}
+                        onOpenButtonClick={() => onOpenButtonClick(appointmentInfo)}
+                        onDeleteButtonClick={() => {
+                            onDeleteButtonClick(appointmentInfo, () => this.props.onDeleteButtonClick!())
+                        }}
+                    >
+                        {this.props.children}
+                    </AppointmentTooltip.Header>
+                )
+            }
+        }
+    }
+
+    private startAppointmentCreation(appointmentInfo: AppointmentInfo) {
+        this.props.controller.scheduleActions.openCreateAppointmentDialog(appointmentInfo)
+    }
+
+    private openEditDialog(appointmentInfo: AppointmentInfo) {
+        this.props.controller.scheduleActions.openEditAppointmentDialog(appointmentInfo)
+    }
+
     render() {
         const currentDate = this.state.selectedDate
         const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         const schedulerData = this.state.appointmentsList
         const actions = this.props.controller.scheduleActions
+
+        const TTCell = this.getTimeTableCell((info: AppointmentInfo) => this.startAppointmentCreation(info))
+        const TooltipHeader = this.getAppointmentTooltipHeader((info: AppointmentInfo) => this.openEditDialog(info),
+            (info: AppointmentInfo, callback: Function) => this.props.controller.scheduleActions.deleteAppointment(info.id!, callback))
         return (<>
             <PageHeader
                 label={(<Message messageKey={"page.schedule.title"}/>)}
@@ -70,22 +122,28 @@ export default class SchedulePage extends React.Component<Properties, State> {
                     <WeekView
                         startDayHour={9}
                         endDayHour={19}
+                        timeTableCellComponent={TTCell}
                     />
                     <EditingState
                         onCommitChanges={(changes: ChangeSet) => actions.handleAppointmentChange(changes)}
                         onEditingAppointmentChange={(editedAppointment: Object) => {
                             if (editedAppointment && !editedAppointment.hasOwnProperty("type")) {
-                                actions.openEditAppointmentDialog(editedAppointment)
+                                this.openEditDialog(editedAppointment as AppointmentInfo)
                             }
                         }}
-                        onAddedAppointmentChange={(addedAppointment: Object) => actions.openCreateAppointmentDialog(addedAppointment)}
+                        onAddedAppointmentChange={(addedAppointment: Object) => this.startAppointmentCreation(addedAppointment as AppointmentInfo)}
                     />
                     <IntegratedEditing/>
                     <Appointments/>
+                    <AppointmentTooltip
+                        showOpenButton
+                        showCloseButton
+                        showDeleteButton
+                        headerComponent={TooltipHeader}
+                    />
                     <AppointmentForm
                         overlayComponent={AppointmentMockForm}
                     />
-
                     <Toolbar/>
                     <DateNavigator />
                     <TodayButton

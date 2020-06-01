@@ -57,8 +57,7 @@ export default class ScheduleActions {
         })
     }
 
-    public openCreateAppointmentDialog(addedAppointment: Object): void {
-        const appointment = addedAppointment as AppointmentInfo
+    public openCreateAppointmentDialog(appointment: AppointmentInfo): void {
         const startDate = appointment.startDate
         const endDate = appointment.endDate
         this.controller.setState({
@@ -245,6 +244,19 @@ export default class ScheduleActions {
             // @ts-ignore
             this.controller.clientActions.loadClientsWithPets(clientIds, () => callback())
             callback()
+        })
+    }
+
+    public deleteAppointment(id: number, callback: Function = () => {}): void {
+        fetchUserZoneRpc({
+            method: RemoteMethods.deleteAppointment,
+            params: [id],
+            successCallback: (result) => {
+                callback()
+                this.controller.setState({
+                    appointmentsList: this.controller.state.appointmentsList.filter(user => user.id != id)
+                })
+            },
         })
     }
 }
