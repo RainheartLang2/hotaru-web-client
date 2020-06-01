@@ -47,6 +47,10 @@
       "second.navigation.dictionaries.visitPurpose.label": "Цель посещения",
       "second.navigation.dictionaries.diagnosis.label": "Диагнозы",
       "second.navigation.dictionaries.animalColor.label": "Окрасы животных",
+
+      "second.navigation.clinicsManagement.clinicsList.label": "Список клиник",
+      "second.navigation.clinicsManagement.workSchedule.label": "График работы",
+
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
       "page.schedule.todayButton.label": "Текущая неделя",

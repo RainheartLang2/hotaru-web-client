@@ -163,6 +163,14 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     }
 
+    public openClinicsManagement(): void {
+        this.openClinicListPage()
+    }
+
+    public openClinicsWorkschedule(): void {
+        this.openPage(PageType.ClinicsWorkschedule, () => {})
+    }
+
     public openDictionaries(): void {
         this.openSpeciesPage()
     }

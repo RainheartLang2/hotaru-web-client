@@ -3,7 +3,6 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
-    AppointmentForm,
     Appointments, AppointmentTooltip,
     DateNavigator,
     DragDropProvider,
@@ -13,7 +12,6 @@ import {
     WeekView
 } from "@devexpress/dx-react-scheduler-material-ui";
 import {AppointmentModel, ChangeSet, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
-import AppointmentMockForm from "./subcomponents/mockForm/AppointmentMockForm";
 import {Employee} from "../../../../common/beans/Employee";
 import {NameUtils} from "../../../../core/utils/NameUtils";
 import LocaleHolder from "../../../../core/utils/LocaleHolder";
@@ -140,9 +138,6 @@ export default class SchedulePage extends React.Component<Properties, State> {
                         showCloseButton
                         showDeleteButton
                         headerComponent={TooltipHeader}
-                    />
-                    <AppointmentForm
-                        overlayComponent={AppointmentMockForm}
                     />
                     <Toolbar/>
                     <DateNavigator />

@@ -21,7 +21,7 @@ export default class SettingsPopoverContent extends React.Component<Properties> 
                 </MenuItem>
                 <MenuItem onClick={() => {
                     this.props.onAnyMenuItemClick()
-                    this.props.controller.openClinicListPage()
+                    this.props.controller.openClinicsManagement()
                 }}>
                     <Message messageKey={"navigationMenu.settings.dialog.clinics"}/>
                 </MenuItem>

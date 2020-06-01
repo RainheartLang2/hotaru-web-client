@@ -1,13 +1,11 @@
 import * as React from "react";
 import {SecondLevelNavigationMenuType} from "../state/enum/SecondLevelNavigationMenuType";
 import EmployeeAppController from "../controller/EmployeeAppController";
-import LeftMenu, {LeftMenuEntry} from "../../core/components/leftMenu/LeftMenu";
-import {Message} from "../../core/components/Message";
-import {DictionaryMenuItemType} from "../state/enum/DictionaryMenuItemType";
+import DictionariesLeftMenu from "../components/navigationMenu/secondLevelNavigation/dictionaries/DictionariesLeftMenu";
+import ClinicsManagementLeftMenu
+    from "../components/navigationMenu/secondLevelNavigation/clinics/ClinicsManagementLeftMenu";
 
 export default class EmployeeLeftMenuContainer extends React.Component<Properties, State> {
-
-    private dictionariesMenuEntries: LeftMenuEntry[]
 
     constructor(props: Properties) {
         super(props)
@@ -15,52 +13,20 @@ export default class EmployeeLeftMenuContainer extends React.Component<Propertie
             menu: SecondLevelNavigationMenuType.None,
             selectedEntryKey: null,
         }
-        this.dictionariesMenuEntries = [
-            {
-                key: DictionaryMenuItemType.Species,
-                label: <Message messageKey={"second.navigation.dictionaries.species.label"}/>,
-                onClick: () => this.props.controller.openSpeciesPage(),
-            },
-            {
-                key: DictionaryMenuItemType.Breed,
-                label: <Message messageKey={"second.navigation.dictionaries.breed.label"}/>,
-                onClick: () => this.props.controller.openBreedsPage(),
-            },
-            {
-                key: DictionaryMenuItemType.MeasureUnits,
-                label: <Message messageKey={"second.navigation.dictionaries.measureUnit.label"}/>,
-                onClick: () => this.props.controller.openMeasureUnitsPage()
-            },
-            {
-                key: DictionaryMenuItemType.VisitPurpose,
-                label: <Message messageKey={"second.navigation.dictionaries.visitPurpose.label"}/>,
-                onClick: () => this.props.controller.openVisitPurposePage()
-            },
-            {
-                key: DictionaryMenuItemType.VisitResult,
-                label: <Message messageKey={"second.navigation.dictionaries.visitResult.label"}/>,
-                onClick: () => this.props.controller.openVisitResultPage()
-            },
-            {
-                key: DictionaryMenuItemType.Diagnosis,
-                label: <Message messageKey={"second.navigation.dictionaries.diagnosis.label"}/>,
-                onClick: () => this.props.controller.openDiagnosisPage(),
-            },
-            {
-                key: DictionaryMenuItemType.AnimalColors,
-                label: <Message messageKey={"second.navigation.dictionaries.animalColor.label"}/>,
-                onClick: () => this.props.controller.openAnimalColorsPage(),
-            },
-        ]
     }
 
     render() {
         return (
             <div>
                 {this.state.menu == SecondLevelNavigationMenuType.Dictionaries
-                    && <LeftMenu
+                    && <DictionariesLeftMenu
+                            controller={this.props.controller}
                             selectedEntryKey={this.state.selectedEntryKey}
-                            entries={this.dictionariesMenuEntries}
+                        />}
+                {this.state.menu == SecondLevelNavigationMenuType.ClinicsManagement
+                    && <ClinicsManagementLeftMenu
+                            controller={this.props.controller}
+                            selectedEntryKey={this.state.selectedEntryKey}
                         />}
             </div>
         )
@@ -69,7 +35,7 @@ export default class EmployeeLeftMenuContainer extends React.Component<Propertie
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             secondLevelNavigationMenuType: "menu",
-            dictionariesNavigationSelectedItem: "selectedEntryKey",
+            secondLevelNavigationSelectedItem: "selectedEntryKey",
         })
     }
 }

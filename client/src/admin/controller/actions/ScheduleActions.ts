@@ -26,7 +26,7 @@ export default class ScheduleActions {
         return resultArray.map(bean => {
             return {
                 id: bean.id,
-                title: bean.title,
+                title: "123",
                 startDate: new Date(bean.startDate),
                 endDate: new Date(bean.endDate),
                 clientId: bean.clientId,
@@ -76,7 +76,6 @@ export default class ScheduleActions {
         const startDate = new Date(appointment.startDate)
         const endDate = new Date(appointment.endDate)
 
-        console.log(startDate)
         this.controller.setState({
             editedAppointmentId: appointment.id,
             editedAppointmentTitle: appointment.title,

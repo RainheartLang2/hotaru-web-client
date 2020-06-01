@@ -10,5 +10,6 @@ export enum PageType {
     VisitPurpose,
     Diagnosis,
     AnimalColors,
+    ClinicsWorkschedule,
     None,
 }

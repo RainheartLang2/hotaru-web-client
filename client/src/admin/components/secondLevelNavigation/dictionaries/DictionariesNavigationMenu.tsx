@@ -37,7 +37,7 @@ export default class DictionariesNavigationMenu extends React.Component<Properti
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            dictionariesNavigationSelectedItem: "selectedItem",
+            secondLevelNavigationSelectedItem: "selectedItem",
         })
     }
 

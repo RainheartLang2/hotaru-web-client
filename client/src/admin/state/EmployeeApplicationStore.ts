@@ -14,6 +14,7 @@ import ScheduleNode, {ScheduleSelectors, ScheduleState} from "./nodes/ScheduleNo
 import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
 import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
 import DictionaryNode, {DictionariesPageSelectors, DictionariesPagesState} from "./nodes/DictionaryNode";
+import {ClinicsManagementMenuItemType} from "./enum/ClinicsManagementMenuItemType";
 import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
@@ -81,9 +82,9 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
                 get: (state: Pick<EmployeeAppState, "pageType">) => this.calcSecondLevelNavigationMenuItemType(state.pageType),
                 value: SecondLevelNavigationMenuType.None,
             },
-            dictionariesNavigationSelectedItem: {
+            secondLevelNavigationSelectedItem: {
                 dependsOn: ["pageType"],
-                get: (state: Pick<EmployeeAppState, "pageType">) => this.calcDictionariesNavigationSelectedItem(this.state.pageType),
+                get: (state: Pick<EmployeeAppState, "pageType">) => this.calcSecondLevelNavigationSelectedItem(this.state.pageType),
                 value: DictionaryMenuItemType.None,
             },
             showSecondLevelNavigationMenu: {
@@ -144,11 +145,16 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Diagnosis:
             case PageType.AnimalColors:
                 return SecondLevelNavigationMenuType.Dictionaries
+
+            case PageType.ClinicList:
+            case PageType.ClinicsWorkschedule:
+                return SecondLevelNavigationMenuType.ClinicsManagement
+
             default: return SecondLevelNavigationMenuType.None
         }
     }
 
-    private calcDictionariesNavigationSelectedItem(pageType: PageType): DictionaryMenuItemType {
+    private calcSecondLevelNavigationSelectedItem(pageType: PageType): number {
         switch (pageType) {
             case PageType.Species: return DictionaryMenuItemType.Species
             case PageType.Breeds: return DictionaryMenuItemType.Breed
@@ -157,6 +163,10 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.VisitPurpose: return DictionaryMenuItemType.VisitPurpose
             case PageType.Diagnosis: return DictionaryMenuItemType.Diagnosis
             case PageType.AnimalColors: return DictionaryMenuItemType.AnimalColors
+
+            case PageType.ClinicList: return ClinicsManagementMenuItemType.ClinicList
+            case PageType.ClinicsWorkschedule: return ClinicsManagementMenuItemType.WorkSchedule
+
             default: return DictionaryMenuItemType.None
         }
     }
@@ -188,7 +198,7 @@ type CommonEmployeeSelectors = {
     showDialog: boolean,
     navigationMenuItemType: NavigationMenuItemType,
     secondLevelNavigationMenuType: SecondLevelNavigationMenuType,
-    dictionariesNavigationSelectedItem: DictionaryMenuItemType,
+    secondLevelNavigationSelectedItem: number,
     showSecondLevelNavigationMenu: boolean,
 }
 
