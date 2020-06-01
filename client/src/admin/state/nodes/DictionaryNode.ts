@@ -10,6 +10,7 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
 import VisitPurpose from "../../../common/beans/VisitPurpose";
+import {AnimalColor} from "../../../common/beans/AnimalColor";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -40,6 +41,11 @@ export default class DictionaryNode {
             editedDiagnosisId: undefined,
             editedDiagnosisName: "",
             addedDiagnosisName: "",
+
+            animalColorsList: [],
+            editedAnimalColorId: undefined,
+            editedAnimalColorName: "",
+            addedAnimalColorName: "",
         }
     }
 
@@ -88,6 +94,17 @@ export default class DictionaryNode {
                 new MaximalLengthValidator(50),
             ],
                 false),
+            animalColorsById: {
+                dependsOn: ["animalColorsList"],
+                get: (state: Pick<DictionariesPagesState, "animalColorsList">) =>
+                    CollectionUtils.mapIdentifiableArray(state.animalColorsList),
+                value: new Map<number, AnimalColor>()
+            },
+            addedAnimalColorNameField: this._store.createField("addedAnimalColorName", "", [
+                new RequiredFieldValidator(),
+                new MaximalLengthValidator(50),
+            ],
+                false),
         }
     }
 }
@@ -113,6 +130,10 @@ export type DictionariesPagesState = {
     editedDiagnosisName: string,
     addedDiagnosisName: string,
 
+    animalColorsList: AnimalColor[],
+    editedAnimalColorId: number | undefined,
+    editedAnimalColorName: string,
+    addedAnimalColorName: string,
 }
 
 export type DictionariesPageSelectors = {
@@ -127,4 +148,7 @@ export type DictionariesPageSelectors = {
 
     diagnosisById: Map<number, Diagnosis>,
     addedDiagnosisNameField: Field,
+
+    animalColorsById: Map<number, AnimalColor>,
+    addedAnimalColorNameField: Field,
 }

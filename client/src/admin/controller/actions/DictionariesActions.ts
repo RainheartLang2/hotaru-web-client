@@ -9,6 +9,7 @@ import Identifiable from "../../../core/entities/Identifiable";
 import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
 import VisitPurpose from "../../../common/beans/VisitPurpose";
+import {AnimalColor} from "../../../common/beans/AnimalColor";
 
 export default class DictionariesActions {
 
@@ -30,6 +31,10 @@ export default class DictionariesActions {
         this.controller.setState({editedVisitPurposeId: id})
     }
 
+    public setEditedAnimalColorId(id?: number) {
+        this.controller.setState({editedAnimalColorId: id})
+    }
+
     public setEditedMeasureName(name: string) {
         this.controller.setState({editedMeasureName: name})
     }
@@ -40,6 +45,10 @@ export default class DictionariesActions {
 
     public setEditedVisitPurposeName(name: string) {
         this.controller.setState({editedVisitPurposeName: name})
+    }
+
+    public setEditedAnimalColorName(name: string) {
+        this.controller.setState({editedAnimalColorName: name})
     }
 
     private getMeasureById(id: number): MeasureUnit {
@@ -76,6 +85,10 @@ export default class DictionariesActions {
 
     public loadDiagnosisList(callback: Function = () => {}): void {
         this.loadList(RemoteMethods.getAllDiagnosis, "diagnosisList", callback)
+    }
+
+    public loadAnimalColorsList(callback: Function = () => {}): void {
+        this.loadList(RemoteMethods.getAllAnimalColors, "animalColorsList", callback)
     }
 
     private submitCreateItem<Type extends Identifiable>(item: Type,
@@ -149,6 +162,20 @@ export default class DictionariesActions {
         this.submitCreateItem(item, RemoteMethods.addDiagnosis, setState, callback)
     }
 
+    public submitCreateAnimalColor(callback: Function = () => {}): void {
+        const item: AnimalColor = {
+            name: this.controller.state.addedAnimalColorName
+        }
+        const setState = (item: AnimalColor) => {
+            this.controller.setState({
+                animalColorsList: [...this.controller.state.animalColorsList, item],
+                addedAnimalColorName: "",
+            })
+            this.controller.toggleFieldValidation("addedAnimalColorNameField", false)
+        }
+        this.submitCreateItem(item, RemoteMethods.addAnimalColor, setState, callback)
+    }
+
     private submitEditItem<Type extends Identifiable>(item: Type, method: RemoteMethod, listPropertyKey: keyof EmployeeAppState, callback: Function): void {
         fetchUserZoneRpc({
             method,
@@ -194,6 +221,14 @@ export default class DictionariesActions {
         this.submitEditItem(item, RemoteMethods.editDiagnosis, "diagnosisList", callback)
     }
 
+    public submitEditAnimalColor(callback: Function = () => {}): void {
+        const item: AnimalColor = {
+            id: this.controller.state.editedAnimalColorId,
+            name: this.controller.state.editedAnimalColorName,
+        }
+        this.submitEditItem(item, RemoteMethods.editAnimalColor, "animalColorsList", callback)
+    }
+
     private deleteItem(id: number, method: RemoteMethod, propertyKey: keyof EmployeeAppState): void {
         fetchUserZoneRpc({
             method,
@@ -218,5 +253,9 @@ export default class DictionariesActions {
 
     public deleteDiagnosis(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteDiagnosis, "diagnosisList")
+    }
+
+    public deleteAnimalColor(id: number): void {
+        this.deleteItem(id, RemoteMethods.deleteAnimalColor, "animalColorsList")
     }
 }

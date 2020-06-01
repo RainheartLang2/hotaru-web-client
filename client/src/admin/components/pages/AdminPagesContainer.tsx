@@ -12,6 +12,7 @@ import MeasurePage from "./measure/MeasurePage";
 import VisitResultPage from "./visitResult/VisitResultPage";
 import DiagnosisPage from "./diagnosis/DiagnosisPage";
 import VisitPurposePage from "./visitPurpose/VisitPurposePage";
+import AnimalColorPage from "./animalColor/AnimalColorPage";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -40,6 +41,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {this.isRenderPage(PageType.VisitResult) && (<VisitResultPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.VisitPurpose) && (<VisitPurposePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Diagnosis) && (<DiagnosisPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.AnimalColors) && (<AnimalColorPage controller={this.props.controller}/>)}
         </>)
     }
 

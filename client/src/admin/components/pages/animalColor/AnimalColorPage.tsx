@@ -1,23 +1,23 @@
+import * as React from "react";
 import {Message} from "../../../../core/components/Message";
 import {TableBodyCmp, TableCmp, TableRowCmp} from "../../../../core/components";
 import {Link, TextField} from "@material-ui/core";
 import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
-import * as React from "react";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import Diagnosis from "../../../../common/beans/Diagnosis";
+import {AnimalColor} from "../../../../common/beans/AnimalColor";
+import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
-import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 
 var styles = require("./styles.css")
 
-export default class DiagnosisPage extends React.Component<Properties, State> {
+export default class AnimalColorPage extends React.Component<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
         this.state = {
-            diagnosisList: [],
+            colorsList: [],
         }
     }
 
@@ -26,23 +26,23 @@ export default class DiagnosisPage extends React.Component<Properties, State> {
         return (
             <>
                 <PageHeader
-                    label={(<Message messageKey={"page.diagnosis.title"}/>)}
+                    label={(<Message messageKey={"page.animalColor.title"}/>)}
                     hasButton={false}
                     buttonOnClick={() => {
                     }}
                 />
                 <TableCmp>
                     <TableBodyCmp>
-                        {this.state.diagnosisList.map(item => {
+                        {this.state.colorsList.map(item => {
                             return (<TableRowCmp key={item.id}>
                                     <CustomTableCell style={styles.nameCell}>
                                         <TextField
                                             variant={"outlined"}
                                             size={"small"}
                                             defaultValue={item.name}
-                                            onFocus={() => actions.setEditedDiagnosisId(item.id)}
-                                            onChange={(event) => actions.setEditedDiagnosisName(event.target.value)}
-                                            onBlur={(event) => actions.submitEditDiagnosis(() => actions.setEditedDiagnosisId(undefined))}
+                                            onFocus={() => actions.setEditedAnimalColorId(item.id)}
+                                            onChange={(event) => actions.setEditedAnimalColorName(event.target.value)}
+                                            onBlur={(event) => actions.submitEditAnimalColor(() => actions.setEditedAnimalColorId(undefined))}
                                         />
                                     </CustomTableCell>
                                     <CustomTableCell style={styles.actions}>
@@ -50,7 +50,7 @@ export default class DiagnosisPage extends React.Component<Properties, State> {
                                             color="primary"
                                             onClick={() => {
                                                 if (item.id) {
-                                                    actions.deleteDiagnosis(item.id)
+                                                    actions.deleteAnimalColor(item.id)
                                                 }
                                             }}
                                         >
@@ -67,14 +67,14 @@ export default class DiagnosisPage extends React.Component<Properties, State> {
                                 <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
                                     size={"small"}
-                                    fieldKey={{addedDiagnosisName: "addedDiagnosisNameField"}}
+                                    fieldKey={{addedAnimalColorName: "addedAnimalColorNameField"}}
                                     variant={"outlined"}
                                 />
                             </CustomTableCell>
                             <CustomTableCell style={""}>
                                 <Link
                                     color="primary"
-                                    onClick={() => actions.submitCreateDiagnosis()}
+                                    onClick={() => actions.submitCreateAnimalColor()}
                                 >
                                     <Message messageKey={"common.button.create"}/>
                                 </Link>
@@ -88,7 +88,7 @@ export default class DiagnosisPage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            diagnosisList: "diagnosisList"
+            animalColorsList: "colorsList"
         })
     }
 
@@ -102,5 +102,5 @@ type Properties = {
 }
 
 type State = {
-    diagnosisList: Diagnosis[]
+    colorsList: AnimalColor[],
 }

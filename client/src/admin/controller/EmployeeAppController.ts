@@ -191,6 +191,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openAnimalColorsPage(): void {
+        this.openPage(PageType.AnimalColors, (setPageLoad: Function) => {
+            this._dictionariesActions.loadAnimalColorsList(setPageLoad)
+        })
+    }
+
     public openSpeciesPage(): void {
         this.openPage(PageType.Species, (setPageLoad: Function) => {
             this._speciesActions.loadList([], setPageLoad)

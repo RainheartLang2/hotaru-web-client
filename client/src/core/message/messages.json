@@ -46,6 +46,7 @@
       "second.navigation.dictionaries.visitResult.label": "Результат посещения",
       "second.navigation.dictionaries.visitPurpose.label": "Цель посещения",
       "second.navigation.dictionaries.diagnosis.label": "Диагнозы",
+      "second.navigation.dictionaries.animalColor.label": "Окрасы животных",
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
       "page.schedule.todayButton.label": "Текущая неделя",
@@ -60,6 +61,7 @@
       "page.visitResult.title": "Результат посещения",
       "page.visitPurpose.title": "Цель посещения",
       "page.diagnosis.title": "Диагнозы",
+      "page.animalColor.title": "Окрасы животных",
 
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",

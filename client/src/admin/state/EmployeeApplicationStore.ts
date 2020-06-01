@@ -142,6 +142,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.VisitResult:
             case PageType.VisitPurpose:
             case PageType.Diagnosis:
+            case PageType.AnimalColors:
                 return SecondLevelNavigationMenuType.Dictionaries
             default: return SecondLevelNavigationMenuType.None
         }
@@ -155,6 +156,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.VisitResult: return DictionaryMenuItemType.VisitResult
             case PageType.VisitPurpose: return DictionaryMenuItemType.VisitPurpose
             case PageType.Diagnosis: return DictionaryMenuItemType.Diagnosis
+            case PageType.AnimalColors: return DictionaryMenuItemType.AnimalColors
             default: return DictionaryMenuItemType.None
         }
     }
