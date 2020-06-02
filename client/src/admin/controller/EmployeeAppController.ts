@@ -14,6 +14,7 @@ import BreedActions from "./actions/BreedActions";
 import ScheduleActions from "./actions/ScheduleActions";
 import ClientActions from "./actions/ClientActions";
 import DictionariesActions from "./actions/DictionariesActions";
+import ClinicsWorkScheduleActions from "./actions/ClinicsWorkScheduleActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -24,6 +25,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _scheduleActions: ScheduleActions
     private _clientActions: ClientActions
     private _dictionariesActions: DictionariesActions
+    private _clinicsWorksScheduleActions: ClinicsWorkScheduleActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -36,6 +38,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._scheduleActions = new ScheduleActions(this)
         this._clientActions = new ClientActions(this)
         this._dictionariesActions = new DictionariesActions(this)
+        this._clinicsWorksScheduleActions = new ClinicsWorkScheduleActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -69,6 +72,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public get clientActions(): ClientActions {
         return this._clientActions
+    }
+
+    public get clinicsWorkScheduleActions(): ClinicsWorkScheduleActions {
+        return this._clinicsWorksScheduleActions
     }
 
     public get dictionariesActions(): DictionariesActions {
@@ -168,7 +175,9 @@ export default class EmployeeAppController extends ApplicationController<Employe
     }
 
     public openClinicsWorkschedule(): void {
-        this.openPage(PageType.ClinicsWorkschedule, () => {})
+        this.openPage(PageType.ClinicsWorkschedule, (setPageLoad: Function) => {
+            setPageLoad()
+        })
     }
 
     public openDictionaries(): void {

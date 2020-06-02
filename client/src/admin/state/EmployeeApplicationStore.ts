@@ -16,6 +16,10 @@ import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
 import DictionaryNode, {DictionariesPageSelectors, DictionariesPagesState} from "./nodes/DictionaryNode";
 import {ClinicsManagementMenuItemType} from "./enum/ClinicsManagementMenuItemType";
 import mergeTypes = CommonUtils.mergeTypes;
+import ClinicsWorkScheduleNode, {
+    ClinicsWorkScheduleSelectors,
+    ClinicsWorkScheduleState
+} from "./nodes/ClinicsWorkScheduleNode";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -29,6 +33,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private petNode!: PetNode
     private clientNode!: ClientNode
     private dictionariesNode!: DictionaryNode
+    private clinicsWorkScheduleNode!: ClinicsWorkScheduleNode
 
     constructor() {
         super()
@@ -41,6 +46,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.petNode = new PetNode(friend)
         this.clientNode = new ClientNode(friend)
         this.dictionariesNode = new DictionaryNode(friend)
+        this.clinicsWorkScheduleNode = new ClinicsWorkScheduleNode(friend)
         this.initialize()
     }
 
@@ -106,6 +112,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.petNode.getDefaultState())
         state = mergeTypes(state, this.clientNode.getDefaultState())
         state = mergeTypes(state, this.dictionariesNode.getDefaultState())
+        state = mergeTypes(state, this.clinicsWorkScheduleNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -118,6 +125,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.petNode.getSelectors())
         selectors = mergeTypes(selectors, this.clientNode.getSelectors())
         selectors = mergeTypes(selectors, this.dictionariesNode.getSelectors())
+        selectors = mergeTypes(selectors, this.clinicsWorkScheduleNode.getDefaultSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -193,6 +201,7 @@ export type EmployeeAppState = DefaultStateType
     & PetState
     & ClientState
     & DictionariesPagesState
+    & ClinicsWorkScheduleState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -211,3 +220,4 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & PetSelectors
     & ClientSelectors
     & DictionariesPageSelectors
+    & ClinicsWorkScheduleSelectors

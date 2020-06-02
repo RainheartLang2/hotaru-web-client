@@ -43,14 +43,14 @@ export default class ConnectedSelect<ItemType,
                         </InputLabel>
                     )}
             <Select
-        onChange={event => {
-            this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, itemsMap.get(+(event.target.value as string))]]))
-        }}
-        value={getKey(this.state.selectedItem)}
-        fullWidth={true}
-        variant={this.props.variant}
+                onChange={event => {
+                    this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, itemsMap.get(+(event.target.value as string))]]))
+                }}
+                value={getKey(this.state.selectedItem)}
+                fullWidth={true}
+                variant={this.props.variant}
             >
-            {options}
+                {options}
             </Select>
             </FormControl>
     )
