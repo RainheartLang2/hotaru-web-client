@@ -7,6 +7,11 @@ import {Message} from "../../../../core/components/Message";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {Clinic} from "../../../../common/beans/Clinic";
 import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/ConnectedCheckbox";
+import WorkScheduleTemplate from "../../../../common/components/workScheduleTemplate/WorkScheduleTemplate";
+import {ClinicWorkSchedule} from "../../../../common/beans/ClinicWorkSchedule";
+import WorkSchedule from "../../../../common/beans/WorkSchedule";
+
+var styles = require("./styles.css")
 
 export default class ClinicsWorkschedulePage extends React.Component<Properties, State> {
 
@@ -14,6 +19,8 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
         super(props)
         this.state = {
             showDefaultScheduleCheckBox: false,
+            editingDisabled: true,
+            workSchedule: null,
         }
     }
 
@@ -40,6 +47,14 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                             label={<Message messageKey={"page.clinicsWorkSchedule.userDefaultSchedule.label"}/>}
                         />
                     }
+                    <div className={styles.workScheduleWrapper}>
+                        <WorkScheduleTemplate
+                            schedule={this.state.workSchedule
+                                ? this.state.workSchedule.schedule
+                                : new WorkSchedule(7, new Map())}
+                            scheduleLength={"week"}
+                            disabled={this.state.editingDisabled}/>
+                    </div>
                 </div>
             </div>
         </>)
@@ -48,6 +63,8 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             clinicsWorkScheduleShowDefaultCheckBox: "showDefaultScheduleCheckBox",
+            clinicsWorkScheduleDisableEditing: "editingDisabled",
+            workScheduleForSelectedClinic: "workSchedule",
         })
     }
 }
@@ -57,5 +74,7 @@ type Properties = {
 }
 
 type State = {
-    showDefaultScheduleCheckBox: boolean
+    editingDisabled: boolean,
+    showDefaultScheduleCheckBox: boolean,
+    workSchedule: ClinicWorkSchedule | null,
 }

@@ -21,6 +21,16 @@
       "common.button.delete": "Удалить",
       "common.label.actions": "Действия",
       "common.employee.name": "Имя",
+      "common.wholeDayLong": "Весь день",
+
+      "common.monday.short": "пн",
+      "common.tuesday.short": "вт",
+      "common.wednesday.short": "ср",
+      "common.thursday.short": "чт",
+      "common.friday.short": "пт",
+      "common.saturday.short": "сб",
+      "common.sunday.short": "вс",
+
       "clinic.mock.name": "Нет клиники",
       "species.mock.name": "Вид не указан",
       "breed.mock.name": "Порода не указана",
@@ -50,6 +60,10 @@
 
       "second.navigation.clinicsManagement.clinicsList.label": "Список клиник",
       "second.navigation.clinicsManagement.workSchedule.label": "График работы",
+      "second.navigation.clinicsManagement.workSchedule.popover.label": "Часы работы",
+
+      "daySchedule.content.delete.tooltip": "Удалить интервал",
+      "daySchedule.content.add.tooltip": "Добавить интервал",
 
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",

@@ -7,6 +7,10 @@ import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFrie
 import MessageResource from "../../../core/message/MessageResource";
 import {ClinicSelectors} from "./ClinicNode";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {ClinicWorkSchedule} from "../../../common/beans/ClinicWorkSchedule";
+import WorkSchedule from "../../../common/beans/WorkSchedule";
+import {ScheduleRecord} from "../../../common/beans/ScheduleRecord";
+import {Time} from "../../../core/utils/Time";
 
 export default class ClinicsWorkScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -27,9 +31,31 @@ export default class ClinicsWorkScheduleNode {
     }
 
     public getDefaultState(): ClinicsWorkScheduleState {
+        //TODO: mock
+        const mondaySchedule = new DaySchedule([
+            new ScheduleRecord(new Time(0, 0), new Time(23, 59))
+        ])
+        const tuesdaySchedule = new DaySchedule([])
+        const wednesdaySchedule = new DaySchedule([
+            new ScheduleRecord(new Time(9, 0), new Time(21, 0))
+        ])
+        const thursdaySchedule = new DaySchedule([
+            new ScheduleRecord(new Time(0, 0), new Time(13, 0)),
+            new ScheduleRecord(new Time(14, 0), new Time(21, 0)),
+        ])
+        const workScheduleMap = new Map<WeekDay, DaySchedule>()
+        workScheduleMap.set(0, mondaySchedule)
+        workScheduleMap.set(1, tuesdaySchedule)
+        workScheduleMap.set(2, wednesdaySchedule)
+        workScheduleMap.set(3, thursdaySchedule)
+        const workSchedule = new WorkSchedule(7, workScheduleMap)
+        const scheduleList = [
+            new ClinicWorkSchedule(1, workSchedule, false, 1),
+            new ClinicWorkSchedule(2, workSchedule, true, 0),
+        ]
         return {
             clinicsWorkScheduleSelectedClinic: ClinicsWorkScheduleNode.getDefaultWorkSchedule(),
-            clinicsSchedule: new Map(),
+            clinicsWorkSchedulesList: scheduleList,
             clinicsWorkScheduleUseDefault: true,
         }
     }
@@ -51,7 +77,43 @@ export default class ClinicsWorkScheduleNode {
                 get: (state: Pick<ClinicsWorkScheduleState, "clinicsWorkScheduleSelectedClinic">) =>
                     state.clinicsWorkScheduleSelectedClinic != ClinicsWorkScheduleNode.defaultWorkSchedule,
                 value: false,
-
+            },
+            clinicsWorkScheduleDisableEditing: {
+                dependsOn: ["clinicsWorkScheduleUseDefault", "clinicsWorkScheduleSelectedClinic"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "clinicsWorkScheduleUseDefault" | "clinicsWorkScheduleSelectedClinic">) =>
+                    state.clinicsWorkScheduleSelectedClinic != ClinicsWorkScheduleNode.getDefaultWorkSchedule()
+                        && state.clinicsWorkScheduleUseDefault,
+                value: false,
+            },
+            clinicsWorkSchedulesByClinicId: {
+                dependsOn: ["clinicsWorkSchedulesList"],
+                get: (state: Pick<ClinicsWorkScheduleState, "clinicsWorkSchedulesList">) => {
+                    return CollectionUtils.mapArrayByUniquePredicate(state.clinicsWorkSchedulesList,
+                                                                                    schedule => schedule.clinicId ? schedule.clinicId : 0)
+                },
+                value: new Map()
+            },
+            workScheduleForSelectedClinic: {
+                dependsOn: [
+                    "clinicsWorkSchedulesByClinicId",
+                    "clinicsWorkScheduleSelectedClinic",
+                    "clinicsWorkScheduleUseDefault",
+                ],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "clinicsWorkSchedulesByClinicId"
+                    | "clinicsWorkScheduleSelectedClinic"
+                    | "clinicsWorkScheduleUseDefault"
+                    >) => {
+                    if (!state.clinicsWorkScheduleSelectedClinic) {
+                        return null
+                    }
+                    const defaultWorkSchedule = ClinicsWorkScheduleNode.getDefaultWorkSchedule()
+                    return state.clinicsWorkScheduleUseDefault
+                            ? state.clinicsWorkSchedulesByClinicId.get(defaultWorkSchedule.id!)!
+                            : state.clinicsWorkSchedulesByClinicId.get(state.clinicsWorkScheduleSelectedClinic.id!)!
+                },
+                value: null
             }
         }
     }
@@ -59,11 +121,14 @@ export default class ClinicsWorkScheduleNode {
 
 export type ClinicsWorkScheduleState = {
     clinicsWorkScheduleSelectedClinic: Clinic | null,
-    clinicsSchedule: Map<WeekDay, DaySchedule>,
     clinicsWorkScheduleUseDefault: boolean,
+    clinicsWorkSchedulesList: ClinicWorkSchedule[],
 }
 
 export type ClinicsWorkScheduleSelectors = {
     clinicsByIdWithDefaultWorkSchedule: Map<number, Clinic>,
+    clinicsWorkSchedulesByClinicId: Map<number, ClinicWorkSchedule>,
+    workScheduleForSelectedClinic: ClinicWorkSchedule | null,
     clinicsWorkScheduleShowDefaultCheckBox: boolean,
+    clinicsWorkScheduleDisableEditing: boolean,
 }

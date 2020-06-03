@@ -1,0 +1,9 @@
+.dateField {
+    width: 75px;
+}
+
+.date {
+    display: flex;
+    justify-content: space-between;
+    width: 175px;
+}

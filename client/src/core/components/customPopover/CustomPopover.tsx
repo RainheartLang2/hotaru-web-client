@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Popover} from "@material-ui/core";
+import {Popover, PopoverOrigin} from "@material-ui/core";
 import {ReactNode} from "react";
 
 var styles = require("./styles.css");
@@ -7,7 +7,17 @@ var styles = require("./styles.css");
 export default class CustomPopover extends React.Component<Properties, State> {
 
     static defaultProps = {
-        getRef: (popover: CustomPopover) => {}
+        getRef: (popover: CustomPopover) => {
+        },
+        anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+        },
+        transformOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+        },
+        disabled: false,
     }
 
     constructor(props: Properties) {
@@ -24,7 +34,7 @@ export default class CustomPopover extends React.Component<Properties, State> {
 
     render() {
         return (
-            <div>
+            <>
                 <div
                     onClick={(event) => {
                         this.setState({anchor:event.currentTarget})
@@ -32,25 +42,20 @@ export default class CustomPopover extends React.Component<Properties, State> {
                 >
                     {this.props.children}
                 </div>
-                <Popover
-                    open={!!this.state.anchor}
-                    anchorEl={this.state.anchor}
-                    onClose={() => this.close()}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                    }}
-                    keepMounted
-                >
-                    <div className={styles.popover}>
-                        {this.props.popoverContent}
-                    </div>
-                </Popover>
-            </div>
+                {!this.props.disabled && (
+                    <Popover
+                        open={!!this.state.anchor}
+                        anchorEl={this.state.anchor}
+                        onClose={() => this.close()}
+                        anchorOrigin={this.props.anchorOrigin}
+                        transformOrigin={this.props.transformOrigin}
+                    >
+                        <div className={styles.popover}>
+                            {this.props.popoverContent}
+                        </div>
+                    </Popover>)
+                }
+            </>
         )
     }
 
@@ -62,6 +67,9 @@ export default class CustomPopover extends React.Component<Properties, State> {
 type Properties = {
     popoverContent: ReactNode,
     getRef: (popover: CustomPopover) => void,
+    disabled?: boolean,
+    anchorOrigin?: PopoverOrigin,
+    transformOrigin?: PopoverOrigin,
 }
 
 type State = {

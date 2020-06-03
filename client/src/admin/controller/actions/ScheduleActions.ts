@@ -12,7 +12,7 @@ import {Client} from "../../../common/beans/Client";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Employee} from "../../../common/beans/Employee";
 import {ClientType} from "../../../common/beans/enums/ClientType";
-import Time = DateUtils.Time;
+import {Time} from "../../../core/utils/Time";
 
 export default class ScheduleActions {
     private controller: EmployeeAppController

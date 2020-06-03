@@ -1,0 +1,48 @@
+.workScheduleTemplate {
+    border: 1px solid rgba(224, 224, 224, 1);
+}
+.workScheduleTemplateTable {
+    min-width: 700px;
+    table-layout: fixed;
+    border-spacing: 0;
+    border-collapse: collapse;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.titleCell {
+    width: 145px;
+    height: 56px;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    text-align: center;
+}
+
+.simpleCell {
+    cursor: pointer;
+}
+
+.simpleCell, .disabledSimpleCell {
+    border-right: 1px solid rgba(224, 224, 224, 1);
+    text-align: center;
+}
+
+.disabledSimpleCell {
+    background-color: #eee;
+}
+
+.simpleCellContent {
+    width: 145px;
+    height: 96px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    justify-content: center;
+    font-style: italic;
+}
+
+.simpleCell:hover {
+    background-color: #e0edff;
+}
+
+.timeIntervalRecord {
+    margin-bottom: 7px;
+}
