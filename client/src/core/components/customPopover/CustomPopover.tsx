@@ -7,8 +7,7 @@ var styles = require("./styles.css");
 export default class CustomPopover extends React.Component<Properties, State> {
 
     static defaultProps = {
-        getRef: (popover: CustomPopover) => {
-        },
+        getRef: (popover: CustomPopover) => {},
         anchorOrigin: {
             vertical: 'bottom',
             horizontal: 'center',
@@ -18,6 +17,7 @@ export default class CustomPopover extends React.Component<Properties, State> {
             horizontal: 'center',
         },
         disabled: false,
+        onClose: () => {},
     }
 
     constructor(props: Properties) {
@@ -30,6 +30,7 @@ export default class CustomPopover extends React.Component<Properties, State> {
 
     public close(): void {
         this.setState({anchor: null})
+        this.props.onClose()
     }
 
     render() {
@@ -70,6 +71,7 @@ type Properties = {
     disabled?: boolean,
     anchorOrigin?: PopoverOrigin,
     transformOrigin?: PopoverOrigin,
+    onClose: Function,
 }
 
 type State = {

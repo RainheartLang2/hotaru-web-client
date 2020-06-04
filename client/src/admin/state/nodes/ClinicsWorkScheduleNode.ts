@@ -50,13 +50,12 @@ export default class ClinicsWorkScheduleNode {
         workScheduleMap.set(3, thursdaySchedule)
         const workSchedule = new WorkSchedule(7, workScheduleMap)
         const scheduleList = [
-            new ClinicWorkSchedule(1, workSchedule, false, 1),
-            new ClinicWorkSchedule(2, workSchedule, true, 0),
+            new ClinicWorkSchedule(1, workSchedule, false, true, 1),
+            new ClinicWorkSchedule(2, workSchedule, true, false, 0),
         ]
         return {
             clinicsWorkScheduleSelectedClinic: ClinicsWorkScheduleNode.getDefaultWorkSchedule(),
             clinicsWorkSchedulesList: scheduleList,
-            clinicsWorkScheduleUseDefault: true,
         }
     }
 
@@ -79,11 +78,16 @@ export default class ClinicsWorkScheduleNode {
                 value: false,
             },
             clinicsWorkScheduleDisableEditing: {
-                dependsOn: ["clinicsWorkScheduleUseDefault", "clinicsWorkScheduleSelectedClinic"],
+                dependsOn: [
+                    "clinicsWorkSchedulesByClinicId",
+                    "clinicsWorkScheduleSelectedClinic",
+                ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
-                    "clinicsWorkScheduleUseDefault" | "clinicsWorkScheduleSelectedClinic">) =>
-                    state.clinicsWorkScheduleSelectedClinic != ClinicsWorkScheduleNode.getDefaultWorkSchedule()
-                        && state.clinicsWorkScheduleUseDefault,
+                    "clinicsWorkSchedulesByClinicId"
+                    | "clinicsWorkScheduleSelectedClinic"
+                    >) => {
+                        return state.clinicsWorkScheduleSelectedClinic != ClinicsWorkScheduleNode.getDefaultWorkSchedule()
+                        && state.clinicsWorkSchedulesByClinicId.get(state.clinicsWorkScheduleSelectedClinic!.id!)!.usesDefault},
                 value: false,
             },
             clinicsWorkSchedulesByClinicId: {
@@ -98,22 +102,37 @@ export default class ClinicsWorkScheduleNode {
                 dependsOn: [
                     "clinicsWorkSchedulesByClinicId",
                     "clinicsWorkScheduleSelectedClinic",
-                    "clinicsWorkScheduleUseDefault",
                 ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
                     "clinicsWorkSchedulesByClinicId"
                     | "clinicsWorkScheduleSelectedClinic"
-                    | "clinicsWorkScheduleUseDefault"
                     >) => {
                     if (!state.clinicsWorkScheduleSelectedClinic) {
                         return null
                     }
                     const defaultWorkSchedule = ClinicsWorkScheduleNode.getDefaultWorkSchedule()
-                    return state.clinicsWorkScheduleUseDefault
+                    const selectedClinicWorkSchedule = state.clinicsWorkSchedulesByClinicId.get(state.clinicsWorkScheduleSelectedClinic.id!)!
+                    return selectedClinicWorkSchedule.usesDefault
                             ? state.clinicsWorkSchedulesByClinicId.get(defaultWorkSchedule.id!)!
                             : state.clinicsWorkSchedulesByClinicId.get(state.clinicsWorkScheduleSelectedClinic.id!)!
                 },
                 value: null
+            },
+            clinicsWorkScheduleUsesDefault: {
+                dependsOn: [
+                    "clinicsWorkSchedulesByClinicId",
+                    "clinicsWorkScheduleSelectedClinic",
+                ],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "clinicsWorkSchedulesByClinicId"
+                    | "clinicsWorkScheduleSelectedClinic"
+                    >) => {
+                    if (!state.clinicsWorkScheduleSelectedClinic) {
+                        return false
+                    }
+                    return state.clinicsWorkSchedulesByClinicId.get(state.clinicsWorkScheduleSelectedClinic.id!)!.usesDefault
+                },
+                value: true,
             }
         }
     }
@@ -121,7 +140,6 @@ export default class ClinicsWorkScheduleNode {
 
 export type ClinicsWorkScheduleState = {
     clinicsWorkScheduleSelectedClinic: Clinic | null,
-    clinicsWorkScheduleUseDefault: boolean,
     clinicsWorkSchedulesList: ClinicWorkSchedule[],
 }
 
@@ -131,4 +149,5 @@ export type ClinicsWorkScheduleSelectors = {
     workScheduleForSelectedClinic: ClinicWorkSchedule | null,
     clinicsWorkScheduleShowDefaultCheckBox: boolean,
     clinicsWorkScheduleDisableEditing: boolean,
+    clinicsWorkScheduleUsesDefault: boolean,
 }

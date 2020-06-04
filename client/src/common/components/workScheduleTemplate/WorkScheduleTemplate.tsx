@@ -7,6 +7,7 @@ import DayScheduleContent from "../dayScheduleContent/DayScheduleContent";
 import WorkSchedule from "../../beans/WorkSchedule";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {DaySchedule} from "../../beans/DaySchedule";
+import EmployeeAppController from "../../../admin/controller/EmployeeAppController";
 
 var styles = require("./styles.css");
 
@@ -72,10 +73,12 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
         return (<tr>
             {days.map(day => {
                 const daySchedule = this.props.schedule.getSchedule(day)
+                let dayScheduleContentCmp: DayScheduleContent | null = null
                 const popoverContent = (
                     <DayScheduleContent
                         label={<Message messageKey={"second.navigation.clinicsManagement.workSchedule.popover.label"}/>}
                         schedule={daySchedule}
+                        getRef={(content: DayScheduleContent) => dayScheduleContentCmp = content}
                     />
                 )
 
@@ -96,6 +99,13 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                                 horizontal: "left",
                             }}
                             disabled={this.props.disabled}
+                            onClose={() => {
+                                if (dayScheduleContentCmp) {
+                                    this.props.controller.clinicsWorkScheduleActions.setDaySchedule(
+                                        day, dayScheduleContentCmp.getRecords()
+                                    )
+                                }
+                            }}
                         >
                             <div className={styles.simpleCellContent}>
                                 {this.getDayScheduleCellContent(daySchedule)}
@@ -118,6 +128,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 }
 
 type Properties = {
+    controller: EmployeeAppController,
     scheduleLength: "week" | number,
     disabled?: boolean,
     schedule: WorkSchedule,

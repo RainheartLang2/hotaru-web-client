@@ -8,6 +8,11 @@ import {CommonUtils} from "../../utils/CommonUtils";
 export default class ConnectedCheckbox<ApplicationState extends DefaultStateType>
     extends React.Component<Properties<ApplicationState>, State> {
 
+    static defaultProps = {
+        onClick: () => {
+        }
+    }
+
     constructor(props: Properties<ApplicationState>) {
         super(props)
         this.state = {
@@ -16,15 +21,21 @@ export default class ConnectedCheckbox<ApplicationState extends DefaultStateType
     }
 
     render() {
+        const checked = this.props.propertyName
+            ? this.state.isChecked
+            : this.props.value
         return (
             <FormGroup>
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={this.state.isChecked}
-                            onChange={(event) =>
-                                this.props.controller.setState({[this.props.propertyName]: event.target.checked})
-                            }
+                            checked={checked}
+                            onChange={(event) => {
+                                if (this.props.propertyName) {
+                                    this.props.controller.setState({[this.props.propertyName]: event.target.checked})
+                                }
+                                this.props.onClick(event.target.checked)
+                            }}
                             color="primary"
                         />}
                     label={
@@ -42,18 +53,24 @@ export default class ConnectedCheckbox<ApplicationState extends DefaultStateType
     }
 
     componentDidMount(): void {
-        this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.propertyName, "isChecked"]]))
+        if (this.props.propertyName) {
+            this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.propertyName, "isChecked"]]))
+        }
     }
 
     componentWillUnmount(): void {
-        this.props.controller.unsubscribe(this)
+        if (this.props.propertyName) {
+            this.props.controller.unsubscribe(this)
+        }
     }
 }
 
 type Properties<ApplicationState> = {
     controller: ApplicationController,
-    propertyName: keyof ApplicationState,
+    propertyName?: keyof ApplicationState,
     label: ReactNode,
+    onClick: (checked: boolean) => void,
+    value?: boolean,
 }
 
 type State = {

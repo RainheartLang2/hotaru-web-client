@@ -1,4 +1,6 @@
 import {DaySchedule} from "./DaySchedule";
+import {ScheduleRecord} from "./ScheduleRecord";
+import {CollectionUtils} from "../../core/utils/CollectionUtils";
 
 export default class WorkSchedule {
     private _length: number
@@ -24,5 +26,15 @@ export default class WorkSchedule {
             return new DaySchedule([])
         }
         return schedule
+    }
+
+    public setSchedule(num: number, records: ScheduleRecord[]): WorkSchedule {
+        if (num >= this.length) {
+            throw new Error("attempted retrieving of schedule with number " + num + ", while length is " + this.length)
+        }
+
+        const newMap = CollectionUtils.cloneMap(this._schedule)
+        newMap.set(num, new DaySchedule(records))
+        return new WorkSchedule(this.length, newMap)
     }
 }

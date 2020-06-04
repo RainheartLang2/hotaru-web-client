@@ -14,13 +14,13 @@ import WorkSchedule from "../../../../common/beans/WorkSchedule";
 var styles = require("./styles.css")
 
 export default class ClinicsWorkschedulePage extends React.Component<Properties, State> {
-
     constructor(props: Properties) {
         super(props)
         this.state = {
             showDefaultScheduleCheckBox: false,
             editingDisabled: true,
             workSchedule: null,
+            useDefaultWorkSchedule: true,
         }
     }
 
@@ -43,12 +43,14 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                     {this.state.showDefaultScheduleCheckBox &&
                         <ConnectedCheckbox<EmployeeAppState>
                             controller={this.props.controller}
-                            propertyName={"clinicsWorkScheduleUseDefault"}
                             label={<Message messageKey={"page.clinicsWorkSchedule.userDefaultSchedule.label"}/>}
+                            onClick={(checked: boolean) => this.props.controller.clinicsWorkScheduleActions.setUsesDefault(checked)}
+                            value={this.state.useDefaultWorkSchedule}
                         />
                     }
                     <div className={styles.workScheduleWrapper}>
                         <WorkScheduleTemplate
+                            controller={this.props.controller}
                             schedule={this.state.workSchedule
                                 ? this.state.workSchedule.schedule
                                 : new WorkSchedule(7, new Map())}
@@ -65,6 +67,7 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             clinicsWorkScheduleShowDefaultCheckBox: "showDefaultScheduleCheckBox",
             clinicsWorkScheduleDisableEditing: "editingDisabled",
             workScheduleForSelectedClinic: "workSchedule",
+            clinicsWorkScheduleUsesDefault: "useDefaultWorkSchedule",
         })
     }
 }
@@ -77,4 +80,5 @@ type State = {
     editingDisabled: boolean,
     showDefaultScheduleCheckBox: boolean,
     workSchedule: ClinicWorkSchedule | null,
+    useDefaultWorkSchedule: boolean,
 }

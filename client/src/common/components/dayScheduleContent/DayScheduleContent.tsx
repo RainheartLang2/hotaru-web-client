@@ -47,6 +47,10 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
         }
     }
 
+    public getRecords(): ScheduleRecord[] {
+        return this.state.records
+    }
+
     render() {
         return (
             <div className={styles.dayScheduleContent}>
@@ -97,14 +101,20 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
                         </CustomContentButton>
                     </div>
                 </div>
-
             </div>
         )
     }
+
+    componentDidMount(): void {
+        this.props.getRef(this)
+    }
+
 }
+
 type Properties = {
     schedule: DaySchedule,
     label: ReactNode,
+    getRef: (content: DayScheduleContent) => void,
 }
 
 type State = {
