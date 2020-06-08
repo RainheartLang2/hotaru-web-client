@@ -53,7 +53,7 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                             controller={this.props.controller}
                             schedule={this.state.workSchedule
                                 ? this.state.workSchedule.schedule
-                                : new WorkSchedule(7, new Map())}
+                                : new WorkSchedule(7, [])}
                             scheduleLength={"week"}
                             disabled={this.state.editingDisabled}/>
                     </div>

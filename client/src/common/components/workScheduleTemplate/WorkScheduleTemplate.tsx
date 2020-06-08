@@ -45,19 +45,18 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
             </div>)
         }
 
-        return daySchedule.records.map((record, index) => {
+        return daySchedule.getRecords().map((record, index) => {
             return (
                 <div className={styles.timeIntervalRecord}>
-                    {DateUtils.formatTimeObject(record.startTime)}
+                    {DateUtils.formatTimeObject(record.getStartTime())}
                     -
-                    {DateUtils.formatTimeObject(record.endTime)}
-                    {index != daySchedule.records.length - 1
+                    {DateUtils.formatTimeObject(record.getEndTime())}
+                    {index != daySchedule.getRecords().length - 1
                         ? "," : ""}
                 </div>
             )
         })
     }
-
 
     private getWeeklyRow(): ReactNode {
         const days = [
@@ -72,6 +71,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 
         return (<tr>
             {days.map(day => {
+                console.log(this.props.schedule)
                 const daySchedule = this.props.schedule.getSchedule(day)
                 let dayScheduleContentCmp: DayScheduleContent | null = null
                 const popoverContent = (

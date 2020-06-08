@@ -1,25 +1,24 @@
-import {DateUtils} from "../../core/utils/DateUtils";
-import {Time} from "../../core/utils/Time";
+import {Time, TimeServerBean} from "../../core/utils/Time";
 
 export class ScheduleRecord {
-    private _startTime: Time
-    private _endTime: Time
+    private startTime: Time
+    private endTime: Time
 
     constructor(startTime: Time, endTime: Time) {
-        this._startTime = startTime;
-        this._endTime = endTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    get startTime(): Time {
-        return this._startTime;
+    public getStartTime(): Time {
+        return this.startTime
     }
 
-    get endTime(): Time {
-        return this._endTime;
+    public getEndTime(): Time {
+        return this.endTime
     }
 
     public compareTo(second: ScheduleRecord): number {
-        return this._startTime.compareTo(second.startTime)
+        return this.startTime.compareTo(second.startTime)
     }
 
     public isBefore(second: ScheduleRecord): boolean {
@@ -39,8 +38,17 @@ export class ScheduleRecord {
             return null
         }
 
-        const startTime = Time.min(this.startTime, second.startTime)
+        const startTime = Time.min(this.startTime, second.getStartTime())
         const endTime = Time.max(this.endTime, second.endTime)
         return new ScheduleRecord(startTime, endTime)
     }
+
+    public static fromServerBean(bean: ScheduleRecordServerBean): ScheduleRecord {
+        return new ScheduleRecord(Time.fromServerBean(bean.startTime), Time.fromServerBean(bean.endTime))
+    }
+}
+
+export type ScheduleRecordServerBean = {
+    startTime: TimeServerBean,
+    endTime: TimeServerBean,
 }

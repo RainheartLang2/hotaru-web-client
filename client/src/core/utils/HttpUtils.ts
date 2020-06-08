@@ -82,6 +82,7 @@ function handleError(e: any, setError: (errorType: string) => void): void {
         return
     }
     const controller = ApplicationControllerHolder.instance.controller
+    console.log(e)
     let errorMessageKey = "error.message.unknown"
     if (e instanceof HttpTransportError) {
         if (e.code == 401) {

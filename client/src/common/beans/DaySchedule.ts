@@ -1,15 +1,15 @@
-import {ScheduleRecord} from "./ScheduleRecord";
+import {ScheduleRecord, ScheduleRecordServerBean} from "./ScheduleRecord";
 import {DateUtils} from "../../core/utils/DateUtils";
 
 export class DaySchedule {
-    private _records: ScheduleRecord[]
+    private records: ScheduleRecord[]
 
     constructor(timePeriods: ScheduleRecord[]) {
-        this._records = DateUtils.mergeTimeRangesSequence(timePeriods)
+        this.records = DateUtils.mergeTimeRangesSequence(timePeriods)
     }
 
-    get records(): ScheduleRecord[] {
-        return this._records;
+    public getRecords(): ScheduleRecord[] {
+        return this.records
     }
 
     public isWholeDayLong(): boolean {
@@ -18,7 +18,15 @@ export class DaySchedule {
         }
 
         const firstRecord = this.records[0]
-        return firstRecord.startTime.hours == 0 && firstRecord.startTime.minutes == 0
-                && firstRecord.endTime.hours == 23 && firstRecord.endTime.minutes == 59
+        return firstRecord.getStartTime().getHours() == 0 && firstRecord.getStartTime().getMinutes() == 0
+                && firstRecord.getEndTime().getHours() == 23 && firstRecord.getEndTime().getMinutes() == 59
     }
+
+    public static fromServerBean(bean: DayScheduleServerBean): DaySchedule {
+        return new DaySchedule(bean.records.map(record => ScheduleRecord.fromServerBean(record)))
+    }
+}
+
+export type DayScheduleServerBean = {
+    records: ScheduleRecordServerBean[]
 }

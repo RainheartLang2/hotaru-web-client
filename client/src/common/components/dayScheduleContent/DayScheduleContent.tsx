@@ -23,7 +23,7 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
         this.addedEndTime = ""
 
         this.state = {
-            records: props.schedule.records
+            records: props.schedule.getRecords()
         }
     }
 
@@ -61,16 +61,16 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
                     return (
                         <div className={styles.recordWrapper}>
                             <DateRangeComponent
-                                startTime={record.startTime}
-                                endTime={record.endTime}
+                                startTime={record.getStartTime()}
+                                endTime={record.getEndTime()}
                                 onStartTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     this.replaceRecord(index,
                                         new ScheduleRecord(DateUtils.parseTime(event.target.value),
-                                            record.endTime))
+                                            record.getEndTime()))
                                 }}
                                 onEndTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     this.replaceRecord(index,
-                                        new ScheduleRecord(record.startTime,
+                                        new ScheduleRecord(record.getStartTime(),
                                             DateUtils.parseTime(event.target.value)))
                                 }}
                             />

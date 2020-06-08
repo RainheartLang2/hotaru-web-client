@@ -9,7 +9,7 @@ export namespace DateUtils {
     }
 
     export function formatTimeObject(time: Time): string {
-        return formatTime(time.hours, time.minutes)
+        return formatTime(time.getHours(), time.getMinutes())
     }
     export function formatTime(hours: number, minutes: number): string {
         return (hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes)

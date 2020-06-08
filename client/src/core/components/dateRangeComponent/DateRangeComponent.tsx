@@ -21,7 +21,7 @@ export default class DateRangeComponent extends React.Component<Properties> {
                         size={"small"}
                         fullWidth={true}
                         defaultValue={this.props.startTime
-                                ? DateUtils.formatTime(this.props.startTime.hours, this.props.startTime.minutes)
+                                ? DateUtils.formatTime(this.props.startTime.getHours(), this.props.startTime.getMinutes())
                                 : ""}
                         onChange={this.props.onStartTimeChange}
                     />
@@ -35,7 +35,7 @@ export default class DateRangeComponent extends React.Component<Properties> {
                         size={"small"}
                         fullWidth={true}
                         defaultValue={this.props.endTime
-                                    ? DateUtils.formatTime(this.props.endTime.hours, this.props.endTime.minutes)
+                                    ? DateUtils.formatTime(this.props.endTime.getHours(), this.props.endTime.getMinutes())
                                     : ""}
                         onChange={this.props.onEndTimeChange}
                     />

@@ -121,8 +121,8 @@ export default class ScheduleActions {
         return {
             id: this.controller.state.editedAppointmentId,
             title: this.controller.state.editedAppointmentTitleField.value,
-            startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), startTime.hours, startTime.minutes),
-            endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), endTime.hours, endTime.minutes),
+            startDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), startTime.getHours(), startTime.getMinutes()),
+            endDate: new Date(date.getFullYear(), date.getMonth(), date.getDate(), endTime.getHours(), endTime.getMinutes()),
             medicId: selectedMedic.id,
         }
     }

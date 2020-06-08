@@ -51,6 +51,10 @@ export namespace CollectionUtils {
         return result
     }
 
+    export function cloneArray<ItemType>(array: ItemType[]): ItemType[] {
+        return array.map(x => x)
+    }
+
     export function mergeMaps<KeyType, ItemType>(targetMap: Map<KeyType, ItemType>, sourctMap: Map<KeyType, ItemType>): void {
         sourctMap.forEach((item, key) => {
             targetMap.set(key, item)

@@ -1,6 +1,6 @@
 export class Time {
-    private _hours: number
-    private _minutes: number
+    private hours: number
+    private minutes: number
 
     constructor(hours: number, minutes: number) {
         if (hours > 23) {
@@ -9,16 +9,16 @@ export class Time {
         if (minutes > 59) {
             throw new Error("minutes amount can not be greater than 58, though it is " + minutes)
         }
-        this._hours = hours;
-        this._minutes = minutes;
+        this.hours = hours;
+        this.minutes = minutes;
     }
 
-    get hours(): number {
-        return this._hours;
+    public getHours(): number {
+        return this.hours
     }
 
-    get minutes(): number {
-        return this._minutes;
+    public getMinutes(): number {
+        return this.minutes
     }
 
     public greaterThan(second: Time): boolean {
@@ -58,4 +58,14 @@ export class Time {
             return second
         }
     }
+
+    public static fromServerBean(bean: TimeServerBean): Time {
+        return new Time(bean.hours, bean.minutes)
+    }
+}
+
+export type TimeServerBean = {
+    hours: number
+    minutes: number
+
 }
