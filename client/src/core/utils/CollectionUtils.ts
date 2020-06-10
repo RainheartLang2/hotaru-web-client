@@ -19,7 +19,7 @@ export namespace CollectionUtils {
         return result
     }
 
-    export function mapIdentifiableArray(array: Identifiable[]) {
+    export function mapIdentifiableArray<ItemType extends Identifiable>(array: ItemType[]): Map<number, ItemType> {
         return mapArrayByUniquePredicate(array, item => item.id ? item.id : 0)
     }
 
@@ -63,5 +63,13 @@ export namespace CollectionUtils {
 
     export function updateArray<Type>(array: Type[], updatedItem: Type, predicate: (item: Type) => any) {
         return array.map(item => predicate(item) == predicate(updatedItem) ? updatedItem : item)
+    }
+
+    export function fillArray<Type>(length: number, sample: Type): Type[] {
+        const result = []
+        for (let i = 0; i < length; i++) {
+            result.push(sample)
+        }
+        return result
     }
 }

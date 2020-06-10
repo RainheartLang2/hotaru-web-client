@@ -27,14 +27,16 @@ export default class ClinicsWorkScheduleActions {
     }
 
     private applyDayScheduleChanges(selectedClinicId: number, day: number, records: ScheduleRecord[]): void {
-        this.controller.setState({
-            clinicsWorkSchedulesList: this.controller.state.clinicsWorkSchedulesList.map(clinicWorkSchedule => {
-                if (clinicWorkSchedule.clinicId != selectedClinicId) {
-                    return clinicWorkSchedule
-                }
-                return clinicWorkSchedule.setDaySchedule(day, records)
-            })
+        const clinicsWorkSchedulesList = this.controller.state.clinicsWorkSchedulesList.map(clinicWorkSchedule => {
+            if (clinicWorkSchedule.clinicId != selectedClinicId) {
+                return clinicWorkSchedule
+            }
+            const newDaySchedule = clinicWorkSchedule.setDaySchedule(day, records)
+            console.log(newDaySchedule)
+            return newDaySchedule
         })
+        console.log(clinicsWorkSchedulesList)
+        this.controller.setState({clinicsWorkSchedulesList})
     }
 
     public setDaySchedule(day: number, records: ScheduleRecord[]): void {

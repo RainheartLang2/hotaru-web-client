@@ -9,9 +9,14 @@ export default class WorkSchedule {
     _schedule: DaySchedule[]
 
 
-    constructor(length: number, schedule: DaySchedule[]) {
-        this._length = length;
-        this._schedule = schedule;
+    constructor(length: number, schedule?: DaySchedule[]) {
+        if (schedule && length != schedule.length) {
+            throw new Error("length is " + length + ", schedule length is " + schedule.length)
+        }
+        this._length = length
+        this._schedule = schedule
+                            ? schedule
+                            : CollectionUtils.fillArray(length, new DaySchedule([]))
     }
 
     public get length(): number {
@@ -35,7 +40,9 @@ export default class WorkSchedule {
             throw new Error("attempted retrieving of schedule with number " + num + ", while length is " + this.length)
         }
 
-        return new WorkSchedule(this.length, cloneArray(this._schedule))
+        const newSchedule = cloneArray(this._schedule)
+        newSchedule[num] = new DaySchedule(records)
+        return new WorkSchedule(this.length, newSchedule)
     }
 
     public static fromServerBean(bean: WorkScheduleServerBean): WorkSchedule {

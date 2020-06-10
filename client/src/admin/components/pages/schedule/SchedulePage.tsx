@@ -140,7 +140,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
                         headerComponent={TooltipHeader}
                     />
                     <Toolbar/>
-                    <DateNavigator />
+                    <DateNavigator/>
                     <TodayButton
                         messages={{
                             today: MessageResource.getMessage("page.schedule.todayButton.label")

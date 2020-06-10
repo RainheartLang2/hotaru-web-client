@@ -10,6 +10,9 @@ import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/Con
 import WorkScheduleTemplate from "../../../../common/components/workScheduleTemplate/WorkScheduleTemplate";
 import {ClinicWorkSchedule} from "../../../../common/beans/ClinicWorkSchedule";
 import WorkSchedule from "../../../../common/beans/WorkSchedule";
+import {Appointments, DateNavigator, MonthView, Scheduler, Toolbar} from "@devexpress/dx-react-scheduler-material-ui";
+import {Paper} from "@material-ui/core";
+import {AppointmentModel, ViewState} from "@devexpress/dx-react-scheduler";
 
 var styles = require("./styles.css")
 
@@ -21,10 +24,12 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             editingDisabled: true,
             workSchedule: null,
             useDefaultWorkSchedule: true,
+            deviations: [],
         }
     }
 
     render() {
+        console.log(this.state.deviations)
         return (<>
             <PageHeader label={<Message messageKey={"page.clinicsWorkSchedule.title"}/>}
                         hasButton={false}
@@ -53,10 +58,27 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                             controller={this.props.controller}
                             schedule={this.state.workSchedule
                                 ? this.state.workSchedule.schedule
-                                : new WorkSchedule(7, [])}
+                                : new WorkSchedule(7)}
                             scheduleLength={"week"}
                             disabled={this.state.editingDisabled}/>
                     </div>
+                </div>
+            </div>
+            <div className={styles.deviationSection}>
+                <div className={styles.deviationSectionTitle}>
+                </div>
+                <div className={styles.deviationContent}>
+                    <Paper>
+                        <Scheduler
+                            data={this.state.deviations}
+                        >
+                            <ViewState/>
+                            <MonthView/>
+                            <Appointments/>
+                            <Toolbar/>
+                            <DateNavigator/>
+                        </Scheduler>
+                    </Paper>
                 </div>
             </div>
         </>)
@@ -68,7 +90,12 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             clinicsWorkScheduleDisableEditing: "editingDisabled",
             workScheduleForSelectedClinic: "workSchedule",
             clinicsWorkScheduleUsesDefault: "useDefaultWorkSchedule",
+            clinicsScheduleDeviationsAppointments: "deviations",
         })
+    }
+
+    componentWillUnmount(): void {
+        this.props.controller.unsubscribe(this)
     }
 }
 
@@ -81,4 +108,5 @@ type State = {
     showDefaultScheduleCheckBox: boolean,
     workSchedule: ClinicWorkSchedule | null,
     useDefaultWorkSchedule: boolean,
+    deviations: AppointmentModel[],
 }
