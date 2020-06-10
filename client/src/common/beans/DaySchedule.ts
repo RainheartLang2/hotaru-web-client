@@ -18,8 +18,14 @@ export class DaySchedule {
         }
 
         const firstRecord = this.records[0]
-        return firstRecord.getStartTime().getHours() == 0 && firstRecord.getStartTime().getMinutes() == 0
-                && firstRecord.getEndTime().getHours() == 23 && firstRecord.getEndTime().getMinutes() == 59
+
+        const startTime = firstRecord.getStartTime()
+        const endTime = firstRecord.getEndTime()
+        if (!startTime || !endTime) {
+            return false
+        }
+        return startTime.getHours() == 0 && startTime.getMinutes() == 0
+                && endTime.getHours() == 23 && endTime.getMinutes() == 59
     }
 
     public static fromServerBean(bean: DayScheduleServerBean): DaySchedule {

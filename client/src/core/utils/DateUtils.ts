@@ -19,7 +19,10 @@ export namespace DateUtils {
         return TimeRegExp.test(value)
     }
 
-    export function parseTime(value: string): Time {
+    export function parseTime(value: string): Time | null {
+        if (!isTimeValid(value)) {
+            return null
+        }
         return new Time(+value.substr(0, 2), +value.substr(3, 2))
     }
 

@@ -3,6 +3,11 @@
     cursor: pointer;
 }
 
-.iconWrapper:hover {
+.enabled:hover {
     color: #ffa500 !important;
+}
+
+.disabled {
+    cursor: default;
+    color: grey;
 }

@@ -1,32 +1,34 @@
 import {Time, TimeServerBean} from "../../core/utils/Time";
 
-export class ScheduleRecord {
-    private startTime: Time
-    private endTime: Time
+type TimeType = Time | null
 
-    constructor(startTime: Time, endTime: Time) {
+export class ScheduleRecord {
+    private startTime: TimeType
+    private endTime: TimeType
+
+    constructor(startTime: TimeType, endTime: TimeType) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public getStartTime(): Time {
+    public getStartTime(): TimeType {
         return this.startTime
     }
 
-    public getEndTime(): Time {
+    public getEndTime(): TimeType {
         return this.endTime
     }
 
     public compareTo(second: ScheduleRecord): number {
-        return this.startTime.compareTo(second.startTime)
+        return this.startTime!.compareTo(second.startTime!)
     }
 
     public isBefore(second: ScheduleRecord): boolean {
-        return this.endTime.lessThan(second.startTime)
+        return this.endTime!.lessThan(second.startTime!)
     }
 
     public isAfter(second: ScheduleRecord): boolean {
-        return this.startTime.greaterThan(second.endTime)
+        return this.startTime!.greaterThan(second.endTime!)
     }
 
     public intersects(second: ScheduleRecord): boolean {
@@ -38,8 +40,8 @@ export class ScheduleRecord {
             return null
         }
 
-        const startTime = Time.min(this.startTime, second.getStartTime())
-        const endTime = Time.max(this.endTime, second.endTime)
+        const startTime = Time.min(this.startTime!, second.getStartTime()!)
+        const endTime = Time.max(this.endTime!, second.endTime!)
         return new ScheduleRecord(startTime, endTime)
     }
 

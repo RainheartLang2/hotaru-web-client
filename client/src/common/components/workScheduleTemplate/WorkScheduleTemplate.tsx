@@ -48,9 +48,9 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
         return daySchedule.getRecords().map((record, index) => {
             return (
                 <div className={styles.timeIntervalRecord}>
-                    {DateUtils.formatTimeObject(record.getStartTime())}
+                    {DateUtils.formatTimeObject(record.getStartTime()!)}
                     -
-                    {DateUtils.formatTimeObject(record.getEndTime())}
+                    {DateUtils.formatTimeObject(record.getEndTime()!)}
                     {index != daySchedule.getRecords().length - 1
                         ? "," : ""}
                 </div>
@@ -76,9 +76,17 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                 let dayScheduleContentCmp: DayScheduleContent | null = null
                 const popoverContent = (
                     <DayScheduleContent
+                        controller={this.props.controller}
                         label={<Message messageKey={"second.navigation.clinicsManagement.workSchedule.popover.label"}/>}
                         schedule={daySchedule}
                         getRef={(content: DayScheduleContent) => dayScheduleContentCmp = content}
+                        onConfirmClick={() => {
+                            if (dayScheduleContentCmp) {
+                                this.props.controller.clinicsWorkScheduleActions.setDaySchedule(
+                                    day, dayScheduleContentCmp.getRecords()
+                                )
+                            }
+                        }}
                     />
                 )
 
@@ -100,11 +108,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                             }}
                             disabled={this.props.disabled}
                             onClose={() => {
-                                if (dayScheduleContentCmp) {
-                                    this.props.controller.clinicsWorkScheduleActions.setDaySchedule(
-                                        day, dayScheduleContentCmp.getRecords()
-                                    )
-                                }
+
                             }}
                         >
                             <div className={styles.simpleCellContent}>

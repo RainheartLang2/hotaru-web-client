@@ -46,8 +46,8 @@ export default class DateRangeComponent extends React.Component<Properties> {
 }
 
 type Properties = {
-    startTime?: Time
-    endTime?: Time
+    startTime?: Time | null
+    endTime?: Time | null
     onStartTimeChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
     onEndTimeChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }

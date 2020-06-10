@@ -8,6 +8,8 @@ import DeleteIcon from '@material-ui/icons/DeleteSharp';
 import AddIcon from '@material-ui/icons/AddSharp';
 import {ScheduleRecord} from "../../beans/ScheduleRecord";
 import {DateUtils} from "../../../core/utils/DateUtils";
+import CustomButton from "../../../core/components/customButton/CustomButton";
+import ApplicationController from "../../../core/mvc/controllers/ApplicationController";
 
 var styles = require("./styles.css")
 
@@ -23,8 +25,20 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
         this.addedEndTime = ""
 
         this.state = {
-            records: props.schedule.getRecords()
+            records: props.schedule.getRecords(),
+            additionDisabled: true,
+            recordsValid: true,
         }
+    }
+
+    private validateRecords(): boolean {
+        let valid = true
+        this.state.records.forEach(record => {
+            if (!record.getStartTime() || !record.getEndTime() || record.getStartTime()!.greaterThan(record.getEndTime()!)) {
+                valid = false
+            }
+        })
+        return valid
     }
 
     private replaceRecord(index: number, record: ScheduleRecord): void {
@@ -39,11 +53,27 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
         })
     }
 
+    private isAddedTimeRangeValid(): boolean {
+        const startTime = DateUtils.parseTime(this.addedStartTime)
+        const endTime = DateUtils.parseTime(this.addedEndTime)
+        if (!startTime || !endTime) {
+            return false
+        }
+
+        return startTime.lessThan(endTime)
+    }
+
+    private validateAddedTimeRange(): void {
+        this.setState({
+            additionDisabled: !this.isAddedTimeRangeValid()
+        })
+    }
+
     private addRecord(): void {
-        if (DateUtils.isTimeValid(this.addedEndTime) && DateUtils.isTimeValid(this.addedStartTime)) {
+        if (this.isAddedTimeRangeValid()) {
             const startTime = DateUtils.parseTime(this.addedStartTime)
             const endTime = DateUtils.parseTime(this.addedEndTime)
-            this.setState({records: [...this.state.records, new ScheduleRecord(startTime, endTime)]})
+            this.setState({records: [...this.state.records, new ScheduleRecord(startTime!, endTime!)]})
         }
     }
 
@@ -52,54 +82,70 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
     }
 
     render() {
+        const error = !this.validateRecords()
         return (
             <div className={styles.dayScheduleContent}>
-                <div className={styles.label}>
-                    {this.props.label}
-                </div>
-                {this.state.records.map((record, index) => {
-                    return (
-                        <div className={styles.recordWrapper}>
-                            <DateRangeComponent
-                                startTime={record.getStartTime()}
-                                endTime={record.getEndTime()}
-                                onStartTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    this.replaceRecord(index,
-                                        new ScheduleRecord(DateUtils.parseTime(event.target.value),
-                                            record.getEndTime()))
-                                }}
-                                onEndTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    this.replaceRecord(index,
-                                        new ScheduleRecord(record.getStartTime(),
-                                            DateUtils.parseTime(event.target.value)))
-                                }}
-                            />
-                            <div className={styles.action}>
-                                <CustomContentButton
-                                    onClick={() => this.deleteRecord(index)}
-                                    tooltipContent={<Message messageKey={"daySchedule.content.delete.tooltip"}/>}>
-                                    <DeleteIcon color={"inherit"} fontSize={"small"}/>
-                                </CustomContentButton>
-                            </div>
-                        </div>
-                    )
-                })}
-                <div className={styles.recordWrapper}>
-                    <DateRangeComponent
-                        onStartTimeChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                            this.addedStartTime = event.target.value
-                        }
-                        onEndTimeChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                            this.addedEndTime = event.target.value
-                        }
-                    />
-                    <div className={styles.action}>
-                        <CustomContentButton
-                            onClick={() => this.addRecord()}
-                            tooltipContent={<Message messageKey={"daySchedule.content.add.tooltip"}/>}>
-                            <AddIcon color={"inherit"} fontSize={"small"}/>
-                        </CustomContentButton>
+                <div>
+                    <div className={styles.label}>
+                        {this.props.label}
                     </div>
+                    {this.state.records.map((record, index) => {
+                        return (
+                            <div className={styles.recordWrapper}>
+                                <DateRangeComponent
+                                    startTime={record.getStartTime()}
+                                    endTime={record.getEndTime()}
+                                    onStartTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        this.replaceRecord(index,
+                                            new ScheduleRecord(DateUtils.parseTime(event.target.value),
+                                                record.getEndTime()))
+                                    }}
+                                    onEndTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        this.replaceRecord(index,
+                                            new ScheduleRecord(record.getStartTime(),
+                                                DateUtils.parseTime(event.target.value)))
+                                    }}
+                                />
+                                <div className={styles.action}>
+                                    <CustomContentButton
+                                        onClick={() => this.deleteRecord(index)}
+                                        tooltipContent={<Message messageKey={"daySchedule.content.delete.tooltip"}/>}>
+                                        <DeleteIcon color={"inherit"} fontSize={"small"}/>
+                                    </CustomContentButton>
+                                </div>
+                            </div>
+                        )
+                    })}
+                    <div className={styles.recordWrapper}>
+                        <DateRangeComponent
+                            onStartTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                this.addedStartTime = event.target.value
+                                this.validateAddedTimeRange()
+                            }}
+                            onEndTimeChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                this.addedEndTime = event.target.value
+                                this.validateAddedTimeRange()
+                            }}
+                        />
+                        <div className={styles.action}>
+                            <CustomContentButton
+                                onClick={() => this.addRecord()}
+                                tooltipContent={<Message messageKey={"daySchedule.content.add.tooltip"}/>}
+                                disabled={this.state.additionDisabled}
+                            >
+                                <AddIcon color={"inherit"} fontSize={"small"}/>
+                            </CustomContentButton>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.footer}>
+                    <CustomButton
+                        controller={this.props.controller}
+                        disabled={error}
+                        onClick={() => this.props.onConfirmClick()}
+                    >
+                        <Message messageKey={"common.button.save"}/>
+                    </CustomButton>
                 </div>
             </div>
         )
@@ -108,15 +154,18 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
     componentDidMount(): void {
         this.props.getRef(this)
     }
-
 }
 
 type Properties = {
+    controller: ApplicationController,
     schedule: DaySchedule,
     label: ReactNode,
     getRef: (content: DayScheduleContent) => void,
+    onConfirmClick: Function,
 }
 
 type State = {
     records: ScheduleRecord[],
+    additionDisabled: boolean,
+    recordsValid: boolean,
 }

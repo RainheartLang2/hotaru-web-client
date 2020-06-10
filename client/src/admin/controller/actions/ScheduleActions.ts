@@ -112,8 +112,8 @@ export default class ScheduleActions {
 
     private buildAppointmentByFields(): MedicalAppointment {
         const date: Date = this.controller.state.editedAppointmentDate
-        const startTime: Time = DateUtils.parseTime(this.controller.state.editedAppointmentStartTime)
-        const endTime: Time = DateUtils.parseTime(this.controller.state.editedAppointmentEndTime)
+        const startTime: Time = DateUtils.parseTime(this.controller.state.editedAppointmentStartTime)!
+        const endTime: Time = DateUtils.parseTime(this.controller.state.editedAppointmentEndTime)!
         const selectedMedic = this.controller.state.selectedEmployeeForSchedulePage
         if (!selectedMedic || !selectedMedic.id) {
             throw new Error("medic id should be defined")

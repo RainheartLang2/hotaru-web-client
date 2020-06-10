@@ -1,4 +1,7 @@
 .dayScheduleContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-height: 200px;
     padding: 10px 20px;
 }
@@ -17,4 +20,10 @@
 
 .action {
     margin-left: 20px;
+}
+
+.footer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
 }
