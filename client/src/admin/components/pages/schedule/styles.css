@@ -6,4 +6,9 @@
 .timeTableCell {
     width: 100%;
     height: 100%;
+    cursor: pointer;
+}
+
+.timeTableCell:hover {
+    background-color: #e0edff;
 }

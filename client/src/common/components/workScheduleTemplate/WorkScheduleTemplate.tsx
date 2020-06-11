@@ -13,6 +13,8 @@ var styles = require("./styles.css");
 
 export default class WorkScheduleTemplate extends React.Component<Properties> {
 
+    private popovers: CustomPopover[] = []
+
     static defaultProps = {
         disabled: false,
     }
@@ -71,22 +73,25 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 
         return (<tr>
             {days.map(day => {
-                console.log(this.props.schedule)
                 const daySchedule = this.props.schedule.getSchedule(day)
                 let dayScheduleContentCmp: DayScheduleContent | null = null
+
+                const closePopover = () => {
+                    if (dayScheduleContentCmp) {
+                        this.props.controller.clinicsWorkScheduleActions.setDaySchedule(
+                            day, dayScheduleContentCmp.getRecords()
+                        )
+                        this.popovers[day].close()
+                    }
+                }
+
                 const popoverContent = (
                     <DayScheduleContent
                         controller={this.props.controller}
                         label={<Message messageKey={"second.navigation.clinicsManagement.workSchedule.popover.label"}/>}
                         schedule={daySchedule}
                         getRef={(content: DayScheduleContent) => dayScheduleContentCmp = content}
-                        onConfirmClick={() => {
-                            if (dayScheduleContentCmp) {
-                                this.props.controller.clinicsWorkScheduleActions.setDaySchedule(
-                                    day, dayScheduleContentCmp.getRecords()
-                                )
-                            }
-                        }}
+                        onConfirmClick={closePopover}
                     />
                 )
 
@@ -96,7 +101,8 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                     >
                         <CustomPopover
                             popoverContent={popoverContent}
-                            getRef={() => {
+                            getRef={(popover) => {
+                                this.popovers[day] = popover
                             }}
                             anchorOrigin={{
                                 vertical: "top",
@@ -107,9 +113,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                                 horizontal: "left",
                             }}
                             disabled={this.props.disabled}
-                            onClose={() => {
-
-                            }}
+                            onClose={() => {}}
                         >
                             <div className={styles.simpleCellContent}>
                                 {this.getDayScheduleCellContent(daySchedule)}

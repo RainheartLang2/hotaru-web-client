@@ -29,11 +29,15 @@ export default class CustomPopover extends React.Component<Properties, State> {
     }
 
     public close(): void {
+        this.innerClose()
+    }
+
+    private innerClose(): void {
         this.setState({anchor: null})
-        this.props.onClose()
     }
 
     render() {
+        const open = this.state.anchor ? true : false
         return (
             <>
                 <div
@@ -45,11 +49,12 @@ export default class CustomPopover extends React.Component<Properties, State> {
                 </div>
                 {!this.props.disabled && (
                     <Popover
-                        open={!!this.state.anchor}
+                        open={open}
                         anchorEl={this.state.anchor}
-                        onClose={() => this.close()}
+                        onClose={() => this.innerClose()}
                         anchorOrigin={this.props.anchorOrigin}
                         transformOrigin={this.props.transformOrigin}
+                        keepMounted
                     >
                         <div className={styles.popover}>
                             {this.props.popoverContent}
