@@ -5,6 +5,9 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
 import {ClinicWorkSchedule, ClinicWorkScheduleServerBean} from "../../../common/beans/ClinicWorkSchedule";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
+import {ClinicWorkScheduleDeviation} from "../../../common/beans/ClinicWorkScheduleDeviation";
+import {DaySchedule} from "../../../common/beans/DaySchedule";
+import {DateUtils} from "../../../core/utils/DateUtils";
 
 export default class ClinicsWorkScheduleActions {
 
@@ -88,7 +91,34 @@ export default class ClinicsWorkScheduleActions {
         for (let key in changedList) {
             const id = +key
             const dateRange = changedList[key]
-            this.updateDeviationDates(id, dateRange.startDate, dateRange.endDate, callback)
+            this.updateDeviationDates(id, dateRange.startDate, DateUtils.getPreviousDate(dateRange.endDate), callback)
         }
+    }
+
+    public addDeviation(name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]): void {
+        const clinicId = global ? undefined : this.controller.state.clinicsWorkScheduleSelectedClinic!.id
+        const newDeviation = ClinicWorkScheduleDeviation.create(this.controller.state.clinicsWorkScheduleDeviationsList.length + 5, name, global, startDate, endDate, records, clinicId)
+        this.controller.setState({
+            clinicsWorkScheduleDeviationsList: [...this.controller.state.clinicsWorkScheduleDeviationsList, newDeviation]
+        })
+    }
+
+    public updateDeviation(id: number, name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]): void {
+        const clinicId = global ? undefined : this.controller.state.clinicsWorkScheduleSelectedClinic!.id
+        const newDeviation = ClinicWorkScheduleDeviation.create(id, name, global, startDate, endDate, records, clinicId)
+        this.controller.setState({
+            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
+                if (deviation.id != id) {
+                    return deviation
+                }
+                return newDeviation
+            })
+        })
+    }
+
+    public deleteDeviation(id: number): void {
+        this.controller.setState({
+            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.filter(deviation => deviation.id != id)
+        })
     }
 }

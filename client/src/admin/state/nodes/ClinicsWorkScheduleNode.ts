@@ -12,6 +12,7 @@ import {DaySchedule} from "../../../common/beans/DaySchedule";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
 import {Time} from "../../../core/utils/Time";
 import {ScheduleRecord} from "../../../common/beans/ScheduleRecord";
+import {DateUtils} from "../../../core/utils/DateUtils";
 
 export default class ClinicsWorkScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -36,7 +37,7 @@ export default class ClinicsWorkScheduleNode {
             id: deviation.id,
             title: deviation.getName(),
             startDate: deviation.getDeviationData().getStartDate(),
-            endDate: deviation.getDeviationData().getEndDate(),
+            endDate: DateUtils.getNextDay(deviation.getDeviationData().getEndDate()),
         }
     }
 

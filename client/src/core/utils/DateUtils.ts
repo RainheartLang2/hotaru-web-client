@@ -1,9 +1,12 @@
 import {ScheduleRecord} from "../../common/beans/ScheduleRecord";
 import {Time} from "./Time";
+import {StringUtils} from "./StringUtils";
 
 const TimeRegExp = new RegExp("\\d\\d:\\d\\d")
 
 export namespace DateUtils {
+    import addLeadingZeros = StringUtils.addLeadingZeros;
+
     export function dateToTimeString(date: Date): string {
         return formatTime(date.getHours(), date.getMinutes())
     }
@@ -44,5 +47,27 @@ export namespace DateUtils {
             }
         })
         return result
+    }
+
+    export function getNextDay(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+    }
+
+    export function getPreviousDate(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)
+    }
+
+    export function formatDate(date: Date, format: string) {
+        return format.replace("yyyy", addLeadingZeros(date.getFullYear(), 4))
+            .replace("MM", addLeadingZeros(date.getMonth() + 1, 2))
+            .replace("dd", addLeadingZeros(date.getDate(), 2))
+    }
+
+    export function standardFormatDate(date: Date) {
+        return formatDate(date, "yyyy-MM-dd")
+    }
+
+    export function isDateValid(date: Date): boolean {
+        return !!date && date.getTime() != NaN
     }
 }

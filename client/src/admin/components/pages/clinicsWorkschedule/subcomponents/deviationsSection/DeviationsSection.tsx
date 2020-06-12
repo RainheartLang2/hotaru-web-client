@@ -17,6 +17,11 @@ import {ReactNode, RefObject} from "react";
 import DayScheduleContent from "../../../../../../common/components/dayScheduleContent/DayScheduleContent";
 import {DaySchedule} from "../../../../../../common/beans/DaySchedule";
 import {ClinicWorkScheduleDeviation} from "../../../../../../common/beans/ClinicWorkScheduleDeviation";
+import DeviationDayScheduleContent
+    , {DeviationDayScheduleConfirmFunction} from "../../../../../../common/components/deviationDayScheduleContent/DeviationDayScheduleContent";
+import {ScheduleRecord} from "../../../../../../common/beans/ScheduleRecord";
+import {LocaleUtils} from "../../../../../../core/enum/LocaleType";
+import LocaleHolder from "../../../../../../core/utils/LocaleHolder";
 
 const styles = require("../../styles.css")
 export default class DeviationsSection extends React.Component<Properties, State> {
@@ -36,21 +41,35 @@ export default class DeviationsSection extends React.Component<Properties, State
         return result.length > 0 ? result[0] : null
     }
 
-    private getDayScheduleContent(schedule: DaySchedule, onConfirmClick: Function = () => {}) {
+    private getDayScheduleContent(id: number | undefined, startDate: Date, endDate: Date, global: boolean, name: string, schedule: DaySchedule, onConfirmClick: DeviationDayScheduleConfirmFunction) {
         return (
-            <DayScheduleContent
+            <DeviationDayScheduleContent
+                name={name}
+                global={global}
+                startDate={startDate}
+                endDate={endDate}
                 controller={this.props.controller}
                 schedule={schedule}
                 label={<Message messageKey={"second.navigation.clinicsManagement.workSchedule.popover.label"}/>}
-                getRef={(content) => {}}
                 onConfirmClick={onConfirmClick}
+                onDeleteClick={id ? () => this.props.controller.clinicsWorkScheduleActions.deleteDeviation(id) : undefined}
             />
         )
     }
 
     private getDayScheduleContentById(id: number) {
-        const schedule = this.state.deviations.get(id)!.getDeviationData().getChanges()
-        return this.getDayScheduleContent(schedule)
+        const deviation = this.state.deviations.get(id)!
+        const deviationData = deviation.getDeviationData()
+        return this.getDayScheduleContent(
+            id,
+            deviationData.getStartDate(),
+            deviationData.getEndDate(),
+            deviation.isGlobal(),
+            deviation.getName(),
+            deviationData.getChanges(),
+            (name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]) =>
+                this.props.controller.clinicsWorkScheduleActions.updateDeviation(id, name, global, startDate, endDate, records)
+            )
     }
 
     private getDayScheduleContentByDate(date: Date): ReactNode {
@@ -58,7 +77,14 @@ export default class DeviationsSection extends React.Component<Properties, State
         if (appointment) {
             return this.getDayScheduleContentById(appointment.id as number)
         } else {
-            return this.getDayScheduleContent(new DaySchedule([]))
+            return this.getDayScheduleContent(
+                undefined,
+                date,
+                date,
+                false,
+                "",
+                new DaySchedule([]),
+                this.props.controller.clinicsWorkScheduleActions.addDeviation)
         }
     }
 
@@ -68,6 +94,14 @@ export default class DeviationsSection extends React.Component<Properties, State
             render() {
                 return (
                     <CustomPopover
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
                         className={styles.appointmentContentWrapper}
                         popoverContent={() => self.getDayScheduleContentById(this.props.data.id as number)}>
                         <Appointments.AppointmentContent
@@ -99,7 +133,17 @@ export default class DeviationsSection extends React.Component<Properties, State
                             className={styles.scheduleCell}
                             popoverContent={() => self.getDayScheduleContentByDate(this.props.startDate)}
                             getRef={() => {}}
-                            onClose={() => {}}>
+                            onClose={() => {}}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            transformOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                        >
+                            {this.props.startDate.getDate()}
                             {this.props.children}
                         </CustomPopover>
                     </WeekView.TimeTableCell>
@@ -112,6 +156,7 @@ export default class DeviationsSection extends React.Component<Properties, State
         const TTCell = this.getTimeTableCell((info: AppointmentInfo) => {})
         const AppointmentComponent = this.getAppointmentContent()
         const actions = this.props.controller.clinicsWorkScheduleActions
+        const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         return (
             <div className={styles.deviationSection}>
                 <div className={styles.deviationSectionTitle}>
@@ -121,6 +166,7 @@ export default class DeviationsSection extends React.Component<Properties, State
                     <Paper>
                         <Scheduler
                             data={this.state.deviationAppointments}
+                            locale={localeTag}
                         >
                             <ViewState/>
                             <MonthView

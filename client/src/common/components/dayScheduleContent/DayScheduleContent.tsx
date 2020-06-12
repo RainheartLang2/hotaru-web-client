@@ -18,6 +18,10 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
     private addedStartTime: string
     private addedEndTime: string
 
+    static defaultProps = {
+        getRef: () => {},
+    }
+
     constructor(props: Properties) {
         super(props)
 
@@ -82,11 +86,11 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
     }
 
     render() {
-        const error = !this.validateRecords()
+        const error = this.props.externalError || !this.validateRecords()
         return (
             <div className={styles.dayScheduleContent}>
                 <div>
-                    <div className={styles.label}>
+                    <div className={this.props.labelStyle ? this.props.labelStyle : styles.label}>
                         {this.props.label}
                     </div>
                     {this.state.records.map((record, index) => {
@@ -142,7 +146,7 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
                     <CustomButton
                         controller={this.props.controller}
                         disabled={error}
-                        onClick={() => this.props.onConfirmClick()}
+                        onClick={() => this.props.onConfirmClick(this.state.records)}
                     >
                         <Message messageKey={"common.button.save"}/>
                     </CustomButton>
@@ -159,9 +163,11 @@ export default class DayScheduleContent extends React.Component<Properties, Stat
 type Properties = {
     controller: ApplicationController,
     schedule: DaySchedule,
-    label: ReactNode,
+    labelStyle?: string,
+    label?: ReactNode,
+    externalError?: boolean,
     getRef: (content: DayScheduleContent) => void,
-    onConfirmClick: Function,
+    onConfirmClick: (records: ScheduleRecord[]) => void,
 }
 
 type State = {

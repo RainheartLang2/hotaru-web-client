@@ -1,5 +1,7 @@
 import {WorkScheduleDeviation} from "./WorkScheduleDeviation";
 import Identifiable from "../../core/entities/Identifiable";
+import {ScheduleRecord} from "./ScheduleRecord";
+import {DaySchedule} from "./DaySchedule";
 
 export class ClinicWorkScheduleDeviation extends Identifiable {
 
@@ -35,5 +37,17 @@ export class ClinicWorkScheduleDeviation extends Identifiable {
     public setDates(startDate: Date, endDate: Date): ClinicWorkScheduleDeviation {
         return new ClinicWorkScheduleDeviation(this.id, this.name, this.global,
             new WorkScheduleDeviation(startDate, endDate, this.deviationData.getChanges()))
+    }
+
+    public static create(
+        id: number | undefined,
+        name: string,
+        global: boolean,
+        startDate: Date,
+        endDate: Date,
+        records: ScheduleRecord[],
+        clinicId?: number
+    ) : ClinicWorkScheduleDeviation {
+        return new ClinicWorkScheduleDeviation(id, name, global, new WorkScheduleDeviation(startDate, endDate, new DaySchedule(records)), clinicId)
     }
 }

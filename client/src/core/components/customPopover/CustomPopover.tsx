@@ -73,9 +73,9 @@ export default class CustomPopover extends React.Component<Properties, State> {
 type Properties = {
     popoverContent: () => ReactNode,
     getRef: (popover: CustomPopover) => void,
-    disabled?: boolean,
-    anchorOrigin?: PopoverOrigin,
-    transformOrigin?: PopoverOrigin,
+    disabled: boolean,
+    anchorOrigin: PopoverOrigin,
+    transformOrigin: PopoverOrigin,
     onClose: Function,
     className: string,
 }

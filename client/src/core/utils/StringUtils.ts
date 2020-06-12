@@ -191,6 +191,14 @@ export namespace StringUtils {
         }
     }
 
+    export function addLeadingZeros(num: number, resultLength: number): string {
+        let result = num.toString()
+        for (let i = 0; i < resultLength - num.toString().length; i++) {
+            result = "0" + result
+        }
+        return result
+    }
+
 
     export enum DifferenceType {
         Addition,

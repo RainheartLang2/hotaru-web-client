@@ -62,9 +62,11 @@
       "second.navigation.clinicsManagement.workSchedule.label": "График работы",
       "second.navigation.clinicsManagement.workSchedule.popover.label": "Часы работы",
 
+      "dayScheduleDeviation.clinic.global.label": "Для всех клиник",
+      "dayScheduleDeviation.clinic.global.tooltip": "Использовать данное изменение в расписании всех клиник",
       "daySchedule.content.delete.tooltip": "Удалить интервал",
       "daySchedule.content.add.tooltip": "Добавить интервал",
-
+      "dayScheduleDeviation.content.delete.tooltip": "Удалить запись об изменении графика",
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
       "page.schedule.todayButton.label": "Текущая неделя",
