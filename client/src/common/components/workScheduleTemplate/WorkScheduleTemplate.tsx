@@ -100,7 +100,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
                         className={this.props.disabled ? styles.disabledSimpleCell : styles.simpleCell}
                     >
                         <CustomPopover
-                            popoverContent={popoverContent}
+                            popoverContent={() => popoverContent}
                             getRef={(popover) => {
                                 this.popovers[day] = popover
                             }}

@@ -31,4 +31,9 @@ export class ClinicWorkScheduleDeviation extends Identifiable {
     public getName(): string {
         return this.name
     }
+
+    public setDates(startDate: Date, endDate: Date): ClinicWorkScheduleDeviation {
+        return new ClinicWorkScheduleDeviation(this.id, this.name, this.global,
+            new WorkScheduleDeviation(startDate, endDate, this.deviationData.getChanges()))
+    }
 }

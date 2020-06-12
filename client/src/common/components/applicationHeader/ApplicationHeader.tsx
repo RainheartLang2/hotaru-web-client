@@ -30,7 +30,7 @@ export default class ApplicationHeader extends React.Component<Properties> {
                 <div className={styles.profileAreaWrapper}>
                     <div className={styles.profileArea}>
                         <CustomPopover
-                            popoverContent={settingsPopoverContent}
+                            popoverContent={() => settingsPopoverContent}
                             getRef={(popover: CustomPopover) => this.settingsPopover = popover}
                         >
                             <CustomContentButton

@@ -22,3 +22,7 @@
 .scheduleCell:hover {
     background-color: #e0edff;
 }
+
+.appointmentContentWrapper {
+    cursor: pointer;
+}

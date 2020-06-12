@@ -18,6 +18,7 @@ export default class CustomPopover extends React.Component<Properties, State> {
         },
         disabled: false,
         onClose: () => {},
+        className: "",
     }
 
     constructor(props: Properties) {
@@ -40,24 +41,23 @@ export default class CustomPopover extends React.Component<Properties, State> {
         const open = this.state.anchor ? true : false
         return (
             <>
-                <div
+                <div className={this.props.className}
                     onClick={(event) => {
                         this.setState({anchor:event.currentTarget})
                     }}
                 >
                     {this.props.children}
                 </div>
-                {!this.props.disabled && (
+                {!this.props.disabled && open && (
                     <Popover
-                        open={open}
+                        open={true}
                         anchorEl={this.state.anchor}
                         onClose={() => this.innerClose()}
                         anchorOrigin={this.props.anchorOrigin}
                         transformOrigin={this.props.transformOrigin}
-                        keepMounted
                     >
                         <div className={styles.popover}>
-                            {this.props.popoverContent}
+                            {this.props.popoverContent()}
                         </div>
                     </Popover>)
                 }
@@ -71,12 +71,13 @@ export default class CustomPopover extends React.Component<Properties, State> {
 }
 
 type Properties = {
-    popoverContent: ReactNode,
+    popoverContent: () => ReactNode,
     getRef: (popover: CustomPopover) => void,
     disabled?: boolean,
     anchorOrigin?: PopoverOrigin,
     transformOrigin?: PopoverOrigin,
     onClose: Function,
+    className: string,
 }
 
 type State = {

@@ -10,6 +10,8 @@ import {ClinicWorkScheduleDeviation} from "../../../common/beans/ClinicWorkSched
 import {WorkScheduleDeviation} from "../../../common/beans/WorkScheduleDeviation";
 import {DaySchedule} from "../../../common/beans/DaySchedule";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
+import {Time} from "../../../core/utils/Time";
+import {ScheduleRecord} from "../../../common/beans/ScheduleRecord";
 
 export default class ClinicsWorkScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -39,13 +41,14 @@ export default class ClinicsWorkScheduleNode {
     }
 
     public getDefaultState(): ClinicsWorkScheduleState {
-        const today = new Date()
+        let today = new Date()
+        today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
         const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
         const mockDeviationsList = [
             new ClinicWorkScheduleDeviation(1,
                 "Изменение графика",
                 true,
-                new WorkScheduleDeviation(today, tomorrow, new DaySchedule([]))
+                new WorkScheduleDeviation(today, tomorrow, new DaySchedule([new ScheduleRecord(new Time(6, 0), new Time(17, 0))]))
             ),
         ]
         return {

@@ -4,6 +4,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
 import {ClinicWorkSchedule, ClinicWorkScheduleServerBean} from "../../../common/beans/ClinicWorkSchedule";
+import {ChangeSet} from "@devexpress/dx-react-scheduler";
 
 export default class ClinicsWorkScheduleActions {
 
@@ -66,5 +67,28 @@ export default class ClinicsWorkScheduleActions {
                 })
             }
         })
+    }
+
+    private updateDeviationDates(id: number, startDate: Date, endDate: Date, callback: Function) :void {
+        this.controller.setState({
+            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
+                if (deviation.id != id) {
+                    return deviation
+                }
+                return deviation.setDates(startDate, endDate)
+            })
+        })
+    }
+
+    public handleDeviationAppointmentChange(changes: ChangeSet, callback: Function = () => {}): void {
+        if (!changes.changed) {
+            return
+        }
+        const changedList = changes.changed
+        for (let key in changedList) {
+            const id = +key
+            const dateRange = changedList[key]
+            this.updateDeviationDates(id, dateRange.startDate, dateRange.endDate, callback)
+        }
     }
 }
