@@ -180,6 +180,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openEmployeeWorkSchedule(): void {
+        this.openPage(PageType.EmployeesWorkSchedule, (setPageLoad: Function) => {
+            setPageLoad()
+        } )
+    }
+
     public openDictionaries(): void {
         this.openSpeciesPage()
     }

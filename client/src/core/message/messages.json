@@ -62,6 +62,9 @@
       "second.navigation.clinicsManagement.workSchedule.label": "График работы",
       "second.navigation.clinicsManagement.workSchedule.popover.label": "Часы работы",
 
+      "second.navigation.employeesManagement.employeesList.label": "Список сотрудников",
+      "second.navigation.employeesManagement.workSchedule.label": "График работы",
+
       "dayScheduleDeviation.clinic.global.label": "Для всех клиник",
       "dayScheduleDeviation.clinic.global.tooltip": "Использовать данное изменение в расписании всех клиник",
       "daySchedule.content.delete.tooltip": "Удалить интервал",
@@ -88,6 +91,7 @@
       "page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label": "Нельзя редактировать график работы, если для клиники указано использование графика по-умолчанию",
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
+      "page.employeesWorkSchedule.title": "График работы сотрудника ${0}",
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",
       "dialog.appointment.field.firstName.label": "Имя",

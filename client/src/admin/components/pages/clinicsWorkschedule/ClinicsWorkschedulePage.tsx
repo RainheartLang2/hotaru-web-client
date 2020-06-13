@@ -1,8 +1,10 @@
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 import * as React from "react";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
-import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
-import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../state/EmployeeApplicationStore";
 import {Message} from "../../../../core/components/Message";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {Clinic} from "../../../../common/beans/Clinic";
@@ -10,17 +12,7 @@ import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/Con
 import WorkScheduleTemplate from "../../../../common/components/workScheduleTemplate/WorkScheduleTemplate";
 import {ClinicWorkSchedule} from "../../../../common/beans/ClinicWorkSchedule";
 import WorkSchedule from "../../../../common/beans/WorkSchedule";
-import {
-    Appointments,
-    DateNavigator,
-    MonthView,
-    Scheduler,
-    Toolbar,
-    WeekView
-} from "@devexpress/dx-react-scheduler-material-ui";
-import {Paper} from "@material-ui/core";
-import {AppointmentModel, ChangeSet, EditingState, IntegratedEditing, ViewState} from "@devexpress/dx-react-scheduler";
-import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
+import {AppointmentModel} from "@devexpress/dx-react-scheduler";
 import DeviationsSection from "./subcomponents/deviationsSection/DeviationsSection";
 
 var styles = require("./styles.css")

@@ -10,7 +10,6 @@ import {
     ClinicWorkScheduleDeviationServerBean
 } from "../../../common/beans/ClinicWorkScheduleDeviation";
 import {DateUtils} from "../../../core/utils/DateUtils";
-import updateClinicScheduleDeviationDates = RemoteMethods.updateClinicScheduleDeviationDates;
 
 export default class ClinicsWorkScheduleActions {
 

@@ -15,11 +15,12 @@ import PetNode, {PetSelectors, PetState} from "./nodes/PetNode";
 import ClientNode, {ClientSelectors, ClientState} from "./nodes/ClientNode";
 import DictionaryNode, {DictionariesPageSelectors, DictionariesPagesState} from "./nodes/DictionaryNode";
 import {ClinicsManagementMenuItemType} from "./enum/ClinicsManagementMenuItemType";
-import mergeTypes = CommonUtils.mergeTypes;
 import ClinicsWorkScheduleNode, {
     ClinicsWorkScheduleSelectors,
     ClinicsWorkScheduleState
 } from "./nodes/ClinicsWorkScheduleNode";
+import mergeTypes = CommonUtils.mergeTypes;
+import {EmployeeManagementMenuItemType} from "./enum/EmployeeManagementMenuItemType";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -158,6 +159,10 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.ClinicsWorkschedule:
                 return SecondLevelNavigationMenuType.ClinicsManagement
 
+            case PageType.UserList:
+            case PageType.EmployeesWorkSchedule:
+                return SecondLevelNavigationMenuType.EmployeesManagement
+
             default: return SecondLevelNavigationMenuType.None
         }
     }
@@ -174,6 +179,9 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
 
             case PageType.ClinicList: return ClinicsManagementMenuItemType.ClinicList
             case PageType.ClinicsWorkschedule: return ClinicsManagementMenuItemType.WorkSchedule
+
+            case PageType.UserList: return EmployeeManagementMenuItemType.EmployeeList
+            case PageType.EmployeesWorkSchedule: return EmployeeManagementMenuItemType.WorkSchedule
 
             default: return DictionaryMenuItemType.None
         }
