@@ -68,11 +68,14 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                                 ? this.state.workSchedule.schedule
                                 : new WorkSchedule(7)}
                             scheduleLength={"week"}
-                            disabled={this.state.editingDisabled}/>
+                            disabled={this.state.editingDisabled}
+                            disabledTooltipLabel={<Message messageKey={"page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label"}/>}
+                        />
                     </div>
                 </div>
             </div>
             <DeviationsSection
+                disabled={this.state.editingDisabled}
                 controller={this.props.controller}
             />
         </>)

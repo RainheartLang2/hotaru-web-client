@@ -48,7 +48,6 @@ export default class ClinicsWorkScheduleNode {
         const mockDeviationsList = [
             new ClinicWorkScheduleDeviation(1,
                 "Изменение графика",
-                true,
                 new WorkScheduleDeviation(today, tomorrow, new DaySchedule([new ScheduleRecord(new Time(6, 0), new Time(17, 0))]))
             ),
         ]
@@ -159,43 +158,45 @@ export default class ClinicsWorkScheduleNode {
                     state.clinicsWorkScheduleDeviationsList.filter(item => !item.isGlobal()),
                 value: [],
             },
-            clinicsScheduleDeviationsByClinic: {
+            clinicsScheduleDeviationsByWorkSchedule: {
                 dependsOn: ["clinicsScheduleNotGlobalDeviations"],
                 get: (state: Pick<ClinicsWorkScheduleSelectors, "clinicsScheduleNotGlobalDeviations">) =>
-                    CollectionUtils.mapArrayByPredicate(state.clinicsScheduleNotGlobalDeviations, deviation => deviation.getClinicId()!),
+                    CollectionUtils.mapArrayByPredicate(state.clinicsScheduleNotGlobalDeviations, deviation => deviation.getWorkScheduleId()!),
                 value: new Map(),
             },
-            clinicsScheduleDeviationsForSelectedClinic: {
+            clinicsScheduleDeviationsForSelectedSchedule: {
                 dependsOn: [
-                    "clinicsScheduleDeviationsByClinic",
+                    "clinicsScheduleDeviationsByWorkSchedule",
                     "clinicsScheduleGlobalDeviations",
-                    "clinicsWorkScheduleSelectedClinic"
+                    "workScheduleForSelectedClinic",
                 ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
-                    "clinicsScheduleDeviationsByClinic" |
+                    "clinicsScheduleDeviationsByWorkSchedule" |
                     "clinicsScheduleGlobalDeviations" |
-                    "clinicsWorkScheduleSelectedClinic"
+                    "workScheduleForSelectedClinic"
                     >) => {
-                    const selectedClinic = state.clinicsWorkScheduleSelectedClinic
-                    if (!selectedClinic) {
+                    const currentWorkSchedule = state.workScheduleForSelectedClinic
+                    if (!currentWorkSchedule) {
                         return state.clinicsScheduleGlobalDeviations
                     }
 
-                    const localDeviations = state.clinicsScheduleDeviationsByClinic.get(selectedClinic.id!)
+                    const workScheduleId = currentWorkSchedule.id!
+
+                    const localDeviations = state.clinicsScheduleDeviationsByWorkSchedule.get(workScheduleId)
 
                     if (!localDeviations) {
                         return state.clinicsScheduleGlobalDeviations
                     }
 
-                    return state.clinicsScheduleDeviationsByClinic.get(selectedClinic.id!)!
+                    return state.clinicsScheduleDeviationsByWorkSchedule.get(workScheduleId)!
                         .concat(state.clinicsScheduleGlobalDeviations)
                 },
                 value: [],
             },
             clinicsScheduleDeviationsAppointments: {
-                dependsOn: ["clinicsScheduleDeviationsForSelectedClinic"],
-                get: (state: Pick<ClinicsWorkScheduleSelectors, "clinicsScheduleDeviationsForSelectedClinic">) =>
-                    state.clinicsScheduleDeviationsForSelectedClinic.map(deviation => this.deviationToAppoinment(deviation)),
+                dependsOn: ["clinicsScheduleDeviationsForSelectedSchedule"],
+                get: (state: Pick<ClinicsWorkScheduleSelectors, "clinicsScheduleDeviationsForSelectedSchedule">) =>
+                    state.clinicsScheduleDeviationsForSelectedSchedule.map(deviation => this.deviationToAppoinment(deviation)),
                 value: [],
             }
         }
@@ -218,7 +219,7 @@ export type ClinicsWorkScheduleSelectors = {
     clinicsScheduleDeviationsById: Map<number, ClinicWorkScheduleDeviation>,
     clinicsScheduleGlobalDeviations: ClinicWorkScheduleDeviation[],
     clinicsScheduleNotGlobalDeviations: ClinicWorkScheduleDeviation[],
-    clinicsScheduleDeviationsByClinic: Map<number, ClinicWorkScheduleDeviation[]>,
-    clinicsScheduleDeviationsForSelectedClinic: ClinicWorkScheduleDeviation[],
+    clinicsScheduleDeviationsByWorkSchedule: Map<number, ClinicWorkScheduleDeviation[]>,
+    clinicsScheduleDeviationsForSelectedSchedule: ClinicWorkScheduleDeviation[],
     clinicsScheduleDeviationsAppointments: AppointmentModel[],
 }

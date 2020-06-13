@@ -10,6 +10,7 @@
 }
 
 .deviationContent {
+    position: relative;
     width: 1035px;
 }
 

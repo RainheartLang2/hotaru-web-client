@@ -85,6 +85,7 @@
       "page.clinicsWorkSchedule.title": "График работы клиник",
       "page.clinicsWorkSchedule.clinicSelect": "Клиника",
       "page.clinicsWorkSchedule.defaultWorkSchedule.name": "График по-умолчанию",
+      "page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label": "Нельзя редактировать график работы, если для клиники указано использование графика по-умолчанию",
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
       "dialog.appointment.create.label": "Создание приёма",

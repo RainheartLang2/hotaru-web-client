@@ -22,6 +22,7 @@ import DeviationDayScheduleContent
 import {ScheduleRecord} from "../../../../../../common/beans/ScheduleRecord";
 import {LocaleUtils} from "../../../../../../core/enum/LocaleType";
 import LocaleHolder from "../../../../../../core/utils/LocaleHolder";
+import DisablingMoire from "../../../../../../core/components/disablingMoire/DisablingMoire";
 
 const styles = require("../../styles.css")
 export default class DeviationsSection extends React.Component<Properties, State> {
@@ -163,6 +164,10 @@ export default class DeviationsSection extends React.Component<Properties, State
                     <Message messageKey={"page.clinicsWorkSchedule.deviationSection.label"}/>
                 </div>
                 <div className={styles.deviationContent}>
+                    <DisablingMoire
+                        active={this.props.disabled}
+                        tooltipLabel={<Message messageKey={"page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label"}/>}
+                    />
                     <Paper>
                         <Scheduler
                             data={this.state.deviationAppointments}
@@ -205,6 +210,7 @@ export default class DeviationsSection extends React.Component<Properties, State
 
 type Properties = {
     controller: EmployeeAppController
+    disabled: boolean
 }
 
 type State = {

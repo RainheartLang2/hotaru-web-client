@@ -8,6 +8,7 @@ import WorkSchedule from "../../beans/WorkSchedule";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {DaySchedule} from "../../beans/DaySchedule";
 import EmployeeAppController from "../../../admin/controller/EmployeeAppController";
+import DisablingMoire from "../../../core/components/disablingMoire/DisablingMoire";
 
 var styles = require("./styles.css");
 
@@ -97,7 +98,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 
                 return (
                     <td
-                        className={this.props.disabled ? styles.disabledSimpleCell : styles.simpleCell}
+                        className={styles.simpleCell}
                     >
                         <CustomPopover
                             popoverContent={() => popoverContent}
@@ -128,6 +129,10 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
     render() {
         return (<div className={styles.workScheduleTemplate}>
             <table className={styles.workScheduleTemplateTable}>
+                <DisablingMoire
+                    tooltipLabel={this.props.disabledTooltipLabel}
+                    active={this.props.disabled}
+                />
                 {this.getWeeklyTitleRow()}
                 {this.getWeeklyRow()}
             </table>
@@ -138,6 +143,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 type Properties = {
     controller: EmployeeAppController,
     scheduleLength: "week" | number,
-    disabled?: boolean,
+    disabled: boolean,
+    disabledTooltipLabel?: ReactNode,
     schedule: WorkSchedule,
 }

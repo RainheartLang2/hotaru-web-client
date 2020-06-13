@@ -5,9 +5,12 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {plainToClass} from "class-transformer";
 import {ClinicWorkSchedule, ClinicWorkScheduleServerBean} from "../../../common/beans/ClinicWorkSchedule";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
-import {ClinicWorkScheduleDeviation} from "../../../common/beans/ClinicWorkScheduleDeviation";
-import {DaySchedule} from "../../../common/beans/DaySchedule";
+import {
+    ClinicWorkScheduleDeviation,
+    ClinicWorkScheduleDeviationServerBean
+} from "../../../common/beans/ClinicWorkScheduleDeviation";
 import {DateUtils} from "../../../core/utils/DateUtils";
+import updateClinicScheduleDeviationDates = RemoteMethods.updateClinicScheduleDeviationDates;
 
 export default class ClinicsWorkScheduleActions {
 
@@ -20,10 +23,12 @@ export default class ClinicsWorkScheduleActions {
     public loadWorkSchedule(callback: Function) {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllClinicWorkSchedules,
-            successCallback: (result) => {
-                const resultList = result as ClinicWorkScheduleServerBean[]
+            successCallback: (result: any) => {
+                const workSchedulesList = result.workSchedules as ClinicWorkScheduleServerBean[]
+                const deviations = result.deviations as ClinicWorkScheduleDeviationServerBean[]
                 this.controller.setState({
-                    clinicsWorkSchedulesList: resultList.map(schedule => ClinicWorkSchedule.fromServerBean(schedule)),
+                    clinicsWorkSchedulesList: workSchedulesList.map(schedule => ClinicWorkSchedule.fromServerBean(schedule)),
+                    clinicsWorkScheduleDeviationsList: deviations.map(deviation => ClinicWorkScheduleDeviation.fromServerBean(deviation))
                 })
                 callback()
             }
@@ -73,13 +78,20 @@ export default class ClinicsWorkScheduleActions {
     }
 
     private updateDeviationDates(id: number, startDate: Date, endDate: Date, callback: Function) :void {
-        this.controller.setState({
-            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
-                if (deviation.id != id) {
-                    return deviation
-                }
-                return deviation.setDates(startDate, endDate)
-            })
+        fetchUserZoneRpc({
+            method: RemoteMethods.updateClinicScheduleDeviationDates,
+            params: [id, startDate, endDate],
+            successCallback: (result) => {
+                this.controller.setState({
+                    clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
+                        if (deviation.id != id) {
+                            return deviation
+                        }
+                        return deviation.setDates(startDate, endDate)
+                    })
+                })
+                callback()
+            }
         })
     }
 
@@ -95,30 +107,65 @@ export default class ClinicsWorkScheduleActions {
         }
     }
 
-    public addDeviation(name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]): void {
-        const clinicId = global ? undefined : this.controller.state.clinicsWorkScheduleSelectedClinic!.id
-        const newDeviation = ClinicWorkScheduleDeviation.create(this.controller.state.clinicsWorkScheduleDeviationsList.length + 5, name, global, startDate, endDate, records, clinicId)
-        this.controller.setState({
-            clinicsWorkScheduleDeviationsList: [...this.controller.state.clinicsWorkScheduleDeviationsList, newDeviation]
+    public addDeviation(
+        name: string,
+        global: boolean,
+        startDate: Date,
+        endDate: Date,
+        records: ScheduleRecord[],
+        callback: Function = () => {}
+    ): void {
+        const workScheduleId = global ? undefined : this.controller.state.workScheduleForSelectedClinic!.id
+        fetchUserZoneRpc({
+            method: RemoteMethods.createClinicScheduleDeviation,
+            params: [name, workScheduleId, startDate, endDate, records],
+            successCallback: (result) => {
+                const newDeviation = ClinicWorkScheduleDeviation.create(result, name, startDate, endDate, records, workScheduleId)
+                this.controller.setState({
+                    clinicsWorkScheduleDeviationsList: [...this.controller.state.clinicsWorkScheduleDeviationsList, newDeviation]
+                })
+                callback()
+            }
         })
     }
 
-    public updateDeviation(id: number, name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]): void {
-        const clinicId = global ? undefined : this.controller.state.clinicsWorkScheduleSelectedClinic!.id
-        const newDeviation = ClinicWorkScheduleDeviation.create(id, name, global, startDate, endDate, records, clinicId)
-        this.controller.setState({
-            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
-                if (deviation.id != id) {
-                    return deviation
-                }
-                return newDeviation
-            })
+    public updateDeviation(
+        id: number,
+        name: string,
+        global: boolean,
+        startDate: Date,
+        endDate: Date,
+        records: ScheduleRecord[],
+        callback: Function = () => {}
+    ): void {
+        const workScheduleId = global ? undefined : this.controller.state.workScheduleForSelectedClinic!.id
+        fetchUserZoneRpc({
+            method: RemoteMethods.updateClinicScheduleDeviation,
+            params: [id, name, workScheduleId, startDate, endDate, records],
+            successCallback: (result) => {
+                const newDeviation = ClinicWorkScheduleDeviation.create(id, name, startDate, endDate, records, workScheduleId)
+                this.controller.setState({
+                    clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
+                        if (deviation.id != id) {
+                            return deviation
+                        }
+                        return newDeviation
+                    })
+                })
+                callback()
+            }
         })
     }
 
-    public deleteDeviation(id: number): void {
-        this.controller.setState({
-            clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.filter(deviation => deviation.id != id)
+    public deleteDeviation(id: number, callback: Function = () => {}): void {
+        fetchUserZoneRpc({
+            method: RemoteMethods.deleteClinicScheduleDeviation,
+            params: [id],
+            successCallback: () => {
+                this.controller.setState({
+                    clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.filter(deviation => deviation.id != id)
+                })
+            }
         })
     }
 }

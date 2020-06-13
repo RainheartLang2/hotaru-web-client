@@ -1,4 +1,4 @@
-import {DaySchedule} from "./DaySchedule";
+import {DaySchedule, DayScheduleServerBean} from "./DaySchedule";
 
 export class WorkScheduleDeviation {
     private startDate: Date
@@ -22,4 +22,14 @@ export class WorkScheduleDeviation {
     public getChanges(): DaySchedule {
         return this.changes
     }
+
+    public static fromServerBean(bean: WorkScheduleDeviationServerBean): WorkScheduleDeviation {
+        return new WorkScheduleDeviation(new Date(bean.startDate), new Date(bean.endDate), DaySchedule.fromServerBean(bean.changes))
+    }
+}
+
+export type WorkScheduleDeviationServerBean = {
+    startDate: number
+    endDate: number
+    changes: DayScheduleServerBean
 }

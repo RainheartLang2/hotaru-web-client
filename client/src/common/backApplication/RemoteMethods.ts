@@ -92,6 +92,10 @@ export namespace RemoteMethods {
     export const getAllClinicWorkSchedules = new RemoteMethod(clinicWorkScheduleService, getAllAction)
     export const editClinicWorkSchedule = new RemoteMethod(clinicWorkScheduleService, editAction)
     export const setUsesDefaultSchedule = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("setUseDefaultFlag"))
+    export const createClinicScheduleDeviation = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("createDeviation"))
+    export const updateClinicScheduleDeviation = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("updateDeviation"))
+    export const updateClinicScheduleDeviationDates = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("updateDeviationDates"))
+    export const deleteClinicScheduleDeviation = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("deleteDeviation"))
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 
