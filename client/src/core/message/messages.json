@@ -92,6 +92,7 @@
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
       "page.employeesWorkSchedule.title": "График работы сотрудника ${0}",
+      "page.employeesWorkSchedule.defaultWorkSchedule.name": "График по-умолчанию",
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",
       "dialog.appointment.field.firstName.label": "Имя",

@@ -42,19 +42,10 @@ export default class ClinicsWorkScheduleNode {
     }
 
     public getDefaultState(): ClinicsWorkScheduleState {
-        let today = new Date()
-        today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-        const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2)
-        const mockDeviationsList = [
-            new ClinicWorkScheduleDeviation(1,
-                "Изменение графика",
-                new WorkScheduleDeviation(today, tomorrow, new DaySchedule([new ScheduleRecord(new Time(6, 0), new Time(17, 0))]))
-            ),
-        ]
         return {
             clinicsWorkScheduleSelectedClinic: ClinicsWorkScheduleNode.getDefaultWorkSchedule(),
             clinicsWorkSchedulesList: [],
-            clinicsWorkScheduleDeviationsList: mockDeviationsList,
+            clinicsWorkScheduleDeviationsList: [],
         }
     }
 

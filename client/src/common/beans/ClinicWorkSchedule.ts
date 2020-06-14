@@ -9,7 +9,6 @@ export class ClinicWorkSchedule extends Identifiable {
     private _usesDefault: boolean
     private _schedule: WorkSchedule
 
-
     constructor(id: number | undefined, schedule: WorkSchedule, _default: boolean, _usesDefault: boolean, clinicId?: number) {
         super(id)
         this._default = _default
