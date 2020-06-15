@@ -14,6 +14,7 @@ import {ClinicWorkSchedule} from "../../../../common/beans/ClinicWorkSchedule";
 import WorkSchedule from "../../../../common/beans/WorkSchedule";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
 import DeviationsSection from "./subcomponents/deviationsSection/DeviationsSection";
+import {ScheduleRecord} from "../../../../common/beans/ScheduleRecord";
 
 var styles = require("./styles.css")
 
@@ -62,6 +63,7 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
                             scheduleLength={"week"}
                             disabled={this.state.editingDisabled}
                             disabledTooltipLabel={<Message messageKey={"page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label"}/>}
+                            onScheduleChange={(day: number, records: ScheduleRecord[]) => this.props.controller.clinicsWorkScheduleActions.setDaySchedule(day, records)}
                         />
                     </div>
                 </div>

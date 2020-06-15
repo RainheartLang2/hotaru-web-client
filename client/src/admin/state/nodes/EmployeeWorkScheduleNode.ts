@@ -1,16 +1,13 @@
 import ApplicationStoreFriend from "../../../core/mvc/store/ApplicationStoreFriend";
 import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStore";
-import {Clinic} from "../../../common/beans/Clinic";
 import MessageResource from "../../../core/message/MessageResource";
 import {Employee} from "../../../common/beans/Employee";
 import {NameUtils} from "../../../core/utils/NameUtils";
-import {ClinicWorkSchedule} from "../../../common/beans/ClinicWorkSchedule";
-import {ClinicWorkScheduleDeviation} from "../../../common/beans/ClinicWorkScheduleDeviation";
 import EmployeeWorkSchedule from "../../../common/beans/EmployeeWorkSchedule";
-import {AppointmentModel} from "@devexpress/dx-react-scheduler";
-import {ClinicsWorkScheduleSelectors, ClinicsWorkScheduleState} from "./ClinicsWorkScheduleNode";
 import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import WorkSchedule from "../../../common/beans/WorkSchedule";
+import {DaySchedule} from "../../../common/beans/DaySchedule";
 
 export default class EmployeeWorkScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -33,7 +30,8 @@ export default class EmployeeWorkScheduleNode {
     public getDefaultState(): EmployeeWorkScheduleState {
         return {
             employeeScheduleSelectedEmployee: EmployeeWorkScheduleNode.getDefaultWorkSchedule(),
-            employeeWorkSchedulesList: [],
+            employeeWorkSchedulesList: [new EmployeeWorkSchedule(1, 1, false, true, new WorkSchedule(2, CollectionUtils.fillArray(2, new DaySchedule([])))),
+                                        new EmployeeWorkSchedule(2, 0, true, false, new WorkSchedule(10, CollectionUtils.fillArray(10, new DaySchedule([]))))],
         }
     }
 
@@ -43,7 +41,14 @@ export default class EmployeeWorkScheduleNode {
                 dependsOn: ["userList"],
                 get: (state: Pick<EmployeeAppState, "userList">) => {
                     const records = state.userList.map(employee => getRecordFromEmployee(employee))
-                    return CollectionUtils.mapArrayByUniquePredicate(records, record => record.id)
+                    const recordsById = CollectionUtils.mapArrayByUniquePredicate(records, record => record.id)
+
+                    const result = new Map<number, EmployeeRecord>()
+                    const defaultRecord = EmployeeWorkScheduleNode.getDefaultWorkSchedule()
+                    result.set(defaultRecord.id, defaultRecord)
+
+                    CollectionUtils.mergeMaps(result, recordsById)
+                    return result
                 },
                 value: new Map(),
             },
@@ -63,13 +68,15 @@ export default class EmployeeWorkScheduleNode {
                         return null
                     }
                     const defaultWorkSchedule = EmployeeWorkScheduleNode.getDefaultWorkSchedule()
-                    const emmployeeWorkSchedule = state.employeeSchedulesByEmployeeId.get(state.employeeScheduleSelectedEmployee.id)
-                    if (!emmployeeWorkSchedule) {
+                    const employeeWorkSchedule = state.employeeSchedulesByEmployeeId.get(state.employeeScheduleSelectedEmployee.id)
+                    if (!employeeWorkSchedule) {
                         return null
                     }
-                    return emmployeeWorkSchedule.isUsesDefault()
+                    const result = employeeWorkSchedule.isUsesDefault()
                         ? state.employeeSchedulesByEmployeeId.get(defaultWorkSchedule.id)!
-                        : state.employeeSchedulesByEmployeeId.get(state.employeeScheduleSelectedEmployee.id)!
+                        : employeeWorkSchedule
+                    console.log(result)
+                    return result
                 },
                 value: null,
             },

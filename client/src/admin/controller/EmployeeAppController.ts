@@ -27,7 +27,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _clientActions: ClientActions
     private _dictionariesActions: DictionariesActions
     private _clinicsWorksScheduleActions: ClinicsWorkScheduleActions
-    private _employeScheduleActions: EmployeeWorkScheduleActions
+    private _employeeScheduleActions: EmployeeWorkScheduleActions
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
@@ -40,7 +40,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._clientActions = new ClientActions(this)
         this._dictionariesActions = new DictionariesActions(this)
         this._clinicsWorksScheduleActions = new ClinicsWorkScheduleActions(this)
-        this._employeScheduleActions = new EmployeeWorkScheduleActions(this)
+        this._employeeScheduleActions = new EmployeeWorkScheduleActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -78,6 +78,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public get clinicsWorkScheduleActions(): ClinicsWorkScheduleActions {
         return this._clinicsWorksScheduleActions
+    }
+
+    public get employeeScheduleActions(): EmployeeWorkScheduleActions {
+        return this._employeeScheduleActions
     }
 
     public get dictionariesActions(): DictionariesActions {

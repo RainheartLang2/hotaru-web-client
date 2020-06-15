@@ -1,0 +1,23 @@
+.workScheduleWrapper {
+    margin-top: 25px;
+}
+
+.deviationSectionTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.deviationContent {
+    position: relative;
+    width: 1035px;
+}
+
+.scheduleCell {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+}

@@ -1,5 +1,4 @@
 .workScheduleTemplate {
-    width: 1035px;
     border: 1px solid rgba(224, 224, 224, 1);
 }
 .workScheduleTemplateTable {
@@ -28,7 +27,7 @@
 }
 
 .simpleCellContent {
-    width: 145px;
+    min-width: 112px;
     height: 96px;
     display: flex;
     flex-direction: column;

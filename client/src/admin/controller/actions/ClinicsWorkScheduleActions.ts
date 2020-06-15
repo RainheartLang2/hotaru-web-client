@@ -40,10 +40,8 @@ export default class ClinicsWorkScheduleActions {
                 return clinicWorkSchedule
             }
             const newDaySchedule = clinicWorkSchedule.setDaySchedule(day, records)
-            console.log(newDaySchedule)
             return newDaySchedule
         })
-        console.log(clinicsWorkSchedulesList)
         this.controller.setState({clinicsWorkSchedulesList})
     }
 

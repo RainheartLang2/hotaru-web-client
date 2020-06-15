@@ -91,8 +91,12 @@
       "page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label": "Нельзя редактировать график работы, если для клиники указано использование графика по-умолчанию",
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
-      "page.employeesWorkSchedule.title": "График работы сотрудника ${0}",
+
+      "page.employeesWorkSchedule.title": "График работы сотрудника",
       "page.employeesWorkSchedule.defaultWorkSchedule.name": "График по-умолчанию",
+      "page.employeesWorkSchedule.employeeSelect": "Сотрудник",
+      "page.employeesWorkSchedule.defaultWorkSchedule.disable.tooltip.label": "Нельзя редактировать график работы, если для сотрудника указано использование графика по-умолчанию",
+
       "dialog.appointment.create.label": "Создание приёма",
       "dialog.appointment.edit.label": "Редактирование приёма",
       "dialog.appointment.field.firstName.label": "Имя",
