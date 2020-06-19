@@ -30,8 +30,8 @@ export default class EmployeeWorkScheduleNode {
     public getDefaultState(): EmployeeWorkScheduleState {
         return {
             employeeScheduleSelectedEmployee: EmployeeWorkScheduleNode.getDefaultWorkSchedule(),
-            employeeWorkSchedulesList: [new EmployeeWorkSchedule(1, 1, false, true, new WorkSchedule(2, CollectionUtils.fillArray(2, new DaySchedule([])))),
-                                        new EmployeeWorkSchedule(2, 0, true, false, new WorkSchedule(10, CollectionUtils.fillArray(10, new DaySchedule([]))))],
+            employeeWorkSchedulesList: [new EmployeeWorkSchedule(1, 1, false, true, new WorkSchedule(2, false, CollectionUtils.fillArray(2, new DaySchedule([])))),
+                                        new EmployeeWorkSchedule(2, 0, true, false, new WorkSchedule(10, false, CollectionUtils.fillArray(10, new DaySchedule([]))))],
         }
     }
 

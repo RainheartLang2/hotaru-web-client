@@ -14,6 +14,11 @@
     width: 1035px;
 }
 
+.lengthSelect {
+    margin-top: 15px;
+    width: 200px;
+}
+
 .scheduleCell {
     width: 100%;
     height: 100%;

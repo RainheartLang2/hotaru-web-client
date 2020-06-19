@@ -49,7 +49,7 @@ export class ClinicWorkSchedule extends Identifiable {
     public static fromServerBean(bean: ClinicWorkScheduleServerBean): ClinicWorkSchedule {
         const schedule = bean.schedule
                             ? WorkSchedule.fromServerBean(bean.schedule!)
-                            : new WorkSchedule(7, [])
+                            : new WorkSchedule(7, true,)
         const clinicId = bean.defaultSchedule
                             ? ClinicsWorkScheduleNode.getDefaultWorkSchedule().id
                             : bean.clinicId

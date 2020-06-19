@@ -54,7 +54,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
             {this.scheduleRangeArray.map((value: number) => {
                 return (
                     <td className={styles.titleCell}>
-                        {value}
+                        {value + 1}
                     </td>
                 )
             })}
@@ -157,7 +157,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
     render() {
         this.scheduleRangeArray = this.props.scheduleLength == "week"
             ? []
-            : CollectionUtils.fillArray(this.props.scheduleLength, 0).map((num, index) => index)
+            : CollectionUtils.getSimpleNumberArray(this.props.scheduleLength)
 
         return (<div className={styles.workScheduleTemplate}>
             <table className={styles.workScheduleTemplateTable}>

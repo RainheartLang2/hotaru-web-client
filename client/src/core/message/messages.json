@@ -31,6 +31,23 @@
       "common.saturday.short": "сб",
       "common.sunday.short": "вс",
 
+      "common.days.1": "1 день",
+      "common.days.2": "2 дня",
+      "common.days.3": "3 дня",
+      "common.days.4": "4 дня",
+      "common.days.5": "5 дней",
+      "common.days.6": "6 дней",
+      "common.days.7": "7 дней",
+      "common.days.8": "8 дней",
+      "common.days.9": "9 дней",
+      "common.days.10": "10 дней",
+      "common.days.11": "11 дней",
+      "common.days.12": "12 дней",
+      "common.days.13": "13 дней",
+      "common.days.14": "14 дней",
+
+      "common.weekly": "Еженедельно",
+
       "clinic.mock.name": "Нет клиники",
       "species.mock.name": "Вид не указан",
       "breed.mock.name": "Порода не указана",

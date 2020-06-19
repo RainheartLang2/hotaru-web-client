@@ -72,4 +72,8 @@ export namespace CollectionUtils {
         }
         return result
     }
+
+    export function getSimpleNumberArray(length: number): number[] {
+        return fillArray(length, 0).map((item, index) => index)
+    }
 }

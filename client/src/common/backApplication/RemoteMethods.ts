@@ -20,6 +20,7 @@ export namespace RemoteMethods {
     const diagnosisService = new ServerAppService("DiagnosisService")
     const animalColorService = new ServerAppService("AnimalColorService")
     const clinicWorkScheduleService = new ServerAppService("ClinicWorkScheduleService")
+    const employeeWorkScheduleService = new ServerAppService("EmployeeWorkScheduleService")
 
     //Back application typical actions list
     const getAllAction = new ServerAppAction("getAll")
@@ -96,6 +97,12 @@ export namespace RemoteMethods {
     export const updateClinicScheduleDeviation = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("updateDeviation"))
     export const updateClinicScheduleDeviationDates = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("updateDeviationDates"))
     export const deleteClinicScheduleDeviation = new RemoteMethod(clinicWorkScheduleService, new ServerAppAction("deleteDeviation"))
+
+    export const getAllEmployeeWorkSchedules = new RemoteMethod(employeeWorkScheduleService, getAllAction)
+    export const editEmployeeWorkSchedule = new RemoteMethod(employeeWorkScheduleService, editAction)
+    export const setUsesDefaultEmployeeSchedule = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("setUseDefaultFlag"))
+    export const setEmployeeScheduleLength = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("setScheduleLength"))
+    export const setEmployeeScheduleWeekly = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("setWeekly"))
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

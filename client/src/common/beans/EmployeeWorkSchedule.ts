@@ -1,6 +1,9 @@
 import Identifiable from "../../core/entities/Identifiable";
-import WorkSchedule from "./WorkSchedule";
+import WorkSchedule, {WorkScheduleServerBean} from "./WorkSchedule";
 import {ScheduleRecord} from "./ScheduleRecord";
+import ClinicsWorkScheduleNode from "../../admin/state/nodes/ClinicsWorkScheduleNode";
+import {ClinicWorkScheduleServerBean} from "./ClinicWorkSchedule";
+import EmployeeWorkScheduleNode from "../../admin/state/nodes/EmployeeWorkScheduleNode";
 
 export default class EmployeeWorkSchedule extends Identifiable {
     private employeeId?: number
@@ -36,7 +39,33 @@ export default class EmployeeWorkSchedule extends Identifiable {
         return new EmployeeWorkSchedule(this.id, this.employeeId, this.defaultSchedule, value, this.schedule)
     }
 
-    public setDaySchedule(day: number, records: ScheduleRecord[]) {
+    public setDaySchedule(day: number, records: ScheduleRecord[]): EmployeeWorkSchedule {
         return new EmployeeWorkSchedule(this.id, this.employeeId, this.defaultSchedule, this.usesDefault, this.schedule.setSchedule(day, records))
     }
+
+    public setLength(length: number): EmployeeWorkSchedule {
+        return new EmployeeWorkSchedule(this.id, this.employeeId, this.defaultSchedule, this.usesDefault, this.schedule.setLength(length))
+    }
+
+    public setWeekly(): EmployeeWorkSchedule {
+        return new EmployeeWorkSchedule(this.id, this.employeeId, this.defaultSchedule, this.usesDefault, this.schedule.setWeekly())
+    }
+
+    public static fromServerBean(bean: EmployeeWorkScheduleServerBean): EmployeeWorkSchedule {
+        const schedule = bean.schedule
+            ? WorkSchedule.fromServerBean(bean.schedule!)
+            : new WorkSchedule(7, true,)
+        const employeeId = bean.defaultSchedule
+            ? EmployeeWorkScheduleNode.getDefaultWorkSchedule().id
+            : bean.employeeId
+        return new EmployeeWorkSchedule(bean.id, employeeId, bean.defaultSchedule, bean.usesDefault, schedule)
+    }
+}
+
+export type EmployeeWorkScheduleServerBean = {
+    employeeId?: number
+    defaultSchedule: boolean
+    id: number
+    schedule?: WorkScheduleServerBean
+    usesDefault: boolean
 }

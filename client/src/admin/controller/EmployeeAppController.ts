@@ -188,7 +188,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public openEmployeeWorkSchedule(): void {
         this.openPage(PageType.EmployeesWorkSchedule, (setPageLoad: Function) => {
-            setPageLoad()
+            this._employeeScheduleActions.loadWorkSchedule(setPageLoad)
         } )
     }
 

@@ -1,13 +1,11 @@
-.workScheduleTemplate {
-    border: 1px solid rgba(224, 224, 224, 1);
-}
+
 .workScheduleTemplateTable {
     position: relative;
-    min-width: 700px;
     table-layout: fixed;
     border-spacing: 0;
     border-collapse: collapse;
     color: rgba(0, 0, 0, 0.87);
+    border: 1px solid rgba(224, 224, 224, 1);
 }
 
 .titleCell {

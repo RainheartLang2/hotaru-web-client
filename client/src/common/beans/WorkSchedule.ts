@@ -2,14 +2,19 @@ import {DaySchedule, DayScheduleServerBean} from "./DaySchedule";
 import {ScheduleRecord} from "./ScheduleRecord";
 import {CollectionUtils} from "../../core/utils/CollectionUtils";
 import cloneArray = CollectionUtils.cloneArray;
-import {plainToClass} from "class-transformer";
 
 export default class WorkSchedule {
     private _length: number
-    _schedule: DaySchedule[]
+    private weekly: boolean
+    private _schedule: DaySchedule[]
 
 
-    constructor(length: number, schedule?: DaySchedule[]) {
+    constructor(length: number, weekly?: boolean, schedule?: DaySchedule[]) {
+        if (weekly) {
+            length = 7
+        }
+        this.weekly = !!weekly
+
         if (schedule && length != schedule.length) {
             throw new Error("length is " + length + ", schedule length is " + schedule.length)
         }
@@ -21,6 +26,10 @@ export default class WorkSchedule {
 
     public get length(): number {
         return this._length;
+    }
+
+    public isWeekly(): boolean {
+        return this.weekly
     }
 
     public getSchedule(num: number): DaySchedule {
@@ -42,15 +51,34 @@ export default class WorkSchedule {
 
         const newSchedule = cloneArray(this._schedule)
         newSchedule[num] = new DaySchedule(records)
-        return new WorkSchedule(this.length, newSchedule)
+        return new WorkSchedule(this.length, this.weekly, newSchedule)
+    }
+
+    public setLength(length: number): WorkSchedule {
+        return new WorkSchedule(length, false, CollectionUtils.fillArray(length, new DaySchedule([])))
+    }
+
+    public setWeekly(): WorkSchedule {
+        return new WorkSchedule(7, true)
     }
 
     public static fromServerBean(bean: WorkScheduleServerBean): WorkSchedule {
-        return new WorkSchedule(bean.length, bean.schedule.map(daySchedule => DaySchedule.fromServerBean(daySchedule)))
+        return new WorkSchedule(bean.length, bean.weekly, bean.schedule.map(daySchedule => DaySchedule.fromServerBean(daySchedule)))
     }
 }
 
 export type WorkScheduleServerBean = {
     length: number
+    weekly: boolean
     schedule: DayScheduleServerBean[]
 }
+
+type CalendaricPeriod = {
+    calendaric: "weekly"
+}
+
+type StrictPeriod = {
+    length: number
+}
+
+type PeriodType = StrictPeriod | CalendaricPeriod
