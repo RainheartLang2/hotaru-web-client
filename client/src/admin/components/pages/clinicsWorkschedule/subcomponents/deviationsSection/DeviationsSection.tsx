@@ -16,7 +16,7 @@ import CustomPopover from "../../../../../../core/components/customPopover/Custo
 import {ReactNode, RefObject} from "react";
 import DayScheduleContent from "../../../../../../common/components/dayScheduleContent/DayScheduleContent";
 import {DaySchedule} from "../../../../../../common/beans/DaySchedule";
-import {ClinicWorkScheduleDeviation} from "../../../../../../common/beans/ClinicWorkScheduleDeviation";
+import {WorkScheduleDeviationContainer} from "../../../../../../common/beans/WorkScheduleDeviationContainer";
 import DeviationDayScheduleContent
     , {DeviationDayScheduleConfirmFunction} from "../../../../../../common/components/deviationDayScheduleContent/DeviationDayScheduleContent";
 import {ScheduleRecord} from "../../../../../../common/beans/ScheduleRecord";
@@ -25,18 +25,10 @@ import LocaleHolder from "../../../../../../core/utils/LocaleHolder";
 import DisablingMoire from "../../../../../../core/components/disablingMoire/DisablingMoire";
 
 const styles = require("../../styles.css")
-export default class DeviationsSection extends React.Component<Properties, State> {
-
-    constructor(props: Properties) {
-        super(props)
-        this.state = {
-            deviationAppointments: [],
-            deviations: new Map(),
-        }
-    }
+export default class DeviationsSection extends React.Component<Properties> {
 
     private getDeviationByDate(date: Date): AppointmentModel | null {
-        const result = this.state.deviationAppointments.filter(appointment => {
+        const result = this.props.deviationAppointments.filter(appointment => {
             return date >= appointment.startDate && date <= appointment.endDate
         })
         return result.length > 0 ? result[0] : null
@@ -53,13 +45,13 @@ export default class DeviationsSection extends React.Component<Properties, State
                 schedule={schedule}
                 label={<Message messageKey={"second.navigation.clinicsManagement.workSchedule.popover.label"}/>}
                 onConfirmClick={onConfirmClick}
-                onDeleteClick={id ? () => this.props.controller.clinicsWorkScheduleActions.deleteDeviation(id) : undefined}
+                onDeleteClick={id ? () => this.props.onDeleteClick(id) : undefined}
             />
         )
     }
 
     private getDayScheduleContentById(id: number) {
-        const deviation = this.state.deviations.get(id)!
+        const deviation = this.props.deviations.get(id)!
         const deviationData = deviation.getDeviationData()
         return this.getDayScheduleContent(
             id,
@@ -69,7 +61,7 @@ export default class DeviationsSection extends React.Component<Properties, State
             deviation.getName(),
             deviationData.getChanges(),
             (name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]) =>
-                this.props.controller.clinicsWorkScheduleActions.updateDeviation(id, name, global, startDate, endDate, records)
+                this.props.onUpdateClick(id, name, global, startDate, endDate, records)
             )
     }
 
@@ -85,7 +77,7 @@ export default class DeviationsSection extends React.Component<Properties, State
                 false,
                 "",
                 new DaySchedule([]),
-                this.props.controller.clinicsWorkScheduleActions.addDeviation)
+                this.props.onAddClick)
         }
     }
 
@@ -156,7 +148,6 @@ export default class DeviationsSection extends React.Component<Properties, State
     render() {
         const TTCell = this.getTimeTableCell((info: AppointmentInfo) => {})
         const AppointmentComponent = this.getAppointmentContent()
-        const actions = this.props.controller.clinicsWorkScheduleActions
         const localeTag = LocaleUtils.getLocaleTag(LocaleHolder.instance.localeType)
         return (
             <div className={styles.deviationSection}>
@@ -170,7 +161,7 @@ export default class DeviationsSection extends React.Component<Properties, State
                     />
                     <Paper>
                         <Scheduler
-                            data={this.state.deviationAppointments}
+                            data={this.props.deviationAppointments}
                             locale={localeTag}
                         >
                             <ViewState/>
@@ -178,7 +169,7 @@ export default class DeviationsSection extends React.Component<Properties, State
                                 timeTableCellComponent={TTCell}
                             />
                             <EditingState
-                                onCommitChanges={(changes: ChangeSet) => actions.handleDeviationAppointmentChange(changes)}
+                                onCommitChanges={(changes: ChangeSet) => this.props.handleChanges(changes)}
                                 onEditingAppointmentChange={(editedAppointment: Object) => {}}
                                 onAddedAppointmentChange={(addedAppointment: Object) => {}}
                             />
@@ -195,25 +186,20 @@ export default class DeviationsSection extends React.Component<Properties, State
             </div>
         )
     }
-
-    componentDidMount(): void {
-        this.props.controller.subscribe(this, {
-            clinicsScheduleDeviationsAppointments: "deviationAppointments",
-            clinicsScheduleDeviationsById: "deviations",
-        })
-    }
-
-    componentWillUnmount(): void {
-        this.props.controller.unsubscribe(this)
-    }
 }
 
 type Properties = {
     controller: EmployeeAppController
     disabled: boolean
-}
-
-type State = {
     deviationAppointments: AppointmentModel[]
-    deviations: Map<number, ClinicWorkScheduleDeviation>
+    deviations: Map<number, WorkScheduleDeviationContainer>
+    handleChanges: (changes: ChangeSet) => void
+    onAddClick: DeviationDayScheduleConfirmFunction
+    onUpdateClick: (id: number,
+                    name: string,
+                    global: boolean,
+                    startDate: Date,
+                    endDate: Date,
+                    records: ScheduleRecord[],) => void
+    onDeleteClick: (id: number) => void
 }

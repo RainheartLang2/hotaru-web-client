@@ -2,12 +2,10 @@ import EmployeeAppController from "../EmployeeAppController";
 import {ScheduleRecord} from "../../../common/beans/ScheduleRecord";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
-import {ClinicWorkSchedule, ClinicWorkScheduleServerBean} from "../../../common/beans/ClinicWorkSchedule";
-import {
-    ClinicWorkScheduleDeviation,
-    ClinicWorkScheduleDeviationServerBean
-} from "../../../common/beans/ClinicWorkScheduleDeviation";
 import EmployeeWorkSchedule, {EmployeeWorkScheduleServerBean} from "../../../common/beans/EmployeeWorkSchedule";
+import {ChangeSet} from "@devexpress/dx-react-scheduler";
+import {DateUtils} from "../../../core/utils/DateUtils";
+import {WorkScheduleDeviationContainer} from "../../../common/beans/WorkScheduleDeviationContainer";
 
 export default class EmployeeWorkScheduleActions {
     private controller: EmployeeAppController
@@ -99,6 +97,101 @@ export default class EmployeeWorkScheduleActions {
                         return newDaySchedule
                     })
                 })
+            }
+        })
+    }
+
+    private updateDeviationDates(id: number, startDate: Date, endDate: Date, callback: Function) :void {
+        fetchUserZoneRpc({
+            method: RemoteMethods.updateEmployeeScheduleDeviationDates,
+            params: [id, startDate, endDate],
+            successCallback: (result) => {
+                this.controller.setState({
+                    employeeWorkScheduleDeviationsList: this.controller.state.employeeWorkScheduleDeviationsList.map(deviation => {
+                        if (deviation.id != id) {
+                            return deviation
+                        }
+                        return deviation.setDates(startDate, endDate)
+                    })
+                })
+                callback()
+            }
+        })
+    }
+
+    public handleDeviationAppointmentChange(changes: ChangeSet, callback: Function = () => {}): void {
+        if (!changes.changed) {
+            return
+        }
+        const changedList = changes.changed
+        for (let key in changedList) {
+            const id = +key
+            const dateRange = changedList[key]
+            this.updateDeviationDates(id, dateRange.startDate, DateUtils.getPreviousDate(dateRange.endDate), callback)
+        }
+    }
+
+    public addDeviation(
+        name: string,
+        global: boolean,
+        startDate: Date,
+        endDate: Date,
+        records: ScheduleRecord[],
+        callback: Function = () => {}
+    ): void {
+
+        const workScheduleId = global ? undefined : this.controller.state.scheduleForSelectedEmployee!.id
+        const newDeviation = WorkScheduleDeviationContainer.createEmployeeDeviation(this.controller.state.employeeScheduleDeviationsAppointments.length + 1
+            , name, startDate, endDate, records, workScheduleId)
+        fetchUserZoneRpc({
+            method: RemoteMethods.createEmployeeScheduleDeviation,
+            params: [name, workScheduleId, startDate, endDate, records],
+            successCallback: (result) => {
+                this.controller.setState({
+                    employeeWorkScheduleDeviationsList: [...this.controller.state.employeeWorkScheduleDeviationsList, newDeviation]
+                })
+                callback()
+            }
+        })
+    }
+
+    public updateDeviation(
+        id: number,
+        name: string,
+        global: boolean,
+        startDate: Date,
+        endDate: Date,
+        records: ScheduleRecord[],
+        callback: Function = () => {}
+    ): void {
+        const workScheduleId = global ? undefined : this.controller.state.scheduleForSelectedEmployee!.id
+        const newDeviation = WorkScheduleDeviationContainer.createEmployeeDeviation(id, name, startDate, endDate, records, workScheduleId)
+        fetchUserZoneRpc({
+            method: RemoteMethods.updateEmployeeScheduleDeviation,
+            params: [id, name, workScheduleId, startDate, endDate, records],
+            successCallback: (result) => {
+                this.controller.setState({
+                    employeeWorkScheduleDeviationsList: this.controller.state.employeeWorkScheduleDeviationsList.map(deviation => {
+                        if (deviation.id != id) {
+                            return deviation
+                        }
+                        return newDeviation
+                    })
+                })
+                callback()
+            }
+        })
+    }
+
+    public deleteDeviation(id: number, callback: Function = () => {}): void {
+        fetchUserZoneRpc({
+            method: RemoteMethods.deleteEmployeeScheduleDeviation,
+            params: [id],
+            successCallback: () => {
+                this.controller.setState({
+                    employeeWorkScheduleDeviationsList: this.controller.state.employeeWorkScheduleDeviationsList.filter(deviation => deviation.id != id)
+                })
+                callback()
             }
         })
     }

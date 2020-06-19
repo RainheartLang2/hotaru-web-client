@@ -14,6 +14,9 @@ import {ReactNode} from "react";
 import {CollectionUtils} from "../../../../core/utils/CollectionUtils";
 import {MenuItem} from "@material-ui/core";
 import Select from "@material-ui/core/Select";
+import DeviationsSection from "../clinicsWorkschedule/subcomponents/deviationsSection/DeviationsSection";
+import {AppointmentModel, ChangeSet} from "@devexpress/dx-react-scheduler";
+import {WorkScheduleDeviationContainer} from "../../../../common/beans/WorkScheduleDeviationContainer";
 
 var styles = require("./styles.css")
 
@@ -27,6 +30,8 @@ export default class EmployeesWorkSchedulePage extends React.Component<Propertie
             editingDisabled: true,
             workSchedule: null,
             useDefaultWorkSchedule: true,
+            deviations: new Map(),
+            deviationAppointments: [],
         }
     }
 
@@ -71,6 +76,7 @@ export default class EmployeesWorkSchedulePage extends React.Component<Propertie
             ? this.state.workSchedule.getWorkSchedule()
             : new WorkSchedule(7)
         const scheduleLength = this.state.workSchedule && !this.state.workSchedule.getWorkSchedule().isWeekly() ? this.state.workSchedule.getWorkSchedule().length : "week"
+        const actions = this.props.controller.employeeScheduleActions
         return (<>
             <PageHeader label={<Message messageKey={"page.employeesWorkSchedule.title"}/>}
                         hasButton={false}
@@ -110,10 +116,22 @@ export default class EmployeesWorkSchedulePage extends React.Component<Propertie
                     </div>
                 </div>
             </div>
-            {/*<DeviationsSection*/}
-                {/*disabled={this.state.editingDisabled}*/}
-                {/*controller={this.props.controller}*/}
-            {/*/>*/}
+            <DeviationsSection
+                disabled={this.state.editingDisabled}
+                controller={this.props.controller}
+                deviationAppointments={this.state.deviationAppointments}
+                deviations={this.state.deviations}
+                handleChanges={(changes: ChangeSet) => actions.handleDeviationAppointmentChange(changes)}
+                onAddClick={(name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]) =>
+                    actions.addDeviation(name, global, startDate, endDate, records)}
+                onUpdateClick={(id: number,
+                                name: string,
+                                global: boolean,
+                                startDate: Date,
+                                endDate: Date,
+                                records: ScheduleRecord[]) => actions.updateDeviation(id, name, global, startDate, endDate, records)}
+                onDeleteClick={(id: number) => actions.deleteDeviation(id)}
+            />
         </>)
     }
 
@@ -123,6 +141,8 @@ export default class EmployeesWorkSchedulePage extends React.Component<Propertie
             employeeScheduleDisableEditing: "editingDisabled",
             scheduleForSelectedEmployee: "workSchedule",
             employeeScheduleUsesDefault: "useDefaultWorkSchedule",
+            employeeScheduleDeviationsById: "deviations",
+            employeeScheduleDeviationsAppointments: "deviationAppointments",
         })
     }
 
@@ -140,4 +160,6 @@ type State = {
     showDefaultScheduleCheckBox: boolean,
     workSchedule: EmployeeWorkSchedule | null,
     useDefaultWorkSchedule: boolean,
+    deviationAppointments: AppointmentModel[],
+    deviations: Map<number, WorkScheduleDeviationContainer>,
 }

@@ -8,6 +8,9 @@ import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import WorkSchedule from "../../../common/beans/WorkSchedule";
 import {DaySchedule} from "../../../common/beans/DaySchedule";
+import {WorkScheduleDeviationContainer} from "../../../common/beans/WorkScheduleDeviationContainer";
+import {AppointmentModel} from "@devexpress/dx-react-scheduler";
+import {ClinicsWorkScheduleSelectors, ClinicsWorkScheduleState} from "./ClinicsWorkScheduleNode";
 
 export default class EmployeeWorkScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -30,8 +33,8 @@ export default class EmployeeWorkScheduleNode {
     public getDefaultState(): EmployeeWorkScheduleState {
         return {
             employeeScheduleSelectedEmployee: EmployeeWorkScheduleNode.getDefaultWorkSchedule(),
-            employeeWorkSchedulesList: [new EmployeeWorkSchedule(1, 1, false, true, new WorkSchedule(2, false, CollectionUtils.fillArray(2, new DaySchedule([])))),
-                                        new EmployeeWorkSchedule(2, 0, true, false, new WorkSchedule(10, false, CollectionUtils.fillArray(10, new DaySchedule([]))))],
+            employeeWorkSchedulesList: [],
+            employeeWorkScheduleDeviationsList: [],
         }
     }
 
@@ -117,6 +120,65 @@ export default class EmployeeWorkScheduleNode {
                     return selectedClinic.isUsesDefault()
                 },
                 value: false,
+            },
+            employeeScheduleDeviationsById: {
+                dependsOn: ["employeeWorkScheduleDeviationsList"],
+                get: (state: Pick<EmployeeWorkScheduleState, "employeeWorkScheduleDeviationsList">) =>
+                    CollectionUtils.mapIdentifiableArray(state.employeeWorkScheduleDeviationsList),
+                value: new Map(),
+            },
+            employeeScheduleGlobalDeviations: {
+                dependsOn: ["employeeWorkScheduleDeviationsList"],
+                get: (state: Pick<EmployeeWorkScheduleState, "employeeWorkScheduleDeviationsList">) =>
+                    state.employeeWorkScheduleDeviationsList.filter(item => item.isGlobal()),
+                value: [],
+            },
+            employeeScheduleNotGlobalDeviations: {
+                dependsOn: ["employeeWorkScheduleDeviationsList"],
+                get: (state: Pick<EmployeeWorkScheduleState, "employeeWorkScheduleDeviationsList">) =>
+                    state.employeeWorkScheduleDeviationsList.filter(item => !item.isGlobal()),
+                value: [],
+            },
+            employeeScheduleDeviationsByWorkSchedule: {
+                dependsOn: ["employeeScheduleNotGlobalDeviations"],
+                get: (state: Pick<EmployeeScheduleSelectors, "employeeScheduleNotGlobalDeviations">) =>
+                    CollectionUtils.mapArrayByPredicate(state.employeeScheduleNotGlobalDeviations, deviation => deviation.getWorkScheduleId()!),
+                value: new Map(),
+            },
+            employeeScheduleDeviationsForSelectedSchedule: {
+                dependsOn: [
+                    "employeeScheduleDeviationsByWorkSchedule",
+                    "employeeScheduleGlobalDeviations",
+                    "scheduleForSelectedEmployee",
+                ],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "employeeScheduleDeviationsByWorkSchedule" |
+                    "employeeScheduleGlobalDeviations" |
+                    "scheduleForSelectedEmployee"
+                    >) => {
+                    const currentWorkSchedule = state.scheduleForSelectedEmployee
+                    if (!currentWorkSchedule) {
+                        return state.employeeScheduleGlobalDeviations
+                    }
+
+                    const workScheduleId = currentWorkSchedule.id!
+
+                    const localDeviations = state.employeeScheduleDeviationsByWorkSchedule.get(workScheduleId)
+
+                    if (!localDeviations) {
+                        return state.employeeScheduleGlobalDeviations
+                    }
+
+                    return state.employeeScheduleDeviationsByWorkSchedule.get(workScheduleId)!
+                        .concat(state.employeeScheduleGlobalDeviations)
+                },
+                value: [],
+            },
+            employeeScheduleDeviationsAppointments: {
+                dependsOn: ["employeeScheduleDeviationsForSelectedSchedule"],
+                get: (state: Pick<EmployeeScheduleSelectors, "employeeScheduleDeviationsForSelectedSchedule">) =>
+                    state.employeeScheduleDeviationsForSelectedSchedule.map(deviation => deviation.toAppointmentModel()),
+                value: [],
             }
         }
     }
@@ -135,7 +197,8 @@ export type EmployeeRecord = {
 
 export type EmployeeWorkScheduleState = {
     employeeScheduleSelectedEmployee: EmployeeRecord | null,
-    employeeWorkSchedulesList: EmployeeWorkSchedule[]
+    employeeWorkSchedulesList: EmployeeWorkSchedule[],
+    employeeWorkScheduleDeviationsList: WorkScheduleDeviationContainer[],
 }
 
 export type EmployeeScheduleSelectors = {
@@ -145,5 +208,11 @@ export type EmployeeScheduleSelectors = {
     employeeScheduleShowDefaultCheckBox: boolean,
     employeeScheduleDisableEditing: boolean,
     employeeScheduleUsesDefault: boolean,
+    employeeScheduleDeviationsById: Map<number, WorkScheduleDeviationContainer>,
+    employeeScheduleGlobalDeviations: WorkScheduleDeviationContainer[],
+    employeeScheduleNotGlobalDeviations: WorkScheduleDeviationContainer[],
+    employeeScheduleDeviationsByWorkSchedule: Map<number, WorkScheduleDeviationContainer[]>,
+    employeeScheduleDeviationsForSelectedSchedule: WorkScheduleDeviationContainer[],
+    employeeScheduleDeviationsAppointments: AppointmentModel[],
 }
 

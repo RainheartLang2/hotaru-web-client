@@ -6,7 +6,7 @@ import MessageResource from "../../../core/message/MessageResource";
 import {ClinicSelectors} from "./ClinicNode";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {ClinicWorkSchedule} from "../../../common/beans/ClinicWorkSchedule";
-import {ClinicWorkScheduleDeviation} from "../../../common/beans/ClinicWorkScheduleDeviation";
+import {WorkScheduleDeviationContainer} from "../../../common/beans/WorkScheduleDeviationContainer";
 import {WorkScheduleDeviation} from "../../../common/beans/WorkScheduleDeviation";
 import {DaySchedule} from "../../../common/beans/DaySchedule";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
@@ -30,15 +30,6 @@ export default class ClinicsWorkScheduleNode {
 
     constructor(store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>) {
         this._store = store;
-    }
-
-    private deviationToAppoinment(deviation: ClinicWorkScheduleDeviation): AppointmentModel {
-        return {
-            id: deviation.id,
-            title: deviation.getName(),
-            startDate: deviation.getDeviationData().getStartDate(),
-            endDate: DateUtils.getNextDay(deviation.getDeviationData().getEndDate()),
-        }
     }
 
     public getDefaultState(): ClinicsWorkScheduleState {
@@ -187,7 +178,7 @@ export default class ClinicsWorkScheduleNode {
             clinicsScheduleDeviationsAppointments: {
                 dependsOn: ["clinicsScheduleDeviationsForSelectedSchedule"],
                 get: (state: Pick<ClinicsWorkScheduleSelectors, "clinicsScheduleDeviationsForSelectedSchedule">) =>
-                    state.clinicsScheduleDeviationsForSelectedSchedule.map(deviation => this.deviationToAppoinment(deviation)),
+                    state.clinicsScheduleDeviationsForSelectedSchedule.map(deviation => deviation.toAppointmentModel()),
                 value: [],
             }
         }
@@ -197,7 +188,7 @@ export default class ClinicsWorkScheduleNode {
 export type ClinicsWorkScheduleState = {
     clinicsWorkScheduleSelectedClinic: Clinic | null,
     clinicsWorkSchedulesList: ClinicWorkSchedule[],
-    clinicsWorkScheduleDeviationsList: ClinicWorkScheduleDeviation[],
+    clinicsWorkScheduleDeviationsList: WorkScheduleDeviationContainer[],
 }
 
 export type ClinicsWorkScheduleSelectors = {
@@ -207,10 +198,10 @@ export type ClinicsWorkScheduleSelectors = {
     clinicsWorkScheduleShowDefaultCheckBox: boolean,
     clinicsWorkScheduleDisableEditing: boolean,
     clinicsWorkScheduleUsesDefault: boolean,
-    clinicsScheduleDeviationsById: Map<number, ClinicWorkScheduleDeviation>,
-    clinicsScheduleGlobalDeviations: ClinicWorkScheduleDeviation[],
-    clinicsScheduleNotGlobalDeviations: ClinicWorkScheduleDeviation[],
-    clinicsScheduleDeviationsByWorkSchedule: Map<number, ClinicWorkScheduleDeviation[]>,
-    clinicsScheduleDeviationsForSelectedSchedule: ClinicWorkScheduleDeviation[],
+    clinicsScheduleDeviationsById: Map<number, WorkScheduleDeviationContainer>,
+    clinicsScheduleGlobalDeviations: WorkScheduleDeviationContainer[],
+    clinicsScheduleNotGlobalDeviations: WorkScheduleDeviationContainer[],
+    clinicsScheduleDeviationsByWorkSchedule: Map<number, WorkScheduleDeviationContainer[]>,
+    clinicsScheduleDeviationsForSelectedSchedule: WorkScheduleDeviationContainer[],
     clinicsScheduleDeviationsAppointments: AppointmentModel[],
 }

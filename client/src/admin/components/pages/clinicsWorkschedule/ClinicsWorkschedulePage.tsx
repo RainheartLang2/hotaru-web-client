@@ -12,9 +12,10 @@ import ConnectedCheckbox from "../../../../core/components/connectedCheckbox/Con
 import WorkScheduleTemplate from "../../../../common/components/workScheduleTemplate/WorkScheduleTemplate";
 import {ClinicWorkSchedule} from "../../../../common/beans/ClinicWorkSchedule";
 import WorkSchedule from "../../../../common/beans/WorkSchedule";
-import {AppointmentModel} from "@devexpress/dx-react-scheduler";
+import {AppointmentModel, ChangeSet} from "@devexpress/dx-react-scheduler";
 import DeviationsSection from "./subcomponents/deviationsSection/DeviationsSection";
 import {ScheduleRecord} from "../../../../common/beans/ScheduleRecord";
+import {WorkScheduleDeviationContainer} from "../../../../common/beans/WorkScheduleDeviationContainer";
 
 var styles = require("./styles.css")
 
@@ -26,11 +27,13 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             editingDisabled: true,
             workSchedule: null,
             useDefaultWorkSchedule: true,
-            deviations: [],
+            deviationAppointments: [],
+            deviations: new Map(),
         }
     }
 
     render() {
+        const actions = this.props.controller.clinicsWorkScheduleActions
         return (<>
             <PageHeader label={<Message messageKey={"page.clinicsWorkSchedule.title"}/>}
                         hasButton={false}
@@ -71,6 +74,18 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             <DeviationsSection
                 disabled={this.state.editingDisabled}
                 controller={this.props.controller}
+                deviationAppointments={this.state.deviationAppointments}
+                deviations={this.state.deviations}
+                handleChanges={(changes: ChangeSet) => actions.handleDeviationAppointmentChange(changes)}
+                onAddClick={(name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]) =>
+                    actions.addDeviation(name, global, startDate, endDate, records)}
+                onUpdateClick={(id: number,
+                                name: string,
+                                global: boolean,
+                                startDate: Date,
+                                endDate: Date,
+                                records: ScheduleRecord[]) => actions.updateDeviation(id, name, global, startDate, endDate, records)}
+                onDeleteClick={(id: number) => actions.deleteDeviation(id)}
             />
         </>)
     }
@@ -81,6 +96,8 @@ export default class ClinicsWorkschedulePage extends React.Component<Properties,
             clinicsWorkScheduleDisableEditing: "editingDisabled",
             workScheduleForSelectedClinic: "workSchedule",
             clinicsWorkScheduleUsesDefault: "useDefaultWorkSchedule",
+            clinicsScheduleDeviationsAppointments: "deviationAppointments",
+            clinicsScheduleDeviationsById: "deviations",
         })
     }
 
@@ -98,5 +115,6 @@ type State = {
     showDefaultScheduleCheckBox: boolean,
     workSchedule: ClinicWorkSchedule | null,
     useDefaultWorkSchedule: boolean,
-    deviations: AppointmentModel[],
+    deviationAppointments: AppointmentModel[],
+    deviations: Map<number, WorkScheduleDeviationContainer>,
 }

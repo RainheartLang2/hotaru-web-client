@@ -6,9 +6,9 @@ import {plainToClass} from "class-transformer";
 import {ClinicWorkSchedule, ClinicWorkScheduleServerBean} from "../../../common/beans/ClinicWorkSchedule";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
 import {
-    ClinicWorkScheduleDeviation,
-    ClinicWorkScheduleDeviationServerBean
-} from "../../../common/beans/ClinicWorkScheduleDeviation";
+    WorkScheduleDeviationContainer,
+    WorkScheduleDeviationContainerServerBean
+} from "../../../common/beans/WorkScheduleDeviationContainer";
 import {DateUtils} from "../../../core/utils/DateUtils";
 
 export default class ClinicsWorkScheduleActions {
@@ -24,10 +24,10 @@ export default class ClinicsWorkScheduleActions {
             method: RemoteMethods.getAllClinicWorkSchedules,
             successCallback: (result: any) => {
                 const workSchedulesList = result.workSchedules as ClinicWorkScheduleServerBean[]
-                const deviations = result.deviations as ClinicWorkScheduleDeviationServerBean[]
+                const deviations = result.deviationAppointments as WorkScheduleDeviationContainerServerBean[]
                 this.controller.setState({
                     clinicsWorkSchedulesList: workSchedulesList.map(schedule => ClinicWorkSchedule.fromServerBean(schedule)),
-                    clinicsWorkScheduleDeviationsList: deviations.map(deviation => ClinicWorkScheduleDeviation.fromServerBean(deviation))
+                    clinicsWorkScheduleDeviationsList: deviations.map(deviation => WorkScheduleDeviationContainer.fromServerBean(deviation))
                 })
                 callback()
             }
@@ -117,7 +117,7 @@ export default class ClinicsWorkScheduleActions {
             method: RemoteMethods.createClinicScheduleDeviation,
             params: [name, workScheduleId, startDate, endDate, records],
             successCallback: (result) => {
-                const newDeviation = ClinicWorkScheduleDeviation.create(result, name, startDate, endDate, records, workScheduleId)
+                const newDeviation = WorkScheduleDeviationContainer.createClinicDeviation(result, name, startDate, endDate, records, workScheduleId)
                 this.controller.setState({
                     clinicsWorkScheduleDeviationsList: [...this.controller.state.clinicsWorkScheduleDeviationsList, newDeviation]
                 })
@@ -140,7 +140,7 @@ export default class ClinicsWorkScheduleActions {
             method: RemoteMethods.updateClinicScheduleDeviation,
             params: [id, name, workScheduleId, startDate, endDate, records],
             successCallback: (result) => {
-                const newDeviation = ClinicWorkScheduleDeviation.create(id, name, startDate, endDate, records, workScheduleId)
+                const newDeviation = WorkScheduleDeviationContainer.createClinicDeviation(id, name, startDate, endDate, records, workScheduleId)
                 this.controller.setState({
                     clinicsWorkScheduleDeviationsList: this.controller.state.clinicsWorkScheduleDeviationsList.map(deviation => {
                         if (deviation.id != id) {
