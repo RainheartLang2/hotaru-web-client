@@ -24,7 +24,7 @@ export default class ClinicsWorkScheduleActions {
             method: RemoteMethods.getAllClinicWorkSchedules,
             successCallback: (result: any) => {
                 const workSchedulesList = result.workSchedules as ClinicWorkScheduleServerBean[]
-                const deviations = result.deviationAppointments as WorkScheduleDeviationContainerServerBean[]
+                const deviations = result.deviations as WorkScheduleDeviationContainerServerBean[]
                 this.controller.setState({
                     clinicsWorkSchedulesList: workSchedulesList.map(schedule => ClinicWorkSchedule.fromServerBean(schedule)),
                     clinicsWorkScheduleDeviationsList: deviations.map(deviation => WorkScheduleDeviationContainer.fromServerBean(deviation))
