@@ -52,14 +52,13 @@ export default class DeviationsSection extends React.Component<Properties> {
 
     private getDayScheduleContentById(id: number) {
         const deviation = this.props.deviations.get(id)!
-        const deviationData = deviation.getDeviationData()
         return this.getDayScheduleContent(
             id,
-            deviationData.getStartDate(),
-            deviationData.getEndDate(),
+            deviation.getStartDate(),
+            deviation.getEndDate(),
             deviation.isGlobal(),
             deviation.getName(),
-            deviationData.getChanges(),
+            deviation.getChanges(),
             (name: string, global: boolean, startDate: Date, endDate: Date, records: ScheduleRecord[]) =>
                 this.props.onUpdateClick(id, name, global, startDate, endDate, records)
             )
