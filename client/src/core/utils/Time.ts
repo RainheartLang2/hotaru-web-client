@@ -41,6 +41,10 @@ export class Time {
         return this.minutes - second.minutes
     }
 
+    public mergeWithDate(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), this.hours, this.minutes)
+    }
+
     public static min(first: Time, second: Time): Time {
         const comparisonResult = first.compareTo(second)
         if (comparisonResult >= 0) {
@@ -58,6 +62,7 @@ export class Time {
             return second
         }
     }
+
 
     public static fromServerBean(bean: TimeServerBean): Time {
         return new Time(bean.hours, bean.minutes)

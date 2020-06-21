@@ -21,6 +21,8 @@ import EmployeeAppController from "../../../controller/EmployeeAppController";
 import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
+import {DaySchedule} from "../../../../common/beans/DaySchedule";
+import CustomTooltip from "../../../../core/components/customTooltip/CustomTooltip";
 
 var styles = require("./styles.css")
 
@@ -31,22 +33,37 @@ export default class SchedulePage extends React.Component<Properties, State> {
         this.state = {
             appointmentsList: [],
             selectedDate: new Date(),
+            employeeSchedule: [],
             hoursRange: [0, 24],
         }
     }
 
+    private isDateRangeActive(startDate: Date, endDate: Date): boolean {
+        const daySchedule = this.state.employeeSchedule.length > 0
+            ? this.state.employeeSchedule[startDate.getDay()]
+            : new DaySchedule([])
+        return daySchedule.includes(startDate, endDate)
+    }
+
     private getTimeTableCell(onClick: (appointment: AppointmentInfo) => void): React.ComponentType<WeekView.TimeTableCellProps> {
+        const self = this
         return class extends React.Component<WeekView.TimeTableCellProps> {
             render() {
+                const isActive = self.isDateRangeActive(this.props.startDate!, this.props.endDate!)
                 return (
                     <WeekView.TimeTableCell
                         {...this.props}>
-                        <div className={styles.timeTableCell} onClick={() => {
-                            onClick({
-                                startDate: this.props.startDate!,
-                                endDate: this.props.endDate!,
-                            })
-                        }}></div>
+                        <CustomTooltip
+                            title={<Message messageKey={"page.schedule.nonWorkingTime.tooltip.label"}/>}
+                            active={!isActive}
+                        >
+                            <div className={isActive ? styles.timeTableCell : styles.inactiveTimeTableCell} onClick={() => {
+                                onClick({
+                                    startDate: this.props.startDate!,
+                                    endDate: this.props.endDate!,
+                                })
+                            }}></div>
+                        </CustomTooltip>
                     </WeekView.TimeTableCell>
                 )
             }
@@ -76,7 +93,9 @@ export default class SchedulePage extends React.Component<Properties, State> {
     }
 
     private startAppointmentCreation(appointmentInfo: AppointmentInfo) {
-        this.props.controller.scheduleActions.openCreateAppointmentDialog(appointmentInfo)
+        if (this.isDateRangeActive(appointmentInfo.startDate!, appointmentInfo.endDate!)) {
+            this.props.controller.scheduleActions.openCreateAppointmentDialog(appointmentInfo)
+        }
     }
 
     private openEditDialog(appointmentInfo: AppointmentInfo) {
@@ -124,10 +143,17 @@ export default class SchedulePage extends React.Component<Properties, State> {
                         timeTableCellComponent={TTCell}
                     />
                     <EditingState
-                        onCommitChanges={(changes: ChangeSet) => actions.handleAppointmentChange(changes)}
+                        onCommitChanges={(changes: ChangeSet) =>
+                            actions.handleAppointmentChange(changes,
+                                (startDate: Date, endDate: Date) => this.isDateRangeActive(startDate, endDate)
+                            )
+                        }
                         onEditingAppointmentChange={(editedAppointment: Object) => {
                             if (editedAppointment && !editedAppointment.hasOwnProperty("type")) {
-                                this.openEditDialog(editedAppointment as AppointmentInfo)
+                                const appointmentInfo = editedAppointment as AppointmentInfo
+                                if (this.isDateRangeActive(appointmentInfo.startDate, appointmentInfo.endDate)) {
+                                    this.openEditDialog(editedAppointment as AppointmentInfo)
+                                }
                             }
                         }}
                         onAddedAppointmentChange={(addedAppointment: Object) => this.startAppointmentCreation(addedAppointment as AppointmentInfo)}
@@ -157,6 +183,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
         this.props.controller.subscribe(this, {
             appointmentsModelList: "appointmentsList",
             schedulePageDate: "selectedDate",
+            personalSchedule: "employeeSchedule",
             personalScheduleHours: "hoursRange",
         })
     }
@@ -173,5 +200,6 @@ type Properties = {
 type State = {
     appointmentsList: AppointmentModel[]
     selectedDate: Date
+    employeeSchedule: DaySchedule[]
     hoursRange: [number, number]
 }

@@ -17,6 +17,7 @@ import {PageType} from "../enum/PageType";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {WorkScheduleUtils} from "../../../core/utils/WorkScheduleUtils";
 import {NumberUtils} from "../../../core/utils/NumberUtils";
+import CallbackValidator from "../../../core/mvc/validators/CallbackValidator";
 
 export default class ScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -56,6 +57,20 @@ export default class ScheduleNode {
     }
 
     public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, ScheduleSelectors> {
+        const timeValidator = new CallbackValidator<string>(() =>
+                MessageResource.getMessage("page.schedule.workingTime.validator.message"),
+            (value: string) => {
+                const startTime = DateUtils.parseTime(this._store.state.editedAppointmentStartTime)
+                const endTime = DateUtils.parseTime(this._store.state.editedAppointmentEndTime)
+                if (!startTime || !endTime || this._store.state.personalSchedule.length == 0) {
+                    return true
+                }
+
+                const date = this._store.state.editedAppointmentDate
+                const daySchedule = this._store.state.personalSchedule[date.getDay()]
+                return daySchedule.includes(startTime.mergeWithDate(date), endTime.mergeWithDate(date))
+            }
+        )
         return {
             appointmentsListById: {
                 dependsOn: ["appointmentsList"],
@@ -123,26 +138,47 @@ export default class ScheduleNode {
                 dependsOn: ["appointmentFormHasStandardErrors",
                     "saveClientAsPermanent",
                     "editedClientNameField",
-                    "editedClientPhoneField"],
+                    "editedClientPhoneField",
+                    "appointmentDialogErrorMessage",
+                ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "appointmentFormHasStandardErrors"
                     | "saveClientAsPermanent"
                     | "editedClientNameField"
-                    | "editedClientPhoneField">) => {
-                    return state.appointmentFormHasStandardErrors
-                        || (state.saveClientAsPermanent
-                            && CommonUtils.allFieldsAreEmpty([state.editedClientPhoneField,
-                                state.editedClientNameField]))
+                    | "editedClientPhoneField"
+                    | "appointmentDialogErrorMessage"
+                    >) => {
+                    return !!state.appointmentDialogErrorMessage ||
+                        (state.appointmentFormHasStandardErrors
+                            || (state.saveClientAsPermanent
+                                && CommonUtils.allFieldsAreEmpty([state.editedClientPhoneField,
+                                    state.editedClientNameField]))
+                        )
                 },
                 value: false,
             },
             appointmentDialogErrorMessage: {
-                dependsOn: ["clientNameOrPhoneNotEntered", "createClientInfo", "saveClientAsPermanent"],
+                dependsOn: ["clientNameOrPhoneNotEntered", "createClientInfo", "saveClientAsPermanent",
+                            "editedAppointmentStartTimeField", "editedAppointmentEndTimeField", "editedAppointmentDate", "personalSchedule"],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "clientNameOrPhoneNotEntered"
                     | "createClientInfo"
                     | "saveClientAsPermanent"
+                    | "editedAppointmentStartTimeField"
+                    | "editedAppointmentEndTimeField"
+                    | "editedAppointmentDate"
+                    | "personalSchedule"
                     >) => {
                     if (state.createClientInfo && state.saveClientAsPermanent && state.clientNameOrPhoneNotEntered) {
                         return MessageResource.getMessage("dialog.appointment.permanentClient.nameOrPhone.error")
+                    }
+                    const startTime = DateUtils.parseTime(state.editedAppointmentStartTimeField.value)
+                    const endTime = DateUtils.parseTime(state.editedAppointmentEndTimeField.value)
+                    if (startTime && endTime && state.personalSchedule.length > 0) {
+                        const daySchedule = state.personalSchedule[state.editedAppointmentDate.getDay()]
+                        const startDate = startTime.mergeWithDate(state.editedAppointmentDate)
+                        const endDate = startTime.mergeWithDate(state.editedAppointmentDate)
+                        if (!daySchedule.includes(startDate, endDate)) {
+                            return MessageResource.getMessage("page.schedule.workingTime.validator.message")
+                        }
                     }
                     return ""
                 },

@@ -90,6 +90,8 @@
       "page.schedule.title": "Расписание",
       "page.schedule.medicSelection.label": "Сотрудник: ",
       "page.schedule.todayButton.label": "Текущая неделя",
+      "page.schedule.nonWorkingTime.tooltip.label": "Нерабочее время",
+      "page.schedule.workingTime.validator.message": "Время приёма захватывает нерабочее время",
       "page.clinics.title": "Клиники",
       "page.species.title": "Справочник видов животных",
       "page.species.button.toBreeds.label": "Перейти к породам",

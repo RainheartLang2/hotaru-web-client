@@ -12,3 +12,9 @@
 .timeTableCell:hover {
     background-color: #e0edff;
 }
+
+.inactiveTimeTableCell {
+    width: 100%;
+    height: 100%;
+    background-color: #e2e2e2;
+}

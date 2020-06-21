@@ -102,4 +102,8 @@ export namespace DateUtils {
     export function getDifferenceInDays(first: Date, second: Date): number {
         return Math.ceil((second.getTime() - first.getTime()) / (1000 * 3600 * 24))
     }
+
+    export function fromDateToTime(date: Date): Time {
+        return new Time(date.getHours(), date.getMinutes())
+    }
 }

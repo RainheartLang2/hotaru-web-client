@@ -195,7 +195,10 @@ export default class ScheduleActions {
         })
     }
 
-    public handleAppointmentChange(changes: ChangeSet, callback: Function = () => {}): void {
+    public handleAppointmentChange(changes: ChangeSet,
+                                   isChangeAllowed: (startDate: Date, endDate: Date) => boolean,
+                                   callback: Function = () => {}
+                                   ): void {
         if (!changes.changed) {
             return
         }
@@ -203,7 +206,9 @@ export default class ScheduleActions {
         for (let key in changedList) {
             const id = +key
             const dateRange = changedList[key]
-            this.updateDates(id, dateRange.startDate, dateRange.endDate, callback)
+            if (isChangeAllowed(dateRange.startDate, dateRange.endDate)) {
+                this.updateDates(id, dateRange.startDate, dateRange.endDate, callback)
+            }
         }
     }
 

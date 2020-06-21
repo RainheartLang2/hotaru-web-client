@@ -43,6 +43,19 @@ export class DaySchedule {
         return this.records[this.records.length - 1].getEndTime()
     }
 
+    public includes(startDate: Date, endDate: Date) {
+        let result = false
+        const startTime = DateUtils.fromDateToTime(startDate)
+        const endTime = DateUtils.fromDateToTime(endDate)
+        this.records.forEach(timeRange => {
+            if (!timeRange.getStartTime()!.greaterThan(startTime) && !timeRange.getEndTime()!.lessThan(endTime)) {
+                result = true
+                return
+            }
+        })
+        return result
+    }
+
     public static fromServerBean(bean: DayScheduleServerBean): DaySchedule {
         return new DaySchedule(bean.records.map(record => ScheduleRecord.fromServerBean(record)))
     }
