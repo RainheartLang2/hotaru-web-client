@@ -4,19 +4,27 @@ import {ScheduleRecord} from "./ScheduleRecord";
 import ClinicsWorkScheduleNode from "../../admin/state/nodes/ClinicsWorkScheduleNode";
 import {ClinicWorkScheduleServerBean} from "./ClinicWorkSchedule";
 import EmployeeWorkScheduleNode from "../../admin/state/nodes/EmployeeWorkScheduleNode";
+import {DaySchedule} from "./DaySchedule";
+import {DateUtils} from "../../core/utils/DateUtils";
 
 export default class EmployeeWorkSchedule extends Identifiable {
     private employeeId?: number
     private defaultSchedule: boolean
     private usesDefault: boolean
     private schedule: WorkSchedule
+    private startDate?: Date
+    private endDate?: Date
 
-    constructor(id: number | undefined, employeeId: number | undefined, isDefault: boolean, usesDefault: boolean, schedule: WorkSchedule) {
+    constructor(id: number | undefined, employeeId: number | undefined, isDefault: boolean, usesDefault: boolean, schedule: WorkSchedule,
+                startDate?: Date, endDate?: Date
+    ) {
         super(id)
         this.employeeId = employeeId
         this.defaultSchedule = isDefault
         this.usesDefault = usesDefault
         this.schedule = schedule
+        this.startDate = startDate
+        this.endDate = endDate
     }
 
     public getEmployeeId(): number | undefined {
@@ -33,6 +41,14 @@ export default class EmployeeWorkSchedule extends Identifiable {
 
     public getWorkSchedule(): WorkSchedule {
         return this.schedule
+    }
+
+    public getStartDate(): Date | undefined {
+        return this.startDate
+    }
+
+    public getEndDate(): Date | undefined {
+        return this.endDate
     }
 
     public setUsesDefault(value: boolean): EmployeeWorkSchedule {
@@ -58,8 +74,51 @@ export default class EmployeeWorkSchedule extends Identifiable {
         const employeeId = bean.defaultSchedule
             ? EmployeeWorkScheduleNode.getDefaultWorkSchedule().id
             : bean.employeeId
-        return new EmployeeWorkSchedule(bean.id, employeeId, bean.defaultSchedule, bean.usesDefault, schedule)
+        return new EmployeeWorkSchedule(
+            bean.id,
+            employeeId,
+            bean.defaultSchedule,
+            bean.usesDefault,
+            schedule,
+            bean.startDate ? new Date(bean.startDate) : undefined,
+            bean.endDate ? new Date(bean.endDate) : undefined,
+        )
     }
+
+    public getDayScheduleForDate(date: Date): DaySchedule {
+        if (this.usesDefault) {
+            throw new Error("DaySchedule can not be calculated. This schedule uses default.")
+        }
+
+        if (this.getWorkSchedule().isWeekly()) {
+            return this.getWorkSchedule().getSchedule(date.getDay())
+        }
+
+        if (!this.startDate) {
+            throw new Error("schedule has no start date to calculate daySchedule")
+        }
+
+        const difference = DateUtils.getDifferenceInDays(this.startDate, date)
+
+        if (difference < 0) {
+            throw new Error("date is greater than startDate")
+        }
+
+        return this.getWorkSchedule().getSchedule(difference % this.getWorkSchedule().length)
+    }
+
+    // public DaySchedule getDayScheduleForDate(Date startDate, Date date) {
+    // if (this.weekly) {
+    // return this.schedule.get(date.getDay());
+    // }
+    //
+    // long difference = DateHelper.getDifferenceInDays(startDate, date);
+    // if (difference < 0) {
+    // return null;
+    // }
+    // int index = (int) (difference % this.length);
+    // return this.schedule.get(index);
+    // }
 }
 
 export type EmployeeWorkScheduleServerBean = {
@@ -68,4 +127,6 @@ export type EmployeeWorkScheduleServerBean = {
     id: number
     schedule?: WorkScheduleServerBean
     usesDefault: boolean
+    startDate?: Date
+    endDate?: Date
 }

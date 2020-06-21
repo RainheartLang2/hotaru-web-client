@@ -195,4 +195,19 @@ export default class EmployeeWorkScheduleActions {
             }
         })
     }
+
+    public loadEmployeeSchedule(employeeId: number, date: Date, callback: Function = () => {}): void {
+        const startDate = DateUtils.getMondayByDate(date)
+        const endDate = DateUtils.getSundayByDate(date)
+        fetchUserZoneRpc({
+            method: RemoteMethods.getDateRangeSchedule,
+            params: [employeeId, startDate, endDate],
+            successCallback: result => {
+                this.controller.setState({
+                    employeeWorkSchedulesList: (result as EmployeeWorkScheduleServerBean[]).map(schedule => EmployeeWorkSchedule.fromServerBean(schedule))
+                })
+                callback()
+            }
+        })
+    }
 }

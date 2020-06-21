@@ -107,6 +107,7 @@ export namespace RemoteMethods {
     export const updateEmployeeScheduleDeviation = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("updateDeviation"))
     export const updateEmployeeScheduleDeviationDates = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("updateDeviationDates"))
     export const deleteEmployeeScheduleDeviation = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("deleteDeviation"))
+    export const getDateRangeSchedule = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("getDateRangeSchedule"))
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

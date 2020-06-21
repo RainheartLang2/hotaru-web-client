@@ -31,6 +31,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
         this.state = {
             appointmentsList: [],
             selectedDate: new Date(),
+            hoursRange: [0, 24],
         }
     }
 
@@ -118,8 +119,8 @@ export default class SchedulePage extends React.Component<Properties, State> {
                         onCurrentDateChange={(currentDate: Date) => actions.changeWeek(currentDate)}
                     />
                     <WeekView
-                        startDayHour={9}
-                        endDayHour={19}
+                        startDayHour={this.state.hoursRange[0]}
+                        endDayHour={this.state.hoursRange[1]}
                         timeTableCellComponent={TTCell}
                     />
                     <EditingState
@@ -156,6 +157,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
         this.props.controller.subscribe(this, {
             appointmentsModelList: "appointmentsList",
             schedulePageDate: "selectedDate",
+            personalScheduleHours: "hoursRange",
         })
     }
 
@@ -171,4 +173,5 @@ type Properties = {
 type State = {
     appointmentsList: AppointmentModel[]
     selectedDate: Date
+    hoursRange: [number, number]
 }

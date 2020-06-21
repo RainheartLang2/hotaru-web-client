@@ -1,5 +1,6 @@
 import {ScheduleRecord, ScheduleRecordServerBean} from "./ScheduleRecord";
 import {DateUtils} from "../../core/utils/DateUtils";
+import {Time} from "../../core/utils/Time";
 
 export class DaySchedule {
     private records: ScheduleRecord[]
@@ -26,6 +27,20 @@ export class DaySchedule {
         }
         return startTime.getHours() == 0 && startTime.getMinutes() == 0
                 && endTime.getHours() == 23 && endTime.getMinutes() == 59
+    }
+
+    public getMinTime(): Time | null {
+        if (this.records.length == 0) {
+            return null
+        }
+        return this.records[0].getStartTime()
+    }
+
+    public getMaxTime(): Time | null {
+        if (this.records.length == 0) {
+            return null
+        }
+        return this.records[this.records.length - 1].getEndTime()
     }
 
     public static fromServerBean(bean: DayScheduleServerBean): DaySchedule {

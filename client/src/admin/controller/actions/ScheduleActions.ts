@@ -36,8 +36,10 @@ export default class ScheduleActions {
     }
 
     public changeWeek(dayInWeek: Date): void {
-        this.controller.setState({
-            schedulePageDate: dayInWeek,
+        this.controller.employeeScheduleActions.loadEmployeeSchedule(this.controller.state.selectedEmployeeForSchedulePage!.id!, dayInWeek, () => {
+            this.controller.setState({
+                schedulePageDate: dayInWeek,
+            })
         })
     }
 

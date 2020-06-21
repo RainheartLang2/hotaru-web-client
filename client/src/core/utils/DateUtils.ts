@@ -49,6 +49,11 @@ export namespace DateUtils {
         return result
     }
 
+    export function getPureDate(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+    }
+
+
     export function getNextDay(date: Date): Date {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
     }
@@ -69,5 +74,32 @@ export namespace DateUtils {
 
     export function isDateValid(date: Date): boolean {
         return !!date && date.getTime() != NaN
+    }
+    
+    export function getMondayByDate(givenDate: Date): Date {
+        const date = getPureDate(givenDate)
+        const day = date.getDay()
+        const diff = date.getDate() - day + (day == 0 ? -6 : 1)
+        return new Date(date.setDate(diff))
+    }
+
+    export function getSundayByDate(date: Date): Date {
+        const day = date.getDay()
+        const diff = date.getDate() - day + (day == 0 ? 0: 7)
+        return new Date(date.setDate(diff))
+    }
+
+    export function getWeekByDate(date: Date): Date[] {
+        let day = getMondayByDate(date)
+        const result = []
+        for (let i = 0; i < 7; i++) {
+            result.push(day)
+            day = getNextDay(day)
+        }
+        return result
+    }
+
+    export function getDifferenceInDays(first: Date, second: Date): number {
+        return Math.ceil((second.getTime() - first.getTime()) / (1000 * 3600 * 24))
     }
 }

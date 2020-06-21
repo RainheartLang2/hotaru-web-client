@@ -12,6 +12,11 @@ import {MedicalAppointment} from "../../../common/beans/MedicalAppointment";
 import {Field} from "../../../core/mvc/store/Field";
 import MessageResource from "../../../core/message/MessageResource";
 import {CommonUtils} from "../../../core/utils/CommonUtils";
+import {DaySchedule} from "../../../common/beans/DaySchedule";
+import {PageType} from "../enum/PageType";
+import {DateUtils} from "../../../core/utils/DateUtils";
+import {WorkScheduleUtils} from "../../../core/utils/WorkScheduleUtils";
+import {NumberUtils} from "../../../core/utils/NumberUtils";
 
 export default class ScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -142,6 +147,50 @@ export default class ScheduleNode {
                     return ""
                 },
                 value: "",
+            },
+            schedulePageWeek: {
+                dependsOn: ["schedulePageDate"],
+                get: (state: Pick<ScheduleState, "schedulePageDate">) => DateUtils.getWeekByDate(state.schedulePageDate),
+                value: [],
+            },
+            personalSchedule: {
+                dependsOn: ["pageType", "defaultEmployeeWorkSchedules", "nonDefaultEmployeeWorkSchedules", "schedulePageWeek"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "pageType"
+                    | "defaultEmployeeWorkSchedules"
+                    | "nonDefaultEmployeeWorkSchedules"
+                    | "schedulePageWeek">) => {
+                    if (state.pageType != PageType.Schedule) {
+                        return []
+                    }
+
+                    const result: DaySchedule[] = []
+                    state.schedulePageWeek.forEach(day => {
+                        result.push(WorkScheduleUtils.getDayScheduleForDate(
+                            state.nonDefaultEmployeeWorkSchedules,
+                            state.defaultEmployeeWorkSchedules,
+                            day
+                        ))
+                    })
+                    return result
+                },
+                value: [],
+            },
+            personalScheduleHours: {
+                dependsOn: ["personalSchedule"],
+                get: (state: Pick<ScheduleSelectors, "personalSchedule">) => {
+                    let min = 24
+                    let max = 0
+                    state.personalSchedule.forEach(schedule => {
+                        min = Math.min(min, schedule.getMinTime() ? schedule.getMinTime()!.getHours() : min)
+                        max = Math.max(max, schedule.getMaxTime() ? schedule.getMaxTime()!.getHours() : max)
+                    })
+                    if (min == 24) {
+                        return [0, 24]
+                    }
+                    return [min, max]
+                },
+                value: [0, 24],
             }
         }
     }
@@ -179,4 +228,8 @@ export type ScheduleSelectors = {
     appointmentFormHasStandardErrors: boolean,
     appointmentFormHasErrors: boolean,
     appointmentDialogErrorMessage: string,
+
+    schedulePageWeek: Date[],
+    personalSchedule: DaySchedule[],
+    personalScheduleHours: [number, number]
 }

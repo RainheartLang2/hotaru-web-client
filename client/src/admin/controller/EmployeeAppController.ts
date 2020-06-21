@@ -156,7 +156,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
                 })
                 this._speciesActions.loadList([], () => {
                     this._breedActions.loadList([], () => {
-                        this._scheduleActions.loadAppointmentsWithClients(() => setPageLoad())
+                        this._scheduleActions.loadAppointmentsWithClients(() => {
+                            this._employeeScheduleActions.loadEmployeeSchedule(
+                                this.state.selectedEmployeeForSchedulePage!.id!,
+                                this.state.schedulePageDate,
+                                () => setPageLoad())
+                        })
                         callback()
                     })
                 })

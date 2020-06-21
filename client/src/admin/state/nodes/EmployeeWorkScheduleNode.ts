@@ -78,7 +78,6 @@ export default class EmployeeWorkScheduleNode {
                     const result = employeeWorkSchedule.isUsesDefault()
                         ? state.employeeSchedulesByEmployeeId.get(defaultWorkSchedule.id)!
                         : employeeWorkSchedule
-                    console.log(result)
                     return result
                 },
                 value: null,
@@ -179,6 +178,18 @@ export default class EmployeeWorkScheduleNode {
                 get: (state: Pick<EmployeeScheduleSelectors, "employeeScheduleDeviationsForSelectedSchedule">) =>
                     state.employeeScheduleDeviationsForSelectedSchedule.map(deviation => deviation.toAppointmentModel()),
                 value: [],
+            },
+            defaultEmployeeWorkSchedules: {
+                dependsOn: ["employeeWorkSchedulesList"],
+                get: (state: Pick<EmployeeWorkScheduleState, "employeeWorkSchedulesList">) =>
+                    state.employeeWorkSchedulesList.filter(schedule => schedule.isDefaultSchedule()),
+                value: [],
+            },
+            nonDefaultEmployeeWorkSchedules: {
+                dependsOn: ["employeeWorkSchedulesList"],
+                get: (state: Pick<EmployeeWorkScheduleState, "employeeWorkSchedulesList">) =>
+                    state.employeeWorkSchedulesList.filter(schedule => !schedule.isDefaultSchedule()),
+                value: [],
             }
         }
     }
@@ -204,6 +215,8 @@ export type EmployeeWorkScheduleState = {
 export type EmployeeScheduleSelectors = {
     employeeRecordsById: Map<number, EmployeeRecord>,
     employeeSchedulesByEmployeeId: Map<number, EmployeeWorkSchedule>,
+    defaultEmployeeWorkSchedules: EmployeeWorkSchedule[],
+    nonDefaultEmployeeWorkSchedules: EmployeeWorkSchedule[],
     scheduleForSelectedEmployee: EmployeeWorkSchedule | null,
     employeeScheduleShowDefaultCheckBox: boolean,
     employeeScheduleDisableEditing: boolean,
