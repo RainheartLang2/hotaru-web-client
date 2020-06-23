@@ -5,7 +5,10 @@ import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import EmployeeWorkSchedule, {EmployeeWorkScheduleServerBean} from "../../../common/beans/EmployeeWorkSchedule";
 import {ChangeSet} from "@devexpress/dx-react-scheduler";
 import {DateUtils} from "../../../core/utils/DateUtils";
-import {WorkScheduleDeviationContainer} from "../../../common/beans/WorkScheduleDeviationContainer";
+import {
+    WorkScheduleDeviationContainer,
+    WorkScheduleDeviationContainerServerBean
+} from "../../../common/beans/WorkScheduleDeviationContainer";
 
 export default class EmployeeWorkScheduleActions {
     private controller: EmployeeAppController
@@ -19,8 +22,10 @@ export default class EmployeeWorkScheduleActions {
             method: RemoteMethods.getAllEmployeeWorkSchedules,
             successCallback: (result: any) => {
                 const workSchedulesList = result.workSchedules as EmployeeWorkScheduleServerBean[]
+                const deviations = result.deviations as WorkScheduleDeviationContainerServerBean[]
                 this.controller.setState({
                     employeeWorkSchedulesList: workSchedulesList.map(schedule => EmployeeWorkSchedule.fromServerBean(schedule)),
+                    employeeWorkScheduleDeviationsList: deviations.map(deviation => WorkScheduleDeviationContainer.fromServerBean(deviation))
                 })
                 callback()
             }
@@ -203,8 +208,11 @@ export default class EmployeeWorkScheduleActions {
             method: RemoteMethods.getDateRangeSchedule,
             params: [employeeId, startDate, endDate],
             successCallback: result => {
+                const schedules = result.workSchedules as EmployeeWorkScheduleServerBean[]
+                const deviations = result.deviations as WorkScheduleDeviationContainerServerBean[]
                 this.controller.setState({
-                    employeeWorkSchedulesList: (result as EmployeeWorkScheduleServerBean[]).map(schedule => EmployeeWorkSchedule.fromServerBean(schedule))
+                    employeeWorkSchedulesList: schedules.map(schedule => EmployeeWorkSchedule.fromServerBean(schedule)),
+                    employeeWorkScheduleDeviationsList: deviations.map(deviation => WorkScheduleDeviationContainer.fromServerBean(deviation)),
                 })
                 callback()
             }

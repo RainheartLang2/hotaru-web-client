@@ -23,6 +23,7 @@ import ConnectedSelect from "../../../../core/components/ConnectedSelect/Connect
 import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
 import {DaySchedule} from "../../../../common/beans/DaySchedule";
 import CustomTooltip from "../../../../core/components/customTooltip/CustomTooltip";
+import {DateUtils} from "../../../../core/utils/DateUtils";
 
 var styles = require("./styles.css")
 
@@ -40,7 +41,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
 
     private isDateRangeActive(startDate: Date, endDate: Date): boolean {
         const daySchedule = this.state.employeeSchedule.length > 0
-            ? this.state.employeeSchedule[startDate.getDay()]
+            ? this.state.employeeSchedule[DateUtils.convertSundayBaseToMondayBase(startDate.getDay())]
             : new DaySchedule([])
         return daySchedule.includes(startDate, endDate)
     }

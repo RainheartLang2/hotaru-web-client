@@ -175,8 +175,9 @@ export default class EmployeeWorkScheduleNode {
             },
             employeeScheduleDeviationsAppointments: {
                 dependsOn: ["employeeScheduleDeviationsForSelectedSchedule"],
-                get: (state: Pick<EmployeeScheduleSelectors, "employeeScheduleDeviationsForSelectedSchedule">) =>
-                    state.employeeScheduleDeviationsForSelectedSchedule.map(deviation => deviation.toAppointmentModel()),
+                get: (state: Pick<EmployeeScheduleSelectors, "employeeScheduleDeviationsForSelectedSchedule">) => {
+                    return state.employeeScheduleDeviationsForSelectedSchedule.map(deviation => deviation.toAppointmentModel())
+                },
                 value: [],
             },
             defaultEmployeeWorkSchedules: {

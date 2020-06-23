@@ -190,23 +190,38 @@ export default class ScheduleNode {
                 value: [],
             },
             personalSchedule: {
-                dependsOn: ["pageType", "defaultEmployeeWorkSchedules", "nonDefaultEmployeeWorkSchedules", "schedulePageWeek"],
+                dependsOn: [
+                    "pageType",
+                    "defaultEmployeeWorkSchedules",
+                    "nonDefaultEmployeeWorkSchedules",
+                    "schedulePageWeek",
+                    "employeeWorkScheduleDeviationsList",
+                ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
                     "pageType"
                     | "defaultEmployeeWorkSchedules"
                     | "nonDefaultEmployeeWorkSchedules"
-                    | "schedulePageWeek">) => {
+                    | "schedulePageWeek"
+                    | "employeeWorkScheduleDeviationsList"
+                    >) => {
                     if (state.pageType != PageType.Schedule) {
                         return []
                     }
 
                     const result: DaySchedule[] = []
+                    console.log(state.employeeWorkScheduleDeviationsList)
                     state.schedulePageWeek.forEach(day => {
-                        result.push(WorkScheduleUtils.getDayScheduleForDate(
-                            state.nonDefaultEmployeeWorkSchedules,
-                            state.defaultEmployeeWorkSchedules,
-                            day
-                        ))
+                        let daySchedule = WorkScheduleUtils.getDayScheduleForDateFromDeviations(state.employeeWorkScheduleDeviationsList, day)
+                        console.log(day)
+                        if (!daySchedule) {
+                            console.log("deviation not found")
+                            daySchedule = (WorkScheduleUtils.getDayScheduleForDate(
+                                state.nonDefaultEmployeeWorkSchedules,
+                                state.defaultEmployeeWorkSchedules,
+                                day
+                            ))
+                        }
+                        result.push(daySchedule)
                     })
                     return result
                 },

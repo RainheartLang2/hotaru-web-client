@@ -106,4 +106,13 @@ export namespace DateUtils {
     export function fromDateToTime(date: Date): Time {
         return new Time(date.getHours(), date.getMinutes())
     }
+
+    export function dateIsBetween(date: Date, fromDate?: Date, toDate?: Date) {
+        return (!fromDate || fromDate <= date)
+        && (!toDate || toDate >= date)
+    }
+
+    export function convertSundayBaseToMondayBase(dayNumber: number) {
+        return dayNumber == 0 ? 6 : dayNumber - 1
+    }
 }

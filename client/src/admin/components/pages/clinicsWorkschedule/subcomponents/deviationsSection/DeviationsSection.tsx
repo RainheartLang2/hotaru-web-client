@@ -29,7 +29,7 @@ export default class DeviationsSection extends React.Component<Properties> {
 
     private getDeviationByDate(date: Date): AppointmentModel | null {
         const result = this.props.deviationAppointments.filter(appointment => {
-            return date >= appointment.startDate && date <= appointment.endDate
+            return date >= appointment.startDate && date < appointment.endDate
         })
         return result.length > 0 ? result[0] : null
     }
