@@ -21,8 +21,7 @@ export default class ControlledCheckBox extends React.Component<Properties> {
                         )
                     }
                     labelPlacement="end"
-                >
-                </FormControlLabel>
+                />
             </FormGroup>
         )
     }

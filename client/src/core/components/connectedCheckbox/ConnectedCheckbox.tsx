@@ -46,8 +46,7 @@ export default class ConnectedCheckbox<ApplicationState extends DefaultStateType
                         )
                     }
                     labelPlacement="end"
-                >
-                </FormControlLabel>
+                />
             </FormGroup>
         )
     }

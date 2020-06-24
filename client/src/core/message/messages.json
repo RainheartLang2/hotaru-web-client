@@ -140,6 +140,9 @@
       "dialog.client.petsList.title": "Питомцы",
 
       "panel.pet.title": "Редактирование данных о питомце",
+      "panel.pet.field.name.label": "Кличка",
+      "panel.pet.field.species.label": "Вид",
+
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",
       "dialog.clinic.logo.dropzone.note": "Загрузите логотип клиники",

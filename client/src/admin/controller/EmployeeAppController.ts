@@ -113,7 +113,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     public startApplication(): void {
         this.store.setState({isApplicationLoading: true})
         this.loadLoggedInUser(() => {
-            this.openSchedulePage(() => {
+            this.openClientsPage(() => {
                 this.store.setState({isApplicationLoading: false})
             })
         })
@@ -256,10 +256,11 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
-    public openClientsPage(): void {
+    public openClientsPage(callback: Function = () => {}): void {
         this.openPage(PageType.Clients, (setPageLoad: Function) => {
             this._clientActions.loadPermanentClientsWithPets(() => {
                 setPageLoad()
+                callback()
             })
         })
     }

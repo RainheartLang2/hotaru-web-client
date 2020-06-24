@@ -21,6 +21,7 @@ export default class WorkScheduleTemplate extends React.Component<Properties> {
 
     static defaultProps = {
         disabled: false,
+        tooltipLabel: "",
     }
 
     constructor(props: Properties) {
@@ -176,7 +177,7 @@ type Properties = {
     controller: EmployeeAppController,
     scheduleLength: "week" | number,
     disabled: boolean,
-    disabledTooltipLabel?: ReactNode,
+    disabledTooltipLabel: NonNullable<React.ReactNode>,
     schedule: WorkSchedule,
     onScheduleChange: (day: number, records: ScheduleRecord[]) => void
 }

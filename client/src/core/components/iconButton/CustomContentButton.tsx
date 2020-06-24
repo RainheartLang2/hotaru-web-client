@@ -8,6 +8,7 @@ export default class CustomContentButton extends React.Component<Properties> {
 
     static defaultProps = {
         disabled: false,
+        tooltipLabel: "",
     }
 
     private getContentStyles(): string {
@@ -39,6 +40,6 @@ export default class CustomContentButton extends React.Component<Properties> {
 
 type Properties = {
     onClick: Function,
-    tooltipContent: ReactNode,
+    tooltipContent: NonNullable<React.ReactNode>,
     disabled: boolean,
 }

@@ -40,7 +40,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
         //TODO: implement
     }
 
-    private getTooltipText(): React.ReactNode {
+    private getTooltipText(): NonNullable<React.ReactNode> {
         return (
             <>
                 {this.state.field.errors.map((errorText, index) => {

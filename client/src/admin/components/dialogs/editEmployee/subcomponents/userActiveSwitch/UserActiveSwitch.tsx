@@ -23,8 +23,7 @@ export default class UserActiveSwitch extends React.Component<Properties> {
                     </div>
                 }
                 labelPlacement="start"
-            >
-            </FormControlLabel>
+            />
         )
     }
 }

@@ -23,8 +23,7 @@ export default class LabeledSwitch extends React.Component<Properties> {
                     </div>
                 }
                 labelPlacement="start"
-            >
-            </FormControlLabel>
+            />
         )
     }
 }

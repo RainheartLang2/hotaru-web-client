@@ -6,6 +6,10 @@ var styles = require("./styles.css");
 
 export default class DisablingMoire extends React.Component<Properties> {
 
+    static defaultProps = {
+        tooltipLabel: "",
+    }
+
     render() {
         return this.props.active &&
             <Tooltip
@@ -19,5 +23,5 @@ export default class DisablingMoire extends React.Component<Properties> {
 
 type Properties = {
     active: boolean
-    tooltipLabel?: ReactNode;
+    tooltipLabel: NonNullable<React.ReactNode>;
 }

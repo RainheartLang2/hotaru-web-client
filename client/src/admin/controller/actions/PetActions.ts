@@ -9,8 +9,10 @@ export default class PetActions {
     }
 
     public openAddPetForm(callback: Function = () => {}) {
-        this.controller.setState({
-            rightPanelType: RightPanelType.Pet,
+        this.controller.speciesActions.loadList([], () => {
+            this.controller.setState({
+                rightPanelType: RightPanelType.Pet,
+            })
         })
     }
 }

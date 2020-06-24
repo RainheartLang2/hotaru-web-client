@@ -2,6 +2,7 @@ import * as React from "react";
 import {Drawer} from "@material-ui/core";
 import EmployeeAppController from "../controller/EmployeeAppController";
 import {RightPanelType} from "../state/enum/RightPanelType";
+import EditPetForm from "../components/panels/petPanel/EditPetForm";
 
 var styles = require("./styles.css");
 
@@ -14,16 +15,16 @@ export default class EmployeeRightPanelContainer extends React.Component<Propert
     }
 
     render() {
-        console.log("renderContainer")
-        console.log(this.state.panelType == RightPanelType.Pet)
+        const panelType = this.state.panelType
         return (
             <>
                 <Drawer
-                    open={this.state.panelType == RightPanelType.Pet}
+                    open={panelType != RightPanelType.None}
                     onClose={() => this.props.controller.closeCurrentRightPanel()}
                     anchor={"right"}
                 >
                     <div className={styles.drawerContent}>
+                        {panelType == RightPanelType.Pet && <EditPetForm controller={this.props.controller}/>}
                     </div>
                 </Drawer>
             </>
