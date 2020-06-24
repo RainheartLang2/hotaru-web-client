@@ -136,7 +136,10 @@
       "dialog.client.field.address.label": "Адрес",
       "dialog.client.field.mail.label": "E-mail",
       "dialog.client.field.nameOrPhone.error": "Для клиента необходимо указать имя или телефон",
+      "dialog.client.addPet.button.tooltip": "Добавить питомца",
+      "dialog.client.petsList.title": "Питомцы",
 
+      "panel.pet.title": "Редактирование данных о питомце",
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",
       "dialog.clinic.logo.dropzone.note": "Загрузите логотип клиники",
@@ -147,7 +150,6 @@
       "dialog.clinic.email.label": "E-mail",
       "dialog.clinic.active.label": "Активна",
       "dialog.clinic.notActive.label": "Не активна",
-
       "page.userList.title": "Сотрудники",
       "dialog.employee.create.label": "Создание нового сотрудника",
       "dialog.employee.edit.label": "Редактирование сотрудника",

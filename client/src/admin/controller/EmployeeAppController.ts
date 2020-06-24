@@ -16,6 +16,8 @@ import ClientActions from "./actions/ClientActions";
 import DictionariesActions from "./actions/DictionariesActions";
 import ClinicsWorkScheduleActions from "./actions/ClinicsWorkScheduleActions";
 import EmployeeWorkScheduleActions from "./actions/EmployeeWorkScheduleActions";
+import PetActions from "./actions/PetActions";
+import {RightPanelType} from "../state/enum/RightPanelType";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -28,6 +30,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _dictionariesActions: DictionariesActions
     private _clinicsWorksScheduleActions: ClinicsWorkScheduleActions
     private _employeeScheduleActions: EmployeeWorkScheduleActions
+    private _petActions: PetActions
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
@@ -41,6 +44,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._dictionariesActions = new DictionariesActions(this)
         this._clinicsWorksScheduleActions = new ClinicsWorkScheduleActions(this)
         this._employeeScheduleActions = new EmployeeWorkScheduleActions(this)
+        this._petActions = new PetActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -86,6 +90,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public get dictionariesActions(): DictionariesActions {
         return this._dictionariesActions
+    }
+
+    public get petActions(): PetActions {
+        return this._petActions
     }
 
     public get cacheManager(): CacheManager {
@@ -275,6 +283,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public closeCurrentDialog(): void {
         this.store.setState({dialogType: DialogType.None})
+    }
+
+    public closeCurrentRightPanel(): void {
+        this.store.setState({rightPanelType: RightPanelType.None})
     }
 
     handleUnauthorizedUserSituation(): void {

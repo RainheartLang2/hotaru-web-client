@@ -209,12 +209,9 @@ export default class ScheduleNode {
                     }
 
                     const result: DaySchedule[] = []
-                    console.log(state.employeeWorkScheduleDeviationsList)
                     state.schedulePageWeek.forEach(day => {
                         let daySchedule = WorkScheduleUtils.getDayScheduleForDateFromDeviations(state.employeeWorkScheduleDeviationsList, day)
-                        console.log(day)
                         if (!daySchedule) {
-                            console.log("deviation not found")
                             daySchedule = (WorkScheduleUtils.getDayScheduleForDate(
                                 state.nonDefaultEmployeeWorkSchedules,
                                 state.defaultEmployeeWorkSchedules,

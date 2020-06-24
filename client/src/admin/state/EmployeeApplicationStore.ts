@@ -19,10 +19,13 @@ import ClinicsWorkScheduleNode, {
     ClinicsWorkScheduleSelectors,
     ClinicsWorkScheduleState
 } from "./nodes/ClinicsWorkScheduleNode";
-import mergeTypes = CommonUtils.mergeTypes;
 import {EmployeeManagementMenuItemType} from "./enum/EmployeeManagementMenuItemType";
-import EmployeeWorkSchedule from "../../common/beans/EmployeeWorkSchedule";
-import EmployeeWorkScheduleNode, {EmployeeScheduleSelectors, EmployeeWorkScheduleState} from "./nodes/EmployeeWorkScheduleNode";
+import EmployeeWorkScheduleNode, {
+    EmployeeScheduleSelectors,
+    EmployeeWorkScheduleState
+} from "./nodes/EmployeeWorkScheduleNode";
+import {RightPanelType} from "./enum/RightPanelType";
+import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -72,6 +75,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             loggedInEmployee: null,
             pageType: PageType.None,
             dialogType: DialogType.None,
+            rightPanelType: RightPanelType.None,
             globalError: null,
         }
     }
@@ -202,6 +206,7 @@ type CommonEmployeeState = {
     loggedInEmployee: Employee | null,
     pageType: PageType,
     dialogType: DialogType,
+    rightPanelType: RightPanelType,
     globalError: string | null,
 }
 

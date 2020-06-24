@@ -6,6 +6,7 @@ import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter"
 import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
 import ErrorArea from "../../../../common/components/errorArea/ErrorArea";
 import ClientForm from "../../../../common/components/clientForm/ClientForm";
+import PetsList from "./subcomponents/PetsList";
 
 var styles = require("./styles.css")
 
@@ -36,7 +37,6 @@ export default class ClientDialog extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log(this.state.hasErrors)
         return (
             <>
                 <DialogTitle>
@@ -55,8 +55,8 @@ export default class ClientDialog extends React.Component<Properties, State> {
                             />
                         </div>
                         <div className={styles.column}>
+                            <PetsList controller={this.props.controller}/>
                         </div>
-
                     </div>
                     <DialogFooter
                         controller={this.props.controller}

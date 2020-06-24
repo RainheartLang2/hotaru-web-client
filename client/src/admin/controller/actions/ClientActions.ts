@@ -74,16 +74,23 @@ export default class ClientActions {
     }
 
     public openEditDialog(client: Client): void {
-        this.controller.setState({
-            dialogType: DialogType.EditClient,
-            editedClientId: client.id,
-            editedClientName: client.firstName,
-            editedClientPhone: client.phone,
-            editedClientAddress: client.address,
-            editedClientMail: client.email,
+        fetchUserZoneRpc({
+            method: RemoteMethods.getPetsForClient,
+            params: [client.id!],
+            successCallback: result => {
+                this.controller.setState({
+                    dialogType: DialogType.EditClient,
+                    petList: result,
+                    editedClientId: client.id,
+                    editedClientName: client.firstName,
+                    editedClientPhone: client.phone,
+                    editedClientAddress: client.address,
+                    editedClientMail: client.email,
+                })
+                this.controller.toggleFieldValidation("editedClientNameField", false)
+                this.controller.toggleFieldValidation("editedClientPhoneField", false)
+            }
         })
-        this.controller.toggleFieldValidation("editedClientNameField", false)
-        this.controller.toggleFieldValidation("editedClientPhoneField", false)
     }
 
     public buildClientByFields(type: ClientType = ClientType.Permanent): Client {

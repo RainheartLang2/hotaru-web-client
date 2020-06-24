@@ -23,3 +23,34 @@
     display: flex;
     justify-content: center;
 }
+
+.petsList {
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    padding-top: 10px;
+    height: 270px;
+}
+
+.petsListHeader {
+    display: flex;
+    padding-left: 15px;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding-right: 10px;
+}
+
+.petsListTitle {
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 4px;
+}
+
+.petsListContent {
+    background-color: #e2e2e2;
+    height: 100%;
+}
+
+.petItem {
+    background-color: white;
+    border-bottom: 1px solid #e2e2e2;
+}

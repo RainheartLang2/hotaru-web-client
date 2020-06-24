@@ -18,6 +18,7 @@ import {AdminSecondLevelNavigationContainer} from "./components/secondLevelNavig
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
 import EmployeeAppController from "./controller/EmployeeAppController";
 import EmployeeLeftMenuContainer from "./containers/EmployeeLeftMenuContainer";
+import EmployeeRightPanelContainer from "./containers/EmployeeRightPanelContainer";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
@@ -64,6 +65,7 @@ export default class AdminApp extends React.Component<Properties, State> {
                 </AppContent>
                 <AdminDialogsContainer controller={this.controller}/>
                 <LoadingMoire visible={this.state.isLoading} fading={true}/>
+                <EmployeeRightPanelContainer controller={this.controller}/>
                 <ErrorModal controller={this.controller}/>
                 <Footer/>
             </MuiThemeProvider>
