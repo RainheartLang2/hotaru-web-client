@@ -4,7 +4,7 @@ import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {DialogType} from "../enum/DialogType";
 import {AppointmentModel} from "@devexpress/dx-react-scheduler";
-import {ConfigureDialogType} from "../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../core/types/ConfigureType";
 import {Employee} from "../../../common/beans/Employee";
 import Species from "../../../common/beans/Species";
 import Breed from "../../../common/beans/Breed";
@@ -266,7 +266,7 @@ export type ScheduleSelectors = {
     appointmentsListById: Map<number, MedicalAppointment>,
     appointmentsForSelectedMedic: MedicalAppointment[],
     appointmentsModelList: AppointmentModel[],
-    appointmentDialogMode: ConfigureDialogType,
+    appointmentDialogMode: ConfigureType,
     editedClientPetSpecies: Map<number, Species>,
     editedClientPetBreeds: Map<number, Breed>,
     editedAppointmentStartTimeField: Field,

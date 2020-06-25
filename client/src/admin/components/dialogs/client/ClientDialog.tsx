@@ -3,10 +3,11 @@ import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
-import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../../core/types/ConfigureType";
 import ErrorArea from "../../../../common/components/errorArea/ErrorArea";
 import ClientForm from "../../../../common/components/clientForm/ClientForm";
 import PetsList from "./subcomponents/PetsList";
+import DisablingMoire from "../../../../core/components/disablingMoire/DisablingMoire";
 
 var styles = require("./styles.css")
 
@@ -55,7 +56,13 @@ export default class ClientDialog extends React.Component<Properties, State> {
                             />
                         </div>
                         <div className={styles.column}>
-                            <PetsList controller={this.props.controller}/>
+                            <div className={styles.petsListWrapper}>
+                                <PetsList controller={this.props.controller}/>
+                                <DisablingMoire
+                                    active={this.state.mode != "edit"}
+                                    tooltipLabel={<Message messageKey={"dialog.client.petsList.disabled.tooltip"}/>}
+                                />
+                            </div>
                         </div>
                     </div>
                     <DialogFooter
@@ -83,7 +90,7 @@ type Properties = {
 }
 
 type State = {
-    mode: ConfigureDialogType,
+    mode: ConfigureType,
     hasErrors: boolean,
     formErrorMessage: string,
 }

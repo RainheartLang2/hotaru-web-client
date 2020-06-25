@@ -6,6 +6,9 @@ import CustomContentButton from "../../../../../core/components/iconButton/Custo
 import AddIcon from '@material-ui/icons/AddSharp';
 import {Message} from "../../../../../core/components/Message";
 import CustomLink from "../../../../../core/components/customLink/CustomLink";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import DeleteIcon from '@material-ui/icons/DeleteSharp';
+import Species from "../../../../../common/beans/Species";
 
 var styles = require("../styles.css")
 
@@ -15,10 +18,19 @@ export default class PetsList extends React.Component<Properties, State> {
         super(props)
         this.state = {
             pets: [],
+            species: new Map(),
         }
     }
 
+    private getListItemLabel(pet: Pet): string {
+        console.log(pet)
+        const species = this.state.species.get(pet.speciesId!)
+        return (pet.name ? (pet.name + " ") : "")
+                + ("(" + species!.name + ")")
+    }
+
     render() {
+        console.log(this.state.species)
         return (
             <div className={styles.petsList}>
                 <div className={styles.petsListHeader}>
@@ -36,19 +48,24 @@ export default class PetsList extends React.Component<Properties, State> {
                 </div>
                 <div className={styles.petsListContent}>
                     <List>
-                        <ListItem className={styles.petItem}>
-                            <ListItemText primary={<CustomLink onClick={() => {}}>Пример</CustomLink>}/>
-                        </ListItem>
                         {this.state.pets.map(pet => {
                             return (
                                 <ListItem className={styles.petItem}>
                                     <ListItemText primary={
                                         <CustomLink
-                                            onClick={() => {}}
+                                            onClick={() => this.props.controller.petActions.openEditPetForm(pet)}
                                         >
-                                            {pet.name}
+                                            {this.getListItemLabel(pet)}
                                         </CustomLink>
                                     }/>
+                                    <ListItemSecondaryAction>
+                                        <CustomContentButton
+                                            onClick={() => this.props.controller.petActions.deletePet(pet.id!)}
+                                            tooltipContent={<Message messageKey={"dialog.client.petsList.delete.tooltip.label"}/>}
+                                        >
+                                            <DeleteIcon/>
+                                        </CustomContentButton>
+                                    </ListItemSecondaryAction>
                                 </ListItem>
                             )
                         })}
@@ -60,7 +77,8 @@ export default class PetsList extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            petsForSelectedClient: "pets"
+            petsForSelectedClient: "pets",
+            speciesListById: "species",
         })
     }
 
@@ -75,4 +93,5 @@ type Properties = {
 
 type State = {
     pets: Pet[]
+    species: Map<number, Species>
 }

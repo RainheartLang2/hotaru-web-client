@@ -4,6 +4,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 export default class CustomTooltip extends React.Component<Properties> {
 
+    static defaultProps = {
+        active: true,
+    }
+
     render() {
         return this.props.active
                 ? (<Tooltip

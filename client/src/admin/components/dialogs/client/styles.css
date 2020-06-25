@@ -24,11 +24,14 @@
     justify-content: center;
 }
 
+.petsListWrapper {
+    position: relative;
+}
+
 .petsList {
     border: 1px solid #e2e2e2;
     border-radius: 10px;
     padding-top: 10px;
-    height: 270px;
 }
 
 .petsListHeader {
@@ -47,7 +50,9 @@
 
 .petsListContent {
     background-color: #e2e2e2;
-    height: 100%;
+    height: 270px;
+    overflow-y: auto;
+    border-radius: 0 0 10px 10px
 }
 
 .petItem {

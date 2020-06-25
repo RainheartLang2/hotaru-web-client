@@ -82,6 +82,12 @@ export const vetTheme: Theme = createMuiTheme({
 
                 }
             }
+        },
+        MuiList: {
+            padding: {
+                paddingTop: "0",
+                paddingBottom: "0",
+            }
         }
     }
 });

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
-import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../../core/types/ConfigureType";
 import ClinicLeftColumn from "./subcomponents/leftColumn/ClinicLeftColumn";
 import ClinicRightColumn from "./subcomponents/rightColumn/ClinicRightColumn";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
@@ -91,7 +91,7 @@ type Properties = {
 }
 
 type State = {
-    mode: ConfigureDialogType,
+    mode: ConfigureType,
     isActive: boolean,
     hasErrors: boolean,
 }

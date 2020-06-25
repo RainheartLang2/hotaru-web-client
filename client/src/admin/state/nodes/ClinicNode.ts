@@ -7,7 +7,7 @@ import {Field} from "../../../core/mvc/store/Field";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
-import {ConfigureDialogType} from "../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../core/types/ConfigureType";
 import {DialogType} from "../enum/DialogType";
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 
@@ -104,7 +104,7 @@ export type ClinicPageState = {
 export type ClinicSelectors = {
     clinicListById: Map<number, Clinic>,
     clinicListByIdWithMock: Map<number, Clinic>,
-    clinicDialogType: ConfigureDialogType,
+    clinicDialogType: ConfigureType,
     editedClinicNameField: Field,
     editedClinicPhoneField: Field,
     editedClinicEmailField: Field,

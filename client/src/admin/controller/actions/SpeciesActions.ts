@@ -44,16 +44,7 @@ export default class SpeciesActions {
     }
 
     public loadList(params: any[] = [], callback: Function = () => {}): void {
-        fetchUserZoneRpc({
-            method: RemoteMethods.getAllSpecies,
-            params: params,
-            successCallback: result => {
-                this.controller.setState({
-                    speciesList: result
-                })
-                callback(result)
-            },
-        })
+        this.controller.cacheManager.speciesCache.execute(callback)
     }
 
     public submitCreateItem(callback: Function = () => {}): void {

@@ -257,10 +257,22 @@ export default class EmployeeAppController extends ApplicationController<Employe
     }
 
     public openClientsPage(callback: Function = () => {}): void {
-        this.openPage(PageType.Clients, (setPageLoad: Function) => {
-            this._clientActions.loadPermanentClientsWithPets(() => {
-                setPageLoad()
-                callback()
+        this.loadInitData(() => {
+            this.openPage(PageType.Clients, (setPageLoad: Function) => {
+                this._clientActions.loadPermanentClientsWithPets(() => {
+                    setPageLoad()
+                    callback()
+                })
+            })
+        })
+    }
+
+    public loadInitData(callback: Function = () => {}) {
+        this.speciesActions.loadList([], () => {
+            this.breedActions.loadList([], () => {
+                this.dictionariesActions.loadAnimalColorsList(() => {
+                    callback()
+                })
             })
         })
     }

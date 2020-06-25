@@ -36,16 +36,7 @@ export default class BreedActions {
     }
 
     public loadList(params: any[] = [], callback: Function = () => {}): void {
-        fetchUserZoneRpc({
-            method: RemoteMethods.getAllBreeds,
-            params: params,
-            successCallback: result => {
-                this.controller.setState({
-                    breedsList: result
-                })
-                callback(result)
-            },
-        })
+        this.controller.cacheManager.breedCache.execute(callback)
     }
 
     public submitCreateItem(callback: Function = () => {}): void {

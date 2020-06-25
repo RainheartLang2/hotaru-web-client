@@ -26,6 +26,7 @@ import EmployeeWorkScheduleNode, {
 } from "./nodes/EmployeeWorkScheduleNode";
 import {RightPanelType} from "./enum/RightPanelType";
 import mergeTypes = CommonUtils.mergeTypes;
+import {Sex} from "../../common/beans/enums/Sex";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -67,6 +68,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
 
 
     private createCommonDefaultState(): CommonEmployeeState {
+
         return {
             isApplicationLoading: true,
             isPageLoading: false,
@@ -77,6 +79,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             dialogType: DialogType.None,
             rightPanelType: RightPanelType.None,
             globalError: null,
+            sexesMapForSelect: Sex.createMapForSelect(),
         }
     }
 
@@ -208,6 +211,7 @@ type CommonEmployeeState = {
     dialogType: DialogType,
     rightPanelType: RightPanelType,
     globalError: string | null,
+    sexesMapForSelect: Map<number, Sex | null>
 }
 
 export type EmployeeAppState = DefaultStateType

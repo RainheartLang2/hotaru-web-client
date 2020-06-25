@@ -59,7 +59,7 @@ export default class DictionariesActions {
         return result
     }
 
-    private loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function): void {
+    public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function): void {
         fetchUserZoneRpc({
             method,
             successCallback: result => {
@@ -88,7 +88,7 @@ export default class DictionariesActions {
     }
 
     public loadAnimalColorsList(callback: Function = () => {}): void {
-        this.loadList(RemoteMethods.getAllAnimalColors, "animalColorsList", callback)
+        this.controller.cacheManager.animalColorCache.execute(callback)
     }
 
     private submitCreateItem<Type extends Identifiable>(item: Type,

@@ -1,4 +1,5 @@
 export enum RightPanelType {
     None,
-    Pet,
+    AddPet,
+    EditPet,
 }

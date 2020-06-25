@@ -23,6 +23,8 @@
       "common.employee.name": "Имя",
       "common.wholeDayLong": "Весь день",
 
+      "common.required.field.tooltip": "Поле обязательно для заполнения",
+
       "common.monday.short": "пн",
       "common.tuesday.short": "вт",
       "common.wednesday.short": "ср",
@@ -45,6 +47,10 @@
       "common.days.12": "12 дней",
       "common.days.13": "13 дней",
       "common.days.14": "14 дней",
+
+      "common.sex.select.none": "Не указан",
+      "common.sex.select.male": "М",
+      "common.sex.select.female": "Ж",
 
       "common.weekly": "Еженедельно",
 
@@ -136,12 +142,19 @@
       "dialog.client.field.address.label": "Адрес",
       "dialog.client.field.mail.label": "E-mail",
       "dialog.client.field.nameOrPhone.error": "Для клиента необходимо указать имя или телефон",
+      "dialog.client.petsList.disabled.tooltip": "Добавление питомцев возможно только после создания клиента",
       "dialog.client.addPet.button.tooltip": "Добавить питомца",
       "dialog.client.petsList.title": "Питомцы",
+      "dialog.client.petsList.delete.tooltip.label": "Удалить питомца",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",
       "panel.pet.field.species.label": "Вид",
+      "panel.pet.field.breed.label": "Порода",
+      "panel.pet.field.color.label": "Окрас",
+      "panel.pet.field.sex.label": "Пол",
+      "panel.pet.field.birthDate.label": "Дата рождения",
+      "panel.pet.field.note.label": "Заметки",
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",

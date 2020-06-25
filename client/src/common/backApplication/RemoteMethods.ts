@@ -111,6 +111,9 @@ export namespace RemoteMethods {
     export const getDateRangeSchedule = new RemoteMethod(employeeWorkScheduleService, new ServerAppAction("getDateRangeSchedule"))
 
     export const getPetsForClient = new RemoteMethod(petService, new ServerAppAction("getForClient"))
+    export const addPet = new RemoteMethod(petService, addAction)
+    export const updatePet = new RemoteMethod(petService, editAction)
+    export const deletePet = new RemoteMethod(petService, deleteAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

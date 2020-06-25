@@ -1,7 +1,7 @@
 import * as React from "react";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
-import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../../core/types/ConfigureType";
 import LeftColumn from "./subcomponents/leftColumn/LeftColumn";
 import RightColumn from "./subcomponents/rightColumn/RightColumn";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
@@ -105,7 +105,7 @@ type Properties = {
 }
 
 type State = {
-    mode: ConfigureDialogType,
+    mode: ConfigureType,
     isActive: boolean,
     hasErrors: boolean,
 }

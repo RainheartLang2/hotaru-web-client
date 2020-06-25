@@ -4,6 +4,7 @@
     font-weight: 500;
     line-height: 1.6;
     letter-spacing: 0.0075em;
+    margin-top: 10px;
     padding-bottom: 20px;
     text-align: center;
 }
@@ -12,11 +13,12 @@
     display: flex;
     flex-direction: column;
     justify-items: center;
+    padding-left: 10px;
 }
 
 .row {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
     width: 200px;
 }

@@ -1,1 +1,0 @@
-export type ConfigureDialogType = "create" | "edit" | "profile" | "none"

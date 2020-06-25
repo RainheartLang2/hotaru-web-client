@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ConfigureDialogType} from "../../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../../core/types/ConfigureType";
 import {DialogContent, DialogTitle} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
@@ -141,7 +141,7 @@ type Properties = {
 }
 
 type State = {
-    mode: ConfigureDialogType,
+    mode: ConfigureType,
     hasErrors: boolean,
     showClientInfoForm: boolean,
     formErrorMessage: string,

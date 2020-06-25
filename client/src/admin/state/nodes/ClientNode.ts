@@ -4,7 +4,7 @@ import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {Client} from "../../../common/beans/Client";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {ClientType} from "../../../common/beans/enums/ClientType";
-import {ConfigureDialogType} from "../../../core/types/ConfigureDialogType";
+import {ConfigureType} from "../../../core/types/ConfigureType";
 import {DialogType} from "../enum/DialogType";
 import {Field} from "../../../core/mvc/store/Field";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
@@ -135,7 +135,7 @@ export type ClientState = {
 export type ClientSelectors = {
     clientsListById: Map<number, Client>,
     permanentClients: Client[],
-    clientDialogType: ConfigureDialogType,
+    clientDialogType: ConfigureType,
     editedClientNameField: Field,
     editedClientPhoneField: Field,
     editedClientAddressField: Field,

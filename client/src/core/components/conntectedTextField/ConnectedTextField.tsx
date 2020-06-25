@@ -206,7 +206,7 @@ type Properties<StateType extends DefaultStateType, DerivationType, StoreType ex
     mask?: string,
     rows?: number,
     defaultValue?: string,
-    type?: "text" | "password" | "time",
+    type?: "text" | "password" | "time" | "date",
     variant?: "standard" | "filled" | "outlined"
 }
 

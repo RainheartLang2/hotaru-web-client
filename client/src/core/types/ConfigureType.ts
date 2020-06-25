@@ -1,0 +1,1 @@
+export type ConfigureType = "create" | "edit" | "profile" | "none"

@@ -24,7 +24,7 @@ export default class EmployeeRightPanelContainer extends React.Component<Propert
                     anchor={"right"}
                 >
                     <div className={styles.drawerContent}>
-                        {panelType == RightPanelType.Pet && <EditPetForm controller={this.props.controller}/>}
+                        {(panelType == RightPanelType.AddPet || panelType == RightPanelType.EditPet) && <EditPetForm controller={this.props.controller}/>}
                     </div>
                 </Drawer>
             </>
