@@ -18,6 +18,7 @@ import ClinicsWorkScheduleActions from "./actions/ClinicsWorkScheduleActions";
 import EmployeeWorkScheduleActions from "./actions/EmployeeWorkScheduleActions";
 import PetActions from "./actions/PetActions";
 import {RightPanelType} from "../state/enum/RightPanelType";
+import PlannedCallActions from "./actions/PlannedCallActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -31,6 +32,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _clinicsWorksScheduleActions: ClinicsWorkScheduleActions
     private _employeeScheduleActions: EmployeeWorkScheduleActions
     private _petActions: PetActions
+    private _plannedCallActions: PlannedCallActions
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
@@ -45,6 +47,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._clinicsWorksScheduleActions = new ClinicsWorkScheduleActions(this)
         this._employeeScheduleActions = new EmployeeWorkScheduleActions(this)
         this._petActions = new PetActions(this)
+        this._plannedCallActions = new PlannedCallActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -94,6 +97,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public get petActions(): PetActions {
         return this._petActions
+    }
+
+    get plannedCallActions(): PlannedCallActions {
+        return this._plannedCallActions;
     }
 
     public get cacheManager(): CacheManager {
@@ -257,7 +264,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     }
 
     public openClientsPage(callback: Function = () => {}): void {
-        this.loadInitData(() => {
+        this.loadClientsInitData(() => {
             this.openPage(PageType.Clients, (setPageLoad: Function) => {
                 this._clientActions.loadPermanentClientsWithPets(() => {
                     setPageLoad()
@@ -267,11 +274,26 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
-    public loadInitData(callback: Function = () => {}) {
+    public loadClientsInitData(callback: Function = () => {}) {
         this.speciesActions.loadList([], () => {
             this.breedActions.loadList([], () => {
                 this.dictionariesActions.loadAnimalColorsList(() => {
                     callback()
+                })
+            })
+        })
+    }
+
+    public openCallsPage(callback: Function = () => {}): void {
+        this.openPage(PageType.PlannedCalls, (setPageLoad: Function) => {
+            this.clinicActions.loadClinicList(() => {
+                this.employeeActions.loadUsersList(() => {
+                    this.clientActions.loadPermanentClientsWithPets(() => {
+                        this.plannedCallActions.loadList(() => {
+                            setPageLoad()
+                            callback()
+                        })
+                    })
                 })
             })
         })

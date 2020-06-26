@@ -27,6 +27,8 @@ import EmployeeWorkScheduleNode, {
 import {RightPanelType} from "./enum/RightPanelType";
 import mergeTypes = CommonUtils.mergeTypes;
 import {Sex} from "../../common/beans/enums/Sex";
+import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/PlannedCallNode";
+import PlannedCall from "../../common/beans/PlannedCall";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -42,6 +44,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private dictionariesNode!: DictionaryNode
     private clinicsWorkScheduleNode!: ClinicsWorkScheduleNode
     private employeesWorkScheduleNode!: EmployeeWorkScheduleNode
+    private plannedCallsNode!: PlannedCallNode
 
     constructor() {
         super()
@@ -56,6 +59,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.dictionariesNode = new DictionaryNode(friend)
         this.clinicsWorkScheduleNode = new ClinicsWorkScheduleNode(friend)
         this.employeesWorkScheduleNode = new EmployeeWorkScheduleNode(friend)
+        this.plannedCallsNode = new PlannedCallNode(friend)
         this.initialize()
     }
 
@@ -126,6 +130,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.dictionariesNode.getDefaultState())
         state = mergeTypes(state, this.clinicsWorkScheduleNode.getDefaultState())
         state = mergeTypes(state, this.employeesWorkScheduleNode.getDefaultState())
+        state = mergeTypes(state, this.plannedCallsNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -140,6 +145,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.dictionariesNode.getSelectors())
         selectors = mergeTypes(selectors, this.clinicsWorkScheduleNode.getDefaultSelectors())
         selectors = mergeTypes(selectors, this.employeesWorkScheduleNode.getDefaultSelectors())
+        selectors = mergeTypes(selectors, this.plannedCallsNode.getSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -153,6 +159,9 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
                 return NavigationMenuItemType.SettingsMenu
             case PageType.Clients:
                 return NavigationMenuItemType.ClientsList
+            case PageType.PlannedCalls:
+                return NavigationMenuItemType.Calls
+
             default: return NavigationMenuItemType.None
         }
     }
@@ -226,6 +235,7 @@ export type EmployeeAppState = DefaultStateType
     & DictionariesPagesState
     & ClinicsWorkScheduleState
     & EmployeeWorkScheduleState
+    & PlannedCallState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -246,3 +256,4 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & DictionariesPageSelectors
     & ClinicsWorkScheduleSelectors
     & EmployeeScheduleSelectors
+    & PlannedCallSelectors

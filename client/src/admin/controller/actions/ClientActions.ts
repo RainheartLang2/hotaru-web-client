@@ -137,7 +137,7 @@ export default class ClientActions {
             params: [client],
             successCallback: result => {
                 this.controller.setState({
-                    clientList: CollectionUtils.updateArray(this.controller.state.clientsList, client, client => client.id)
+                    clinicList: CollectionUtils.updateArray(this.controller.state.clientsList, client, client => client.id)
                 })
                 this.controller.closeCurrentDialog()
                 this.controller.setDialogButtonLoading(false)

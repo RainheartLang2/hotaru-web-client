@@ -62,6 +62,7 @@
       "navigationMenu.schedule.title": "Расписание",
       "navigationMenu.settings.title": "Настройки",
       "navigationMenu.clients.title": "Клиенты",
+      "navigationMenu.calls.title": "Звонки",
       "navigationMenu.settingsIcom.tooltip.label": "Настройки",
       "navigationMenu.settings.dialog.global": "Основные настройки",
       "navigationMenu.settings.dialog.locale": "Локализация",
@@ -116,6 +117,7 @@
       "page.clinicsWorkSchedule.defaultWorkSchedule.disable.tooltip.label": "Нельзя редактировать график работы, если для клиники указано использование графика по-умолчанию",
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
+      "page.plannedCalls.title": "Прозвоны",
 
       "page.employeesWorkSchedule.title": "График работы сотрудника",
       "page.employeesWorkSchedule.defaultWorkSchedule.name": "График по-умолчанию",
@@ -146,6 +148,13 @@
       "dialog.client.addPet.button.tooltip": "Добавить питомца",
       "dialog.client.petsList.title": "Питомцы",
       "dialog.client.petsList.delete.tooltip.label": "Удалить питомца",
+
+      "dialog.plannedCall.create.title": "Создание нового прозвона",
+      "dialog.plannedCall.edit.title": "Редактирование прозвона",
+      "dialog.plannedCall.clinic.field.label": "Клиника",
+      "dialog.plannedCall.doctor.field.label": "Доктор",
+      "dialog.plannedCall.client.field.label": "Клиент",
+      "dialog.plannedCall.pet.field.label": "Питомец",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

@@ -12,5 +12,6 @@ export enum PageType {
     AnimalColors,
     ClinicsWorkschedule,
     EmployeesWorkSchedule,
+    PlannedCalls,
     None,
 }

@@ -72,7 +72,7 @@ export default class ClinicActions {
             successCallback: (result) => {
                 clinic.id = +result
                 this.controller.setState({
-                    clientList: [...this.controller.state.clientList, clinic]
+                    clinicList: [...this.controller.state.clinicList, clinic]
                 })
                 this.controller.closeCurrentDialog()
                 this.controller.setDialogButtonLoading(false)
@@ -89,7 +89,7 @@ export default class ClinicActions {
             params: [clinic],
             successCallback: result => {
                 this.controller.setState({
-                    clientList: CollectionUtils.updateArray(this.controller.state.clientList, clinic, clinic => clinic.id)
+                    clinicList: CollectionUtils.updateArray(this.controller.state.clinicList, clinic, clinic => clinic.id)
                 })
                 this.controller.closeCurrentDialog()
                 this.controller.setDialogButtonLoading(false)
@@ -111,7 +111,7 @@ export default class ClinicActions {
             method: RemoteMethods.deleteClinic,
             params: [id],
             successCallback: (result) => this.controller.setState({
-                clientList: this.controller.state.clientList.filter(clinic => clinic.id != id)
+                clinicList: this.controller.state.clinicList.filter(clinic => clinic.id != id)
             }),
         })
     }

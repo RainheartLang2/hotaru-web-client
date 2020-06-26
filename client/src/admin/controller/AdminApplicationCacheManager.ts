@@ -55,7 +55,7 @@ export default class CacheManager {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllClinics,
             successCallback: result => {
-                this.store.setState({clientList: result})
+                this.store.setState({clinicList: result})
                 callback()
             },
         })

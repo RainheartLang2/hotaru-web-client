@@ -14,7 +14,7 @@ export default class PetActions {
     }
 
     public openAddPetForm(callback: Function = () => {}) {
-        this.controller.loadInitData(() => {
+        this.controller.loadClientsInitData(() => {
             this.controller.setState({
                 rightPanelType: RightPanelType.AddPet,
                 editedPetId: undefined,
@@ -31,7 +31,7 @@ export default class PetActions {
     }
 
     public openEditPetForm(pet: Pet, callback: Function = () => {}) {
-        this.controller.loadInitData(() => {
+        this.controller.loadClientsInitData(() => {
             const breed = pet.breedId ? this.controller.state.breedsListById.get(pet.breedId) : null
             const species = pet.speciesId ? this.controller.state.speciesListById.get(pet.speciesId!) : null
             this.controller.setState({

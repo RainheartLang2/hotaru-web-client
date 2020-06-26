@@ -7,4 +7,5 @@ export enum NavigationMenuItemType {
     MockType,
     SettingsMenu,
     ClientsList,
+    Calls,
 }

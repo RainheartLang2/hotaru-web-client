@@ -1,0 +1,26 @@
+.dialogContent {
+    display:flex;
+    justify-content: space-between;
+    min-height: 340px;
+    padding: 0px 5px;
+}
+
+.column {
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    height: 45px;
+    padding-bottom: 10px;
+}
+
+.error {
+    height: 24px;
+    display: flex;
+    justify-content: center;
+}

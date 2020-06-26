@@ -21,7 +21,7 @@ export default class ClinicNode {
 
     public getDefaultState(): ClinicPageState {
         return {
-            clientList: [],
+            clinicList: [],
             editedClinicId: 0,
             editedClinicLogo: null,
             editedClinicName: "",
@@ -37,8 +37,8 @@ export default class ClinicNode {
     public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, ClinicSelectors> {
         return {
             clinicListById: {
-                dependsOn: ["clientList"],
-                get: (state: Pick<ClinicPageState, "clientList">) => CollectionUtils.mapArrayByUniquePredicate(state.clientList, clinic => clinic.id ? clinic.id : 0),
+                dependsOn: ["clinicList"],
+                get: (state: Pick<ClinicPageState, "clinicList">) => CollectionUtils.mapArrayByUniquePredicate(state.clinicList, clinic => clinic.id ? clinic.id : 0),
                 value: new Map<number, Clinic>()
             },
             clinicListByIdWithMock: {
@@ -89,7 +89,7 @@ export default class ClinicNode {
 }
 
 export type ClinicPageState = {
-    clientList: Clinic[],
+    clinicList: Clinic[],
     editedClinicId: number,
     editedClinicLogo: string | null,
     editedClinicName: string,

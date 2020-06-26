@@ -33,6 +33,11 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                     value={NavigationMenuItemType.ClientsList}
                     onClick={() => this.props.controller.openClientsPage()}
                 />
+                <Tab
+                    label={<Message messageKey={"navigationMenu.calls.title"}/>}
+                    value={NavigationMenuItemType.Calls}
+                    onClick={() => this.props.controller.openCallsPage()}
+                />
             </Tabs>
         )
     }

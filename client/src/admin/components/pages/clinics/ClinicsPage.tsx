@@ -97,7 +97,7 @@ export default class ClinicsPage extends React.Component<Properties, State> {
 
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
-            clientList: "clinics",
+            clinicList: "clinics",
         })
     }
 

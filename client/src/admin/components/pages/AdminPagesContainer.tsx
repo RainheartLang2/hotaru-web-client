@@ -15,6 +15,7 @@ import VisitPurposePage from "./visitPurpose/VisitPurposePage";
 import AnimalColorPage from "./animalColor/AnimalColorPage";
 import ClinicsWorkschedulePage from "./clinicsWorkschedule/ClinicsWorkschedulePage";
 import EmployeesWorkSchedulePage from "./employeesWorkSchedule/EmployeesWorkSchedulePage";
+import PlannedCallsPage from "./plannedCalls/PlannedCallsPage";
 
 export default class AdminPagesContainer extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -46,6 +47,7 @@ export default class AdminPagesContainer extends React.Component<Properties, Sta
             {this.isRenderPage(PageType.AnimalColors) && (<AnimalColorPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.ClinicsWorkschedule) && (<ClinicsWorkschedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.EmployeesWorkSchedule) && (<EmployeesWorkSchedulePage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.PlannedCalls) && (<PlannedCallsPage controller={this.props.controller}/>)}
         </>)
     }
 
