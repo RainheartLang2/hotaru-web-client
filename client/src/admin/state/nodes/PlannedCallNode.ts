@@ -9,6 +9,10 @@ import {Pet} from "../../../common/beans/Pet";
 import {Field} from "../../../core/mvc/store/Field";
 import {ConfigureType} from "../../../core/types/ConfigureType";
 import {DialogType} from "../enum/DialogType";
+import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
+import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {PlannedCallStateType} from "../../../common/beans/enums/PlannedCallStateType";
+import NotPastDateValidator from "../../../core/mvc/validators/NotPastDateValidator";
 
 export default class PlannedCallNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -33,7 +37,23 @@ export default class PlannedCallNode {
 
     public getSelectors(): SelectorsInfo<EmployeeAppState & EmployeeAppSelectors, PlannedCallSelectors> {
         return {
-            plannedCallDateField: this._store.createField("plannedCallDate"),
+            plannedCallsById: {
+                dependsOn: ["plannedCalls"],
+                get: (state: Pick<PlannedCallState, "plannedCalls">) => CollectionUtils.mapIdentifiableArray(state.plannedCalls),
+                value: new Map(),
+            },
+            plannedCallStateType: {
+                dependsOn: ["plannedCallsById", "plannedCallId"],
+                get: (state: Pick<PlannedCallState & PlannedCallSelectors, "plannedCallsById" | "plannedCallId">) => {
+                    const id = state.plannedCallId
+                    return id
+                        ? state.plannedCallsById.get(id!)!.state
+                        : PlannedCallStateType.Assigned
+                },
+                value: PlannedCallStateType.Assigned
+            },
+            plannedCallDateField: this._store.createField("plannedCallDate", "",
+                [new RequiredFieldValidator(), new NotPastDateValidator()]),
             plannedCallNoteField: this._store.createField("plannedCallNote"),
             editPlannedCallMode: {
                 dependsOn: ["dialogType"],
@@ -48,12 +68,58 @@ export default class PlannedCallNode {
                 },
                 value: "none",
             },
-            editPlannedCallFormHasErrors: this._store.createFormHasErrorsSelector(["plannedCallDateField", "plannedCallNoteField"]),
+            editPlannedCallFormHasStandardErrors: this._store.createFormHasErrorsSelector(["plannedCallDateField", "plannedCallNoteField"]),
+            editPlannedCallFormHasErrors: {
+                dependsOn: [
+                    "editPlannedCallFormHasStandardErrors",
+                    "plannedCallClinic",
+                    "plannedCallDoctor",
+                    "plannedCallClient"
+                ],
+                get: (state: Pick<PlannedCallState & PlannedCallSelectors,
+                    "editPlannedCallFormHasStandardErrors" |
+                    "plannedCallClinic" |
+                    "plannedCallDoctor" |
+                    "plannedCallClient"
+                    >) => {
+                        return state.editPlannedCallFormHasStandardErrors
+                                || !state.plannedCallClient
+                                || !state.plannedCallDoctor
+                                || !state.plannedCallClinic
+                },
+                value: false,
+            },
             editPlannedCallFormErrorMessage: {
                 dependsOn: ["editPlannedCallFormHasErrors"],
                 get: (state: Pick<PlannedCallSelectors, "editPlannedCallFormHasErrors">) => "",
                 value: "",
-            }
+            },
+            editPlannedCallDoctorsList: {
+                dependsOn: ["userListByClinicId", "employeeWithoutClinicList", "plannedCallClinic"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "userListByClinicId" | "employeeWithoutClinicList" | "plannedCallClinic">) => {
+                    if (!state.plannedCallClinic) {
+                        return []
+                    }
+
+                    const employeesByClinic = state.userListByClinicId.get(state.plannedCallClinic.id!)
+                                                ? state.userListByClinicId.get(state.plannedCallClinic.id!)!
+                                                : []
+                    return employeesByClinic.concat(state.employeeWithoutClinicList)
+                },
+                value: [],
+            },
+            editPlannedCallPetsList: {
+                dependsOn: ["petsByOwners", "plannedCallClient"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "petsByOwners" | "plannedCallClient">) => {
+                    if (!state.plannedCallClient) {
+                        return []
+                    }
+
+                    const result = state.petsByOwners.get(state.plannedCallClient.id!)
+                    return result ? result : []
+                },
+                value: [],
+            },
         }
     }
 }
@@ -70,9 +136,14 @@ export type PlannedCallState = {
 }
 
 export type PlannedCallSelectors = {
+    plannedCallsById: Map<number, PlannedCall>,
+    plannedCallStateType: PlannedCallStateType,
     plannedCallDateField: Field,
     plannedCallNoteField: Field,
+    editPlannedCallDoctorsList: Employee[],
+    editPlannedCallPetsList: Pet[],
     editPlannedCallMode: ConfigureType,
+    editPlannedCallFormHasStandardErrors: boolean,
     editPlannedCallFormHasErrors: boolean,
     editPlannedCallFormErrorMessage: string,
 }

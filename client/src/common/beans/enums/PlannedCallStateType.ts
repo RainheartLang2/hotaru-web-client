@@ -1,5 +1,6 @@
 export enum PlannedCallStateType {
-    Assigned,
-    Done,
-    Canceled,
+    Assigned = "Assigned",
+    Done = "Done",
+    Canceled = "Canceled",
+    Expired = "Expired",
 }

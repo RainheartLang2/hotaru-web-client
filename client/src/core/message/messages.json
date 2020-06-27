@@ -5,6 +5,9 @@
       "validator.email.message": "email-адрес обязан содержать символ '@'",
       "validator.confirm.password.message": "Значение не совпадает с изначально введённым паролем",
       "validator.time.message": "Поле должно быть заполнено в формате 'hh:mm' и содержать только цифры",
+      "validator.date.message": "Поле должно содержать корректно заполненную дату",
+      "validator.notPast.message": "Дата в данном поле не может относиться к уже прошедшему дню",
+
       "field.login.label": "Логин",
       "field.password.label": "Пароль",
       "field.password.repeat.label": "Повторите пароль",
@@ -53,6 +56,14 @@
       "common.sex.select.female": "Ж",
 
       "common.weekly": "Еженедельно",
+
+      "plannedCall.state.assigned.name": "Активен",
+      "plannedCall.state.done.name": "Выполнен",
+      "plannedCall.state.canceled.name": "Отменён",
+      "plannedCall.state.expired.name": "Просрочен",
+
+      "plannedCall.state.done.tooltip": "Отметить звонок выполненным",
+      "plannedCall.state.cancel.tooltip": "Отменить звонок",
 
       "clinic.mock.name": "Нет клиники",
       "species.mock.name": "Вид не указан",
@@ -155,6 +166,8 @@
       "dialog.plannedCall.doctor.field.label": "Доктор",
       "dialog.plannedCall.client.field.label": "Клиент",
       "dialog.plannedCall.pet.field.label": "Питомец",
+      "dialog.plannedCall.date.field.label": "Дата прозвона",
+      "dialog.plannedCall.note.field.label": "Заметки",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

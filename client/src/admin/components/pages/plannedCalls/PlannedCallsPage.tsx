@@ -5,8 +5,9 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {TableBodyCmp, TableCmp, TableHeaderCmp, TableRowCmp} from "../../../../core/components";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
-import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
 import CustomLink from "../../../../core/components/customLink/CustomLink";
+import {PlannedCallStateType} from "../../../../common/beans/enums/PlannedCallStateType";
+import {EnumUtils} from "../../../../common/utils/EnumUtils";
 
 var styles = require("../schedule/styles.css")
 
@@ -16,6 +17,15 @@ export default class PlannedCallsPage extends React.Component<Properties, State>
         super(props)
         this.state = {
             calls: []
+        }
+    }
+
+    private getStateClass(call: PlannedCall): string {
+        switch (call.state) {
+            case PlannedCallStateType.Assigned: return styles.assignedState
+            case PlannedCallStateType.Done: return styles.doneState
+            case PlannedCallStateType.Canceled: return styles.canceledState
+            case PlannedCallStateType.Expired: return styles.expiredState
         }
     }
 
@@ -31,7 +41,7 @@ export default class PlannedCallsPage extends React.Component<Properties, State>
                     <TableHeaderCmp>
                         <TableRowCmp>
                             <CustomTableCell style={styles.nameCell}/>
-                            <CustomTableCell style={styles.actionsCell}/>
+                            <CustomTableCell style={styles.stateCell}/>
                         </TableRowCmp>
                     </TableHeaderCmp>
                     <TableBodyCmp>
@@ -45,13 +55,10 @@ export default class PlannedCallsPage extends React.Component<Properties, State>
                                             {call.id}
                                         </CustomLink>
                                     </CustomTableCell>
-                                    <CustomTableCell style={styles.actionsCell}>
-                                        <CustomContentButton
-                                            onClick={() => {}}
-                                            tooltipContent={<Message messageKey={"common.button.delete"}/>}
-                                        >
-                                            Удалить
-                                        </CustomContentButton>
+                                    <CustomTableCell style={styles.stateCell}>
+                                        <div className={this.getStateClass(call)}>
+                                            {EnumUtils.stateToString(call.state)}
+                                        </div>
                                     </CustomTableCell>
                                 </TableRowCmp>
                             )

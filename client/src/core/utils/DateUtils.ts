@@ -115,4 +115,8 @@ export namespace DateUtils {
     export function convertSundayBaseToMondayBase(dayNumber: number) {
         return dayNumber == 0 ? 6 : dayNumber - 1
     }
+
+    export function getCurrentDate(): Date {
+        return getPureDate(new Date())
+    }
 }

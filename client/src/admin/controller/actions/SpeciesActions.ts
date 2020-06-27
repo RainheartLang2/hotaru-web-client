@@ -91,4 +91,8 @@ export default class SpeciesActions {
             }),
         })
     }
+
+    public getSpecies(id: number): Species | undefined {
+        return this.controller.state.speciesListById.get(id)
+    }
 }

@@ -120,6 +120,17 @@ export default class EmployeeNode {
                 "editedEmployeePasswordField",
                 "editedEmployeeConfirmPasswordField",
             ]),
+            userListByClinicId: {
+                dependsOn: ["userList"],
+                get: (state: Pick<UserPageEmployeeState, "userList">) =>
+                    CollectionUtils.mapArrayByPredicate(state.userList, user => user.clinicId ? user.clinicId : 0),
+                value: new Map(),
+            },
+            employeeWithoutClinicList: {
+                dependsOn: ["userList"],
+                get: (state: Pick<UserPageEmployeeState, "userList">) => state.userList.filter(user => !user.clinicId),
+                value: [],
+            }
         }
     }
 }
@@ -146,6 +157,8 @@ type EmployeeDialogType = "create" | "edit" | "profile" | "none"
 
 export type UserSelectors = {
     userListById: Map<number, Employee>,
+    userListByClinicId: Map<number, Employee[]>,
+    employeeWithoutClinicList: Employee[],
     medicsListById: Map<number, Employee>,
     employeeDialogType: EmployeeDialogType,
     editedEmployeeFirstNameField: Field,

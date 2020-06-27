@@ -3,6 +3,22 @@
 
 }
 
-.actionsCell {
+.stateCell {
 
+}
+
+.assignedState {
+    color: #4d90d6;
+}
+
+.doneState {
+    color: lightgreen;
+}
+
+.canceledState {
+    color: orange;
+}
+
+.expiredState {
+    color: red;
 }

@@ -40,7 +40,11 @@ export default class ConnectedAutoCompleteField<
 
     render() {
         return (
-            <CustomTooltip  arrow={true} title={<Message messageKey={"common.required.field.tooltip"} />} active={this.showRequiredError()}>
+            <CustomTooltip
+                arrow={true}
+                title={<Message messageKey={"common.required.field.tooltip"} />}
+                active={this.showRequiredError()}
+            >
                 <Autocomplete<ItemType>
                     options={this.state.options}
                     getOptionLabel={(option) => this.props.itemToString(option)}
@@ -51,6 +55,7 @@ export default class ConnectedAutoCompleteField<
                     fullWidth={this.props.fullWidth}
                     size={this.props.size}
                     value={this.state.selectedItem}
+                    disabled={this.props.disabled}
                     renderInput={(params) =>
                         <TextField
                             {...params}

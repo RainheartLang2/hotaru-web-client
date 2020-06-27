@@ -1,3 +1,13 @@
+.dialogTitleWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.titleButtons {
+    display: flex;
+    justify-content: flex-start;
+}
+
 .dialogContent {
     display:flex;
     justify-content: space-between;

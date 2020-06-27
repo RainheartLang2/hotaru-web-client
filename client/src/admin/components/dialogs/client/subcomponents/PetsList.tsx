@@ -9,6 +9,7 @@ import CustomLink from "../../../../../core/components/customLink/CustomLink";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
 import Species from "../../../../../common/beans/Species";
+import {NameUtils} from "../../../../../core/utils/NameUtils";
 
 var styles = require("../styles.css")
 
@@ -23,10 +24,8 @@ export default class PetsList extends React.Component<Properties, State> {
     }
 
     private getListItemLabel(pet: Pet): string {
-        console.log(pet)
         const species = this.state.species.get(pet.speciesId!)
-        return (pet.name ? (pet.name + " ") : "")
-                + ("(" + species!.name + ")")
+        return NameUtils.formatPetName(pet, species!)
     }
 
     render() {

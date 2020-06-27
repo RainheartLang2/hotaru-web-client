@@ -286,12 +286,14 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public openCallsPage(callback: Function = () => {}): void {
         this.openPage(PageType.PlannedCalls, (setPageLoad: Function) => {
-            this.clinicActions.loadClinicList(() => {
-                this.employeeActions.loadUsersList(() => {
-                    this.clientActions.loadPermanentClientsWithPets(() => {
-                        this.plannedCallActions.loadList(() => {
-                            setPageLoad()
-                            callback()
+            this.speciesActions.loadList([], () => {
+                this.clinicActions.loadClinicList(() => {
+                    this.employeeActions.loadUsersList(() => {
+                        this.clientActions.loadPermanentClientsWithPets(() => {
+                            this.plannedCallActions.loadList(() => {
+                                setPageLoad()
+                                callback()
+                            })
                         })
                     })
                 })
