@@ -16,8 +16,10 @@ import {DaySchedule} from "../../../common/beans/DaySchedule";
 import {PageType} from "../enum/PageType";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {WorkScheduleUtils} from "../../../core/utils/WorkScheduleUtils";
-import {NumberUtils} from "../../../core/utils/NumberUtils";
 import CallbackValidator from "../../../core/mvc/validators/CallbackValidator";
+import PlannedCall from "../../../common/beans/PlannedCall";
+import {PersonalScheduleAppointmentType} from "../../../common/beans/enums/PersonalScheduleAppointmentType";
+import {EnumUtils} from "../../../common/utils/EnumUtils";
 
 export default class ScheduleNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -47,12 +49,22 @@ export default class ScheduleNode {
         }
     }
 
-    private toAppointmentModel(appointment: MedicalAppointment): AppointmentModel {
+    private medicalVisitToAppointmentModel(appointment: MedicalAppointment): AppointmentModel {
         return {
-            id: appointment.id,
-            title: appointment.title,
+            id: PersonalScheduleAppointmentType.buildIdData({id: appointment.id!, type: PersonalScheduleAppointmentType.Visit}),
+            title: MessageResource.getMessage("page.schedule.visit.type.name") + ": " + appointment.title,
             startDate: appointment.startDate,
             endDate: appointment.endDate,
+        }
+    }
+
+    private plannedCallToAppointmentModel(call: PlannedCall): AppointmentModel {
+        return {
+            id: PersonalScheduleAppointmentType.buildIdData({id: call.id!, type: PersonalScheduleAppointmentType.Call}),
+            title: MessageResource.getMessage("page.schedule.call.type.name") + " " + "(" + EnumUtils.stateToString(call.state) + ")",
+            startDate: DateUtils.getPureDate(call.callDate),
+            endDate: DateUtils.getEndOfDay(call.callDate),
+            allDay: true,
         }
     }
 
@@ -90,10 +102,29 @@ export default class ScheduleNode {
                 },
                 value: [],
             },
+            plannedCallsForSelectedMedic: {
+                dependsOn: ["selectedEmployeeForSchedulePage", "plannedCallsByDoctorId"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "selectedEmployeeForSchedulePage" | "plannedCallsByDoctorId">) => {
+                    console.log(state.plannedCallsByDoctorId)
+                    const selectedEmployee = state.selectedEmployeeForSchedulePage
+                    if (selectedEmployee) {
+                        const plannedCalls = state.plannedCallsByDoctorId.get(selectedEmployee.id!)
+                        if (plannedCalls) {
+                            return plannedCalls
+                        }
+                    }
+                    return []
+                },
+                value: [],
+            },
             appointmentsModelList: {
-                dependsOn: ["appointmentsForSelectedMedic"],
-                get: (state: Pick<ScheduleSelectors, "appointmentsForSelectedMedic">) => {
-                    return state.appointmentsForSelectedMedic.map(item => this.toAppointmentModel(item))
+                dependsOn: ["appointmentsForSelectedMedic", "plannedCallsForSelectedMedic"],
+                get: (state: Pick<ScheduleSelectors, "appointmentsForSelectedMedic" | "plannedCallsForSelectedMedic">) => {
+                    state.plannedCallsForSelectedMedic
+                    return state.appointmentsForSelectedMedic
+                        .map(item => this.medicalVisitToAppointmentModel(item))
+                        .concat((state.plannedCallsForSelectedMedic
+                                      .map(item => this.plannedCallToAppointmentModel(item))))
                 },
                 value: [],
             },
@@ -204,6 +235,7 @@ export default class ScheduleNode {
                     | "schedulePageWeek"
                     | "employeeWorkScheduleDeviationsList"
                     >) => {
+                    console.log(state)
                     if (state.pageType != PageType.Schedule) {
                         return []
                     }
@@ -265,6 +297,7 @@ export type ScheduleState = {
 export type ScheduleSelectors = {
     appointmentsListById: Map<number, MedicalAppointment>,
     appointmentsForSelectedMedic: MedicalAppointment[],
+    plannedCallsForSelectedMedic: PlannedCall[],
     appointmentsModelList: AppointmentModel[],
     appointmentDialogMode: ConfigureType,
     editedClientPetSpecies: Map<number, Species>,

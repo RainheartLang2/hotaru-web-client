@@ -62,6 +62,7 @@
       "plannedCall.state.canceled.name": "Отменён",
       "plannedCall.state.expired.name": "Просрочен",
 
+      "plannedCall.edit.tooltip": "Редактировать звонок",
       "plannedCall.state.done.tooltip": "Отметить звонок выполненным",
       "plannedCall.state.cancel.tooltip": "Отменить звонок",
 
@@ -110,6 +111,9 @@
       "page.schedule.todayButton.label": "Текущая неделя",
       "page.schedule.nonWorkingTime.tooltip.label": "Нерабочее время",
       "page.schedule.workingTime.validator.message": "Время приёма захватывает нерабочее время",
+      "page.schedule.visit.type.name": "Приём",
+      "page.schedule.call.type.name": "Звонок",
+
       "page.clinics.title": "Клиники",
       "page.species.title": "Справочник видов животных",
       "page.species.button.toBreeds.label": "Перейти к породам",

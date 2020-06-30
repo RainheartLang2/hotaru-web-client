@@ -18,3 +18,17 @@
     height: 100%;
     background-color: #e2e2e2;
 }
+
+.appointmentTooltipHeader {
+    display: flex;
+    justify-content: flex-end;
+    height: 50px;
+    padding-right: 4px;
+}
+
+.appointmentTooltipButtons {
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+    padding-top: 12px;
+}

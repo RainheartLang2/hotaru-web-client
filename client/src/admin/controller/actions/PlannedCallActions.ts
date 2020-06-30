@@ -77,6 +77,14 @@ export default class PlannedCallActions {
         })
     }
 
+    public getPlannedCall(id: number): PlannedCall {
+        const result = this.controller.state.plannedCallsById.get(id)
+        if (!result) {
+            throw new Error("there is no planned call with id " + id)
+        }
+        return result
+    }
+
     public addPlannedCall(callback: Function = () => {}): void {
         const call = this.buildCallByField()
         fetchUserZoneRpc({

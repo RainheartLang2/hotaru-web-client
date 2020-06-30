@@ -42,6 +42,16 @@ export default class PlannedCallNode {
                 get: (state: Pick<PlannedCallState, "plannedCalls">) => CollectionUtils.mapIdentifiableArray(state.plannedCalls),
                 value: new Map(),
             },
+            plannedCallsByDoctorId: {
+                dependsOn: ["plannedCalls"],
+                get: (state: Pick<PlannedCallState, "plannedCalls">) => {
+                    console.log(state.plannedCalls)
+                    const result = CollectionUtils.mapArrayByPredicate(state.plannedCalls, call => call.doctorId)
+                    console.log(result)
+                    return result
+                },
+                value: new Map(),
+            },
             plannedCallStateType: {
                 dependsOn: ["plannedCallsById", "plannedCallId"],
                 get: (state: Pick<PlannedCallState & PlannedCallSelectors, "plannedCallsById" | "plannedCallId">) => {
@@ -137,6 +147,7 @@ export type PlannedCallState = {
 
 export type PlannedCallSelectors = {
     plannedCallsById: Map<number, PlannedCall>,
+    plannedCallsByDoctorId: Map<number, PlannedCall[]>,
     plannedCallStateType: PlannedCallStateType,
     plannedCallDateField: Field,
     plannedCallNoteField: Field,

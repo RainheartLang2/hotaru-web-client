@@ -13,6 +13,7 @@ import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {Employee} from "../../../common/beans/Employee";
 import {ClientType} from "../../../common/beans/enums/ClientType";
 import {Time} from "../../../core/utils/Time";
+import {PersonalScheduleAppointmentType} from "../../../common/beans/enums/PersonalScheduleAppointmentType";
 
 export default class ScheduleActions {
     private controller: EmployeeAppController
@@ -77,15 +78,15 @@ export default class ScheduleActions {
         const appointment = editedAppointment as AppointmentInfo
         const startDate = new Date(appointment.startDate)
         const endDate = new Date(appointment.endDate)
-
+        const appointmentId = PersonalScheduleAppointmentType.extractIdData(appointment.id!).id
         this.controller.setState({
-            editedAppointmentId: appointment.id,
+            editedAppointmentId: appointmentId,
             editedAppointmentTitle: appointment.title,
             editedAppointmentDate: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()),
             editedAppointmentStartTime: DateUtils.dateToTimeString(startDate),
             editedAppointmentEndTime: DateUtils.dateToTimeString(endDate),
         })
-        const medicalAppointment = appointment.id ? this.controller.state.appointmentsListById.get(appointment.id) : null
+        const medicalAppointment = this.controller.state.appointmentsListById.get(appointmentId)
 
         if (medicalAppointment && medicalAppointment.clientId) {
             const client = this.controller.state.clientsListById.get(medicalAppointment.clientId)

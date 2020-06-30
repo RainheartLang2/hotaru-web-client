@@ -14,6 +14,7 @@ export default class ConnectedSelect<ItemType,
 
     static defaultProps = {
         variant: "outlined",
+        onChange: () => {}
     }
 
     constructor(props: Properties<ItemType, StateType, SelectorsType>) {
@@ -45,6 +46,7 @@ export default class ConnectedSelect<ItemType,
             <Select
                 onChange={event => {
                     this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, itemsMap.get(+(event.target.value as string))]]))
+                    this.props.onChange()
                 }}
                 value={getKey(this.state.selectedItem)}
                 fullWidth={true}
@@ -76,6 +78,7 @@ type Properties<ItemType, StateType, SelectorsType> = {
     selectedItemProperty: keyof StateType,
     itemToString: (item: ItemType) => string,
     getKey: (item: ItemType | null) => number,
+    onChange: Function
 }
 
 type State<ItemType> = {

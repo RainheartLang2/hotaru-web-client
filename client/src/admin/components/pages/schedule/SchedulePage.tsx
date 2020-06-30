@@ -3,7 +3,9 @@ import {Message} from "../../../../core/components/Message";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import {Paper} from "@material-ui/core";
 import {
-    Appointments, AppointmentTooltip,
+    AllDayPanel,
+    Appointments,
+    AppointmentTooltip,
     DateNavigator,
     DragDropProvider,
     Scheduler,
@@ -18,12 +20,17 @@ import LocaleHolder from "../../../../core/utils/LocaleHolder";
 import {LocaleUtils} from "../../../../core/enum/LocaleType";
 import MessageResource from "../../../../core/message/MessageResource";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../state/EmployeeApplicationStore";
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
 import {DaySchedule} from "../../../../common/beans/DaySchedule";
 import CustomTooltip from "../../../../core/components/customTooltip/CustomTooltip";
 import {DateUtils} from "../../../../core/utils/DateUtils";
+import {PersonalScheduleAppointmentType} from "../../../../common/beans/enums/PersonalScheduleAppointmentType";
+import {PlannedCallTooltipHeader} from "./subcomponents/callTooltipHeader/PlannedCallTooltipHeader";
 
 var styles = require("./styles.css")
 
@@ -74,21 +81,29 @@ export default class SchedulePage extends React.Component<Properties, State> {
     private getAppointmentTooltipHeader(onOpenButtonClick: (info: AppointmentInfo) => void,
                                         onDeleteButtonClick: (info: AppointmentInfo, callback: Function) => void
     ): React.ComponentType<AppointmentTooltip.HeaderProps > {
+        const CallTooltipHeader = PlannedCallTooltipHeader.getComponent(this.props.controller)
         return class extends React.Component<AppointmentTooltip.HeaderProps> {
             render() {
                 const appointmentInfo = this.props.appointmentData as AppointmentInfo
-                return (
-                    // @ts-ignore
-                    <AppointmentTooltip.Header
-                        {...this.props}
-                        onOpenButtonClick={() => onOpenButtonClick(appointmentInfo)}
-                        onDeleteButtonClick={() => {
-                            onDeleteButtonClick(appointmentInfo, () => this.props.onDeleteButtonClick!())
-                        }}
-                    >
-                        {this.props.children}
-                    </AppointmentTooltip.Header>
-                )
+                const idData = PersonalScheduleAppointmentType.extractIdData(appointmentInfo.id as string)
+                if (idData.type == PersonalScheduleAppointmentType.Visit) {
+                    return (
+                        // @ts-ignore
+                        <AppointmentTooltip.Header
+                            {...this.props}
+                            onOpenButtonClick={() => onOpenButtonClick(appointmentInfo)}
+                            onDeleteButtonClick={() => {
+                                onDeleteButtonClick(appointmentInfo, () => this.props.onDeleteButtonClick!())
+                            }}
+                        >
+                            {this.props.children}
+                        </AppointmentTooltip.Header>
+                    )
+                } else {
+                    return (
+                        <CallTooltipHeader {...this.props}/>
+                    )
+                }
             }
         }
     }
@@ -99,8 +114,22 @@ export default class SchedulePage extends React.Component<Properties, State> {
         }
     }
 
-    private openEditDialog(appointmentInfo: AppointmentInfo) {
+    private openEditVisitDialog(appointmentInfo: AppointmentInfo): void {
         this.props.controller.scheduleActions.openEditAppointmentDialog(appointmentInfo)
+    }
+
+    private editAppointment(appointmentInfo: AppointmentInfo): void {
+        const idData = PersonalScheduleAppointmentType.extractIdData(appointmentInfo.id!)
+        if (idData.type == PersonalScheduleAppointmentType.Visit) {
+            this.openEditVisitDialog(appointmentInfo)
+        }
+    }
+
+    private deleteAppointment(appointmentInfo: AppointmentInfo, callback: Function):void {
+        const idData = PersonalScheduleAppointmentType.extractIdData(appointmentInfo.id!)
+        if (idData.type == PersonalScheduleAppointmentType.Visit) {
+            this.props.controller.scheduleActions.deleteAppointment(idData.id, callback)
+        }
     }
 
     render() {
@@ -110,8 +139,9 @@ export default class SchedulePage extends React.Component<Properties, State> {
         const actions = this.props.controller.scheduleActions
 
         const TTCell = this.getTimeTableCell((info: AppointmentInfo) => this.startAppointmentCreation(info))
-        const TooltipHeader = this.getAppointmentTooltipHeader((info: AppointmentInfo) => this.openEditDialog(info),
-            (info: AppointmentInfo, callback: Function) => this.props.controller.scheduleActions.deleteAppointment(info.id!, callback))
+        const TooltipHeader = this.getAppointmentTooltipHeader((info: AppointmentInfo) => this.openEditVisitDialog(info),
+            (info: AppointmentInfo, callback: Function) => this.deleteAppointment(info, callback))
+        console.log(this.state.employeeSchedule)
         return (<>
             <PageHeader
                 label={(<Message messageKey={"page.schedule.title"}/>)}
@@ -126,6 +156,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
                     itemToString={medic => NameUtils.formatName(medic)}
                     getKey={medic => medic && medic.id ? medic.id : 0}
                     label={<Message messageKey={"page.schedule.medicSelection.label"}/>}
+                    onChange={() => this.props.controller.loadSchedulePageInitData()}
                 />
             </div>
             <Paper>
@@ -153,7 +184,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
                             if (editedAppointment && !editedAppointment.hasOwnProperty("type")) {
                                 const appointmentInfo = editedAppointment as AppointmentInfo
                                 if (this.isDateRangeActive(appointmentInfo.startDate, appointmentInfo.endDate)) {
-                                    this.openEditDialog(editedAppointment as AppointmentInfo)
+                                    this.openEditVisitDialog(editedAppointment as AppointmentInfo)
                                 }
                             }
                         }}
@@ -161,6 +192,7 @@ export default class SchedulePage extends React.Component<Properties, State> {
                     />
                     <IntegratedEditing/>
                     <Appointments/>
+                    <AllDayPanel/>
                     <AppointmentTooltip
                         showOpenButton
                         showCloseButton

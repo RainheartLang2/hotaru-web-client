@@ -116,6 +116,8 @@ export default class PlannedCallDialog extends React.Component<Properties, State
                                     fieldKey={{plannedCallDate: "plannedCallDateField"}}
                                     label={<Message messageKey={"dialog.plannedCall.date.field.label"}/>}
                                     type={"date"}
+                                    disabled={this.state.callState == PlannedCallStateType.Done
+                                    || this.state.callState == PlannedCallStateType.Canceled}
                                 />
                             </div>
                         </div>

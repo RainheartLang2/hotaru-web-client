@@ -53,6 +53,10 @@ export namespace DateUtils {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
+    export function getEndOfDay(date: Date): Date {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59)
+    }
+
 
     export function getNextDay(date: Date): Date {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)

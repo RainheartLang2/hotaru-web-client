@@ -163,22 +163,28 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public loadSchedulePageInitData(callback: Function = () => {}): void {
+        this._speciesActions.loadList([], () => {
+            this._breedActions.loadList([], () => {
+                this._scheduleActions.loadAppointmentsWithClients(() => {
+                    this._employeeScheduleActions.loadEmployeeSchedule(
+                        this.state.selectedEmployeeForSchedulePage!.id!,
+                        this.state.schedulePageDate,
+                        () => callback())
+                })
+            })
+        })
+    }
+
     public openSchedulePage(callback: Function = () => {}): void {
         this.openPage(PageType.Schedule, (setPageLoad: Function) => {
             this._employeeActions.loadUsersList((employees) => {
                 this.setState({
                     selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
                 })
-                this._speciesActions.loadList([], () => {
-                    this._breedActions.loadList([], () => {
-                        this._scheduleActions.loadAppointmentsWithClients(() => {
-                            this._employeeScheduleActions.loadEmployeeSchedule(
-                                this.state.selectedEmployeeForSchedulePage!.id!,
-                                this.state.schedulePageDate,
-                                () => setPageLoad())
-                        })
-                        callback()
-                    })
+                this.loadSchedulePageInitData(() => {
+                    callback()
+                    setPageLoad()
                 })
             })
         })
@@ -278,7 +284,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this.speciesActions.loadList([], () => {
             this.breedActions.loadList([], () => {
                 this.dictionariesActions.loadAnimalColorsList(() => {
-                    callback()
+                    this.plannedCallActions.loadList(callback)
                 })
             })
         })
