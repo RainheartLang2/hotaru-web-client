@@ -1,5 +1,6 @@
 import CacheKey from "./CacheKey";
 import CacheSettings from "./CacheSettings";
+import {BatchedCallback} from "./mvc/store/ApplicationStore";
 
 export default class ExecutableCache {
     private keys: CacheKey[]

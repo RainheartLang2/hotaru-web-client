@@ -33,11 +33,9 @@ export default class ClientActions {
             params: clientsIds,
             successCallback: result => {
                 const clientInfo: ServerClientInfo = result
-                this.controller.batched(() => {
-                    this.controller.setState({
-                        clientsList: clientInfo.clients,
-                        petList: clientInfo.pets,
-                    })
+                this.controller.setState({
+                    clientsList: clientInfo.clients,
+                    petList: clientInfo.pets,
                 })
                 callback(result)
             },
@@ -49,12 +47,10 @@ export default class ClientActions {
             method: RemoteMethods.getPermanentClients,
             successCallback: result => {
                 const clientInfo: ServerClientInfo = result
-                this.controller.batched(() => {
                     this.controller.setState({
                         clientsList: clientInfo.clients,
                         petList: clientInfo.pets,
                     })
-                })
                 callback(result)
             },
         })

@@ -2,6 +2,7 @@ import {CommonUtils} from "../../utils/CommonUtils";
 import FieldValidator from "../validators/FieldValidator";
 import {Field} from "./Field";
 import ApplicationStoreFriend from "./ApplicationStoreFriend";
+import StateChangeContext, {StateChangeContextMode} from "./StateChangeContext";
 
 export default abstract class ApplicationStore<StateType extends DefaultStateType, SelectorsType> {
     private originalState!: StateType
@@ -37,10 +38,12 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     protected abstract getSelectors(): SelectorsInfo<StateType, SelectorsType>
 
     private initializeSelectors(): void {
+        const context = new StateChangeContext(StateChangeContextMode.AUTO)
         //TODO: optimize
         for (let selectorKey in this.selectors) {
-            this.refreshSelector(selectorKey, false)
+            this.refreshSelector(selectorKey, context, false)
         }
+        context.onSetState()
     }
 
     protected createDefaultStateTypeEntry(): DefaultStateType {
@@ -100,10 +103,15 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         }
     }
 
-    public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean): void {
+    public toggleFieldValidation(fieldKey: keyof SelectorsType,
+                                 value: boolean,
+                                 context = new StateChangeContext(StateChangeContextMode.AUTO)
+
+    ): void {
         const field = this.readableState[fieldKey] as unknown as Field
         field.validationActive = value
-        this.refreshSelector(fieldKey)
+        this.refreshSelector(fieldKey, context)
+        context.onSetState()
     }
 
     private validateField<ValueType>(value: ValueType,
@@ -179,48 +187,57 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         this.propertyKeysBySubscriber.delete(subscriber)
     }
 
-    private postChanges<ValueType>(key: keyof (StateType & SelectorsType), newValue: ValueType) {
+    private postChanges<ValueType>(key: keyof (StateType & SelectorsType),
+                                   newValue: ValueType,
+                                   context: StateChangeContext,
+    ) {
         const propertySubscriptionData = this.getPropertySubscriptionData(key)
         propertySubscriptionData.forEach(subscriptionData => {
-            subscriptionData.subscriber.setState({[subscriptionData.propertyAlias]: newValue})
+            context.setState(subscriptionData.subscriber, {[subscriptionData.propertyAlias]: newValue})
         })
     }
 
-    private refreshDependencies(key: keyof (StateType & SelectorsType), postChanges: boolean = true): void {
+    private refreshDependencies(key: keyof (StateType & SelectorsType),
+                                context: StateChangeContext,
+                                postChanges: boolean = true): void {
         const propertyDependencies = this.dependencies.get(key)
         if (!propertyDependencies) {
             throw new Error("no dependencies for key " + key)
         }
         propertyDependencies.forEach(dependency => {
             try {
-                this.refreshSelector(dependency, postChanges)
+                this.refreshSelector(dependency, context, postChanges)
             } catch (e) {
             }
         })
     }
 
-    public setState(newState: Partial<StateType>): void {
+    public setState(newState: Partial<StateType>,
+                    context = new StateChangeContext(StateChangeContextMode.AUTO)
+    ): void {
         for (let propertyKey in newState) {
             // @ts-ignore
             this.originalState[propertyKey] = newState[propertyKey]
             // @ts-ignore
             this.readableState[propertyKey] = newState[propertyKey]
-            this.postChanges(propertyKey, newState[propertyKey])
-
-            this.refreshDependencies(propertyKey)
+            this.postChanges(propertyKey, newState[propertyKey], context)
+            this.refreshDependencies(propertyKey, context)
         }
+        context.onSetState()
     }
 
-    private refreshSelector(selectorKey: keyof SelectorsType, postChanges: boolean = true): void {
+    private refreshSelector(selectorKey: keyof SelectorsType,
+                            context: StateChangeContext,
+                            postChanges: boolean = true): void {
         const record = this.selectors[selectorKey]
         record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
         this.readableState[selectorKey] = record.value
         if (postChanges) {
-            this.postChanges(selectorKey, record.value)
+            this.postChanges(selectorKey, record.value, context)
         }
 
-        this.refreshDependencies(selectorKey, postChanges)
+        this.refreshDependencies(selectorKey, context, postChanges)
     }
 
     private createDependencies(): Map<KeysJunction<StateType, SelectorsType>, (keyof SelectorsType)[]> {
@@ -323,3 +340,5 @@ export type DefaultStateType = {
 export type PropertyAliasInfo<State, ComponentState> = {
     [P in (keyof State)]: keyof ComponentState
 }
+
+export type BatchedCallback = (context: StateChangeContext) => void

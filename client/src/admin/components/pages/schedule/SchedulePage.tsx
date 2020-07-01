@@ -141,7 +141,6 @@ export default class SchedulePage extends React.Component<Properties, State> {
         const TTCell = this.getTimeTableCell((info: AppointmentInfo) => this.startAppointmentCreation(info))
         const TooltipHeader = this.getAppointmentTooltipHeader((info: AppointmentInfo) => this.openEditVisitDialog(info),
             (info: AppointmentInfo, callback: Function) => this.deleteAppointment(info, callback))
-        console.log(this.state.employeeSchedule)
         return (<>
             <PageHeader
                 label={(<Message messageKey={"page.schedule.title"}/>)}

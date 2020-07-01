@@ -61,7 +61,7 @@ export default class ScheduleNode {
     private plannedCallToAppointmentModel(call: PlannedCall): AppointmentModel {
         return {
             id: PersonalScheduleAppointmentType.buildIdData({id: call.id!, type: PersonalScheduleAppointmentType.Call}),
-            title: MessageResource.getMessage("page.schedule.call.type.name") + " " + "(" + EnumUtils.stateToString(call.state) + ")",
+            title: MessageResource.getMessage("page.schedule.call.type.name") + " " + "(" + EnumUtils.stateToString(call.state) + ")p';",
             startDate: DateUtils.getPureDate(call.callDate),
             endDate: DateUtils.getEndOfDay(call.callDate),
             allDay: true,
@@ -105,7 +105,6 @@ export default class ScheduleNode {
             plannedCallsForSelectedMedic: {
                 dependsOn: ["selectedEmployeeForSchedulePage", "plannedCallsByDoctorId"],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "selectedEmployeeForSchedulePage" | "plannedCallsByDoctorId">) => {
-                    console.log(state.plannedCallsByDoctorId)
                     const selectedEmployee = state.selectedEmployeeForSchedulePage
                     if (selectedEmployee) {
                         const plannedCalls = state.plannedCallsByDoctorId.get(selectedEmployee.id!)
