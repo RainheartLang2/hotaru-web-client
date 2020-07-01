@@ -4,6 +4,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import Breed from "../../../common/beans/Breed";
+import {EmployeeStateContext} from "../../state/EmployeeApplicationStore";
 
 export default class BreedActions {
     private controller: EmployeeAppController
@@ -35,8 +36,8 @@ export default class BreedActions {
         })
     }
 
-    public loadList(params: any[] = [], callback: Function = () => {}): void {
-        this.controller.cacheManager.breedCache.execute(callback)
+    public loadList(params: any[] = [], callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.cacheManager.breedCache.execute(callback, context)
     }
 
     public submitCreateItem(callback: Function = () => {}): void {

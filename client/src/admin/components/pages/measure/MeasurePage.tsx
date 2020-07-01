@@ -50,7 +50,6 @@ export default class MeasurePage extends React.Component<Properties, State> {
                                         <Link
                                             color="primary"
                                             onClick={() => {
-                                                console.log(item.id)
                                                 if (item.id) {
                                                     actions.deleteMeasure(item.id)
                                                 }

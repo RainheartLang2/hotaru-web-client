@@ -3,6 +3,7 @@ import EmployeeAppController from "../EmployeeAppController";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {EmployeeStateContext} from "../../state/EmployeeApplicationStore";
 
 export default class SpeciesActions {
 
@@ -43,8 +44,8 @@ export default class SpeciesActions {
         })
     }
 
-    public loadList(params: any[] = [], callback: Function = () => {}): void {
-        this.controller.cacheManager.speciesCache.execute(callback)
+    public loadList(params: any[] = [], callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.cacheManager.speciesCache.execute(callback, context)
     }
 
     public submitCreateItem(callback: Function = () => {}): void {

@@ -127,14 +127,17 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
-    protected openPage(pageType: PageType, loadingFunction: (f: Function) => void) {
+    protected openPage(pageType: PageType,
+                       loadingFunction: (f: Function) => void,
+                       context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>
+                       ) {
         this.store.setState({
             pageType: pageType,
             isPageLoading: true,
         })
         this.onErrorFireEvent((callback: Function) => {
                 loadingFunction(() => {
-                    this.store.setState({isPageLoading: false})
+                    this.store.setState({isPageLoading: false}, context)
                     callback()
                 })
             },
@@ -164,34 +167,35 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
-    public loadSchedulePageInitData(callback: Function = () => {}): void {
+    public loadSchedulePageInitData(context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>,
+                                    callback: Function = () => {}): void {
         this._speciesActions.loadList([], () => {
             this._breedActions.loadList([], () => {
-                this._scheduleActions.loadAppointmentsWithClients(() => {
+                this._scheduleActions.loadAppointmentsWithClients(context, () => {
                     this._employeeScheduleActions.loadEmployeeSchedule(
                         this.state.selectedEmployeeForSchedulePage!.id!,
                         this.state.schedulePageDate,
-                        () => callback())
+                        () => callback()),
+                        context
                 })
-            })
-        })
+            }, context)
+        }, context)
     }
 
     public openSchedulePage(callback: Function = () => {}): void {
+        const batchContext = this.getBatchContext()
         this.openPage(PageType.Schedule, (setPageLoad: Function) => {
-            this.batched((closeBatch) => {
-                this._employeeActions.loadUsersList((employees) => {
-                    this.setState({
-                        selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
-                    })
-                    this.loadSchedulePageInitData(() => {
-                        callback()
-                        setPageLoad()
-                        closeBatch()
-                    })
+            this._employeeActions.loadUsersList((employees) => {
+                this.setState({
+                    selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
+                }, batchContext)
+                this.loadSchedulePageInitData(batchContext, () => {
+                    callback()
+                    setPageLoad()
+                    batchContext.closeBatch()
                 })
-            })
-        })
+            }, batchContext)
+        }, batchContext)
     }
 
     public openGlobalSettings(): void {

@@ -14,6 +14,8 @@ import {Employee} from "../../../common/beans/Employee";
 import {ClientType} from "../../../common/beans/enums/ClientType";
 import {Time} from "../../../core/utils/Time";
 import {PersonalScheduleAppointmentType} from "../../../common/beans/enums/PersonalScheduleAppointmentType";
+import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../state/EmployeeApplicationStore";
 
 export default class ScheduleActions {
     private controller: EmployeeAppController
@@ -234,24 +236,27 @@ export default class ScheduleActions {
         })
     }
 
-    public loadAppointmentsList(callback: (employees: Employee[]) => void = () => {}): void {
+    public loadAppointmentsList(callback: (employees: Employee[]) => void = () => {},
+                                context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>
+    ): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllAppointments,
             successCallback: result => {
-                this.controller.setState({appointmentsList: result})
+                this.controller.setState({appointmentsList: result}, context)
                 callback(result)
             },
         })
     }
 
-    public loadAppointmentsWithClients(callback: Function = () => {}) : void {
+    public loadAppointmentsWithClients(context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>,
+                                       callback: Function = () => {}) : void {
         this.loadAppointmentsList(() => {
             const appointments = this.controller.state.appointmentsList
             const clientIds = appointments.map(appointment => appointment.clientId).filter(id => !!id)
             // @ts-ignore
-            this.controller.clientActions.loadClientsWithPets(clientIds, () => callback())
+            this.controller.clientActions.loadClientsWithPets(clientIds, () => callback(), context)
             callback()
-        })
+        }, context)
     }
 
     public deleteAppointment(id: number, callback: Function = () => {}): void {

@@ -10,7 +10,6 @@ export namespace PersonalScheduleAppointmentType {
 
     export function extractIdData(value: string): AppointmentIdentifyingData {
         const splittedData = value.split("|")
-        console.log(splittedData)
 
         return {
             id: +splittedData[1],

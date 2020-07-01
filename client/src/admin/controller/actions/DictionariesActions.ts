@@ -4,7 +4,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {RemoteMethod} from "../../../core/http/RemoteMethod";
-import {EmployeeAppState} from "../../state/EmployeeApplicationStore";
+import {EmployeeAppState, EmployeeStateContext} from "../../state/EmployeeApplicationStore";
 import Identifiable from "../../../core/entities/Identifiable";
 import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
@@ -59,13 +59,13 @@ export default class DictionariesActions {
         return result
     }
 
-    public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function): void {
+    public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function, context?: EmployeeStateContext): void {
         fetchUserZoneRpc({
             method,
             successCallback: result => {
                 this.controller.setState({
                     [resultKey]: result,
-                })
+                }, context)
                 callback(result)
             },
         })
@@ -87,8 +87,8 @@ export default class DictionariesActions {
         this.loadList(RemoteMethods.getAllDiagnosis, "diagnosisList", callback)
     }
 
-    public loadAnimalColorsList(callback: Function = () => {}): void {
-        this.controller.cacheManager.animalColorCache.execute(callback)
+    public loadAnimalColorsList(callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.cacheManager.animalColorCache.execute(callback, context)
     }
 
     private submitCreateItem<Type extends Identifiable>(item: Type,

@@ -9,6 +9,8 @@ import {
     WorkScheduleDeviationContainer,
     WorkScheduleDeviationContainerServerBean
 } from "../../../common/beans/WorkScheduleDeviationContainer";
+import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../state/EmployeeApplicationStore";
 
 export default class EmployeeWorkScheduleActions {
     private controller: EmployeeAppController
@@ -201,7 +203,11 @@ export default class EmployeeWorkScheduleActions {
         })
     }
 
-    public loadEmployeeSchedule(employeeId: number, date: Date, callback: Function = () => {}): void {
+    public loadEmployeeSchedule(employeeId: number,
+                                date: Date,
+                                callback: Function = () => {},
+                                context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>,
+    ): void {
         const startDate = DateUtils.getMondayByDate(date)
         const endDate = DateUtils.getSundayByDate(date)
         fetchUserZoneRpc({
@@ -213,7 +219,7 @@ export default class EmployeeWorkScheduleActions {
                 this.controller.setState({
                     employeeWorkSchedulesList: schedules.map(schedule => EmployeeWorkSchedule.fromServerBean(schedule)),
                     employeeWorkScheduleDeviationsList: deviations.map(deviation => WorkScheduleDeviationContainer.fromServerBean(deviation)),
-                })
+                }, context)
                 callback()
             }
         })

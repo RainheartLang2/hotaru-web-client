@@ -29,7 +29,6 @@ export default class PetsList extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log(this.state.species)
         return (
             <div className={styles.petsList}>
                 <div className={styles.petsListHeader}>

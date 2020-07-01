@@ -6,6 +6,8 @@ import {DialogType} from "../../state/enum/DialogType";
 import {Clinic} from "../../../common/beans/Clinic";
 import {Login} from "../../../common/beans/Login";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../state/EmployeeApplicationStore";
 
 export default class EmployeeActions {
     private controller: EmployeeAppController
@@ -14,11 +16,12 @@ export default class EmployeeActions {
         this.controller = controller;
     }
 
-    public loadUsersList(callback: (employees: Employee[]) => void = () => {}): void {
+    public loadUsersList(callback: (employees: Employee[]) => void = () => {},
+                         context?: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllEmployees,
             successCallback: result => {
-                this.controller.setState({userList: result})
+                this.controller.setState({userList: result}, context)
                 callback(result)
             },
         })

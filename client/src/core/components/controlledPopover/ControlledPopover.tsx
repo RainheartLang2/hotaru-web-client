@@ -16,7 +16,6 @@ export default class ControlledPopover extends React.Component<Properties> {
     }
 
     render() {
-        console.log(this.props.anchor)
         return (
             <Popover
                 open={this.props.anchor != null}

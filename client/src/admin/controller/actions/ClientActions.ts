@@ -6,6 +6,8 @@ import {Pet} from "../../../common/beans/Pet";
 import {DialogType} from "../../state/enum/DialogType";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import {ClientType} from "../../../common/beans/enums/ClientType";
+import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
+import {EmployeeAppSelectors, EmployeeAppState} from "../../state/EmployeeApplicationStore";
 
 export default class ClientActions {
     private controller: EmployeeAppController
@@ -27,7 +29,10 @@ export default class ClientActions {
         })
     }
 
-    public loadClientsWithPets(clientsIds: number[], callback: Function) {
+    public loadClientsWithPets(clientsIds: number[],
+                               callback: Function,
+                               context: StateChangeContext<EmployeeAppState, EmployeeAppSelectors>
+    ): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllClients,
             params: clientsIds,
@@ -36,7 +41,7 @@ export default class ClientActions {
                 this.controller.setState({
                     clientsList: clientInfo.clients,
                     petList: clientInfo.pets,
-                })
+                }, context)
                 callback(result)
             },
         })

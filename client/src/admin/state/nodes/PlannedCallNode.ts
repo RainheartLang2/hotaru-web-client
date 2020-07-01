@@ -45,9 +45,7 @@ export default class PlannedCallNode {
             plannedCallsByDoctorId: {
                 dependsOn: ["plannedCalls"],
                 get: (state: Pick<PlannedCallState, "plannedCalls">) => {
-                    console.log(state.plannedCalls)
                     const result = CollectionUtils.mapArrayByPredicate(state.plannedCalls, call => call.doctorId)
-                    console.log(result)
                     return result
                 },
                 value: new Map(),

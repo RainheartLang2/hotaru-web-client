@@ -7,7 +7,6 @@ export default abstract class ApplicationController<StateType extends DefaultSta
                                                 StoreType extends ApplicationStore<StateType, SelectorsType> = any> {
 
     protected store: StoreType
-    private context?: StateChangeContext<StateType, SelectorsType>
     private onErrorEvent: Function = () => {}
 
     constructor(store: StoreType) {
@@ -27,13 +26,18 @@ export default abstract class ApplicationController<StateType extends DefaultSta
         this.store.unsubscribe(subscriber)
     }
 
-    public setState(newState: Partial<StateType>): void {
-        this.store.setState(newState, this.context)
+    public setState(newState: Partial<StateType>, context?: StateChangeContext<StateType, SelectorsType>): void {
+        this.store.setState(newState, context)
     }
 
-    public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean) {
-        this.store.toggleFieldValidation(fieldKey, value, this.context)
+    public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean, context?: StateChangeContext<StateType, SelectorsType>) {
+        this.store.toggleFieldValidation(fieldKey, value, context)
     }
+
+    public getBatchContext(): StateChangeContext<StateType, SelectorsType> {
+        return this.store.getBatchContext()
+    }
+
 
     public setGlobalApplicationError(errorMessageKey: string) {
         this.onErrorEvent()

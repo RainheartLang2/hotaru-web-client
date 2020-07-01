@@ -3,7 +3,6 @@ import FieldValidator from "../validators/FieldValidator";
 import {Field} from "./Field";
 import ApplicationStoreFriend from "./ApplicationStoreFriend";
 import StateChangeContext, {StateChangeContextMode} from "./StateChangeContext";
-import {CollectionUtils} from "../../utils/CollectionUtils";
 
 export default abstract class ApplicationStore<StateType extends DefaultStateType, SelectorsType> {
     private originalState!: StateType
@@ -331,6 +330,10 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
 
     private createReadableState(): StateType & SelectorsType {
         return CommonUtils.mergeTypes(this.originalState, getSelectorsValues(this.selectors))
+    }
+
+    public getBatchContext(): StateChangeContext<StateType, SelectorsType> {
+        return new StateChangeContext(this.createFriend(), StateChangeContextMode.BATCHED)
     }
 
     protected createFriend(): ApplicationStoreFriend<StateType, SelectorsType> {

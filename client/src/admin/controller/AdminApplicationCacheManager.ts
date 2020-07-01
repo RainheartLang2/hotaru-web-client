@@ -6,7 +6,12 @@ import ExecutableCache from "../../core/ExecutableCache";
 import {fetchUserZoneRpc} from "../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../common/backApplication/RemoteMethods";
 import EmployeeAppController from "./EmployeeAppController";
-import EmployeeApplicationStore from "../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState,
+    EmployeeStateContext
+} from "../state/EmployeeApplicationStore";
+import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 
 export default class CacheManager {
 
@@ -19,75 +24,84 @@ export default class CacheManager {
     private breedCacheKey = new CacheKey("breed", CacheVolatility.LOW)
     private animalColorCacheKey = new CacheKey("animalColor", CacheVolatility.LOW)
 
-    private _clinicCache: ExecutableCache
-    private _speciesCache: ExecutableCache
-    private _breedCache: ExecutableCache
-    private _animalColorCache: ExecutableCache
+    private _clinicCache: EmployeeAppCache
+    private _speciesCache: EmployeeAppCache
+    private _breedCache: EmployeeAppCache
+    private _animalColorCache: EmployeeAppCache
 
     constructor(controller: EmployeeAppController, store: EmployeeApplicationStore) {
         this.controller = controller
         this.store = store
         this.settings = new CacheSettings(CacheUtils.getCacheLifetineSettings(),
             [this.clinicCacheKey, this.speciesCacheKey, this.breedCacheKey, this.animalColorCacheKey])
-        this._clinicCache = new ExecutableCache(this.settings, [this.clinicCacheKey], callback => this.loadClinicList(callback))
-        this._speciesCache = new ExecutableCache(this.settings, [this.speciesCacheKey], callback => this.loadSpecies([], callback))
-        this._breedCache = new ExecutableCache(this.settings, [this.breedCacheKey], callback => this.loadBreeds([], callback))
-        this._animalColorCache = new ExecutableCache(this.settings, [this.animalColorCacheKey], callback => this.loadAnimalColors(callback))
+        this._clinicCache = new ExecutableCache(this.settings, [this.clinicCacheKey],
+            (callback, context) => this.loadClinicList(callback, context))
+        this._speciesCache = new ExecutableCache(this.settings, [this.speciesCacheKey],
+            (callback, context) => this.loadSpecies([], callback, context))
+        this._breedCache = new ExecutableCache(this.settings, [this.breedCacheKey],
+            (callback, context) => this.loadBreeds([], callback, context))
+        this._animalColorCache = new ExecutableCache(this.settings, [this.animalColorCacheKey],
+            (callback, context) => this.loadAnimalColors(callback, context))
     }
 
-    get clinicCache(): ExecutableCache {
+    get clinicCache(): EmployeeAppCache{
         return this._clinicCache;
     }
 
-    get speciesCache(): ExecutableCache {
+    get speciesCache(): EmployeeAppCache {
         return this._speciesCache;
     }
 
-    get breedCache(): ExecutableCache {
+    get breedCache(): EmployeeAppCache {
         return this._breedCache;
     }
 
-    get animalColorCache(): ExecutableCache {
+    get animalColorCache(): EmployeeAppCache {
         return this._animalColorCache;
     }
 
-    private loadClinicList(callback: Function): void {
+    private loadClinicList(callback: Function, context?: EmployeeStateContext): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllClinics,
             successCallback: result => {
-                this.store.setState({clinicList: result})
+                this.store.setState({clinicList: result}, context)
                 callback()
             },
         })
     }
 
-    private loadSpecies(params: any[] = [], callback: Function = () => {}): void {
+    private loadSpecies(params: any[] = [], callback: Function = () => {}, context?: EmployeeStateContext): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllSpecies,
             params: params,
             successCallback: result => {
                 this.controller.setState({
                     speciesList: result
-                })
+                }, context)
                 callback(result)
             },
         })
     }
 
-    private loadBreeds(params: any[] = [], callback: Function = () => {}): void {
+    private loadBreeds(params: any[] = [], callback: Function = () => {}, context?: EmployeeStateContext): void {
         fetchUserZoneRpc({
             method: RemoteMethods.getAllBreeds,
             params: params,
             successCallback: result => {
                 this.controller.setState({
                     breedsList: result
-                })
+                }, context)
                 callback(result)
             },
         })
     }
 
-    private loadAnimalColors(callback: Function = () => {}): void {
-        this.controller.dictionariesActions.loadList(RemoteMethods.getAllAnimalColors, "animalColorsList", callback)
+    private loadAnimalColors(callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.dictionariesActions.loadList(RemoteMethods.getAllAnimalColors,
+            "animalColorsList",
+            callback,
+            context)
     }
 }
+
+type EmployeeAppCache = ExecutableCache<EmployeeAppState, EmployeeAppSelectors>

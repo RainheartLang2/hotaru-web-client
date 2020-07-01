@@ -29,6 +29,7 @@ import mergeTypes = CommonUtils.mergeTypes;
 import {Sex} from "../../common/beans/enums/Sex";
 import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/PlannedCallNode";
 import PlannedCall from "../../common/beans/PlannedCall";
+import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -257,3 +258,5 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & ClinicsWorkScheduleSelectors
     & EmployeeScheduleSelectors
     & PlannedCallSelectors
+
+export type EmployeeStateContext = StateChangeContext<EmployeeAppState, EmployeeAppSelectors>

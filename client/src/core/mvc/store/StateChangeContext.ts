@@ -2,7 +2,7 @@ import ApplicationStore, {DefaultStateType} from "./ApplicationStore";
 import ApplicationStoreFriend from "./ApplicationStoreFriend";
 import {CollectionUtils} from "../../utils/CollectionUtils";
 
-export default class StateChangeContext<StateType extends DefaultStateType, SelectorsType> {
+export default class StateChangeContext<StateType extends DefaultStateType = DefaultStateType, SelectorsType = any> {
     private mode: StateChangeContextMode
     private store: ApplicationStoreFriend<StateType, SelectorsType>
     private stateChanges: Map<React.Component, any>
@@ -13,6 +13,10 @@ export default class StateChangeContext<StateType extends DefaultStateType, Sele
         this.mode = mode
         this.changedSelectors = []
         this.stateChanges = new Map()
+    }
+
+    public getMode(): StateChangeContextMode {
+        return this.mode
     }
 
     public setState(component: React.Component, state: any): void {
@@ -44,7 +48,7 @@ export default class StateChangeContext<StateType extends DefaultStateType, Sele
         }
     }
 
-    public onBatchClose(): void {
+    public closeBatch(): void {
         if (this.mode == StateChangeContextMode.BATCHED) {
             this.commitChanges()
         }
