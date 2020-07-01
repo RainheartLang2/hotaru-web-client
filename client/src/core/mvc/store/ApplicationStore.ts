@@ -3,6 +3,7 @@ import FieldValidator from "../validators/FieldValidator";
 import {Field} from "./Field";
 import ApplicationStoreFriend from "./ApplicationStoreFriend";
 import StateChangeContext, {StateChangeContextMode} from "./StateChangeContext";
+import {CollectionUtils} from "../../utils/CollectionUtils";
 
 export default abstract class ApplicationStore<StateType extends DefaultStateType, SelectorsType> {
     private originalState!: StateType
@@ -14,6 +15,8 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     private subscriptionDataByPropertyKey!: Map<keyof (StateType & SelectorsType), SubscriptionData[]>
     private propertyKeysBySubscriber!: Map<React.Component, (keyof (StateType & SelectorsType))[]>
 
+    private selectorDepth!: SelectorDepth<StateType & SelectorsType>
+
     protected initialize(): void {
         this.originalState = this.getDefaultState()
         this.selectors = this.getSelectors()
@@ -21,6 +24,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         this.checkSelectors(this.selectors)
         this.readableState = this.createReadableState()
         this.initializeSelectors()
+        this.selectorDepth = this.initializeSelectorsDepthInfo()
 
         this.subscriptionDataByPropertyKey = new Map()
         this.propertyKeysBySubscriber = new Map()
@@ -38,12 +42,35 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     protected abstract getSelectors(): SelectorsInfo<StateType, SelectorsType>
 
     private initializeSelectors(): void {
-        const context = new StateChangeContext(StateChangeContextMode.AUTO)
+        const context = new StateChangeContext(this.createFriend(), StateChangeContextMode.AUTO)
         //TODO: optimize
         for (let selectorKey in this.selectors) {
             this.refreshSelector(selectorKey, context, false)
         }
         context.onSetState()
+    }
+
+    private initializeSelectorsDepthInfo(): SelectorDepth<StateType & SelectorsType> {
+        let result: any = {}
+        for (let key in this.originalState) {
+            result[key] = 0
+            this.markSelectorDepth(result, 0, key)
+        }
+        return result
+    }
+
+    private markSelectorDepth(selectorDepthInfo: any, currentDepth: number, key: (keyof (StateType & SelectorsType))): void {
+        const dependencies = this.dependencies.get(key)
+        if (dependencies) {
+            dependencies.forEach((dependency: keyof SelectorsType) => {
+                let recordedDepth = selectorDepthInfo[dependency]
+                if (!recordedDepth) {
+                    recordedDepth = 0
+                }
+                selectorDepthInfo[dependency] = Math.max(currentDepth + 1, recordedDepth)
+                this.markSelectorDepth(selectorDepthInfo, currentDepth + 1, dependency)
+            })
+        }
     }
 
     protected createDefaultStateTypeEntry(): DefaultStateType {
@@ -105,7 +132,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
 
     public toggleFieldValidation(fieldKey: keyof SelectorsType,
                                  value: boolean,
-                                 context = new StateChangeContext(StateChangeContextMode.AUTO)
+                                 context = new StateChangeContext(this.createFriend(), StateChangeContextMode.AUTO)
 
     ): void {
         const field = this.readableState[fieldKey] as unknown as Field
@@ -189,7 +216,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
 
     private postChanges<ValueType>(key: keyof (StateType & SelectorsType),
                                    newValue: ValueType,
-                                   context: StateChangeContext,
+                                   context: StateChangeContext<StateType, SelectorsType>,
     ) {
         const propertySubscriptionData = this.getPropertySubscriptionData(key)
         propertySubscriptionData.forEach(subscriptionData => {
@@ -198,7 +225,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     }
 
     private refreshDependencies(key: keyof (StateType & SelectorsType),
-                                context: StateChangeContext,
+                                context: StateChangeContext<StateType, SelectorsType>,
                                 postChanges: boolean = true): void {
         const propertyDependencies = this.dependencies.get(key)
         if (!propertyDependencies) {
@@ -212,27 +239,62 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         })
     }
 
+    private getAllDependencies(key: keyof (StateType & SelectorsType)): (keyof SelectorsType)[] {
+        const propertyDependencies = this.dependencies.get(key)
+        if (!propertyDependencies) {
+            throw new Error("no dependencies for key " + key)
+        }
+        let result: (keyof SelectorsType)[] = propertyDependencies
+        propertyDependencies.forEach(dependency => {
+            try {
+                result = result.concat(this.getAllDependencies(dependency))
+            } catch (e) {
+            }
+        })
+        return result
+    }
+
     public setState(newState: Partial<StateType>,
-                    context = new StateChangeContext(StateChangeContextMode.AUTO)
+                    context = new StateChangeContext(this.createFriend(), StateChangeContextMode.AUTO)
     ): void {
+        let changedSelectors: (keyof SelectorsType)[] = []
         for (let propertyKey in newState) {
             // @ts-ignore
             this.originalState[propertyKey] = newState[propertyKey]
             // @ts-ignore
             this.readableState[propertyKey] = newState[propertyKey]
             this.postChanges(propertyKey, newState[propertyKey], context)
-            this.refreshDependencies(propertyKey, context)
+            context.addChangedSelectors(this.getAllDependencies(propertyKey))
         }
         context.onSetState()
     }
 
-    private refreshSelector(selectorKey: keyof SelectorsType,
-                            context: StateChangeContext,
-                            postChanges: boolean = true): void {
+    private sortSelectors(selectors: (keyof SelectorsType)[]) {
+        selectors.sort((first, second) => {
+            return (this.selectorDepth[first] - this.selectorDepth[second])
+        })
+    }
+
+    private recalculateSelectors(selectors: (keyof SelectorsType)[], context: StateChangeContext<StateType, SelectorsType>) {
+        this.sortSelectors(selectors)
+        selectors.forEach(selectorKey => {
+            this.calculateSelector(selectorKey)
+            this.postChanges(selectorKey, this.state[selectorKey], context)
+        })
+    }
+
+    private calculateSelector(selectorKey: keyof SelectorsType): void {
         const record = this.selectors[selectorKey]
         record.value = record.get(CommonUtils.pick(this.readableState, record.dependsOn), record.value)
         // @ts-ignore
         this.readableState[selectorKey] = record.value
+    }
+
+    private refreshSelector(selectorKey: keyof SelectorsType,
+                            context: StateChangeContext<StateType, SelectorsType>,
+                            postChanges: boolean = true): void {
+        this.calculateSelector(selectorKey)
+        const record = this.selectors[selectorKey]
         if (postChanges) {
             this.postChanges(selectorKey, record.value, context)
         }
@@ -271,11 +333,6 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         return CommonUtils.mergeTypes(this.originalState, getSelectorsValues(this.selectors))
     }
 
-    public batched(executableBody: Function) {
-        //TODO: add batching
-        executableBody()
-    }
-
     protected createFriend(): ApplicationStoreFriend<StateType, SelectorsType> {
         const store = this
         return new class implements ApplicationStoreFriend<StateType, SelectorsType> {
@@ -294,6 +351,10 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
 
             public get state(): Readonly<StateType & SelectorsType> {
                 return store.readableState
+            }
+
+            public recalculateSelectors(selectors: (keyof SelectorsType)[], context: StateChangeContext<StateType, SelectorsType>): void {
+                store.recalculateSelectors(selectors, context)
             }
         }
     }
@@ -341,4 +402,6 @@ export type PropertyAliasInfo<State, ComponentState> = {
     [P in (keyof State)]: keyof ComponentState
 }
 
-export type BatchedCallback = (context: StateChangeContext) => void
+type SelectorDepth<State> = {
+    [P in (keyof State)]: number
+}

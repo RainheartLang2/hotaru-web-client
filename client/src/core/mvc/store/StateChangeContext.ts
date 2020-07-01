@@ -1,11 +1,17 @@
 import ApplicationStore, {DefaultStateType} from "./ApplicationStore";
+import ApplicationStoreFriend from "./ApplicationStoreFriend";
+import {CollectionUtils} from "../../utils/CollectionUtils";
 
-export default class StateChangeContext {
+export default class StateChangeContext<StateType extends DefaultStateType, SelectorsType> {
     private mode: StateChangeContextMode
+    private store: ApplicationStoreFriend<StateType, SelectorsType>
     private stateChanges: Map<React.Component, any>
+    private changedSelectors: (keyof SelectorsType)[]
 
-    constructor(mode = StateChangeContextMode.AUTO) {
+    constructor(store: ApplicationStoreFriend<StateType, SelectorsType>, mode = StateChangeContextMode.AUTO) {
+        this.store = store
         this.mode = mode
+        this.changedSelectors = []
         this.stateChanges = new Map()
     }
 
@@ -20,7 +26,12 @@ export default class StateChangeContext {
         this.stateChanges.set(component, componentData)
     }
 
+    public addChangedSelectors(selectors: (keyof SelectorsType)[]) {
+        this.changedSelectors = this.changedSelectors.concat(selectors)
+    }
+
     private commitChanges(): void {
+        this.store.recalculateSelectors(CollectionUtils.getDistinct(this.changedSelectors), this)
         this.stateChanges.forEach((state: any, component: React.Component) => {
             component.setState(state)
             this.stateChanges.delete(component)

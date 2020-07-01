@@ -76,4 +76,8 @@ export namespace CollectionUtils {
     export function getSimpleNumberArray(length: number): number[] {
         return fillArray(length, 0).map((item, index) => index)
     }
+
+    export function getDistinct<Type>(array: Type[]): Type[] {
+        return array.filter((value, index, self) => self.indexOf(value) == index)
+    }
 }

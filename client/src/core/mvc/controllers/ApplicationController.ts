@@ -1,11 +1,13 @@
 import ApplicationStore, {DefaultStateType, PropertyAliasInfo} from "../store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
+import StateChangeContext, {StateChangeContextMode} from "../store/StateChangeContext";
 
 export default abstract class ApplicationController<StateType extends DefaultStateType = any,
                                                 SelectorsType = any,
                                                 StoreType extends ApplicationStore<StateType, SelectorsType> = any> {
 
     protected store: StoreType
+    private context?: StateChangeContext<StateType, SelectorsType>
     private onErrorEvent: Function = () => {}
 
     constructor(store: StoreType) {
@@ -26,11 +28,11 @@ export default abstract class ApplicationController<StateType extends DefaultSta
     }
 
     public setState(newState: Partial<StateType>): void {
-        this.store.setState(newState)
+        this.store.setState(newState, this.context)
     }
 
     public toggleFieldValidation(fieldKey: keyof SelectorsType, value: boolean) {
-        this.store.toggleFieldValidation(fieldKey, value)
+        this.store.toggleFieldValidation(fieldKey, value, this.context)
     }
 
     public setGlobalApplicationError(errorMessageKey: string) {
@@ -69,8 +71,17 @@ export default abstract class ApplicationController<StateType extends DefaultSta
         this.store.setState(CommonUtils.createLooseObject<StateType>([[submitButtonProperty, value]]))
     }
 
-    public batched(executableBody: Function) {
-        this.store.batched(executableBody)
+    public batched(executableBody: (closeBatch: Function) => void) {
+        // this.context = new StateChangeContext(StateChangeContextMode.BATCHED)
+        // executableBody(() => {
+        //     console.log("closeBatch")
+        //     if (!this.context) {
+        //         throw new Error("context is undefined inside of batch")
+        //     }
+        //     this.context.onBatchClose()
+        //     this.context = undefined
+        // })
+        executableBody(() => {})
     }
 
     public setError(messageKey: string): void {

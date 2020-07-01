@@ -179,13 +179,16 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public openSchedulePage(callback: Function = () => {}): void {
         this.openPage(PageType.Schedule, (setPageLoad: Function) => {
-            this._employeeActions.loadUsersList((employees) => {
-                this.setState({
-                    selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
-                })
-                this.loadSchedulePageInitData(() => {
-                    callback()
-                    setPageLoad()
+            this.batched((closeBatch) => {
+                this._employeeActions.loadUsersList((employees) => {
+                    this.setState({
+                        selectedEmployeeForSchedulePage: employees.length > 0 ? employees[0] : undefined
+                    })
+                    this.loadSchedulePageInitData(() => {
+                        callback()
+                        setPageLoad()
+                        closeBatch()
+                    })
                 })
             })
         })
