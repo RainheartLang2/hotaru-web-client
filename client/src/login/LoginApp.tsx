@@ -8,10 +8,9 @@ import LocaleHolder from "../core/utils/LocaleHolder";
 import {DEFAULT_LOCALE} from "../core/enum/LocaleType";
 import LoginApplicationController from "./controller/LoginApplicationController";
 import ApplicationControllerHolder from "../core/utils/ApplicationControllerHolder";
-import MaskTransformer from "../core/utils/MaskTransformer";
-import {StringUtils} from "../core/utils/StringUtils";
+import CheckingStateComponent from "../core/components/CheckingStateComponent";
 
-export default class LoginApp extends React.Component<Properties, State> {
+export default class LoginApp extends CheckingStateComponent<Properties, State> {
 
     private controller: LoginApplicationController
 

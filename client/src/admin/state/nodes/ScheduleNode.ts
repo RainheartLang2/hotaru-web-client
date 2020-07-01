@@ -234,7 +234,6 @@ export default class ScheduleNode {
                     | "schedulePageWeek"
                     | "employeeWorkScheduleDeviationsList"
                     >) => {
-                    console.log(state)
                     if (state.pageType != PageType.Schedule) {
                         return []
                     }

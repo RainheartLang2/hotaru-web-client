@@ -27,14 +27,14 @@ import EmployeeApplicationStore, {
 import ConnectedSelect from "../../../../core/components/ConnectedSelect/ConnectedSelect";
 import {AppointmentInfo} from "../../../../common/beans/AppointmentInfo";
 import {DaySchedule} from "../../../../common/beans/DaySchedule";
-import CustomTooltip from "../../../../core/components/customTooltip/CustomTooltip";
 import {DateUtils} from "../../../../core/utils/DateUtils";
 import {PersonalScheduleAppointmentType} from "../../../../common/beans/enums/PersonalScheduleAppointmentType";
 import {PlannedCallTooltipHeader} from "./subcomponents/callTooltipHeader/PlannedCallTooltipHeader";
+import CheckingStateComponent from "../../../../core/components/CheckingStateComponent";
 
 var styles = require("./styles.css")
 
-export default class SchedulePage extends React.Component<Properties, State> {
+export default class SchedulePage extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
         super(props)
 
@@ -61,17 +61,12 @@ export default class SchedulePage extends React.Component<Properties, State> {
                 return (
                     <WeekView.TimeTableCell
                         {...this.props}>
-                        <CustomTooltip
-                            title={<Message messageKey={"page.schedule.nonWorkingTime.tooltip.label"}/>}
-                            active={!isActive}
-                        >
                             <div className={isActive ? styles.timeTableCell : styles.inactiveTimeTableCell} onClick={() => {
                                 onClick({
                                     startDate: this.props.startDate!,
                                     endDate: this.props.endDate!,
                                 })
                             }}></div>
-                        </CustomTooltip>
                     </WeekView.TimeTableCell>
                 )
             }

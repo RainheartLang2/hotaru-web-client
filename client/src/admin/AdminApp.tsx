@@ -19,10 +19,11 @@ import ApplicationControllerHolder from "../core/utils/ApplicationControllerHold
 import EmployeeAppController from "./controller/EmployeeAppController";
 import EmployeeLeftMenuContainer from "./containers/EmployeeLeftMenuContainer";
 import EmployeeRightPanelContainer from "./containers/EmployeeRightPanelContainer";
+import CheckingStateComponent from "../core/components/CheckingStateComponent";
 
 export let CURRENT_THEME: Theme = vetTheme;
 
-export default class AdminApp extends React.Component<Properties, State> {
+export default class AdminApp extends CheckingStateComponent<Properties, State> {
 
     private controller: EmployeeAppController
 

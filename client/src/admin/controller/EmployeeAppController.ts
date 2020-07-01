@@ -175,7 +175,8 @@ export default class EmployeeAppController extends ApplicationController<Employe
                     this._employeeScheduleActions.loadEmployeeSchedule(
                         this.state.selectedEmployeeForSchedulePage!.id!,
                         this.state.schedulePageDate,
-                        () => callback()),
+                        () => callback(),
+                        context),
                         context
                 })
             }, context)

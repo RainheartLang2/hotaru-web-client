@@ -207,7 +207,7 @@ export default class ScheduleActions {
         }
         const changedList = changes.changed
         for (let key in changedList) {
-            const id = +key
+            const id = PersonalScheduleAppointmentType.extractIdData(key).id
             const dateRange = changedList[key]
             if (isChangeAllowed(dateRange.startDate, dateRange.endDate)) {
                 this.updateDates(id, dateRange.startDate, dateRange.endDate, callback)
@@ -255,7 +255,6 @@ export default class ScheduleActions {
             const clientIds = appointments.map(appointment => appointment.clientId).filter(id => !!id)
             // @ts-ignore
             this.controller.clientActions.loadClientsWithPets(clientIds, () => callback(), context)
-            callback()
         }, context)
     }
 

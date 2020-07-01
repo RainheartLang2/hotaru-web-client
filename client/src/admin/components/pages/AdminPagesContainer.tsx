@@ -16,8 +16,9 @@ import AnimalColorPage from "./animalColor/AnimalColorPage";
 import ClinicsWorkschedulePage from "./clinicsWorkschedule/ClinicsWorkschedulePage";
 import EmployeesWorkSchedulePage from "./employeesWorkSchedule/EmployeesWorkSchedulePage";
 import PlannedCallsPage from "./plannedCalls/PlannedCallsPage";
+import CheckingStateComponent from "../../../core/components/CheckingStateComponent";
 
-export default class AdminPagesContainer extends React.Component<Properties, State> {
+export default class AdminPagesContainer extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
         super(props)
         this.state = {
