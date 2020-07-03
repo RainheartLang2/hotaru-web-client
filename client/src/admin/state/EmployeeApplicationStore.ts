@@ -25,11 +25,11 @@ import EmployeeWorkScheduleNode, {
     EmployeeWorkScheduleState
 } from "./nodes/EmployeeWorkScheduleNode";
 import {RightPanelType} from "./enum/RightPanelType";
-import mergeTypes = CommonUtils.mergeTypes;
 import {Sex} from "../../common/beans/enums/Sex";
 import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/PlannedCallNode";
-import PlannedCall from "../../common/beans/PlannedCall";
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
+import {AccountingMenuItemType} from "./enum/AccountingMenuItemType";
+import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -162,6 +162,8 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
                 return NavigationMenuItemType.ClientsList
             case PageType.PlannedCalls:
                 return NavigationMenuItemType.Calls
+            case PageType.SalesCategories:
+                return NavigationMenuItemType.Accounting
 
             default: return NavigationMenuItemType.None
         }
@@ -186,6 +188,10 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.EmployeesWorkSchedule:
                 return SecondLevelNavigationMenuType.EmployeesManagement
 
+            case PageType.SalesCategories:
+            case PageType.Sales:
+                return SecondLevelNavigationMenuType.Accounting
+
             default: return SecondLevelNavigationMenuType.None
         }
     }
@@ -205,6 +211,9 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
 
             case PageType.UserList: return EmployeeManagementMenuItemType.EmployeeList
             case PageType.EmployeesWorkSchedule: return EmployeeManagementMenuItemType.WorkSchedule
+
+            case PageType.SalesCategories: return AccountingMenuItemType.SalesCategories
+            case PageType.Sales: return AccountingMenuItemType.Sales
 
             default: return DictionaryMenuItemType.None
         }

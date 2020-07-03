@@ -199,6 +199,12 @@ export namespace StringUtils {
         return result
     }
 
+    export function numberToStringEmptyIfZero(num: number) : string {
+        if (num == 0) {
+            return ""
+        }
+        return num.toString()
+    }
 
     export enum DifferenceType {
         Addition,

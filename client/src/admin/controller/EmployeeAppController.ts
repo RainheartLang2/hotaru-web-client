@@ -316,6 +316,23 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openAccountingPage(callback: Function = () => {}): void {
+        this.openSalesCategoryPage(callback)
+    }
+
+    public openSalesPage(callback: Function = () => {}): void {
+
+    }
+
+    public openSalesCategoryPage(callback: Function = () => {}): void {
+        this.openPage(PageType.SalesCategories, (setPageLoad: Function) => {
+            this.dictionariesActions.loadSalesCategories(() => {
+                setPageLoad()
+                callback()
+            })
+        })
+    }
+
     public setShowDialog(dialogType: DialogType): void {
         this.store.setState({dialogType})
     }

@@ -38,6 +38,11 @@ export default class NavigationMenu extends React.Component<Properties, State> {
                     value={NavigationMenuItemType.Calls}
                     onClick={() => this.props.controller.openCallsPage()}
                 />
+                <Tab
+                    label={<Message messageKey={"navigationMenu.accounting.title"}/>}
+                    value={NavigationMenuItemType.Accounting}
+                    onClick={() => this.props.controller.openSalesCategoryPage()}
+                />
             </Tabs>
         )
     }

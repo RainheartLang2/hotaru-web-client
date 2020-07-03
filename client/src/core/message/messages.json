@@ -62,6 +62,9 @@
       "plannedCall.state.canceled.name": "Отменён",
       "plannedCall.state.expired.name": "Просрочен",
 
+      "salesType.goods.name.plural": "Товары",
+      "salesType.service.name.plural": "Услуги",
+
       "plannedCall.edit.tooltip": "Редактировать звонок",
       "plannedCall.state.done.tooltip": "Отметить звонок выполненным",
       "plannedCall.state.cancel.tooltip": "Отменить звонок",
@@ -75,6 +78,7 @@
       "navigationMenu.settings.title": "Настройки",
       "navigationMenu.clients.title": "Клиенты",
       "navigationMenu.calls.title": "Звонки",
+      "navigationMenu.accounting.title": "Учёт",
       "navigationMenu.settingsIcom.tooltip.label": "Настройки",
       "navigationMenu.settings.dialog.global": "Основные настройки",
       "navigationMenu.settings.dialog.locale": "Локализация",
@@ -100,6 +104,9 @@
 
       "second.navigation.employeesManagement.employeesList.label": "Список сотрудников",
       "second.navigation.employeesManagement.workSchedule.label": "График работы",
+
+      "second.navigation.accounting.sales.label": "Товары и услуги",
+      "second.navigation.accounting.categories.label": "Группы товаров и услуг",
 
       "dayScheduleDeviation.clinic.global.label": "Для всех клиник",
       "dayScheduleDeviation.clinic.global.tooltip": "Использовать данное изменение в расписании всех клиник",
@@ -133,6 +140,8 @@
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
       "page.plannedCalls.title": "Прозвоны",
+
+      "page.salesCategories.title": "Список групп товаров и услуг",
 
       "page.employeesWorkSchedule.title": "График работы сотрудника",
       "page.employeesWorkSchedule.defaultWorkSchedule.name": "График по-умолчанию",

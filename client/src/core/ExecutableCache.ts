@@ -17,6 +17,7 @@ export default class ExecutableCache<StateType extends DefaultStateType, Selecto
     }
 
     public execute(callback: Function, context?: StateChangeContext<StateType, SelectorsType>) {
+        console.log("execute")
         let needToRefresh = false
         this.keys.forEach(key => {
             if (this.settings.isNeedUpdate(key)) {

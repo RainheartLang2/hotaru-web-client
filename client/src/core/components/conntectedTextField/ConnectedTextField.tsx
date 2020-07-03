@@ -16,6 +16,10 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
                                             StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<StateType, SelectorsType, StoreType>, State> {
 
+    static defaultProps = {
+        size: "small",
+    }
+
     private prevValue: string
     private maskTransformer: MaskTransformer = new MaskTransformer("")
 

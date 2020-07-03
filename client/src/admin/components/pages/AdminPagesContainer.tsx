@@ -17,6 +17,7 @@ import ClinicsWorkschedulePage from "./clinicsWorkschedule/ClinicsWorkschedulePa
 import EmployeesWorkSchedulePage from "./employeesWorkSchedule/EmployeesWorkSchedulePage";
 import PlannedCallsPage from "./plannedCalls/PlannedCallsPage";
 import CheckingStateComponent from "../../../core/components/CheckingStateComponent";
+import SalesCategoryPage from "./accounting/SalesCategoryPage";
 
 export default class AdminPagesContainer extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
@@ -49,6 +50,7 @@ export default class AdminPagesContainer extends CheckingStateComponent<Properti
             {this.isRenderPage(PageType.ClinicsWorkschedule) && (<ClinicsWorkschedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.EmployeesWorkSchedule) && (<EmployeesWorkSchedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.PlannedCalls) && (<PlannedCallsPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.SalesCategories) && (<SalesCategoryPage controller={this.props.controller}/>)}
         </>)
     }
 

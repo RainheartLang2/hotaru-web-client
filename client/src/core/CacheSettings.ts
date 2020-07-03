@@ -14,7 +14,7 @@ export default class CacheSettings {
     public isNeedUpdate(key: CacheKey): boolean {
         let lastUpdateStamp = this.keysData.get(key)
         if (lastUpdateStamp == null) {
-            throw new Error("Settings contain info about key " + key.name)
+            throw new Error("Settings does not contain info about key " + key.name)
         }
         return (lastUpdateStamp + this.getLifeTime(key)) < Date.now()
     }

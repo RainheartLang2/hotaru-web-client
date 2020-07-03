@@ -6,6 +6,7 @@ import ClinicsManagementLeftMenu
     from "../components/navigationMenu/secondLevelNavigation/clinics/ClinicsManagementLeftMenu";
 import EmployeesManagementLeftMenu
     from "../components/navigationMenu/secondLevelNavigation/employees/EmployeesManagementLeftMenu";
+import AccountingLeftMenu from "../components/navigationMenu/secondLevelNavigation/accounting/AccountingLeftMenu";
 
 export default class EmployeeLeftMenuContainer extends React.Component<Properties, State> {
 
@@ -32,6 +33,11 @@ export default class EmployeeLeftMenuContainer extends React.Component<Propertie
                         />}
                 {this.state.menu == SecondLevelNavigationMenuType.EmployeesManagement
                     && <EmployeesManagementLeftMenu
+                            controller={this.props.controller}
+                            selectedEntryKey={this.state.selectedEntryKey}
+                        />}
+                {this.state.menu == SecondLevelNavigationMenuType.Accounting
+                    && <AccountingLeftMenu
                             controller={this.props.controller}
                             selectedEntryKey={this.state.selectedEntryKey}
                         />}

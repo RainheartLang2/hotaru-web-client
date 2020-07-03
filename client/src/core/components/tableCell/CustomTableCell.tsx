@@ -14,5 +14,5 @@ export default class CustomTableCell extends React.Component<Properties> {
 }
 
 type Properties = {
-    style: string,
+    style?: string,
 }

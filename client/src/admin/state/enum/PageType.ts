@@ -13,5 +13,7 @@ export enum PageType {
     ClinicsWorkschedule,
     EmployeesWorkSchedule,
     PlannedCalls,
+    SalesCategories,
+    Sales,
     None,
 }

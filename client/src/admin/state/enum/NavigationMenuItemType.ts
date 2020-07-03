@@ -8,4 +8,5 @@ export enum NavigationMenuItemType {
     SettingsMenu,
     ClientsList,
     Calls,
+    Accounting,
 }

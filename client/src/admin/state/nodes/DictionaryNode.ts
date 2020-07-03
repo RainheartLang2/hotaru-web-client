@@ -11,6 +11,8 @@ import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
 import VisitPurpose from "../../../common/beans/VisitPurpose";
 import {AnimalColor} from "../../../common/beans/AnimalColor";
+import {SalesCategory} from "../../../common/beans/SalesCategory";
+import {SalesType} from "../../../common/beans/enums/SalesType";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -21,6 +23,9 @@ export default class DictionaryNode {
     }
 
     public getDefaultState(): DictionariesPagesState {
+        const salesTypeMap = new Map<number, SalesType>()
+        salesTypeMap.set(SalesType.salesTypeToNumber(SalesType.Goods), SalesType.Goods)
+        salesTypeMap.set(SalesType.salesTypeToNumber(SalesType.Service), SalesType.Service)
         return {
             measureList: [],
             editedMeasureId: undefined,
@@ -46,6 +51,17 @@ export default class DictionaryNode {
             editedAnimalColorId: undefined,
             editedAnimalColorName: "",
             addedAnimalColorName: "",
+
+            salesCategoriesList: [],
+            salesTypesList: salesTypeMap,
+            editedSalesCategoryId: undefined,
+            editedSalesCategoryName: "",
+            editedSalesCategoryType: null,
+            editedSalesCategoryExtraCharge: "",
+
+            addedSalesCategoryName: "",
+            addedSalesCategoryType: SalesType.Goods,
+            addedSalesCategoryExtraCharge: "",
         }
     }
 
@@ -105,6 +121,16 @@ export default class DictionaryNode {
                 new MaximalLengthValidator(50),
             ],
                 false),
+
+            salesCategoriesById: {
+                dependsOn: ["salesCategoriesList"],
+                get: (state: Pick<DictionariesPagesState, "salesCategoriesList">) => CollectionUtils.mapIdentifiableArray(state.salesCategoriesList),
+                value: new Map(),
+            },
+            addedSalesCategoryNameField: this._store.createField("addedSalesCategoryName"),
+            addedSalesCategoryExtraChargeField: this._store.createField("addedSalesCategoryExtraCharge"),
+            editedSalesCategoryNameField: this._store.createField("editedSalesCategoryName"),
+            editedSalesCategotyExtraChargeField: this._store.createField("editedSalesCategoryExtraCharge"),
         }
     }
 }
@@ -134,6 +160,17 @@ export type DictionariesPagesState = {
     editedAnimalColorId: number | undefined,
     editedAnimalColorName: string,
     addedAnimalColorName: string,
+
+    salesCategoriesList: SalesCategory[],
+    editedSalesCategoryId: number | undefined,
+    editedSalesCategoryName: string,
+    salesTypesList: Map<number, SalesType>,
+    editedSalesCategoryType: SalesType | null,
+    editedSalesCategoryExtraCharge: string,
+
+    addedSalesCategoryName: string,
+    addedSalesCategoryType: SalesType | null,
+    addedSalesCategoryExtraCharge: string,
 }
 
 export type DictionariesPageSelectors = {
@@ -151,4 +188,11 @@ export type DictionariesPageSelectors = {
 
     animalColorsById: Map<number, AnimalColor>,
     addedAnimalColorNameField: Field,
+
+    salesCategoriesById: Map<number, SalesCategory>
+    editedSalesCategoryNameField: Field,
+    editedSalesCategotyExtraChargeField: Field,
+    addedSalesCategoryNameField: Field,
+    addedSalesCategoryExtraChargeField: Field,
+
 }

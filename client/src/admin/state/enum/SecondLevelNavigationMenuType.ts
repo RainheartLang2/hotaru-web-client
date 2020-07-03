@@ -3,4 +3,5 @@ export enum SecondLevelNavigationMenuType {
     Dictionaries,
     ClinicsManagement,
     EmployeesManagement,
+    Accounting,
 }

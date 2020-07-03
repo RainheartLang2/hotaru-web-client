@@ -10,6 +10,10 @@ import VisitResult from "../../../common/beans/VisitResult";
 import Diagnosis from "../../../common/beans/Diagnosis";
 import VisitPurpose from "../../../common/beans/VisitPurpose";
 import {AnimalColor} from "../../../common/beans/AnimalColor";
+import {SalesCategory} from "../../../common/beans/SalesCategory";
+import {StringUtils} from "../../../core/utils/StringUtils";
+import {SalesType} from "../../../common/beans/enums/SalesType";
+import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
 
 export default class DictionariesActions {
 
@@ -59,12 +63,13 @@ export default class DictionariesActions {
         return result
     }
 
-    public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function, context?: EmployeeStateContext): void {
+    public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function, context?: EmployeeStateContext,
+                    parseResponse: (result: any) => any = result => result): void {
         fetchUserZoneRpc({
             method,
             successCallback: result => {
                 this.controller.setState({
-                    [resultKey]: result,
+                    [resultKey]: parseResponse(result),
                 }, context)
                 callback(result)
             },
@@ -89,6 +94,10 @@ export default class DictionariesActions {
 
     public loadAnimalColorsList(callback: Function = () => {}, context?: EmployeeStateContext): void {
         this.controller.cacheManager.animalColorCache.execute(callback, context)
+    }
+
+    public loadSalesCategories(callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.cacheManager.salesCategoriesCache.execute(callback, context)
     }
 
     private submitCreateItem<Type extends Identifiable>(item: Type,
@@ -176,6 +185,23 @@ export default class DictionariesActions {
         this.submitCreateItem(item, RemoteMethods.addAnimalColor, setState, callback)
     }
 
+    public submitCreateSalesCategory(callback: Function = () => {}): void {
+        const item: SalesCategory = new SalesCategory({
+            name: this.controller.state.addedSalesCategoryNameField.value,
+            type: this.controller.state.addedSalesCategoryType!,
+            extraCharge: +this.controller.state.addedSalesCategoryExtraChargeField.value,
+        })
+        const setState = (item: SalesCategory) => {
+            this.controller.setState({
+                salesCategoriesList: [...this.controller.state.salesCategoriesList, item],
+                addedSalesCategoryName: "",
+                addedSalesCategoryType: SalesType.Goods,
+                addedSalesCategoryExtraCharge: "",
+            })
+        }
+        this.submitCreateItem(item, RemoteMethods.addSalesCategory, setState, callback)
+    }
+
     private submitEditItem<Type extends Identifiable>(item: Type, method: RemoteMethod, listPropertyKey: keyof EmployeeAppState, callback: Function): void {
         fetchUserZoneRpc({
             method,
@@ -229,6 +255,49 @@ export default class DictionariesActions {
         this.submitEditItem(item, RemoteMethods.editAnimalColor, "animalColorsList", callback)
     }
 
+    public setSalesCategoryId(id?: number) {
+        if (id) {
+            const category = this.controller.state.salesCategoriesById.get(id)
+            if (!category) {
+                throw new Error("no category with id " + id)
+            }
+            this.controller.setState({
+                editedSalesCategoryId: id,
+                editedSalesCategoryName: category.getName(),
+                editedSalesCategoryType: category.getSalesType(),
+                editedSalesCategoryExtraCharge: StringUtils.numberToStringEmptyIfZero(category.getExtraCharge()),
+            })
+        } else {
+            this.controller.setState({
+                editedSalesCategoryId: id,
+                editedSalesCategoryName: "",
+                editedSalesCategoryType: null,
+                editedSalesCategoryExtraCharge: "",
+            })
+        }
+    }
+
+    public setEditedSalesCategoryName(name: string) {
+        this.controller.setState({
+            editedSalesCategoryName: name,
+        })
+    }
+
+    public setEditedSalesCategoryType(type: SalesType) {
+        this.controller.setState({
+            editedSalesCategoryType: type
+        })
+    }
+
+    public submitEditSalesCategory() {
+        // const item: SalesCategory = {
+        //     id: this.controller.state.editedSalesCategoryId,
+        //     name: this.controller.state.editedSalesCategoryNameField.value,
+        //
+        // }
+        // this.submitEditItem(item, RemoteMethods.editMeasure, "measureList", callback)
+    }
+
     private deleteItem(id: number, method: RemoteMethod, propertyKey: keyof EmployeeAppState): void {
         fetchUserZoneRpc({
             method,
@@ -257,5 +326,9 @@ export default class DictionariesActions {
 
     public deleteAnimalColor(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteAnimalColor, "animalColorsList")
+    }
+
+    public deleteSalesCategory(id: number): void {
+        this.deleteItem(id, RemoteMethods.deleteSalesCategory, "salesCategoriesList")
     }
 }

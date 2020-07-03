@@ -11,7 +11,7 @@ import EmployeeApplicationStore, {
     EmployeeAppState,
     EmployeeStateContext
 } from "../state/EmployeeApplicationStore";
-import StateChangeContext from "../../core/mvc/store/StateChangeContext";
+import {SalesCategory, SalesCategoryBean} from "../../common/beans/SalesCategory";
 
 export default class CacheManager {
 
@@ -23,17 +23,27 @@ export default class CacheManager {
     private speciesCacheKey = new CacheKey("species", CacheVolatility.LOW)
     private breedCacheKey = new CacheKey("breed", CacheVolatility.LOW)
     private animalColorCacheKey = new CacheKey("animalColor", CacheVolatility.LOW)
+    private salesCategoriesCacheKey = new CacheKey("salesCategories", CacheVolatility.LOW)
 
     private _clinicCache: EmployeeAppCache
     private _speciesCache: EmployeeAppCache
     private _breedCache: EmployeeAppCache
     private _animalColorCache: EmployeeAppCache
+    private _salesCategoriesCache: EmployeeAppCache
 
     constructor(controller: EmployeeAppController, store: EmployeeApplicationStore) {
         this.controller = controller
         this.store = store
         this.settings = new CacheSettings(CacheUtils.getCacheLifetineSettings(),
-            [this.clinicCacheKey, this.speciesCacheKey, this.breedCacheKey, this.animalColorCacheKey])
+            [
+                this.clinicCacheKey,
+                this.speciesCacheKey,
+                this.breedCacheKey,
+                this.animalColorCacheKey,
+                this.salesCategoriesCacheKey
+            ])
+
+
         this._clinicCache = new ExecutableCache(this.settings, [this.clinicCacheKey],
             (callback, context) => this.loadClinicList(callback, context))
         this._speciesCache = new ExecutableCache(this.settings, [this.speciesCacheKey],
@@ -42,6 +52,8 @@ export default class CacheManager {
             (callback, context) => this.loadBreeds([], callback, context))
         this._animalColorCache = new ExecutableCache(this.settings, [this.animalColorCacheKey],
             (callback, context) => this.loadAnimalColors(callback, context))
+        this._salesCategoriesCache = new ExecutableCache(this.settings, [this.salesCategoriesCacheKey],
+            (callback, context) => this.loadSalesCategories(callback, context))
     }
 
     get clinicCache(): EmployeeAppCache{
@@ -58,6 +70,10 @@ export default class CacheManager {
 
     get animalColorCache(): EmployeeAppCache {
         return this._animalColorCache;
+    }
+
+    get salesCategoriesCache(): EmployeeAppCache {
+        return this._salesCategoriesCache;
     }
 
     private loadClinicList(callback: Function, context?: EmployeeStateContext): void {
@@ -101,6 +117,17 @@ export default class CacheManager {
             "animalColorsList",
             callback,
             context)
+    }
+
+    private loadSalesCategories(callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.controller.dictionariesActions.loadList(RemoteMethods.getAllSalesCategories,
+            "salesCategoriesList",
+            callback,
+            context,
+            result => {
+                return (result as SalesCategoryBean[]).map(bean => new SalesCategory(bean))
+            },
+            )
     }
 }
 
