@@ -14,14 +14,18 @@ export default class ConnectedSelect<ItemType,
 
     static defaultProps = {
         variant: "outlined",
-        onChange: () => {}
+        onChange: () => {},
+        onFocus: () => {},
+        onBlur: () => {},
+        controlled: true,
+        defaultValue: null,
     }
 
     constructor(props: Properties<ItemType, StateType, SelectorsType>) {
         super(props)
         this.state = {
             itemsMap: new Map(),
-            selectedItem: null,
+            selectedItem: this.props.defaultValue,
         }
     }
 
@@ -45,12 +49,20 @@ export default class ConnectedSelect<ItemType,
                     )}
             <Select
                 onChange={event => {
-                    this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, itemsMap.get(+(event.target.value as string))]]))
-                    this.props.onChange()
+                    const selectedItem = itemsMap.get(+(event.target.value as string))
+                    this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, selectedItem]]))
+                    this.props.onChange(event)
+                    if (!this.props.controlled) {
+                        this.setState({
+                            selectedItem: selectedItem ? selectedItem : null,
+                        })
+                    }
                 }}
                 value={getKey(this.state.selectedItem)}
                 fullWidth={true}
                 variant={this.props.variant}
+                onBlur={this.props.onBlur}
+                onFocus={this.props.onFocus}
             >
                 {options}
             </Select>
@@ -59,10 +71,11 @@ export default class ConnectedSelect<ItemType,
     }
 
     componentDidMount() {
-        this.props.controller.subscribe(this, CommonUtils.createLooseObject([
-            [this.props.mapProperty, "itemsMap"],
-            [this.props.selectedItemProperty, "selectedItem"],
-        ]))
+        const properties: [any, any][] = [[this.props.mapProperty, "itemsMap"]]
+        if (this.props.controlled) {
+            properties.push([this.props.selectedItemProperty, "selectedItem"])
+        }
+        this.props.controller.subscribe(this, CommonUtils.createLooseObject(properties))
     }
 
     componentWillUnmount(): void {
@@ -78,7 +91,11 @@ type Properties<ItemType, StateType, SelectorsType> = {
     selectedItemProperty: keyof StateType,
     itemToString: (item: ItemType) => string,
     getKey: (item: ItemType | null) => number,
-    onChange: Function
+    onChange: (event: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => void,
+    onBlur: (event: React.FocusEvent<{ name?: string | undefined; value: unknown; }>) => void,
+    onFocus: (event: React.FocusEvent<{ name?: string | undefined; value: unknown; }>) => void,
+    controlled: boolean,
+    defaultValue: ItemType
 }
 
 type State<ItemType> = {

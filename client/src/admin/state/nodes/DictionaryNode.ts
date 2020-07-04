@@ -13,6 +13,7 @@ import VisitPurpose from "../../../common/beans/VisitPurpose";
 import {AnimalColor} from "../../../common/beans/AnimalColor";
 import {SalesCategory} from "../../../common/beans/SalesCategory";
 import {SalesType} from "../../../common/beans/enums/SalesType";
+import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -127,10 +128,11 @@ export default class DictionaryNode {
                 get: (state: Pick<DictionariesPagesState, "salesCategoriesList">) => CollectionUtils.mapIdentifiableArray(state.salesCategoriesList),
                 value: new Map(),
             },
-            addedSalesCategoryNameField: this._store.createField("addedSalesCategoryName"),
-            addedSalesCategoryExtraChargeField: this._store.createField("addedSalesCategoryExtraCharge"),
-            editedSalesCategoryNameField: this._store.createField("editedSalesCategoryName"),
-            editedSalesCategotyExtraChargeField: this._store.createField("editedSalesCategoryExtraCharge"),
+            addedSalesCategoryNameField: this._store.createField("addedSalesCategoryName", "" ,
+                [new RequiredFieldValidator(),
+                new MaximalLengthValidator(100)
+                ]),
+            addedSalesCategoryExtraChargeField: this._store.createField("addedSalesCategoryExtraCharge", "", ValidatorUtils.getFloatNumberFieldValidators()),
         }
     }
 }
@@ -190,8 +192,6 @@ export type DictionariesPageSelectors = {
     addedAnimalColorNameField: Field,
 
     salesCategoriesById: Map<number, SalesCategory>
-    editedSalesCategoryNameField: Field,
-    editedSalesCategotyExtraChargeField: Field,
     addedSalesCategoryNameField: Field,
     addedSalesCategoryExtraChargeField: Field,
 

@@ -289,13 +289,20 @@ export default class DictionariesActions {
         })
     }
 
-    public submitEditSalesCategory() {
-        // const item: SalesCategory = {
-        //     id: this.controller.state.editedSalesCategoryId,
-        //     name: this.controller.state.editedSalesCategoryNameField.value,
-        //
-        // }
-        // this.submitEditItem(item, RemoteMethods.editMeasure, "measureList", callback)
+    public setEditedSalesCategoryExtraCharge(extraCharge: string) {
+        this.controller.setState({
+            editedSalesCategoryExtraCharge: extraCharge
+        })
+    }
+
+    public submitEditSalesCategory(callback: Function = () => {}) {
+        const item: SalesCategory = new SalesCategory({
+            id: this.controller.state.editedSalesCategoryId,
+            name: this.controller.state.editedSalesCategoryName,
+            type: this.controller.state.editedSalesCategoryType!,
+            extraCharge: StringUtils.stringToNumberZeroIfEmpty(this.controller.state.editedSalesCategoryExtraCharge)
+        })
+        this.submitEditItem(item, RemoteMethods.editSalesCategory, "salesCategoriesList", callback)
     }
 
     private deleteItem(id: number, method: RemoteMethod, propertyKey: keyof EmployeeAppState): void {

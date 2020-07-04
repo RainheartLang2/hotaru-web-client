@@ -7,6 +7,7 @@
       "validator.time.message": "Поле должно быть заполнено в формате 'hh:mm' и содержать только цифры",
       "validator.date.message": "Поле должно содержать корректно заполненную дату",
       "validator.notPast.message": "Дата в данном поле не может относиться к уже прошедшему дню",
+      "validator.floatNumber.message": "Поле должно быть заполнено числом в корректной записи",
 
       "field.login.label": "Логин",
       "field.password.label": "Пароль",

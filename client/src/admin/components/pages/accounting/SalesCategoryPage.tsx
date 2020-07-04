@@ -2,9 +2,10 @@ import * as React from "react";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 import {Message} from "../../../../core/components/Message";
 import {TableBodyCmp, TableCmp, TableRowCmp} from "../../../../core/components";
-import {Link, TextField} from "@material-ui/core";
-import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
-import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../state/EmployeeApplicationStore";
 import PageHeader from "../../../../common/components/pageHeader/PageHeader";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
 import {SalesCategory} from "../../../../common/beans/SalesCategory";
@@ -16,6 +17,10 @@ import {SalesType} from "../../../../common/beans/enums/SalesType";
 import DeleteIcon from "@material-ui/icons/DeleteSharp"
 import AddIcon from "@material-ui/icons/AddSharp"
 import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
+import {StringUtils} from "../../../../core/utils/StringUtils";
+import {ValidatorUtils} from "../../../../core/utils/ValidatorUtils";
+import MaximalLengthValidator from "../../../../core/mvc/validators/MaximalLengthValidator";
+
 var styles = require("./styles.css")
 
 export default class SalesCategoryPage extends React.Component<Properties, State> {
@@ -44,15 +49,37 @@ export default class SalesCategoryPage extends React.Component<Properties, State
                                         <ValidatedTextField
                                             defaultValue={item.getName()}
                                             onFocus={() => actions.setSalesCategoryId(item.id)}
-                                            onChange={(event) => {}}
-                                            onBlur={(event) => actions.submitEditAnimalColor(() => actions.setEditedAnimalColorId(undefined))}
+                                            onChange={(event) => {actions.setEditedSalesCategoryName(event.target.value)}}
+                                            onBlur={(event) => actions.submitEditSalesCategory(() => actions.setSalesCategoryId(undefined))}
                                             validators={[
                                                 new RequiredFieldValidator(),
+                                                new MaximalLengthValidator(100),
                                             ]}
                                         />
                                     </CustomTableCell>
-                                    <CustomTableCell/>
-                                    <CustomTableCell/>
+                                    <CustomTableCell>
+                                        <ConnectedSelect<SalesType, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                            controller={this.props.controller}
+                                            mapProperty={"salesTypesList"}
+                                            selectedItemProperty={"editedSalesCategoryType"}
+                                            itemToString={type => SalesType.salesTypeToString(type)}
+                                            getKey={type => type ? SalesType.salesTypeToNumber(type) : -1}
+                                            onFocus={() => actions.setSalesCategoryId(item.id)}
+                                            onChange={event => actions.setEditedSalesCategoryType(event.target.value as SalesType)}
+                                            onBlur={(event) => actions.submitEditSalesCategory(() => actions.setSalesCategoryId(undefined))}
+                                            controlled={false}
+                                            defaultValue={SalesType.Goods}
+                                        />
+                                    </CustomTableCell>
+                                    <CustomTableCell>
+                                        <ValidatedTextField
+                                            defaultValue={StringUtils.numberToStringEmptyIfZero(item.getExtraCharge())}
+                                            onFocus={() => actions.setSalesCategoryId(item.id)}
+                                            onChange={(event) => {actions.setEditedSalesCategoryName(event.target.value)}}
+                                            onBlur={(event) => actions.submitEditSalesCategory(() => actions.setSalesCategoryId(undefined))}
+                                            validators={ValidatorUtils.getFloatNumberFieldValidators()}
+                                        />
+                                    </CustomTableCell>
                                     <CustomTableCell style={styles.actions}>
                                         <CustomContentButton
                                             onClick={() => {

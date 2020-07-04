@@ -206,6 +206,10 @@ export namespace StringUtils {
         return num.toString()
     }
 
+    export function stringToNumberZeroIfEmpty(value: string): number {
+        return value == "" ? 0 : +value
+    }
+
     export enum DifferenceType {
         Addition,
         Deletion,

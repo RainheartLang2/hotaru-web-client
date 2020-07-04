@@ -22,16 +22,19 @@ export default class ValidatedTextField extends React.Component<Properties, Stat
     }
 
     private validate(event: React.ChangeEvent<HTMLInputElement>): void {
-        let errorValidator : FieldValidator | null = null
+        let errorValidators : FieldValidator[] = []
         this.props.validators.forEach(validator => {
             if (!validator.isValid(event.target.value)) {
-                errorValidator = validator
+                errorValidators.push(validator)
             }
         })
+        const abortingValidators = errorValidators.filter(validator => validator.isAbortingValidator())
+        const isThereAbortingValidator = abortingValidators.length > 0
+        const error = !isThereAbortingValidator && errorValidators.length > 0
         this.setState({
-            valid: !errorValidator,
-            value: (!!errorValidator && errorValidator!.isAbortingValidator()) ? this.state.value : event.target.value,
-            errorMessage: !errorValidator ? "" : errorValidator!.getErrorMessage(),
+            valid: !error,
+            value: (isThereAbortingValidator) ? this.state.value : event.target.value,
+            errorMessage: !error ? "" : errorValidators[0].getErrorMessage(),
         })
     }
 
