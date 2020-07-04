@@ -19,7 +19,7 @@ import EmployeeWorkScheduleActions from "./actions/EmployeeWorkScheduleActions";
 import PetActions from "./actions/PetActions";
 import {RightPanelType} from "../state/enum/RightPanelType";
 import PlannedCallActions from "./actions/PlannedCallActions";
-import StateChangeContext, {StateChangeContextMode} from "../../core/mvc/store/StateChangeContext";
+import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -321,7 +321,12 @@ export default class EmployeeAppController extends ApplicationController<Employe
     }
 
     public openSalesPage(callback: Function = () => {}): void {
-
+        this.openPage(PageType.Sales, (setPageLoad: Function) => {
+            this.dictionariesActions.loadSalesCategories(() => {
+                setPageLoad()
+                callback()
+            })
+        })
     }
 
     public openSalesCategoryPage(callback: Function = () => {}): void {

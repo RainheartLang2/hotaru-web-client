@@ -30,6 +30,7 @@ import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/P
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import {AccountingMenuItemType} from "./enum/AccountingMenuItemType";
 import mergeTypes = CommonUtils.mergeTypes;
+import SalesUnitNode, {SalesUnitSelectors, SalesUnitState} from "./nodes/SalesUnitNode";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -46,6 +47,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private clinicsWorkScheduleNode!: ClinicsWorkScheduleNode
     private employeesWorkScheduleNode!: EmployeeWorkScheduleNode
     private plannedCallsNode!: PlannedCallNode
+    private salesUnitNode!: SalesUnitNode
 
     constructor() {
         super()
@@ -61,6 +63,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.clinicsWorkScheduleNode = new ClinicsWorkScheduleNode(friend)
         this.employeesWorkScheduleNode = new EmployeeWorkScheduleNode(friend)
         this.plannedCallsNode = new PlannedCallNode(friend)
+        this.salesUnitNode = new SalesUnitNode(friend)
         this.initialize()
     }
 
@@ -132,6 +135,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.clinicsWorkScheduleNode.getDefaultState())
         state = mergeTypes(state, this.employeesWorkScheduleNode.getDefaultState())
         state = mergeTypes(state, this.plannedCallsNode.getDefaultState())
+        state = mergeTypes(state, this.salesUnitNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -147,6 +151,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.clinicsWorkScheduleNode.getDefaultSelectors())
         selectors = mergeTypes(selectors, this.employeesWorkScheduleNode.getDefaultSelectors())
         selectors = mergeTypes(selectors, this.plannedCallsNode.getSelectors())
+        selectors = mergeTypes(selectors, this.salesUnitNode.getSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -246,6 +251,7 @@ export type EmployeeAppState = DefaultStateType
     & ClinicsWorkScheduleState
     & EmployeeWorkScheduleState
     & PlannedCallState
+    & SalesUnitState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -267,5 +273,6 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & ClinicsWorkScheduleSelectors
     & EmployeeScheduleSelectors
     & PlannedCallSelectors
+    & SalesUnitSelectors
 
 export type EmployeeStateContext = StateChangeContext<EmployeeAppState, EmployeeAppSelectors>

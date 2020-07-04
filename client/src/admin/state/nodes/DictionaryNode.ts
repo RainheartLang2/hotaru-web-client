@@ -14,6 +14,7 @@ import {AnimalColor} from "../../../common/beans/AnimalColor";
 import {SalesCategory} from "../../../common/beans/SalesCategory";
 import {SalesType} from "../../../common/beans/enums/SalesType";
 import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
+import SalesUnit from "../../../common/beans/SalesUnit";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
