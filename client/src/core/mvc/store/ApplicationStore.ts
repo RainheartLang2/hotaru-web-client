@@ -111,19 +111,27 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     }
 
     protected createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
+                                          requiredProperties: (keyof (StateType & SelectorsType))[] = [],
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
         return {
             dependsOn: fieldsKeys,
             get: (state: Pick<StateType & SelectorsType, any>) => {
-                let result = false
+                let error = false
                 fieldsKeys.forEach(key => {
                     const field = this.readableState[key] as unknown as Field
                     if (field.errors.length > 0) {
-                        result = true
+                        error = true
                         return
                     }
                 })
-                return result
+                requiredProperties.forEach(key => {
+                    const value = this.readableState[key]
+                    if (!value) {
+                        error = true
+                        return
+                    }
+                })
+                return error
             },
             value: false,
         }
@@ -348,8 +356,9 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
             }
 
             public createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
+                                               requiredProperties: (keyof (StateType & SelectorsType))[] = [],
             ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
-                return store.createFormHasErrorsSelector(fieldsKeys)
+                return store.createFormHasErrorsSelector(fieldsKeys, requiredProperties)
             }
 
             public get state(): Readonly<StateType & SelectorsType> {

@@ -191,6 +191,9 @@
       "dialog.plannedCall.date.field.label": "Дата прозвона",
       "dialog.plannedCall.note.field.label": "Заметки",
 
+      "dialog.stock.create.label": "Создание нового склада",
+      "dialog.stock.edit.label": "Редактирование склада",
+
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",
       "panel.pet.field.species.label": "Вид",

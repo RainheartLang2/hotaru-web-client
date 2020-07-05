@@ -11,4 +11,6 @@ export enum DialogType {
     EditClient,
     CreatePlannedCall,
     EditPlannedCall,
+    CreateStock,
+    EditStock,
 }

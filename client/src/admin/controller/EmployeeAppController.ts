@@ -1,5 +1,9 @@
 import ApplicationController from "../../core/mvc/controllers/ApplicationController";
-import EmployeeApplicationStore, {EmployeeAppSelectors, EmployeeAppState} from "../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState,
+    EmployeeStateContext
+} from "../state/EmployeeApplicationStore";
 import {PageType} from "../state/enum/PageType";
 import {DialogType} from "../state/enum/DialogType";
 import {fetchPreloginRpc, fetchUserZoneRpc} from "../../core/utils/HttpUtils";
@@ -157,9 +161,22 @@ export default class EmployeeAppController extends ApplicationController<Employe
                 })
             },
             () => {
-                this.store.setState({isPageLoading: false})
+                this.store.setState({isPageLoading: false}, context)
             }
         )
+    }
+
+    public openDialog(dialogType: DialogType,
+                      callback: (turnOffLoading: Function) => void,
+                      context?: EmployeeStateContext): void {
+        this.store.setState({
+            dialogType: dialogType,
+            isDialogLoading: true
+        })
+
+        callback(() => {
+            this.store.setState({isDialogLoading: false}, context)
+        })
     }
 
     public openUserListPage(callback: Function = () => {}): void {

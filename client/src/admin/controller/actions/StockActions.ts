@@ -4,6 +4,7 @@ import {StockType} from "../../../common/beans/enums/StockType";
 import {EmployeeStateContext} from "../../state/EmployeeApplicationStore";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
+import {DialogType} from "../../state/enum/DialogType";
 
 export default class StockActions {
 
@@ -29,10 +30,25 @@ export default class StockActions {
     }
 
     public openCreateDialog(callback: Function = () => {}, context?: EmployeeStateContext) {
-        callback()
+        this.controller.openDialog(DialogType.CreateStock, setLoading => {
+            setLoading()
+            callback()
+        })
     }
 
     public openEditDialog(stock: Stock, callback: Function = () => {}, context?: EmployeeStateContext) {
+        this.controller.openDialog(DialogType.EditStock, setLoading => {
+            setLoading()
+            callback()
+        })
+    }
+
+    public submitCreate(callback: Function = () => {}) {
+        callback()
+
+    }
+
+    public submitEdit(callback: Function = () => {}) {
         callback()
     }
 

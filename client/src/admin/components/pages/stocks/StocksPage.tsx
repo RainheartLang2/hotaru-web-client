@@ -26,7 +26,7 @@ export default class StocksPage extends React.Component<Properties, State> {
             <>
                 <PageHeader label={(<Message messageKey={"page.stocks.title"}/>)}
                             hasButton={true}
-                            buttonOnClick={() => {}}/>
+                            buttonOnClick={() => actions.openCreateDialog()}/>
                 <TableCmp>
                     <TableBodyCmp>
                         {this.state.stocks.map(stock => {

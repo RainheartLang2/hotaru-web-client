@@ -7,6 +7,7 @@ import AppointmentDialog from "../components/dialogs/appointment/AppointmentDial
 import EmployeeAppController from "../controller/EmployeeAppController";
 import ClientDialog from "../components/dialogs/client/ClientDialog";
 import PlannedCallDialog from "../components/dialogs/plannedCall/PlannedCallDialog";
+import EditStockForm from "../components/dialogs/stock/EditStockForm";
 
 export default class AdminDialogsContainer extends React.Component<Properties, State> {
 
@@ -45,6 +46,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                     {(dialogType == DialogType.CreatePlannedCall || dialogType == DialogType.EditPlannedCall)
                         && (<PlannedCallDialog controller={this.props.controller}/>)
                     }
+                    {(dialogType == DialogType.CreateStock || dialogType == DialogType.EditStock
+                        && (<EditStockForm controller={this.props.controller}/>))}
                 </Dialog>
             </>
         )
