@@ -67,6 +67,9 @@
       "salesType.goods.name.plural": "Товары",
       "salesType.service.name.plural": "Услуги",
 
+      "stockType.storing.name": "Для хранения",
+      "stockType.selling.name": "Для реализации",
+
       "plannedCall.edit.tooltip": "Редактировать звонок",
       "plannedCall.state.done.tooltip": "Отметить звонок выполненным",
       "plannedCall.state.cancel.tooltip": "Отменить звонок",

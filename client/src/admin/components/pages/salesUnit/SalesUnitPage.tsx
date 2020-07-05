@@ -46,7 +46,7 @@ export default class SalesUnitPage extends React.Component<Properties, State> {
                 <TableBodyCmp>
                     {this.state.salesUnits.map(unit => {
                         return (
-                            <>
+                            <TableRowCmp>
                                 <CustomTableCell>
                                     <ValidatedTextField
                                         validators={ValidatorUtils.getStandardTextValidators(100)}
@@ -112,7 +112,7 @@ export default class SalesUnitPage extends React.Component<Properties, State> {
                                         <DeleteIcon/>
                                     </CustomContentButton>
                                 </CustomTableCell>
-                            </>
+                            </TableRowCmp>
                         )
                     })}
                 </TableBodyCmp>

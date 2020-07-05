@@ -3,14 +3,14 @@ import {StockType} from "./enums/StockType";
 
 export default class Stock extends Identifiable {
     public name: string
-    public storageType: StockType
+    public stockType: StockType
     public responsiblePersonId: number
     public clinicId: number
 
     constructor(bean: StockBean) {
         super(bean.id)
         this.name = bean.name
-        this.storageType = bean.storageType
+        this.stockType = bean.stockType
         this.responsiblePersonId = bean.responsiblePersonId
         this.clinicId = bean.clinicId
     }
@@ -19,7 +19,7 @@ export default class Stock extends Identifiable {
 export type StockBean = {
     id?: number,
     name: string,
-    storageType: StockType
+    stockType: StockType
     responsiblePersonId: number
     clinicId: number
 }

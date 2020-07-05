@@ -148,6 +148,14 @@ export default class EmployeeActions {
         })
     }
 
+    public getEmployeeById(id: number): Employee {
+        const result = this.controller.state.userListById.get(id)
+        if (!result) {
+            throw new Error("no employee for id " + id)
+        }
+        return result
+    }
+
     public deleteEmployee(id: number): void {
         fetchUserZoneRpc({
             method: RemoteMethods.deleteEmployee,
