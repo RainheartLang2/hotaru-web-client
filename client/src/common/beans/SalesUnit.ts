@@ -2,11 +2,11 @@ import Identifiable from "../../core/entities/Identifiable";
 import {SalesType} from "./enums/SalesType";
 
 export default class SalesUnit extends Identifiable {
-    private name: string
-    private salesType: SalesType
-    private categoryId: number
-    private measureUnitId: number
-    private price: number
+    public name: string
+    public salesType: SalesType
+    public categoryId: number
+    public measureUnitId: number
+    public price: number
 
     constructor(bean: SalesUnitBean) {
         super(bean.id)

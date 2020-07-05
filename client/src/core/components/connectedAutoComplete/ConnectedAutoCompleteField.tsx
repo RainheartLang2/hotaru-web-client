@@ -1,12 +1,8 @@
 import * as React from "react";
 import ApplicationController from "../../mvc/controllers/ApplicationController";
-import {DefaultStateType} from "../../mvc/store/ApplicationStore";
-import ApplicationStore from "../../mvc/store/ApplicationStore";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import {TextField} from "@material-ui/core";
+import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
 import {CommonUtils} from "../../utils/CommonUtils";
-import CustomTooltip from "../customTooltip/CustomTooltip";
-import {Message} from "../Message";
+import CustomAutoCompleteField, {CustomAutoCompleteProps} from "../customAutoComplete/CustomAutoCompleteField";
 
 export default class ConnectedAutoCompleteField<
     ItemType,
@@ -14,7 +10,7 @@ export default class ConnectedAutoCompleteField<
     SelectorsType,
     StoreType extends ApplicationStore<StateType, SelectorsType>,
     >
-    extends React.Component<Properties<StateType, SelectorsType, StoreType, ItemType>, State<ItemType>> {
+    extends CustomAutoCompleteField<ItemType, Properties<StateType, SelectorsType, StoreType, ItemType>> {
 
     static defaultProps = {
         variant: "standard",
@@ -22,7 +18,9 @@ export default class ConnectedAutoCompleteField<
         size: 'small',
         fullWidth: true,
         onChange: () => {},
+        onBlur: () => {},
         required: false,
+        controlled: true,
     }
 
     constructor(props: Properties<StateType, SelectorsType, StoreType, ItemType>) {
@@ -32,54 +30,6 @@ export default class ConnectedAutoCompleteField<
             selectedItem: null,
             changed: false,
         }
-    }
-
-    private showRequiredError(): boolean {
-        return this.props.required && this.state.changed && !this.state.selectedItem
-    }
-
-    render() {
-        console.log(this.state.options)
-        return (
-            <CustomTooltip
-                arrow={true}
-                title={<Message messageKey={"common.required.field.tooltip"} />}
-                active={this.showRequiredError()}
-            >
-                <Autocomplete<ItemType>
-                    options={this.state.options}
-                    getOptionLabel={(option) => {
-                        console.log(this.state.options)
-                        console.log(option)
-                        return this.props.itemToString(option)
-                    }}
-                    onChange={(event, value) => {
-                        this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, value]]))
-                        this.props.onChange(value)
-                    }}
-                    fullWidth={this.props.fullWidth}
-                    size={this.props.size}
-                    value={this.state.selectedItem}
-                    disabled={this.props.disabled}
-                    renderInput={(params) =>
-                        <TextField
-                            {...params}
-                            label={this.props.label}
-                            variant={this.props.variant}
-                            disabled={this.props.disabled}
-                            size={this.props.size}
-                            fullWidth={this.props.fullWidth}
-                            error={this.showRequiredError()}
-                            onBlur={() => {
-                                this.setState({
-                                    changed: true,
-                                })
-                            }}
-                        />}
-                />
-            </CustomTooltip>
-
-        )
     }
 
     componentDidMount(): void {
@@ -92,24 +42,16 @@ export default class ConnectedAutoCompleteField<
     componentWillUnmount(): void {
         this.props.controller.unsubscribe(this)
     }
+
+    protected setValue(value: ItemType | null): void {
+        this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, value]]))
+    }
 }
 
-export type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<StateType, DerivationType>, ItemType> = {
+export type Properties<StateType extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<StateType, DerivationType>, ItemType> =
+    CustomAutoCompleteProps<ItemType> &
+    {
     controller: ApplicationController<StateType, DerivationType, StoreType>,
-    itemToString: (item: ItemType) => string,
-    label?: React.ReactNode,
-    variant: "standard" | "filled" | "outlined",
-    disabled?: boolean,
-    size: 'small' | 'medium',
-    fullWidth: boolean,
-    selectedItemProperty: keyof StateType,
+    selectedItemProperty?: keyof StateType,
     itemsProperty: keyof (StateType & DerivationType),
-    onChange: (value: ItemType | null) => void,
-    required: boolean,
-}
-
-export type State<Type> = {
-    options: Type[],
-    selectedItem: Type | null,
-    changed: boolean,
 }

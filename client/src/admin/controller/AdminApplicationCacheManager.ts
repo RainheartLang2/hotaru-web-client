@@ -143,7 +143,6 @@ export default class CacheManager {
     }
 
     private loadSalesUnits(callback: Function = () => {}, context?: EmployeeStateContext): void {
-        console.log("loadSalesUnits")
         CommonActionsFunctions.loadList(this.controller,
             RemoteMethods.getAllSalesUnits,
             "salesUnitList",

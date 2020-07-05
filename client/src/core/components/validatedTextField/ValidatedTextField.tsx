@@ -66,7 +66,7 @@ export default class ValidatedTextField extends React.Component<Properties, Stat
                             })
                         }
                         if (this.state.valid) {
-                            this.props.onValidBlur()
+                            this.props.onValidBlur(event)
                         }
                     }}
                     value = {this.state.value}
@@ -78,7 +78,7 @@ export default class ValidatedTextField extends React.Component<Properties, Stat
 
 type Properties = TextFieldProps & {
     validators: FieldValidator[]
-    onValidBlur: Function
+    onValidBlur: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 type State = {

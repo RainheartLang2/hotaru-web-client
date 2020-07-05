@@ -135,15 +135,7 @@ export default class DictionaryNode {
             addedSalesCategoryExtraChargeField: this._store.createField("addedSalesCategoryExtraCharge", "", ValidatorUtils.getFloatNumberFieldValidators()),
             goodsSalesCategories: {
                 dependsOn: ["salesCategoriesList"],
-                get: (state: Pick<DictionariesPagesState, "salesCategoriesList">) => {
-                    const result = state.salesCategoriesList.filter(category => {
-                        console.log(category.getSalesType())
-                        console.log(SalesType.Goods)
-                        return category.getSalesType() == SalesType.Goods
-                    })
-                    console.log(result)
-                    return result
-                },
+                get: (state: Pick<DictionariesPagesState, "salesCategoriesList">) => state.salesCategoriesList.filter(category => category.getSalesType() == SalesType.Goods),
                 value: [],
             },
             serviceSalesCategories: {

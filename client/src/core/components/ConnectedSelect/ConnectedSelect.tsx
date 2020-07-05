@@ -23,6 +23,9 @@ export default class ConnectedSelect<ItemType,
 
     constructor(props: Properties<ItemType, StateType, SelectorsType>) {
         super(props)
+        if (props.controlled && !props.selectedItemProperty) {
+            throw new Error("selectedItemProperty should be defined for controlled select")
+        }
         this.state = {
             itemsMap: new Map(),
             selectedItem: this.props.defaultValue,
@@ -88,7 +91,7 @@ type Properties<ItemType, StateType, SelectorsType> = {
     label?: ReactNode,
     variant?: "standard" | "outlined"
     mapProperty: keyof (StateType & SelectorsType),
-    selectedItemProperty: keyof StateType,
+    selectedItemProperty?: keyof StateType,
     itemToString: (item: ItemType) => string,
     getKey: (item: ItemType | null) => number,
     onChange: (event: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => void,

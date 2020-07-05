@@ -65,6 +65,10 @@ export namespace CollectionUtils {
         return array.map(item => predicate(item) == predicate(updatedItem) ? updatedItem : item)
     }
 
+    export function updateIdentifiableArray<Type extends Identifiable>(array: Type[], updatedItem: Type) {
+        return updateArray(array, updatedItem, item => item.id)
+    }
+
     export function fillArray<Type>(length: number, sample: Type): Type[] {
         const result = []
         for (let i = 0; i < length; i++) {

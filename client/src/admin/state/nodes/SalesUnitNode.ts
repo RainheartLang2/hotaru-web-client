@@ -11,6 +11,7 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import EnteringPriceValidator from "../../../core/mvc/validators/EnteringPriceValidator";
 import PriceValidator from "../../../core/mvc/validators/PriceValidator";
+import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 
 export default class SalesUnitNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -23,8 +24,6 @@ export default class SalesUnitNode {
     public getDefaultState(): SalesUnitState {
         return {
             salesUnitList: [],
-            editedSalesUnitId: null,
-            editedSalesUnitName: "",
             addedSalesUnitName: "",
             addedSalesUnitType: SalesType.Goods,
             addedSalesUnitCategory: null,
@@ -45,12 +44,7 @@ export default class SalesUnitNode {
                 new RequiredFieldValidator(),
                 new MaximalLengthValidator(100),
             ]),
-            addedSalesUnitPriceField: this._store.createField("addedSalesUnitPrice", "", [
-                new RequiredFieldValidator(),
-                new MaximalLengthValidator(10),
-                new EnteringPriceValidator(),
-                new PriceValidator(),
-            ]),
+            addedSalesUnitPriceField: this._store.createField("addedSalesUnitPrice", "", ValidatorUtils.getPriceValidators()),
             salesCategoriesForSelectedType: {
                 dependsOn: ["addedSalesCategoryType", "serviceSalesCategories", "goodsSalesCategories"],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
@@ -90,8 +84,6 @@ export default class SalesUnitNode {
 
 export type SalesUnitState = {
     salesUnitList: SalesUnit[],
-    editedSalesUnitId: number | null,
-    editedSalesUnitName: string,
 
     addedSalesUnitName: string,
     addedSalesUnitType: SalesType,

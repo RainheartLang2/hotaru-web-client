@@ -75,19 +75,6 @@ export default abstract class ApplicationController<StateType extends DefaultSta
         this.store.setState(CommonUtils.createLooseObject<StateType>([[submitButtonProperty, value]]))
     }
 
-    public batched(executableBody: (closeBatch: Function) => void) {
-        // this.context = new StateChangeContext(StateChangeContextMode.BATCHED)
-        // executableBody(() => {
-        //     console.log("closeBatch")
-        //     if (!this.context) {
-        //         throw new Error("context is undefined inside of batch")
-        //     }
-        //     this.context.onBatchClose()
-        //     this.context = undefined
-        // })
-        executableBody(() => {})
-    }
-
     public setError(messageKey: string): void {
 
     }

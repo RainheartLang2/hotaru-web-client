@@ -331,4 +331,20 @@ export default class DictionariesActions {
     public deleteSalesCategory(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteSalesCategory, "salesCategoriesList")
     }
+
+    public getSalesCategoryById(id: number): SalesCategory {
+        const result = this.controller.state.salesCategoriesById.get(id)
+        if (!result) {
+            throw new Error("no sales category for id " + id)
+        }
+        return result
+    }
+
+    public getMeasureUnitById(id: number): MeasureUnit {
+        const result = this.controller.state.measureListById.get(id)
+        if (!result) {
+            throw new Error("no measure unit for id " + id)
+        }
+        return result
+    }
 }
