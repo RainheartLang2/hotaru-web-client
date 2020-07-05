@@ -39,6 +39,7 @@ export default class ConnectedAutoCompleteField<
     }
 
     render() {
+        console.log(this.state.options)
         return (
             <CustomTooltip
                 arrow={true}
@@ -47,7 +48,11 @@ export default class ConnectedAutoCompleteField<
             >
                 <Autocomplete<ItemType>
                     options={this.state.options}
-                    getOptionLabel={(option) => this.props.itemToString(option)}
+                    getOptionLabel={(option) => {
+                        console.log(this.state.options)
+                        console.log(option)
+                        return this.props.itemToString(option)
+                    }}
                     onChange={(event, value) => {
                         this.props.controller.setState(CommonUtils.createLooseObject([[this.props.selectedItemProperty, value]]))
                         this.props.onChange(value)

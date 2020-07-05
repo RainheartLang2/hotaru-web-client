@@ -12,6 +12,9 @@ import EmployeeApplicationStore, {
     EmployeeStateContext
 } from "../state/EmployeeApplicationStore";
 import {SalesCategory, SalesCategoryBean} from "../../common/beans/SalesCategory";
+import {CommonActionsFunctions} from "./actions/CommonActionsFunctions";
+import SalesUnit, {SalesUnitBean} from "../../common/beans/SalesUnit";
+import SalesUnitActions from "./actions/SalesUnitActions";
 
 export default class CacheManager {
 
@@ -24,12 +27,14 @@ export default class CacheManager {
     private breedCacheKey = new CacheKey("breed", CacheVolatility.LOW)
     private animalColorCacheKey = new CacheKey("animalColor", CacheVolatility.LOW)
     private salesCategoriesCacheKey = new CacheKey("salesCategories", CacheVolatility.LOW)
+    private _salesUnitCacheKey = new CacheKey("salesUnit", CacheVolatility.LOW)
 
     private _clinicCache: EmployeeAppCache
     private _speciesCache: EmployeeAppCache
     private _breedCache: EmployeeAppCache
     private _animalColorCache: EmployeeAppCache
     private _salesCategoriesCache: EmployeeAppCache
+    private _salesUnitCache: EmployeeAppCache
 
     constructor(controller: EmployeeAppController, store: EmployeeApplicationStore) {
         this.controller = controller
@@ -40,7 +45,8 @@ export default class CacheManager {
                 this.speciesCacheKey,
                 this.breedCacheKey,
                 this.animalColorCacheKey,
-                this.salesCategoriesCacheKey
+                this.salesCategoriesCacheKey,
+                this._salesUnitCacheKey,
             ])
 
 
@@ -54,6 +60,8 @@ export default class CacheManager {
             (callback, context) => this.loadAnimalColors(callback, context))
         this._salesCategoriesCache = new ExecutableCache(this.settings, [this.salesCategoriesCacheKey],
             (callback, context) => this.loadSalesCategories(callback, context))
+        this._salesUnitCache = new ExecutableCache(this.settings, [this._salesUnitCacheKey],
+            (callback, context) => this.loadSalesUnits(callback, context))
     }
 
     get clinicCache(): EmployeeAppCache{
@@ -74,6 +82,10 @@ export default class CacheManager {
 
     get salesCategoriesCache(): EmployeeAppCache {
         return this._salesCategoriesCache;
+    }
+
+    get salesUnitCache(): EmployeeAppCache {
+        return this._salesUnitCache;
     }
 
     private loadClinicList(callback: Function, context?: EmployeeStateContext): void {
@@ -128,6 +140,18 @@ export default class CacheManager {
                 return (result as SalesCategoryBean[]).map(bean => new SalesCategory(bean))
             },
             )
+    }
+
+    private loadSalesUnits(callback: Function = () => {}, context?: EmployeeStateContext): void {
+        console.log("loadSalesUnits")
+        CommonActionsFunctions.loadList(this.controller,
+            RemoteMethods.getAllSalesUnits,
+            "salesUnitList",
+            callback,
+            context,
+            result => {
+                return (result as SalesUnitBean[]).map(bean => new SalesUnit(bean))
+            })
     }
 }
 

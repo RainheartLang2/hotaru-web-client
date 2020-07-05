@@ -14,6 +14,7 @@ import {SalesCategory} from "../../../common/beans/SalesCategory";
 import {StringUtils} from "../../../core/utils/StringUtils";
 import {SalesType} from "../../../common/beans/enums/SalesType";
 import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
+import {CommonActionsFunctions} from "./CommonActionsFunctions";
 
 export default class DictionariesActions {
 
@@ -65,15 +66,7 @@ export default class DictionariesActions {
 
     public loadList(method: RemoteMethod, resultKey: keyof EmployeeAppState, callback: Function, context?: EmployeeStateContext,
                     parseResponse: (result: any) => any = result => result): void {
-        fetchUserZoneRpc({
-            method,
-            successCallback: result => {
-                this.controller.setState({
-                    [resultKey]: parseResponse(result),
-                }, context)
-                callback(result)
-            },
-        })
+        CommonActionsFunctions.loadList(this.controller, method, resultKey, callback, context, parseResponse)
     }
 
     public loadMeasureUnits(params: any[] = [], callback: Function = () => {}): void {
@@ -188,7 +181,7 @@ export default class DictionariesActions {
     public submitCreateSalesCategory(callback: Function = () => {}): void {
         const item: SalesCategory = new SalesCategory({
             name: this.controller.state.addedSalesCategoryNameField.value,
-            type: this.controller.state.addedSalesCategoryType!,
+            salesType: this.controller.state.addedSalesCategoryType!,
             extraCharge: +this.controller.state.addedSalesCategoryExtraChargeField.value,
         })
         const setState = (item: SalesCategory) => {
@@ -299,7 +292,7 @@ export default class DictionariesActions {
         const item: SalesCategory = new SalesCategory({
             id: this.controller.state.editedSalesCategoryId,
             name: this.controller.state.editedSalesCategoryName,
-            type: this.controller.state.editedSalesCategoryType!,
+            salesType: this.controller.state.editedSalesCategoryType!,
             extraCharge: StringUtils.stringToNumberZeroIfEmpty(this.controller.state.editedSalesCategoryExtraCharge)
         })
         this.submitEditItem(item, RemoteMethods.editSalesCategory, "salesCategoriesList", callback)

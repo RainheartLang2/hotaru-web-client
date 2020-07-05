@@ -20,6 +20,7 @@ import PetActions from "./actions/PetActions";
 import {RightPanelType} from "../state/enum/RightPanelType";
 import PlannedCallActions from "./actions/PlannedCallActions";
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
+import SalesUnitActions from "./actions/SalesUnitActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -34,6 +35,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _employeeScheduleActions: EmployeeWorkScheduleActions
     private _petActions: PetActions
     private _plannedCallActions: PlannedCallActions
+    private _salesUnitActions: SalesUnitActions
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
@@ -49,6 +51,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._employeeScheduleActions = new EmployeeWorkScheduleActions(this)
         this._petActions = new PetActions(this)
         this._plannedCallActions = new PlannedCallActions(this)
+        this._salesUnitActions = new SalesUnitActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -102,6 +105,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     get plannedCallActions(): PlannedCallActions {
         return this._plannedCallActions;
+    }
+
+    get salesUnitActions(): SalesUnitActions {
+        return this._salesUnitActions;
     }
 
     public get cacheManager(): CacheManager {
@@ -323,8 +330,14 @@ export default class EmployeeAppController extends ApplicationController<Employe
     public openSalesPage(callback: Function = () => {}): void {
         this.openPage(PageType.Sales, (setPageLoad: Function) => {
             this.dictionariesActions.loadSalesCategories(() => {
-                setPageLoad()
-                callback()
+                this.salesUnitActions.loadList(() => {
+                    this.dictionariesActions.loadMeasureUnits([], () => {
+                        this.toggleFieldValidation("addedSalesUnitNameField", false)
+                        this.toggleFieldValidation("addedSalesUnitPriceField", false)
+                        setPageLoad()
+                        callback()
+                    })
+                })
             })
         })
     }

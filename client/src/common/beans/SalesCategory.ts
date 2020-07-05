@@ -8,7 +8,7 @@ export class SalesCategory extends Identifiable {
 
     constructor(bean: SalesCategoryBean) {
         super(bean.id)
-        this.salesType = bean.type
+        this.salesType = bean.salesType
         this.name = bean.name
         this.extraCharge = bean.extraCharge
     }
@@ -28,7 +28,7 @@ export class SalesCategory extends Identifiable {
 
 export type SalesCategoryBean = {
     id?: number
-    type: SalesType
+    salesType: SalesType
     name: string
     extraCharge: number
 }

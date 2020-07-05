@@ -18,6 +18,7 @@ export default class ConnectedTextField<StateType extends DefaultStateType,
 
     static defaultProps = {
         size: "small",
+        fullWidth: true,
     }
 
     private prevValue: string
