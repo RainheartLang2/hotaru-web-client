@@ -19,6 +19,7 @@ import PlannedCallsPage from "./plannedCalls/PlannedCallsPage";
 import CheckingStateComponent from "../../../core/components/CheckingStateComponent";
 import SalesCategoryPage from "./accounting/SalesCategoryPage";
 import SalesUnitPage from "./salesUnit/SalesUnitPage";
+import StocksPage from "./stocks/StocksPage";
 
 export default class AdminPagesContainer extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
@@ -53,6 +54,7 @@ export default class AdminPagesContainer extends CheckingStateComponent<Properti
             {this.isRenderPage(PageType.PlannedCalls) && (<PlannedCallsPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.SalesCategories) && (<SalesCategoryPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Sales) && (<SalesUnitPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.Stocks) && (<StocksPage controller={this.props.controller}/>)}
         </>)
     }
 

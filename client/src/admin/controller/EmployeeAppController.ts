@@ -21,6 +21,7 @@ import {RightPanelType} from "../state/enum/RightPanelType";
 import PlannedCallActions from "./actions/PlannedCallActions";
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import SalesUnitActions from "./actions/SalesUnitActions";
+import StockActions from "./actions/StockActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -36,6 +37,8 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _petActions: PetActions
     private _plannedCallActions: PlannedCallActions
     private _salesUnitActions: SalesUnitActions
+    private _stockActions: StockActions
+
     private _cacheManager: AdminApplicationCacheManager
 
     private constructor() {
@@ -52,6 +55,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._petActions = new PetActions(this)
         this._plannedCallActions = new PlannedCallActions(this)
         this._salesUnitActions = new SalesUnitActions(this)
+        this._stockActions = new StockActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -109,6 +113,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     get salesUnitActions(): SalesUnitActions {
         return this._salesUnitActions;
+    }
+
+    get stockActions(): StockActions {
+        return this._stockActions;
     }
 
     public get cacheManager(): CacheManager {
@@ -347,6 +355,19 @@ export default class EmployeeAppController extends ApplicationController<Employe
             this.dictionariesActions.loadSalesCategories(() => {
                 setPageLoad()
                 callback()
+            })
+        })
+    }
+
+    public openStocksPage(callback: Function = () => {}): void {
+        this.openPage(PageType.Stocks, (setPageLoad: Function) => {
+            this.clinicActions.loadClinicList(() => {
+                this.employeeActions.loadUsersList(() => {
+                    this.stockActions.loadList(() => {
+                        setPageLoad()
+                        callback()
+                    })
+                })
             })
         })
     }

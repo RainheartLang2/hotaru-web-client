@@ -29,8 +29,9 @@ import {Sex} from "../../common/beans/enums/Sex";
 import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/PlannedCallNode";
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import {AccountingMenuItemType} from "./enum/AccountingMenuItemType";
-import mergeTypes = CommonUtils.mergeTypes;
 import SalesUnitNode, {SalesUnitSelectors, SalesUnitState} from "./nodes/SalesUnitNode";
+import mergeTypes = CommonUtils.mergeTypes;
+import StockNode, {StockSelectors, StockState} from "./nodes/StocksNode";
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -48,6 +49,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
     private employeesWorkScheduleNode!: EmployeeWorkScheduleNode
     private plannedCallsNode!: PlannedCallNode
     private salesUnitNode!: SalesUnitNode
+    private stockNode!: StockNode
 
     constructor() {
         super()
@@ -64,6 +66,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         this.employeesWorkScheduleNode = new EmployeeWorkScheduleNode(friend)
         this.plannedCallsNode = new PlannedCallNode(friend)
         this.salesUnitNode = new SalesUnitNode(friend)
+        this.stockNode = new StockNode(friend)
         this.initialize()
     }
 
@@ -136,6 +139,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         state = mergeTypes(state, this.employeesWorkScheduleNode.getDefaultState())
         state = mergeTypes(state, this.plannedCallsNode.getDefaultState())
         state = mergeTypes(state, this.salesUnitNode.getDefaultState())
+        state = mergeTypes(state, this.stockNode.getDefaultState())
         return state as EmployeeAppState
     }
 
@@ -152,6 +156,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
         selectors = mergeTypes(selectors, this.employeesWorkScheduleNode.getDefaultSelectors())
         selectors = mergeTypes(selectors, this.plannedCallsNode.getSelectors())
         selectors = mergeTypes(selectors, this.salesUnitNode.getSelectors())
+        selectors = mergeTypes(selectors, this.stockNode.getSelectors())
         return selectors as unknown as SelectorsInfo<EmployeeAppState, EmployeeAppSelectors>
     }
 
@@ -168,6 +173,8 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.PlannedCalls:
                 return NavigationMenuItemType.Calls
             case PageType.SalesCategories:
+            case PageType.Sales:
+            case PageType.Stocks:
                 return NavigationMenuItemType.Accounting
 
             default: return NavigationMenuItemType.None
@@ -195,6 +202,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
 
             case PageType.SalesCategories:
             case PageType.Sales:
+            case PageType.Stocks:
                 return SecondLevelNavigationMenuType.Accounting
 
             default: return SecondLevelNavigationMenuType.None
@@ -219,6 +227,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
 
             case PageType.SalesCategories: return AccountingMenuItemType.SalesCategories
             case PageType.Sales: return AccountingMenuItemType.Sales
+            case PageType.Stocks: return AccountingMenuItemType.Stocks
 
             default: return DictionaryMenuItemType.None
         }
@@ -252,6 +261,7 @@ export type EmployeeAppState = DefaultStateType
     & EmployeeWorkScheduleState
     & PlannedCallState
     & SalesUnitState
+    & StockState
 
 type CommonEmployeeSelectors = {
     showDialog: boolean,
@@ -274,5 +284,6 @@ export type EmployeeAppSelectors = CommonEmployeeSelectors
     & EmployeeScheduleSelectors
     & PlannedCallSelectors
     & SalesUnitSelectors
+    & StockSelectors
 
 export type EmployeeStateContext = StateChangeContext<EmployeeAppState, EmployeeAppSelectors>

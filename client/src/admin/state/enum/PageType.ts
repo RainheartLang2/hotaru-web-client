@@ -15,5 +15,6 @@ export enum PageType {
     PlannedCalls,
     SalesCategories,
     Sales,
+    Stocks,
     None,
 }

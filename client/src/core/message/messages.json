@@ -109,6 +109,7 @@
 
       "second.navigation.accounting.sales.label": "Товары и услуги",
       "second.navigation.accounting.categories.label": "Группы товаров и услуг",
+      "second.navigation.accounting.stocks.label": "Склады",
 
       "dayScheduleDeviation.clinic.global.label": "Для всех клиник",
       "dayScheduleDeviation.clinic.global.tooltip": "Использовать данное изменение в расписании всех клиник",
@@ -142,6 +143,8 @@
       "page.clinicsWorkSchedule.userDefaultSchedule.label": "Использовать график по-умполчанию",
       "page.clinicsWorkSchedule.deviationSection.label": "Отклонения от графика",
       "page.plannedCalls.title": "Прозвоны",
+
+      "page.stocks.title": "Список складов",
 
       "page.salesCategories.title": "Список групп товаров и услуг",
       "page.salesUnit.title": "Товары и услуги",
