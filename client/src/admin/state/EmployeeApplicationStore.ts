@@ -30,8 +30,8 @@ import PlannedCallNode, {PlannedCallSelectors, PlannedCallState} from "./nodes/P
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import {AccountingMenuItemType} from "./enum/AccountingMenuItemType";
 import SalesUnitNode, {SalesUnitSelectors, SalesUnitState} from "./nodes/SalesUnitNode";
-import mergeTypes = CommonUtils.mergeTypes;
 import StockNode, {StockSelectors, StockState} from "./nodes/StocksNode";
+import mergeTypes = CommonUtils.mergeTypes;
 
 export default class EmployeeApplicationStore extends ApplicationStore<EmployeeAppState, EmployeeAppSelectors> {
 
@@ -175,6 +175,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.SalesCategories:
             case PageType.Sales:
             case PageType.Stocks:
+            case PageType.CounterAgents:
                 return NavigationMenuItemType.Accounting
 
             default: return NavigationMenuItemType.None
@@ -203,6 +204,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.SalesCategories:
             case PageType.Sales:
             case PageType.Stocks:
+            case PageType.CounterAgents:
                 return SecondLevelNavigationMenuType.Accounting
 
             default: return SecondLevelNavigationMenuType.None
@@ -228,6 +230,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.SalesCategories: return AccountingMenuItemType.SalesCategories
             case PageType.Sales: return AccountingMenuItemType.Sales
             case PageType.Stocks: return AccountingMenuItemType.Stocks
+            case PageType.CounterAgents: return AccountingMenuItemType.CounterAgents
 
             default: return DictionaryMenuItemType.None
         }

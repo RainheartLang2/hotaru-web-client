@@ -26,6 +26,7 @@ export namespace RemoteMethods {
     const salesCategoriesService = new ServerAppService("SalesCategoryService")
     const salesUnitService = new ServerAppService("SalesUnitService")
     const stockService = new ServerAppService("StockService")
+    const counterAgentService = new ServerAppService("CounterAgentService")
 
     //Back application typical actions list
     const getAllAction = new ServerAppAction("getAll")
@@ -140,6 +141,11 @@ export namespace RemoteMethods {
     export const addStock = new RemoteMethod(stockService, addAction)
     export const editStock = new RemoteMethod(stockService, editAction)
     export const deleteStock = new RemoteMethod(stockService, deleteAction)
+
+    export const getAllCounterAgents = new RemoteMethod(counterAgentService, getAllAction)
+    export const addCounterAgent = new RemoteMethod(counterAgentService, addAction)
+    export const editCounterAgent = new RemoteMethod(counterAgentService, editAction)
+    export const deleteCounterAgent = new RemoteMethod(counterAgentService, deleteAction)
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

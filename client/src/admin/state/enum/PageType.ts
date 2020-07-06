@@ -16,5 +16,6 @@ export enum PageType {
     SalesCategories,
     Sales,
     Stocks,
+    CounterAgents,
     None,
 }

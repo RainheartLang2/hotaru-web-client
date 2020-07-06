@@ -26,6 +26,7 @@ import PlannedCallActions from "./actions/PlannedCallActions";
 import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import SalesUnitActions from "./actions/SalesUnitActions";
 import StockActions from "./actions/StockActions";
+import CounterAgentsActions from "./actions/CounterAgentsActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -42,6 +43,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _plannedCallActions: PlannedCallActions
     private _salesUnitActions: SalesUnitActions
     private _stockActions: StockActions
+    private _counterAgentActions: CounterAgentsActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -60,6 +62,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._plannedCallActions = new PlannedCallActions(this)
         this._salesUnitActions = new SalesUnitActions(this)
         this._stockActions = new StockActions(this)
+        this._counterAgentActions = new CounterAgentsActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -121,6 +124,10 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     get stockActions(): StockActions {
         return this._stockActions;
+    }
+
+    get counterAgentActions(): CounterAgentsActions {
+        return this._counterAgentActions;
     }
 
     public get cacheManager(): CacheManager {
@@ -385,6 +392,15 @@ export default class EmployeeAppController extends ApplicationController<Employe
                         callback()
                     })
                 })
+            })
+        })
+    }
+
+    public openCounterAgentsPage(callback: Function = () => {}): void {
+        this.openPage(PageType.CounterAgents, setPageLoad => {
+            this.stockActions.loadCounterAgents(() => {
+                setPageLoad()
+                callback()
             })
         })
     }

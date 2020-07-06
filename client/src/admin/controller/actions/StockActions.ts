@@ -29,6 +29,10 @@ export default class StockActions {
         })
     }
 
+    public loadCounterAgents(callback: Function = () => {}): void {
+        callback()
+    }
+
     public openCreateDialog(callback: Function = () => {}, context?: EmployeeStateContext) {
         this.controller.openDialog(DialogType.CreateStock, setLoading => {
             this.controller.setState({

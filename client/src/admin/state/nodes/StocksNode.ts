@@ -10,6 +10,7 @@ import {Field} from "../../../core/mvc/store/Field";
 import {ConfigureType} from "../../../core/types/ConfigureType";
 import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 import {DialogType} from "../enum/DialogType";
+import CounterAgent from "../../../common/beans/CounterAgent";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -31,6 +32,8 @@ export default class StockNode {
             editedStockType: StockType.getDefaultType(),
             editedStockClinic: null,
             editedStockEmployee: null,
+
+            counterAgentsList: [],
         }
     }
 
@@ -69,7 +72,13 @@ export default class StockNode {
                 value: [],
             },
             stockFormHasErrors: this._store.createFormHasErrorsSelector(["editedStockNameField"],
-                ["editedStockEmployee"])
+                ["editedStockEmployee"]),
+
+            counterAgentsById: {
+                dependsOn: ["counterAgentsList"],
+                get: (state: Pick<StockState, "counterAgentsList">) => CollectionUtils.mapIdentifiableArray(state.counterAgentsList),
+                value: new Map(),
+            }
         }
     }
 }
@@ -82,6 +91,8 @@ export type StockState = {
     editedStockType: StockType,
     editedStockClinic: Clinic | null,
     editedStockEmployee: Employee | null,
+
+    counterAgentsList: CounterAgent[],
 }
 
 export type StockSelectors = {
@@ -90,4 +101,6 @@ export type StockSelectors = {
     editedStockUsersForSelectedClinic: Employee[],
     stockDialogMode: ConfigureType,
     stockFormHasErrors: boolean,
+
+    counterAgentsById: Map<number, CounterAgent>
 }
