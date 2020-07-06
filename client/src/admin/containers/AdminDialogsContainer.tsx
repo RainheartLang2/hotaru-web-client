@@ -46,8 +46,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                     {(dialogType == DialogType.CreatePlannedCall || dialogType == DialogType.EditPlannedCall)
                         && (<PlannedCallDialog controller={this.props.controller}/>)
                     }
-                    {(dialogType == DialogType.CreateStock || dialogType == DialogType.EditStock
-                        && (<EditStockForm controller={this.props.controller}/>))}
+                    {(dialogType == DialogType.CreateStock || dialogType == DialogType.EditStock)
+                        && (<EditStockForm controller={this.props.controller}/>)}
                 </Dialog>
             </>
         )

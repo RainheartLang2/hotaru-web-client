@@ -26,6 +26,9 @@ export default class ConnectedSelect<ItemType,
         if (props.controlled && !props.selectedItemProperty) {
             throw new Error("selectedItemProperty should be defined for controlled select")
         }
+        if (!props.controller && props.selectedItemProperty) {
+            throw new Error("selected shoud not be defined for uncontrolled select")
+        }
         this.state = {
             itemsMap: new Map(),
             selectedItem: this.props.defaultValue,

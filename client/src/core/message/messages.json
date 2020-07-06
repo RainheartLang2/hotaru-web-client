@@ -193,6 +193,10 @@
 
       "dialog.stock.create.label": "Создание нового склада",
       "dialog.stock.edit.label": "Редактирование склада",
+      "dialog.stock.name.field.label": "Наименование",
+      "dialog.stock.type.field.label": "Тип",
+      "dialog.stock.clinic.field.label": "Клиника",
+      "dialog.stock.responsible.field.label": "Ответственное лицо",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

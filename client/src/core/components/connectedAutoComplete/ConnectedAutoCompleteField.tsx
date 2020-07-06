@@ -52,6 +52,6 @@ export type Properties<StateType extends DefaultStateType, DerivationType, Store
     CustomAutoCompleteProps<ItemType> &
     {
     controller: ApplicationController<StateType, DerivationType, StoreType>,
-    selectedItemProperty?: keyof StateType,
+    selectedItemProperty: keyof StateType,
     itemsProperty: keyof (StateType & DerivationType),
 }

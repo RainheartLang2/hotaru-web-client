@@ -3,10 +3,6 @@ import {EmployeeAppSelectors, EmployeeAppState} from "../EmployeeApplicationStor
 import Stock from "../../../common/beans/Storage";
 import {SelectorsInfo} from "../../../core/mvc/store/ApplicationStore";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
-import Species from "../../../common/beans/Species";
-import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
-import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
-import {SpeciesPageSelector, SpeciesPageState} from "./SpeciesNode";
 import {StockType} from "../../../common/beans/enums/StockType";
 import {Clinic} from "../../../common/beans/Clinic";
 import {Employee} from "../../../common/beans/Employee";
@@ -24,8 +20,12 @@ export default class StockNode {
     }
 
     public getDefaultState(): StockState {
+        const stockTypesMap = new Map<number, StockType>()
+        stockTypesMap.set(StockType.stockTypeToNumber(StockType.Selling), StockType.Selling)
+        stockTypesMap.set(StockType.stockTypeToNumber(StockType.Storing), StockType.Storing)
         return {
             stocksList: [],
+            stockTypes: stockTypesMap,
             editedStockId: null,
             editedStockName: "",
             editedStockType: StockType.getDefaultType(),
@@ -58,14 +58,25 @@ export default class StockNode {
                 },
                 value: "none",
             },
+            editedStockUsersForSelectedClinic: {
+                dependsOn: ["userList", "editedStockClinic"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "userList" | "editedStockClinic">) => {
+                    if (!state.editedStockClinic) {
+                        return state.userList
+                    }
+                    return state.userList.filter(user => !user.clinicId || user.clinicId == state.editedStockClinic!.id)
+                },
+                value: [],
+            },
             stockFormHasErrors: this._store.createFormHasErrorsSelector(["editedStockNameField"],
-                ["editedStockClinic", "editedStockEmployee"])
+                ["editedStockEmployee"])
         }
     }
 }
 
 export type StockState = {
-    stocksList: Stock[]
+    stocksList: Stock[],
+    stockTypes: Map<number, StockType>
     editedStockId: number | null,
     editedStockName: string,
     editedStockType: StockType,
@@ -76,6 +87,7 @@ export type StockState = {
 export type StockSelectors = {
     stocksById: Map<number, Stock>
     editedStockNameField: Field,
+    editedStockUsersForSelectedClinic: Employee[],
     stockDialogMode: ConfigureType,
     stockFormHasErrors: boolean,
 }
