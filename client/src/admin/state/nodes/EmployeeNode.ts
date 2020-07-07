@@ -10,6 +10,7 @@ import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldVa
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 import EmailFormatValidator from "../../../core/mvc/validators/EmailFormatValidator";
+import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 
 export default class EmployeeNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -87,12 +88,10 @@ export default class EmployeeNode {
                 [new MaximalLengthValidator(2048)]
             ),
             editedEmployeeMailField: this._store.createField("editedEmployeeMail", "",
-                [new MaximalLengthValidator(254),
-                    new EmailFormatValidator()]
+                ValidatorUtils.getEmailValidators()
             ),
             editedEmployeePhoneField: this._store.createField("editedEmployeePhone", "",
-                [new MaximalLengthValidator(15),
-                new DigitsOnlyValidator("\\*")]
+                ValidatorUtils.getPhoneValidators()
             ),
             editedEmployeeLoginField: this._store.createField("editedEmployeeLogin", "", []),
             editedEmployeePasswordField: this._store.createField("editedEmployeePassword", "", []),

@@ -13,4 +13,6 @@ export enum DialogType {
     EditPlannedCall,
     CreateStock,
     EditStock,
+    CreateCounterAgent,
+    EditCounterAgent,
 }

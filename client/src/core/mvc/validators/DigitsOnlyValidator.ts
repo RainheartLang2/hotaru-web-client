@@ -1,11 +1,17 @@
 import FieldValidator from "./FieldValidator";
+import {RegularExpressions} from "../../utils/RegularExpressions";
 
 export default class DigitsOnlyValidator extends FieldValidator<string> {
     private regexp: RegExp
 
-    constructor(serviceCharacter: string) {
+    constructor(serviceCharacter?: string) {
         super()
-        this.regexp = new RegExp(`^(\\d|${serviceCharacter})*$`)
+        if (serviceCharacter) {
+            this.regexp = new RegExp(`^(\\d|${serviceCharacter})*$`)
+        } else {
+            this.regexp = new RegExp(RegularExpressions.digitsOnly)
+        }
+
     }
 
     getErrorMessage(): string {

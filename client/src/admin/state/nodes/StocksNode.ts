@@ -11,6 +11,9 @@ import {ConfigureType} from "../../../core/types/ConfigureType";
 import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 import {DialogType} from "../enum/DialogType";
 import CounterAgent from "../../../common/beans/CounterAgent";
+import {PersonType} from "../../../common/beans/enums/PersonType";
+import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
+import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -24,6 +27,10 @@ export default class StockNode {
         const stockTypesMap = new Map<number, StockType>()
         stockTypesMap.set(StockType.stockTypeToNumber(StockType.Selling), StockType.Selling)
         stockTypesMap.set(StockType.stockTypeToNumber(StockType.Storing), StockType.Storing)
+
+        const personTypesMap = new Map<number, PersonType>()
+        personTypesMap.set(PersonType.personTypeToNumber(PersonType.Legal), PersonType.Legal)
+        personTypesMap.set(PersonType.personTypeToNumber(PersonType.Natural), PersonType.Natural)
         return {
             stocksList: [],
             stockTypes: stockTypesMap,
@@ -34,6 +41,19 @@ export default class StockNode {
             editedStockEmployee: null,
 
             counterAgentsList: [],
+            personTypes: personTypesMap,
+            editedAgentId: null,
+            editedAgentName: "",
+            editedAgentPersonName: "",
+            editedAgentType: PersonType.getDefaultType(),
+            editedAgentPhone: "",
+            editedAgentEmail: "",
+            editedAgentPersonFinancialId: "",
+            editedAgentBankName: "",
+            editedAgentBankId: "",
+            editedAgentCorAccount: "",
+            editedAgentGyroAccount: "",
+            editedAgentNote: "",
         }
     }
 
@@ -78,7 +98,63 @@ export default class StockNode {
                 dependsOn: ["counterAgentsList"],
                 get: (state: Pick<StockState, "counterAgentsList">) => CollectionUtils.mapIdentifiableArray(state.counterAgentsList),
                 value: new Map(),
-            }
+            },
+            editedAgentNameField: this._store.createField("editedAgentName", "", ValidatorUtils.getStandardTextValidators(100)),
+            editedAgentPersonNameField: this._store.createField("editedAgentPersonName", "", ValidatorUtils.getStandardTextValidators(100)),
+            editedAgentPhoneField: this._store.createField("editedAgentPhone", "" , ValidatorUtils.getPhoneValidators()),
+            editedAgentEmailField: this._store.createField("editedAgentEmail", "", ValidatorUtils.getEmailValidators()),
+            editedAgentPersonFinancialIdField: this._store.createField("editedAgentPersonFinancialId", "",
+                [
+                    new MaximalLengthValidator(50),
+                    new DigitsOnlyValidator(),
+                ]),
+            editedAgentBankNameField: this._store.createField("editedAgentBankName", "",
+                [
+                    new MaximalLengthValidator(200)
+                ]),
+            editedAgentBankIdField: this._store.createField("editedAgentBankId", "",
+                [
+                    new MaximalLengthValidator(50),
+                    new DigitsOnlyValidator(),
+                ]),
+            editedAgentCorAccountField: this._store.createField("editedAgentCorAccount", "",
+                [
+                    new MaximalLengthValidator(50),
+                    new DigitsOnlyValidator(),
+                ]),
+            editedAgentGyroAccountField: this._store.createField("editedAgentGyroAccount", "",
+                [
+                    new MaximalLengthValidator(50),
+                    new DigitsOnlyValidator()
+                ]),
+            editedAgentNoteField: this._store.createField("editedAgentNote", "", [new MaximalLengthValidator(2000)]),
+            counterAgentDialogMode: {
+                dependsOn: ["dialogType"],
+                get: (state: Pick<EmployeeAppState, "dialogType">) => {
+                    switch (state.dialogType) {
+                        case DialogType.CreateCounterAgent:
+                            return "create"
+                        case DialogType.EditCounterAgent:
+                            return "edit"
+                        default:
+                            return "none"
+                    }
+                },
+                value: "none",
+            },
+            counterAgentFormHasErrors: this._store.createFormHasErrorsSelector([
+                "editedAgentNameField",
+                "editedAgentPersonNameField",
+                "editedAgentBankIdField",
+                "editedAgentBankNameField",
+                "editedAgentPhoneField",
+                "editedAgentPersonFinancialIdField",
+                "editedAgentNoteField",
+                "editedAgentCorAccountField",
+                "editedAgentGyroAccountField",
+                "editedAgentPhoneField",
+                "editedAgentEmailField",
+            ])
         }
     }
 }
@@ -93,6 +169,19 @@ export type StockState = {
     editedStockEmployee: Employee | null,
 
     counterAgentsList: CounterAgent[],
+    personTypes: Map<number, PersonType>
+    editedAgentId: number | null,
+    editedAgentName: string,
+    editedAgentPersonName: string,
+    editedAgentType: PersonType,
+    editedAgentPhone: string,
+    editedAgentEmail: string,
+    editedAgentPersonFinancialId: string,
+    editedAgentBankName: string,
+    editedAgentBankId: string,
+    editedAgentCorAccount: string,
+    editedAgentGyroAccount: string,
+    editedAgentNote: string,
 }
 
 export type StockSelectors = {
@@ -103,4 +192,16 @@ export type StockSelectors = {
     stockFormHasErrors: boolean,
 
     counterAgentsById: Map<number, CounterAgent>
+    editedAgentNameField: Field,
+    editedAgentPersonNameField: Field,
+    editedAgentPhoneField: Field,
+    editedAgentEmailField: Field,
+    editedAgentPersonFinancialIdField: Field,
+    editedAgentBankNameField: Field,
+    editedAgentBankIdField: Field,
+    editedAgentCorAccountField: Field,
+    editedAgentGyroAccountField: Field,
+    editedAgentNoteField: Field,
+    counterAgentDialogMode: ConfigureType,
+    counterAgentFormHasErrors: boolean,
 }

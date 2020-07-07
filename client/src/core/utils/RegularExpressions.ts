@@ -3,4 +3,5 @@ export namespace RegularExpressions {
     export const number = "^(-?\\d+([.]\\d\\d?)?)?$"
     export const price = "^(\\d+([.]\\d\\d)?)?$"
     export const enteringPrice = "^\\d*[.]?\\d?\\d?$"
+    export const digitsOnly = "^\\d*$"
 }

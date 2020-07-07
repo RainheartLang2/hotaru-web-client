@@ -3,6 +3,7 @@ import {PersonType} from "./enums/PersonType";
 
 export default class CounterAgent extends Identifiable {
     public name: string
+    public contactPersonName: string
     public personType: PersonType
     public phone: string
     public email: string
@@ -17,6 +18,7 @@ export default class CounterAgent extends Identifiable {
     constructor(bean: CounterAgentBean) {
         super(bean.id)
         this.name = bean.name
+        this.contactPersonName = bean.contactPersonName
         this.personType = bean.personType
         this.phone = bean.phone
         this.email = bean.email
@@ -32,6 +34,7 @@ export default class CounterAgent extends Identifiable {
 export type CounterAgentBean = {
     id?: number
     name: string
+    contactPersonName: string
     personType: PersonType
     phone: string
     email: string

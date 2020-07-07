@@ -70,6 +70,9 @@
       "stockType.storing.name": "Для хранения",
       "stockType.selling.name": "Для реализации",
 
+      "personType.legal.name": "Юридическое",
+      "personType.natural.name": "Физическое",
+
       "plannedCall.edit.tooltip": "Редактировать звонок",
       "plannedCall.state.done.tooltip": "Отметить звонок выполненным",
       "plannedCall.state.cancel.tooltip": "Отменить звонок",
@@ -200,6 +203,20 @@
       "dialog.stock.type.field.label": "Тип",
       "dialog.stock.clinic.field.label": "Клиника",
       "dialog.stock.responsible.field.label": "Ответственное лицо",
+
+      "dialog.agent.create.label": "Создание нового контрагента",
+      "dialog.agent.edit.label": "Редактирование контрагента",
+      "dialog.agent.name.field.label": "Название",
+      "dialog.agent.contactName.field.label": "Контактное лицо",
+      "dialog.agent.personType.field.label": "Тип лица",
+      "dialog.agent.phone.field.label": "Телефон",
+      "dialog.agent.email.field.label": "E-mail",
+      "dialog.agent.personFinancialId.field.label": "ИНН",
+      "dialog.agent.bankName.field.label": "Название банка",
+      "dialog.agent.bankId.field.label": "БИК",
+      "dialog.agent.corAccount.field.label": "Кор счёт",
+      "dialog.agent.gyroAccount.field.label": "Расчётный счёт",
+      "dialog.agent.note.field.label": "Заметки",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",
