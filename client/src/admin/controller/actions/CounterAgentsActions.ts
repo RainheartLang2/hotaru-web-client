@@ -6,6 +6,7 @@ import {RemoteMethod} from "../../../core/http/RemoteMethod";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {DialogType} from "../../state/enum/DialogType";
 import {PersonType} from "../../../common/beans/enums/PersonType";
+import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 
 export default class CounterAgentsActions {
     private controller: EmployeeAppController
@@ -83,11 +84,50 @@ export default class CounterAgentsActions {
         })
     }
 
-    public submitCreate(callback: Function = () => {}): void {
+    public buildAgentByFields(): CounterAgent {
+        const state = this.controller.state
+        return new CounterAgent({
+            id: state.editedAgentId ? state.editedAgentId : undefined,
+            name: state.editedAgentNameField.value,
+            contactPersonName: state.editedAgentPersonNameField.value,
+            personType: state.editedAgentType,
+            phone: state.editedAgentPhoneField.value,
+            email: state.editedAgentEmailField.value,
+            personFinancialId: state.editedAgentPersonFinancialIdField.value,
+            bankId: state.editedAgentBankIdField.value,
+            bankName: state.editedAgentBankNameField.value,
+            correspondentAccount: state.editedAgentCorAccountField.value,
+            gyroAccount: state.editedAgentGyroAccountField.value,
+            note: state.editedAgentNoteField.value,
+        })
+    }
 
+    public submitCreate(callback: Function = () => {}): void {
+        const agent = this.buildAgentByFields()
+        fetchUserZoneRpc({
+            method: RemoteMethods.addCounterAgent,
+            params: [agent],
+            successCallback: result => {
+                agent.id = +result
+                this.controller.setState({
+                    counterAgentsList: [...this.controller.state.counterAgentsList, agent]
+                })
+                this.controller.closeCurrentDialog()
+            }
+        })
     }
 
     public submitEdit(callback: Function = () => {}): void {
-
+        const agent = this.buildAgentByFields()
+        fetchUserZoneRpc({
+            method: RemoteMethods.editCounterAgent,
+            params: [agent],
+            successCallback: result => {
+                this.controller.setState({
+                    counterAgentsList: CollectionUtils.updateIdentifiableArray(this.controller.state.counterAgentsList, agent)
+                })
+                this.controller.closeCurrentDialog()
+            }
+        })
     }
 }

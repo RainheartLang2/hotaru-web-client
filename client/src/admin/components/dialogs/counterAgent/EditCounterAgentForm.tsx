@@ -78,7 +78,7 @@ export default class EditCounterAgentForm extends React.Component<Properties, St
                             </div>
                             <div className={styles.row}>
                                 <ConnectedSelect<PersonType, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                                    label={"dialog.agent.personType.field.label"}
+                                    label={<Message messageKey={"dialog.agent.personType.field.label"}/>}
                                     controller={this.props.controller}
                                     mapProperty={"personTypes"}
                                     selectedItemProperty={"editedAgentType"}
@@ -104,7 +104,7 @@ export default class EditCounterAgentForm extends React.Component<Properties, St
                             <div className={styles.row}>
                                 <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}
-                                    fieldKey={{editedAgentEmail: "editedAgentNoteField"}}
+                                    fieldKey={{editedAgentNote: "editedAgentNoteField"}}
                                     label={(<Message messageKey={"dialog.agent.note.field.label"}/>)}
                                 />
                             </div>
