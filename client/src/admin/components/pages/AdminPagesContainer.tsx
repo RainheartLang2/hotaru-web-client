@@ -21,6 +21,7 @@ import SalesCategoryPage from "./accounting/SalesCategoryPage";
 import SalesUnitPage from "./salesUnit/SalesUnitPage";
 import StocksPage from "./stocks/StocksPage";
 import CounterAgentsPage from "./counterAgents/CounterAgentsPage";
+import GoodsProducersPage from "./goodsProducer/GoodsProducersPage";
 
 export default class AdminPagesContainer extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
@@ -50,6 +51,7 @@ export default class AdminPagesContainer extends CheckingStateComponent<Properti
             {this.isRenderPage(PageType.VisitPurpose) && (<VisitPurposePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Diagnosis) && (<DiagnosisPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.AnimalColors) && (<AnimalColorPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.GoodsProducers) && (<GoodsProducersPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.ClinicsWorkschedule) && (<ClinicsWorkschedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.EmployeesWorkSchedule) && (<EmployeesWorkSchedulePage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.PlannedCalls) && (<PlannedCallsPage controller={this.props.controller}/>)}

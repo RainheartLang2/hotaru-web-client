@@ -17,3 +17,15 @@
     padding-bottom: 10px;
     width: 400px;
 }
+
+.nameCell {
+    width: 200px;
+}
+
+.additionalRow {
+    background-color: #ddfada;
+}
+
+.actions {
+    display: flex;
+}

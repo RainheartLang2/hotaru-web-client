@@ -10,6 +10,7 @@ export enum PageType {
     VisitPurpose,
     Diagnosis,
     AnimalColors,
+    GoodsProducers,
     ClinicsWorkschedule,
     EmployeesWorkSchedule,
     PlannedCalls,

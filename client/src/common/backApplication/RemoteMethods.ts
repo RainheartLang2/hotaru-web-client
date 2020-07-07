@@ -19,6 +19,7 @@ export namespace RemoteMethods {
     const visitPurposeService = new ServerAppService("VisitPurposeService")
     const diagnosisService = new ServerAppService("DiagnosisService")
     const animalColorService = new ServerAppService("AnimalColorService")
+    const goodsProducerService = new ServerAppService("GoodsProducerService")
     const clinicWorkScheduleService = new ServerAppService("ClinicWorkScheduleService")
     const employeeWorkScheduleService = new ServerAppService("EmployeeWorkScheduleService")
     const petService = new ServerAppService("PetService")
@@ -83,6 +84,11 @@ export namespace RemoteMethods {
     export const addAnimalColor = new RemoteMethod(animalColorService, addAction)
     export const editAnimalColor = new RemoteMethod(animalColorService, editAction)
     export const deleteAnimalColor = new RemoteMethod(animalColorService, deleteAction)
+
+    export const getAllGoodsProducers = new RemoteMethod(goodsProducerService, getAllAction)
+    export const addGoodsProducer = new RemoteMethod(goodsProducerService, addAction)
+    export const editGoodsProducer = new RemoteMethod(goodsProducerService, editAction)
+    export const deleteGoodsProducer = new RemoteMethod(goodsProducerService, deleteAction)
 
     export const getAllAppointments = new RemoteMethod(appointmentService, getAllAction)
     export const addAppointment = new RemoteMethod(appointmentService, addAction)

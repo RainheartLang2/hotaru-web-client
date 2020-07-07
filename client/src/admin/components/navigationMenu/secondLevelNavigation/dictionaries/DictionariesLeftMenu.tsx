@@ -27,6 +27,11 @@ export default class DictionariesLeftMenu extends React.Component<Properties> {
                 onClick: () => this.props.controller.openMeasureUnitsPage()
             },
             {
+                key: DictionaryMenuItemType.GoodsProducers,
+                label: <Message messageKey={"second.navigation.dictionaries.goodsProducer.label"}/>,
+                onClick: () => this.props.controller.openGoodsProducerPage(),
+            },
+            {
                 key: DictionaryMenuItemType.VisitPurpose,
                 label: <Message messageKey={"second.navigation.dictionaries.visitPurpose.label"}/>,
                 onClick: () => this.props.controller.openVisitPurposePage()

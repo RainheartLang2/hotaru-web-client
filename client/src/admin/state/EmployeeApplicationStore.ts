@@ -191,6 +191,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.VisitPurpose:
             case PageType.Diagnosis:
             case PageType.AnimalColors:
+            case PageType.GoodsProducers:
                 return SecondLevelNavigationMenuType.Dictionaries
 
             case PageType.ClinicList:

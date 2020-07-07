@@ -7,4 +7,5 @@ export enum DictionaryMenuItemType {
     VisitPurpose,
     Diagnosis,
     AnimalColors,
+    GoodsProducers,
 }

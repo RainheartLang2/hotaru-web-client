@@ -14,6 +14,7 @@ import {AnimalColor} from "../../../common/beans/AnimalColor";
 import {SalesCategory} from "../../../common/beans/SalesCategory";
 import {SalesType} from "../../../common/beans/enums/SalesType";
 import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
+import GoodsProducer from "../../../common/beans/GoodsProducer";
 
 export default class DictionaryNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -52,6 +53,9 @@ export default class DictionaryNode {
             editedAnimalColorId: undefined,
             editedAnimalColorName: "",
             addedAnimalColorName: "",
+
+            goodsProducersList: [],
+            addedGoodsProducerName: "",
 
             salesCategoriesList: [],
             salesTypesList: salesTypeMap,
@@ -123,6 +127,15 @@ export default class DictionaryNode {
             ],
                 false),
 
+            goodsProducersById: {
+                dependsOn: ["goodsProducersList"],
+                get: (state: Pick<DictionariesPagesState, "goodsProducersList">) =>
+                    CollectionUtils.mapIdentifiableArray(state.goodsProducersList),
+                value: new Map<number, GoodsProducer>(),
+            },
+
+            addedGoodsProducerNameField: this._store.createField("addedGoodsProducerName", "", ValidatorUtils.getStandardTextValidators(50)),
+
             salesCategoriesById: {
                 dependsOn: ["salesCategoriesList"],
                 get: (state: Pick<DictionariesPagesState, "salesCategoriesList">) => CollectionUtils.mapIdentifiableArray(state.salesCategoriesList),
@@ -173,6 +186,9 @@ export type DictionariesPagesState = {
     editedAnimalColorName: string,
     addedAnimalColorName: string,
 
+    goodsProducersList: GoodsProducer[],
+    addedGoodsProducerName: string,
+
     salesCategoriesList: SalesCategory[],
     editedSalesCategoryId: number | undefined,
     editedSalesCategoryName: string,
@@ -200,6 +216,9 @@ export type DictionariesPageSelectors = {
 
     animalColorsById: Map<number, AnimalColor>,
     addedAnimalColorNameField: Field,
+
+    goodsProducersById: Map<number, GoodsProducer>,
+    addedGoodsProducerNameField: Field,
 
     salesCategoriesById: Map<number, SalesCategory>
     addedSalesCategoryNameField: Field,

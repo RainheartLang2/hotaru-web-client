@@ -13,8 +13,8 @@ import {AnimalColor} from "../../../common/beans/AnimalColor";
 import {SalesCategory} from "../../../common/beans/SalesCategory";
 import {StringUtils} from "../../../core/utils/StringUtils";
 import {SalesType} from "../../../common/beans/enums/SalesType";
-import StateChangeContext from "../../../core/mvc/store/StateChangeContext";
 import {CommonActionsFunctions} from "./CommonActionsFunctions";
+import GoodsProducer from "../../../common/beans/GoodsProducer";
 
 export default class DictionariesActions {
 
@@ -91,6 +91,10 @@ export default class DictionariesActions {
 
     public loadSalesCategories(callback: Function = () => {}, context?: EmployeeStateContext): void {
         this.controller.cacheManager.salesCategoriesCache.execute(callback, context)
+    }
+
+    public loadGoodsProducers(callback: Function = () => {}): void {
+        this.loadList(RemoteMethods.getAllGoodsProducers, "goodsProducersList", callback)
     }
 
     private submitCreateItem<Type extends Identifiable>(item: Type,
@@ -178,6 +182,21 @@ export default class DictionariesActions {
         this.submitCreateItem(item, RemoteMethods.addAnimalColor, setState, callback)
     }
 
+    public submitCreateGoodsProducer(callback: Function = () => {}): void {
+        const item: GoodsProducer = {
+            name: this.controller.state.addedGoodsProducerNameField.value,
+        }
+
+        const setState = (item: GoodsProducer) => {
+            this.controller.setState({
+                goodsProducersList: [...this.controller.state.goodsProducersList, item],
+                addedGoodsProducerName: "",
+            })
+            this.controller.toggleFieldValidation("addedGoodsProducerNameField", false)
+        }
+        this.submitCreateItem(item, RemoteMethods.addGoodsProducer, setState, callback)
+    }
+
     public submitCreateSalesCategory(callback: Function = () => {}): void {
         const item: SalesCategory = new SalesCategory({
             name: this.controller.state.addedSalesCategoryNameField.value,
@@ -246,6 +265,14 @@ export default class DictionariesActions {
             name: this.controller.state.editedAnimalColorName,
         }
         this.submitEditItem(item, RemoteMethods.editAnimalColor, "animalColorsList", callback)
+    }
+
+    public submitEditGoodsProducer(id: number, name: string, callback: Function = () => {}): void {
+        const item: GoodsProducer = {
+            id,
+            name,
+        }
+        this.submitEditItem(item, RemoteMethods.editGoodsProducer, "goodsProducersList", callback)
     }
 
     public setSalesCategoryId(id?: number) {
@@ -326,6 +353,10 @@ export default class DictionariesActions {
 
     public deleteAnimalColor(id: number): void {
         this.deleteItem(id, RemoteMethods.deleteAnimalColor, "animalColorsList")
+    }
+
+    public deleteGoodsProducer(id: number): void {
+        this.deleteItem(id, RemoteMethods.deleteGoodsProducer, "goodsProducersList")
     }
 
     public deleteSalesCategory(id: number): void {
