@@ -7,9 +7,13 @@ import Stock from "../../../../common/beans/Storage";
 import CustomTableCell from "../../../../core/components/tableCell/CustomTableCell";
 import {Link} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/DeleteSharp"
+import AssignmentIcon from "@material-ui/icons/AssignmentSharp"
 import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
 import {StockType} from "../../../../common/beans/enums/StockType";
 import {NameUtils} from "../../../../core/utils/NameUtils";
+import DropDownMenu, {DropDownMenuItem} from "../../../../core/components/dropDownMenu/DropDownMenu";
+
+var styles = require("../../../commonStyles.css")
 
 export default class StocksPage extends React.Component<Properties, State> {
 
@@ -22,6 +26,20 @@ export default class StocksPage extends React.Component<Properties, State> {
 
     render() {
         const actions = this.props.controller.stockActions
+        const createDocumentMenuItems: DropDownMenuItem<Stock>[] = [
+            {
+                label: <Message messageKey={"page.stocks.createDocument.income.button.label"} />,
+                onClick: stock => actions.openCreateIncomeDocDialog(stock),
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.outcome.button.label"} />,
+                onClick: () => {},
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.inventory.button.label"} />,
+                onClick: () => {},
+            }
+        ]
         return (
             <>
                 <PageHeader label={(<Message messageKey={"page.stocks.title"}/>)}
@@ -50,7 +68,17 @@ export default class StocksPage extends React.Component<Properties, State> {
                                     <CustomTableCell>
                                         {NameUtils.formatName(employee)}
                                     </CustomTableCell>
-                                    <CustomTableCell>
+                                    <CustomTableCell style={styles.actionsCell}>
+                                        <DropDownMenu<Stock>
+                                            items={createDocumentMenuItems}
+                                            onclickArgument={stock}
+                                        >
+                                            <CustomContentButton
+                                                tooltipContent={<Message messageKey={"page.stocks.createDocument.tooltip.label"}/>}
+                                            >
+                                                <AssignmentIcon/>
+                                            </CustomContentButton>
+                                        </DropDownMenu>
                                         <CustomContentButton
                                             onClick={() => {
                                                 if (stock.id) {

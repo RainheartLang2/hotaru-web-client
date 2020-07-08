@@ -9,6 +9,7 @@ import ClientDialog from "../components/dialogs/client/ClientDialog";
 import PlannedCallDialog from "../components/dialogs/plannedCall/PlannedCallDialog";
 import EditStockForm from "../components/dialogs/stock/EditStockForm";
 import EditCounterAgentForm from "../components/dialogs/counterAgent/EditCounterAgentForm";
+import EditGoodsDocumentForm from "../components/dialogs/goodsDocument/EditGoodsDocumentForm";
 
 export default class AdminDialogsContainer extends React.Component<Properties, State> {
 
@@ -51,6 +52,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                         && (<EditStockForm controller={this.props.controller}/>)}
                     {(dialogType == DialogType.CreateCounterAgent || dialogType == DialogType.EditCounterAgent)
                         && (<EditCounterAgentForm controller={this.props.controller}/>)}
+                    {(dialogType == DialogType.CreateGoodsIncome || dialogType == DialogType.EditGoodsIncome)
+                        && (<EditGoodsDocumentForm controller={this.props.controller}/>)}
                 </Dialog>
             </>
         )

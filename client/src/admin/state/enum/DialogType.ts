@@ -15,4 +15,6 @@ export enum DialogType {
     EditStock,
     CreateCounterAgent,
     EditCounterAgent,
+    CreateGoodsIncome,
+    EditGoodsIncome,
 }

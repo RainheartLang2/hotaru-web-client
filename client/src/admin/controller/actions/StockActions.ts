@@ -115,4 +115,11 @@ export default class StockActions {
             }
         })
     }
+
+    public openCreateIncomeDocDialog(stock: Stock, callback: Function = () => {}): void {
+        this.controller.openDialog(DialogType.CreateGoodsIncome, setLoading => {
+            setLoading()
+            callback()
+        })
+    }
 }

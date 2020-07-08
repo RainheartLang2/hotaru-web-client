@@ -29,3 +29,8 @@
 .actions {
     display: flex;
 }
+
+.actionsCell {
+    display: flex;
+    justify-content: space-between;
+}

@@ -9,6 +9,7 @@ export default class CustomContentButton extends React.Component<Properties> {
     static defaultProps = {
         disabled: false,
         tooltipLabel: "",
+        onClick: () => {},
     }
 
     private getContentStyles(): string {

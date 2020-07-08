@@ -1,4 +1,4 @@
-export enum ShippingType {
+export enum ShipingType {
     Income = "Income",
     Outcome = "Outcome",
 }

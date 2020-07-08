@@ -221,6 +221,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.VisitPurpose: return DictionaryMenuItemType.VisitPurpose
             case PageType.Diagnosis: return DictionaryMenuItemType.Diagnosis
             case PageType.AnimalColors: return DictionaryMenuItemType.AnimalColors
+            case PageType.GoodsProducers: return DictionaryMenuItemType.GoodsProducers
 
             case PageType.ClinicList: return ClinicsManagementMenuItemType.ClinicList
             case PageType.ClinicsWorkschedule: return ClinicsManagementMenuItemType.WorkSchedule

@@ -154,6 +154,10 @@
       "page.plannedCalls.title": "Прозвоны",
 
       "page.stocks.title": "Список складов",
+      "page.stocks.createDocument.tooltip.label": "Создать документ",
+      "page.stocks.createDocument.income.button.label": "Приходная накладная",
+      "page.stocks.createDocument.outcome.button.label": "Расходная накладная",
+      "page.stocks.createDocument.inventory.button.label": "Инвентаризация",
 
       "page.counterAgent.title": "Список контрагентов",
 
