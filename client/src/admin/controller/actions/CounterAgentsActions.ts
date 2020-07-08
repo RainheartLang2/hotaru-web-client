@@ -67,7 +67,8 @@ export default class CounterAgentsActions {
                 const agents = result as CounterAgentBean[]
                 this.controller.setState({
                     counterAgentsList: agents.map(bean => new CounterAgent(bean))
-                })
+                }, context)
+                callback()
             }
         })
     }

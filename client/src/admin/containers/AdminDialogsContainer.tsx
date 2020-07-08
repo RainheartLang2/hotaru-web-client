@@ -10,6 +10,9 @@ import PlannedCallDialog from "../components/dialogs/plannedCall/PlannedCallDial
 import EditStockForm from "../components/dialogs/stock/EditStockForm";
 import EditCounterAgentForm from "../components/dialogs/counterAgent/EditCounterAgentForm";
 import EditGoodsDocumentForm from "../components/dialogs/goodsDocument/EditGoodsDocumentForm";
+import LoadingMoire from "../../core/components/loadingMoire/LoadingMoire";
+
+var styles = require("./styles.css")
 
 export default class AdminDialogsContainer extends React.Component<Properties, State> {
 
@@ -26,34 +29,42 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
         this.props.controller.closeCurrentDialog()
     }
 
+    private isRenderDialog(dialogType: DialogType) {
+        return !this.state.isLoading && this.state.dialogType == dialogType
+    }
+
     render() {
         const dialogType = this.state.dialogType
+        const isLoading = this.state.isLoading
         return (
             <>
                 <Dialog open={dialogType != DialogType.None}
                         maxWidth="md"
                         onBackdropClick={() => this.closeDialog()}
                         onClose={() => this.closeDialog()}>
-                    {(dialogType == DialogType.CreateEmployee
-                        || dialogType == DialogType.EditEmployee
-                        || dialogType == DialogType.EditEmployeeProfile)
-                    && (<EditEmployeeDialog controller={this.props.controller}/>)}
+                    <div className={styles.dialogWindow}>
+                        <LoadingMoire delay={true} visible={isLoading}/>
+                        {(dialogType == DialogType.CreateEmployee
+                            || this.isRenderDialog(DialogType.EditEmployee)
+                            || this.isRenderDialog(DialogType.EditEmployeeProfile))
+                        && (<EditEmployeeDialog controller={this.props.controller}/>)}
 
-                    {(dialogType == DialogType.CreateClinic || dialogType == DialogType.EditClinic)
+                        {(this.isRenderDialog(DialogType.CreateClinic) || this.isRenderDialog(DialogType.EditClinic))
                         && (<ClinicDialog controller={this.props.controller}/>)}
-                    {(dialogType == DialogType.CreateAppointment || dialogType == DialogType.EditAppointment)
+                        {(this.isRenderDialog(DialogType.CreateAppointment) || this.isRenderDialog(DialogType.EditAppointment))
                         && (<AppointmentDialog controller={this.props.controller}/>)}
-                    {(dialogType == DialogType.CreateClient || dialogType == DialogType.EditClient)
+                        {(this.isRenderDialog(DialogType.CreateClient) || this.isRenderDialog(DialogType.EditClient))
                         && (<ClientDialog controller={this.props.controller}/>)}
-                    {(dialogType == DialogType.CreatePlannedCall || dialogType == DialogType.EditPlannedCall)
+                        {(this.isRenderDialog(DialogType.CreatePlannedCall) || this.isRenderDialog(DialogType.EditPlannedCall))
                         && (<PlannedCallDialog controller={this.props.controller}/>)
-                    }
-                    {(dialogType == DialogType.CreateStock || dialogType == DialogType.EditStock)
+                        }
+                        {(this.isRenderDialog(DialogType.CreateStock) || this.isRenderDialog(DialogType.EditStock))
                         && (<EditStockForm controller={this.props.controller}/>)}
-                    {(dialogType == DialogType.CreateCounterAgent || dialogType == DialogType.EditCounterAgent)
+                        {(this.isRenderDialog(DialogType.CreateCounterAgent) || this.isRenderDialog(DialogType.EditCounterAgent))
                         && (<EditCounterAgentForm controller={this.props.controller}/>)}
-                    {(dialogType == DialogType.CreateGoodsIncome || dialogType == DialogType.EditGoodsIncome)
+                        {(this.isRenderDialog(DialogType.CreateGoodsIncome) || this.isRenderDialog(DialogType.EditGoodsIncome))
                         && (<EditGoodsDocumentForm controller={this.props.controller}/>)}
+                    </div>
                 </Dialog>
             </>
         )

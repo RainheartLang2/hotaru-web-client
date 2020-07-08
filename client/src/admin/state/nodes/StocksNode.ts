@@ -14,6 +14,8 @@ import CounterAgent from "../../../common/beans/CounterAgent";
 import {PersonType} from "../../../common/beans/enums/PersonType";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
+import DateValidator from "../../../core/mvc/validators/DateValidator";
+import {ShipingType} from "../../../common/beans/enums/ShipingType";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -54,6 +56,12 @@ export default class StockNode {
             editedAgentCorAccount: "",
             editedAgentGyroAccount: "",
             editedAgentNote: "",
+
+            editedShipmentDocumentId: undefined,
+            editedShipDocStock: null,
+            editedShipDocCounterAgent: null,
+            editedShipDocNumber: "",
+            editedShipDocDate: "",
         }
     }
 
@@ -154,7 +162,39 @@ export default class StockNode {
                 "editedAgentGyroAccountField",
                 "editedAgentPhoneField",
                 "editedAgentEmailField",
-            ])
+            ]),
+            editedShipDocNumberField: this._store.createField("editedShipDocNumber"),
+            editedShipDocDateField: this._store.createField("editedShipDocDate", "", [
+                new DateValidator()
+            ]),
+            editedShipDocFormMode: {
+                dependsOn: ["dialogType"],
+                get: (state: Pick<EmployeeAppState, "dialogType">) => {
+                    switch (state.dialogType) {
+                        case DialogType.CreateGoodsIncome:
+                            return "create"
+                        case DialogType.EditGoodsIncome:
+                            return "edit"
+                        default:
+                            return "none"
+                    }
+                },
+                value: "none",
+            },
+            editedShipDocType: {
+                dependsOn: ["dialogType"],
+                get: (state:Pick<EmployeeAppState, "dialogType">) => {
+                    switch (state.dialogType) {
+                        case DialogType.CreateGoodsIncome:
+                        case DialogType.EditGoodsIncome:
+                            return ShipingType.Income
+                        default:
+                            return null
+                    }
+                },
+                value: null,
+            },
+            editedShipDocFormHasErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"])
         }
     }
 }
@@ -182,6 +222,12 @@ export type StockState = {
     editedAgentCorAccount: string,
     editedAgentGyroAccount: string,
     editedAgentNote: string,
+
+    editedShipmentDocumentId: number | undefined
+    editedShipDocStock: Stock | null
+    editedShipDocCounterAgent: CounterAgent | null
+    editedShipDocNumber: string
+    editedShipDocDate: string
 }
 
 export type StockSelectors = {
@@ -204,4 +250,10 @@ export type StockSelectors = {
     editedAgentNoteField: Field,
     counterAgentDialogMode: ConfigureType,
     counterAgentFormHasErrors: boolean,
+
+    editedShipDocNumberField: Field,
+    editedShipDocDateField: Field,
+    editedShipDocFormMode: ConfigureType,
+    editedShipDocType: ShipingType | null,
+    editedShipDocFormHasErrors: boolean,
 }

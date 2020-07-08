@@ -2,3 +2,9 @@
     width: 400px;
     padding: 50px 20px 0 20px;
 }
+
+.dialogWindow {
+    position: relative;
+    min-width: 958px;
+    min-height: 485px;
+}

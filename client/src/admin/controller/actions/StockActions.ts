@@ -6,6 +6,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {DialogType} from "../../state/enum/DialogType";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import {DateUtils} from "../../../core/utils/DateUtils";
 
 export default class StockActions {
 
@@ -27,10 +28,6 @@ export default class StockActions {
                 callback()
             }
         })
-    }
-
-    public loadCounterAgents(callback: Function = () => {}): void {
-        callback()
     }
 
     public openCreateDialog(callback: Function = () => {}, context?: EmployeeStateContext) {
@@ -118,8 +115,21 @@ export default class StockActions {
 
     public openCreateIncomeDocDialog(stock: Stock, callback: Function = () => {}): void {
         this.controller.openDialog(DialogType.CreateGoodsIncome, setLoading => {
-            setLoading()
-            callback()
+            this.loadList(() => {
+                this.controller.counterAgentActions.loadList(() => {
+                    this.controller.salesUnitActions.loadList(() => {
+                        this.controller.setState({
+                            editedShipmentDocumentId: undefined,
+                            editedShipDocStock: stock,
+                            editedShipDocCounterAgent: null,
+                            editedShipDocNumber: "",
+                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate())
+                        })
+                        setLoading()
+                        callback()
+                    })
+                })
+            })
         })
     }
 }

@@ -5,6 +5,7 @@ export default class GoodsPack extends Identifiable {
     public stockId: number
     public goodsTypeId: number
     public goodsProducerId: number
+    public incomeDocumentId: number
     public amount: number
     public series: string
     public creationDate: Date
@@ -15,6 +16,7 @@ export default class GoodsPack extends Identifiable {
         this.stockId = bean.stockId
         this.goodsTypeId = bean.goodsTypeId
         this.goodsProducerId = bean.goodsProducerId
+        this.incomeDocumentId = bean.incomeDocumentId
         this.amount = bean.amount
         this.series = bean.series
         this.creationDate = new Date(bean.creationDate)
@@ -27,6 +29,7 @@ export type GoodsPackBean = {
     stockId: number
     goodsTypeId: number
     goodsProducerId: number
+    incomeDocumentId: number
     amount: number
     series: string
     creationDate: Date

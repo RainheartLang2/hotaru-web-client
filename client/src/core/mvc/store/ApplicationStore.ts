@@ -114,7 +114,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                                           requiredProperties: (keyof (StateType & SelectorsType))[] = [],
     ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, boolean> {
         return {
-            dependsOn: fieldsKeys,
+            dependsOn: requiredProperties.concat(fieldsKeys),
             get: (state: Pick<StateType & SelectorsType, any>) => {
                 let error = false
                 fieldsKeys.forEach(key => {

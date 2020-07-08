@@ -404,7 +404,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
     public openCounterAgentsPage(callback: Function = () => {}): void {
         this.openPage(PageType.CounterAgents, setPageLoad => {
-            this.stockActions.loadCounterAgents(() => {
+            this.counterAgentActions.loadList(() => {
                 setPageLoad()
                 callback()
             })

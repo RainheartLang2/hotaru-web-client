@@ -224,6 +224,12 @@
       "dialog.agent.gyroAccount.field.label": "Расчётный счёт",
       "dialog.agent.note.field.label": "Заметки",
 
+      "dialog.goods.document.income.label": "Создание приходной наклодной",
+      "dialog.goods.document.field.stock.label": "Склад",
+      "dialog.goods.document.field.agent.label": "Контрагент",
+      "dialog.goods.document.field.series.label": "Серия",
+      "dialog.goods.document.field.date.label": "Дата документа",
+
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",
       "panel.pet.field.species.label": "Вид",
