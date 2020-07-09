@@ -16,8 +16,10 @@ import GoodsPackWithPrice from "../../../../common/beans/GoodsPackWithPrice";
 import {ReactNode} from "react";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
-import CustomLink from "../../../../core/components/customLink/CustomLink";
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
+import EditIcon from '@material-ui/icons/EditSharp';
+
+import {MathUtils} from "../../../../core/utils/MathUtils";
 
 var styles = require("../../../commonStyles.css")
 
@@ -31,22 +33,36 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
         }
     }
 
+    private renderGoodsPackName(item: GoodsPackWithPrice): ReactNode {
+        const salesUnit = this.props.controller.salesUnitActions.getUnitById(item.goodsTypeId)
+        const measureUnit = this.props.controller.dictionariesActions.getMeasureUnitById(salesUnit.measureUnitId)
+        return (<Message messageKey={"dialog.goods.document.goodsList.name.template"}
+                         args={[salesUnit.name,
+                                item.amount.toString(),
+                                measureUnit.name!,
+                                item.price.toString(),
+                                MathUtils.calculateCost(item.amount, item.price, item.taxRate).toString()
+                                ]}/>)
+    }
+
     private renderGoodsListItem(item: GoodsPackWithPrice): ReactNode {
         return (<>
-            <ListItemText primary={
-                <CustomLink
-                    onClick={() => {}}
-                >
-                    {123}
-                </CustomLink>
-            }/>
+            <ListItemText primary={this.renderGoodsPackName(item)}/>
             <ListItemSecondaryAction>
-                <CustomContentButton
-                    onClick={() => {}}
-                    tooltipContent={<Message messageKey={"common.bitton.delete"}/>}
-                >
-                    <DeleteIcon/>
-                </CustomContentButton>
+                <div className={styles.actions}>
+                    <CustomContentButton
+                        onClick={() => this.props.controller.goodsDocumentActions.openEditGoodsPackRightPanel(item)}
+                        tooltipContent={<Message messageKey={"common.button.edit"}/>}
+                    >
+                        <EditIcon/>
+                    </CustomContentButton>
+                    <CustomContentButton
+                        onClick={() => this.props.controller.goodsDocumentActions.deleteGoodsPackForDocument(item.id!)}
+                        tooltipContent={<Message messageKey={"common.button.delete"}/>}
+                    >
+                        <DeleteIcon/>
+                    </CustomContentButton>
+                </div>
             </ListItemSecondaryAction>
         </>)
     }
@@ -99,7 +115,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                 controller={this.props.controller}
                                 itemsListProperty={"editedShipDocGoods"}
                                 label={<Message messageKey={"dialog.goods.document.goodsList.label"}/>}
-                                renderItem={this.renderGoodsListItem}
+                                renderItem={item => this.renderGoodsListItem(item)}
                                 onAddButtonClick={() => this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()}
                                 addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
                             />

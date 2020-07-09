@@ -22,6 +22,7 @@
     "admin": {
       "common.button.create": "Создать",
       "common.button.cancel": "Отменить",
+      "common.button.edit": "Редактировать",
       "common.button.back": "Назад",
       "common.button.save": "Сохранить",
       "common.button.delete": "Удалить",
@@ -232,6 +233,7 @@
       "dialog.goods.document.field.date.label": "Дата документа",
       "dialog.goods.document.goodsList.label": "Товары",
       "dialog.goods.document.goodsList.add.label": "Добавить товар",
+      "dialog.goods.document.goodsList.name.template": "${0}, ${1}(${2}), цена за ${2} - ${3}, общая стоимость - ${4}",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

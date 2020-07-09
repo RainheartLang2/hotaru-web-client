@@ -9,6 +9,7 @@ import ConnectedAutoCompleteField from "../../../../core/components/connectedAut
 import {TextField} from "@material-ui/core";
 import GoodsProducer from "../../../../common/beans/GoodsProducer";
 import {ConfigureType} from "../../../../core/types/ConfigureType";
+import MeasureUnit from "../../../../common/beans/MeasureUnit";
 
 var styles = require("../../../commonStyles.css");
 
@@ -16,6 +17,7 @@ export default class EditGoodsPackForm extends React.Component<Properties, State
     constructor(props: Properties) {
         super(props)
         this.state = {
+            measureUnit: null,
             hasErrors: false,
             cost: null,
             mode: "none",
@@ -25,6 +27,8 @@ export default class EditGoodsPackForm extends React.Component<Properties, State
     private submitForm() {
         if (this.state.mode == "create") {
             this.props.controller.goodsDocumentActions.submitCreateGoodsPackForDocument()
+        } else if (this.state.mode == "edit") {
+            this.props.controller.goodsDocumentActions.submitEditGoodsPackForDocument()
         }
     }
 
@@ -51,7 +55,8 @@ export default class EditGoodsPackForm extends React.Component<Properties, State
                                 controller={this.props.controller}
                                 fieldKey={{editedGoodsPackAmount: "editedGoodsPackAmountField"}}
                                 type={"number"}
-                                label={<Message messageKey={"panel.goodsPack.amount.field.label"} args={[""]}/>}
+                                label={<Message messageKey={"panel.goodsPack.amount.field.label"}
+                                                args={[this.state.measureUnit ? `(${this.state.measureUnit.name})` : ""]}/>}
                             />
                         </div>
                         <div className={styles.rightPanelRow}>
@@ -131,6 +136,7 @@ export default class EditGoodsPackForm extends React.Component<Properties, State
             editedGoodsPackFormMode: "mode",
             editedGoodsPackCost: "cost",
             editedGoodsPackFormHasErrors: "hasErrors",
+            editedGoodsPackFormMeasureUnit: "measureUnit"
         })
     }
 
@@ -144,6 +150,7 @@ export type Properties = {
 }
 
 export type State = {
+    measureUnit: MeasureUnit | null
     mode: ConfigureType
     hasErrors: boolean
     cost: number | null

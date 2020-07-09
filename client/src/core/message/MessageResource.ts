@@ -20,7 +20,10 @@ export default class MessageResource {
             }
         }
         args.forEach((argumentValue, index) => {
-            resultMessage = resultMessage.replace("${" + index + "}", argumentValue)
+            const argsMark = "${" + index + "}"
+            while (resultMessage.indexOf(argsMark) >= 0) {
+                resultMessage = resultMessage.replace("${" + index + "}", argumentValue)
+            }
         })
         return resultMessage
     }

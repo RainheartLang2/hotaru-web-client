@@ -37,9 +37,17 @@ export default class GoodsDocumentActions {
         })
     }
 
+    private loadDataForGoodsPackPanel(callback: Function = () => {}): void {
+        this.controller.dictionariesActions.loadGoodsProducers(() => {
+            this.controller.dictionariesActions.loadMeasureUnits([], () => {
+                callback()
+            })
+        })
+    }
+
     public openCreateGoodsPackRightPanel(callback: Function = () => {}): void {
         this.controller.openRightPanel(RightPanelType.AddGoodsPack, setLoading => {
-            this.controller.dictionariesActions.loadGoodsProducers(() => {
+            this.loadDataForGoodsPackPanel(() => {
                 this.controller.setState({
                     editedGoodsPackId: undefined,
                     editedGoodsPackSalesType: null,
@@ -56,6 +64,30 @@ export default class GoodsDocumentActions {
                 this.controller.toggleFieldValidation("editedGoodsPackTaxRateField", false)
                 this.controller.toggleFieldValidation("editedGoodsPackCreationDateField", false)
                 this.controller.toggleFieldValidation("editedGoodsPackExpirationDateField", false)
+                setLoading()
+                callback()
+            })
+        })
+    }
+
+    public openEditGoodsPackRightPanel(pack: GoodsPackWithPrice, callback: Function = () => {}) {
+        this.controller.openRightPanel(RightPanelType.EditGoodsPack, setLoading => {
+            this.loadDataForGoodsPackPanel(() => {
+                const salesType = this.controller.salesUnitActions.getUnitById(pack.goodsTypeId)
+                const goodsProducer = pack.goodsProducerId
+                    ? this.controller.dictionariesActions.getGoodsProducerById(pack.goodsProducerId)
+                    : null
+                this.controller.setState({
+                    editedGoodsPackId: pack.id,
+                    editedGoodsPackSalesType: salesType,
+                    editedGoodsPackAmount: pack.amount.toString(),
+                    editedGoodsPackUnitPrice: pack.price.toString(),
+                    editedGoodsPackTaxRate: pack.price.toString(),
+                    editedGoodsPackProducer: goodsProducer,
+                    editedGoodsPackSeries: pack.series,
+                    editedGoodsPackCreationDate: DateUtils.standardFormatDate(pack.creationDate),
+                    editedGoodsPackExpirationDate: DateUtils.standardFormatDate(pack.expirationDate),
+                })
                 setLoading()
                 callback()
             })
@@ -96,5 +128,19 @@ export default class GoodsDocumentActions {
             editedShipDocGoods: [...this.controller.state.editedShipDocGoods, item]
         })
         this.controller.closeCurrentRightPanel()
+    }
+
+    public submitEditGoodsPackForDocument(callback: Function = () => {}): void {
+        const item = this.buildGoodsPackByFields()
+        this.controller.setState({
+            editedShipDocGoods: CollectionUtils.updateIdentifiableArray(this.controller.state.editedShipDocGoods, item)
+        })
+        this.controller.closeCurrentRightPanel()
+    }
+
+    public deleteGoodsPackForDocument(id: number, callback: Function = () => {}): void {
+        this.controller.setState({
+            editedShipDocGoods: this.controller.state.editedShipDocGoods.filter(item => item.id != id)
+        })
     }
 }

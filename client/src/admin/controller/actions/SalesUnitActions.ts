@@ -31,7 +31,7 @@ export default class SalesUnitActions {
         })
     }
 
-    private getUnitById(id: number) {
+    public getUnitById(id: number) {
         const result = this.controller.state.salesUnitListById.get(id)
         if (!result) {
             throw new Error("There is no sales unit with id " + id)

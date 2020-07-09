@@ -25,6 +25,7 @@ import EnteringPriceValidator from "../../../core/mvc/validators/EnteringPriceVa
 import PriceValidator from "../../../core/mvc/validators/PriceValidator";
 import {RightPanelType} from "../enum/RightPanelType";
 import {MathUtils} from "../../../core/utils/MathUtils";
+import MeasureUnit from "../../../common/beans/MeasureUnit";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -215,6 +216,11 @@ export default class StockNode {
                 value: null,
             },
             editedShipDocFormHasErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
+            editedShipDocGoodsById: {
+                dependsOn: ["editedShipDocGoods"],
+                get: (state: Pick<StockState, "editedShipDocGoods">) => CollectionUtils.mapIdentifiableArray(state.editedShipDocGoods),
+                value: new Map(),
+            },
             editedGoodsPackAmountField: this._store.createField("editedGoodsPackAmount", "0", [
                 new RequiredFieldValidator(),
                 new DigitsOnlyValidator(),
@@ -262,9 +268,21 @@ export default class StockNode {
                     const amount = +state.editedGoodsPackAmountField.value
                     const price = +state.editedGoodsPackUnitPriceField.value
                     const taxRate = state.editedGoodsPackTaxRateField.value ? +state.editedGoodsPackTaxRateField.value : 0
-                    return MathUtils.round(price * amount * (1 + taxRate / 100), 2)
+                    return MathUtils.calculateCost(amount, price, taxRate)
                 },
                 value: null
+            },
+            editedGoodsPackFormMeasureUnit: {
+                dependsOn: ["measureListById", "editedGoodsPackSalesType"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "measureListById" | "editedGoodsPackSalesType">) => {
+                    if (!state.editedGoodsPackSalesType) {
+                        return null
+                    }
+
+                    const result = state.measureListById.get(state.editedGoodsPackSalesType.measureUnitId)
+                    return result ? result : null
+                },
+                value: null,
             },
             editedGoodsPackFormMode: {
                 dependsOn: ["rightPanelType"],
@@ -358,6 +376,8 @@ export type StockSelectors = {
     editedShipDocType: ShipingType | null,
     editedShipDocFormHasErrors: boolean,
 
+    editedShipDocGoodsById: Map<number, GoodsPackWithPrice>
+
     editedGoodsPackAmountField: Field
     editedGoodsPackUnitPriceField: Field
     editedGoodsPackCalcError: boolean
@@ -366,6 +386,7 @@ export type StockSelectors = {
     editedGoodsPackSeriesField: Field
     editedGoodsPackCreationDateField: Field,
     editedGoodsPackExpirationDateField: Field,
+    editedGoodsPackFormMeasureUnit: MeasureUnit | null,
     editedGoodsPackFormMode: ConfigureType,
     editedGoodsPackFormHasErrors: boolean,
 }

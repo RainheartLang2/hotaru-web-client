@@ -378,4 +378,12 @@ export default class DictionariesActions {
         }
         return result
     }
+
+    public getGoodsProducerById(id: number): GoodsProducer {
+        const result = this.controller.state.goodsProducersById.get(id)
+        if (!result) {
+            throw new Error("no goods producer for id " + id)
+        }
+        return result
+    }
 }
