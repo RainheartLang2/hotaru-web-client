@@ -1,11 +1,10 @@
 import Identifiable from "../../core/entities/Identifiable";
-import {__extends} from "tslib";
 
 export default class GoodsPack extends Identifiable {
     public stockId: number
     public goodsTypeId: number
-    public goodsProducerId: number
-    public incomeDocumentId: number
+    public goodsProducerId?: number
+    public incomeDocumentId?: number
     public amount: number
     public series: string
     public creationDate: Date
@@ -28,8 +27,8 @@ export type GoodsPackBean = {
     id?: number
     stockId: number
     goodsTypeId: number
-    goodsProducerId: number
-    incomeDocumentId: number
+    goodsProducerId?: number
+    incomeDocumentId?: number
     amount: number
     series: string
     creationDate: Date

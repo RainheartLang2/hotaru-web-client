@@ -34,3 +34,29 @@
     display: flex;
     justify-content: space-between;
 }
+
+.rightPanelTitle {
+    font-size: 1.25rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.0075em;
+    margin-top: 10px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.rightPanelContent {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    padding-left: 10px;
+    min-width: 100px;
+}
+
+.rightPanelRow {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    width: 200px;
+}

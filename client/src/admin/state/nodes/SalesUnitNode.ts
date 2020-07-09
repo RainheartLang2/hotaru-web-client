@@ -9,8 +9,6 @@ import MeasureUnit from "../../../common/beans/MeasureUnit";
 import {Field} from "../../../core/mvc/store/Field";
 import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
 import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthValidator";
-import EnteringPriceValidator from "../../../core/mvc/validators/EnteringPriceValidator";
-import PriceValidator from "../../../core/mvc/validators/PriceValidator";
 import {ValidatorUtils} from "../../../core/utils/ValidatorUtils";
 
 export default class SalesUnitNode {
@@ -77,7 +75,12 @@ export default class SalesUnitNode {
                             || !state.addedSalesUnitMeasureUnit
                 },
                 value: false,
-            }
+            },
+            goodsSalesUnitList: {
+                dependsOn: ["salesUnitList"],
+                get: (state: Pick<EmployeeAppState, "salesUnitList">) => state.salesUnitList.filter(unit => unit.getSalesType() == SalesType.Goods),
+                value: [],
+            },
         }
     }
 }
@@ -94,6 +97,8 @@ export type SalesUnitState = {
 
 export type SalesUnitSelectors = {
     salesUnitListById: Map<number, SalesUnit>
+    goodsSalesUnitList: SalesUnit[],
+
     addedSalesUnitNameField: Field,
     addedSalesUnitPriceField: Field,
     addedSalesUnitFieldsHasError: boolean,

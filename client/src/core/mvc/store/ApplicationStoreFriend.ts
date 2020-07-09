@@ -4,11 +4,11 @@ import {DefaultStateType, Selector} from "./ApplicationStore";
 import StateChangeContext from "./StateChangeContext";
 
 export default abstract class ApplicationStoreFriend<StateType extends DefaultStateType, SelectorsType> {
-    public abstract createField(originalProperty: keyof (StateType & SelectorsType),
-                                defaultValue?: string,
+    public abstract createField<Type>(originalProperty: keyof (StateType & SelectorsType),
+                                defaultValue?: Type,
                                 validators?: FieldValidator[],
                                 validationActive?: boolean,
-    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field>
+    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field<Type>>
 
     public abstract createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
                                                 requiredProperties?: (keyof (StateType & SelectorsType))[],

@@ -1,7 +1,7 @@
 import * as React from "react";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
 import {ConfigureType} from "../../../../core/types/ConfigureType";
-import {DialogContent, DialogTitle} from "@material-ui/core";
+import {DialogContent, DialogTitle, ListItem, ListItemText} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import {ShipingType} from "../../../../common/beans/enums/ShipingType";
 import ConnectedAutoCompleteField from "../../../../core/components/connectedAutoComplete/ConnectedAutoCompleteField";
@@ -11,6 +11,13 @@ import Stock from "../../../../common/beans/Storage";
 import CounterAgent from "../../../../common/beans/CounterAgent";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
+import MinorList from "../../../../common/components/list/MinorList";
+import GoodsPackWithPrice from "../../../../common/beans/GoodsPackWithPrice";
+import {ReactNode} from "react";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
+import CustomLink from "../../../../core/components/customLink/CustomLink";
+import DeleteIcon from '@material-ui/icons/DeleteSharp';
 
 var styles = require("../../../commonStyles.css")
 
@@ -22,6 +29,26 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
             hasErrors: false,
             type: null,
         }
+    }
+
+    private renderGoodsListItem(item: GoodsPackWithPrice): ReactNode {
+        return (<>
+            <ListItemText primary={
+                <CustomLink
+                    onClick={() => {}}
+                >
+                    {123}
+                </CustomLink>
+            }/>
+            <ListItemSecondaryAction>
+                <CustomContentButton
+                    onClick={() => {}}
+                    tooltipContent={<Message messageKey={"common.bitton.delete"}/>}
+                >
+                    <DeleteIcon/>
+                </CustomContentButton>
+            </ListItemSecondaryAction>
+        </>)
     }
 
     render() {
@@ -68,6 +95,14 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                             </div>
                         </div>
                         <div className={styles.column}>
+                            <MinorList<GoodsPackWithPrice, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                controller={this.props.controller}
+                                itemsListProperty={"editedShipDocGoods"}
+                                label={<Message messageKey={"dialog.goods.document.goodsList.label"}/>}
+                                renderItem={this.renderGoodsListItem}
+                                onAddButtonClick={() => this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()}
+                                addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
+                            />
                         </div>
                     </div>
                     <DialogFooter

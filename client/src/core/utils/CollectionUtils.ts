@@ -84,4 +84,15 @@ export namespace CollectionUtils {
     export function getDistinct<Type>(array: Type[]): Type[] {
         return array.filter((value, index, self) => self.indexOf(value) == index)
     }
+
+    export function getMaxByPredicate<Type>(array: Type[], predicate: (item: Type) => number): number {
+        let result: number | undefined = undefined
+        array.forEach(item => {
+            const predicateResult = predicate(item)
+            if (!result || predicateResult > result) {
+                result = predicateResult
+            }
+        })
+        return result ? result : 0
+    }
 }

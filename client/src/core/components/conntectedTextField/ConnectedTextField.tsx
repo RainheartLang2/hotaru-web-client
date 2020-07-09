@@ -211,7 +211,7 @@ type Properties<StateType extends DefaultStateType, DerivationType, StoreType ex
     mask?: string,
     rows?: number,
     defaultValue?: string,
-    type?: "text" | "password" | "time" | "date",
+    type?: "text" | "password" | "time" | "date" | "number",
     variant?: "standard" | "filled" | "outlined"
 }
 

@@ -9,6 +9,7 @@
       "validator.notPast.message": "Дата в данном поле не может относиться к уже прошедшему дню",
       "validator.floatNumber.message": "Поле должно быть заполнено числом в корректной записи",
       "validator.price.message": "Поле должно быть заполнено целым числом или числом с двумя знаками после разделителя",
+      "validator.positive.message": "Значение в поле должно быть больше нуля",
 
       "field.login.label": "Логин",
       "field.password.label": "Пароль",
@@ -229,6 +230,8 @@
       "dialog.goods.document.field.agent.label": "Контрагент",
       "dialog.goods.document.field.series.label": "Серия",
       "dialog.goods.document.field.date.label": "Дата документа",
+      "dialog.goods.document.goodsList.label": "Товары",
+      "dialog.goods.document.goodsList.add.label": "Добавить товар",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",
@@ -238,6 +241,17 @@
       "panel.pet.field.sex.label": "Пол",
       "panel.pet.field.birthDate.label": "Дата рождения",
       "panel.pet.field.note.label": "Заметки",
+
+      "panel.goodsPack.title": "Редактирование партии товаров",
+      "panel.goodsPack.salesUnit.field.label": "Товар",
+      "panel.goodsPack.amount.field.label": "Количество ${0}",
+      "panel.goodsPack.price.field.label": "Цена без НДС",
+      "panel.goodsPack.taxRate.field.label": "Ставка НДС",
+      "panel.goodsPack.cost.field.label": "Стоимость с учётом НДС",
+      "panel.goodsPack.producer.field.label": "Производитель",
+      "panel.goodsPack.series.field.label": "Серия",
+      "panel.goodsPack.creationDate.field.label": "Дата создания",
+      "panel.goodsPack.expirationDate.field.label": "Срок годности",
 
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",

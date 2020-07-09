@@ -112,24 +112,4 @@ export default class StockActions {
             }
         })
     }
-
-    public openCreateIncomeDocDialog(stock: Stock, callback: Function = () => {}): void {
-        this.controller.openDialog(DialogType.CreateGoodsIncome, setLoading => {
-            this.loadList(() => {
-                this.controller.counterAgentActions.loadList(() => {
-                    this.controller.salesUnitActions.loadList(() => {
-                        this.controller.setState({
-                            editedShipmentDocumentId: undefined,
-                            editedShipDocStock: stock,
-                            editedShipDocCounterAgent: null,
-                            editedShipDocNumber: "",
-                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate())
-                        })
-                        setLoading()
-                        callback()
-                    })
-                })
-            })
-        })
-    }
 }

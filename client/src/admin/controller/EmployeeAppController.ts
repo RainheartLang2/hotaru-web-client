@@ -27,6 +27,7 @@ import StateChangeContext from "../../core/mvc/store/StateChangeContext";
 import SalesUnitActions from "./actions/SalesUnitActions";
 import StockActions from "./actions/StockActions";
 import CounterAgentsActions from "./actions/CounterAgentsActions";
+import GoodsDocumentActions from "./actions/GoodsDocumentActions";
 
 export default class EmployeeAppController extends ApplicationController<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore> {
     private static _instance: EmployeeAppController
@@ -44,6 +45,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
     private _salesUnitActions: SalesUnitActions
     private _stockActions: StockActions
     private _counterAgentActions: CounterAgentsActions
+    private _goodsDocumentActions: GoodsDocumentActions
 
     private _cacheManager: AdminApplicationCacheManager
 
@@ -63,6 +65,7 @@ export default class EmployeeAppController extends ApplicationController<Employe
         this._salesUnitActions = new SalesUnitActions(this)
         this._stockActions = new StockActions(this)
         this._counterAgentActions = new CounterAgentsActions(this)
+        this._goodsDocumentActions = new GoodsDocumentActions(this)
 
         this._cacheManager = new AdminApplicationCacheManager(this, this.store)
     }
@@ -130,6 +133,14 @@ export default class EmployeeAppController extends ApplicationController<Employe
         return this._counterAgentActions;
     }
 
+    get goodsDocumentActions(): GoodsDocumentActions {
+        return this._goodsDocumentActions;
+    }
+
+    set goodsDocumentActions(value: GoodsDocumentActions) {
+        this._goodsDocumentActions = value;
+    }
+
     public get cacheManager(): CacheManager {
         return this._cacheManager
     }
@@ -183,6 +194,19 @@ export default class EmployeeAppController extends ApplicationController<Employe
 
         callback(() => {
             this.store.setState({isDialogLoading: false}, context)
+        })
+    }
+
+    public openRightPanel(panelType: RightPanelType,
+                          callback: (turnOffLoading: Function) => void,
+                          context?: EmployeeStateContext): void {
+        this.store.setState({
+            rightPanelType: panelType,
+            isRightPanelLoading: true,
+        })
+
+        callback(() => {
+            this.store.setState({isRightPanelLoading: false}, context)
         })
     }
 

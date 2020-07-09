@@ -3,6 +3,8 @@ import {Drawer} from "@material-ui/core";
 import EmployeeAppController from "../controller/EmployeeAppController";
 import {RightPanelType} from "../state/enum/RightPanelType";
 import EditPetForm from "../components/panels/petPanel/EditPetForm";
+import EditGoodsPackForm from "../components/panels/goodsPack/EditGoodsPackForm";
+import LoadingMoire from "../../core/components/loadingMoire/LoadingMoire";
 
 var styles = require("./styles.css");
 
@@ -11,7 +13,12 @@ export default class EmployeeRightPanelContainer extends React.Component<Propert
         super(props)
         this.state = {
             panelType: RightPanelType.None,
+            isLoading: false,
         }
+    }
+    
+    private isRenderPanel(panelType: RightPanelType): boolean {
+        return !this.state.isLoading && this.state.panelType == panelType
     }
 
     render() {
@@ -24,7 +31,9 @@ export default class EmployeeRightPanelContainer extends React.Component<Propert
                     anchor={"right"}
                 >
                     <div className={styles.drawerContent}>
+                        <LoadingMoire visible={this.state.isLoading} delay={true}/>
                         {(panelType == RightPanelType.AddPet || panelType == RightPanelType.EditPet) && <EditPetForm controller={this.props.controller}/>}
+                        {(this.isRenderPanel(RightPanelType.AddGoodsPack) || this.isRenderPanel(RightPanelType.EditGoodsPack)) && <EditGoodsPackForm controller={this.props.controller}/>}
                     </div>
                 </Drawer>
             </>
@@ -34,6 +43,7 @@ export default class EmployeeRightPanelContainer extends React.Component<Propert
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             rightPanelType: "panelType",
+            isRightPanelLoading: "isLoading",
         })
     }
 
@@ -48,4 +58,5 @@ type Properties = {
 
 type State = {
     panelType: RightPanelType
+    isLoading: boolean
 }

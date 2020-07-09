@@ -16,6 +16,15 @@ import MaximalLengthValidator from "../../../core/mvc/validators/MaximalLengthVa
 import DigitsOnlyValidator from "../../../core/mvc/validators/DigitsOnlyValidator";
 import DateValidator from "../../../core/mvc/validators/DateValidator";
 import {ShipingType} from "../../../common/beans/enums/ShipingType";
+import GoodsPackWithPrice from "../../../common/beans/GoodsPackWithPrice";
+import SalesUnit from "../../../common/beans/SalesUnit";
+import GoodsProducer from "../../../common/beans/GoodsProducer";
+import RequiredFieldValidator from "../../../core/mvc/validators/RequiredFieldValidator";
+import PositiveNumberValidator from "../../../core/mvc/validators/PositiveNumberValidator";
+import EnteringPriceValidator from "../../../core/mvc/validators/EnteringPriceValidator";
+import PriceValidator from "../../../core/mvc/validators/PriceValidator";
+import {RightPanelType} from "../enum/RightPanelType";
+import {MathUtils} from "../../../core/utils/MathUtils";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -62,6 +71,17 @@ export default class StockNode {
             editedShipDocCounterAgent: null,
             editedShipDocNumber: "",
             editedShipDocDate: "",
+            editedShipDocGoods: [],
+
+            editedGoodsPackId: undefined,
+            editedGoodsPackSalesType: null,
+            editedGoodsPackAmount: "",
+            editedGoodsPackUnitPrice: "",
+            editedGoodsPackTaxRate: "",
+            editedGoodsPackProducer: null,
+            editedGoodsPackSeries: "",
+            editedGoodsPackCreationDate: "",
+            editedGoodsPackExpirationDate: "",
         }
     }
 
@@ -194,7 +214,76 @@ export default class StockNode {
                 },
                 value: null,
             },
-            editedShipDocFormHasErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"])
+            editedShipDocFormHasErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
+            editedGoodsPackAmountField: this._store.createField("editedGoodsPackAmount", "0", [
+                new RequiredFieldValidator(),
+                new DigitsOnlyValidator(),
+                new PositiveNumberValidator(),
+                new MaximalLengthValidator(15),
+            ]),
+            editedGoodsPackUnitPriceField: this._store.createField("editedGoodsPackUnitPrice", "0", [
+                new EnteringPriceValidator(),
+                new PriceValidator(),
+                new MaximalLengthValidator(15),
+            ]),
+            editedGoodsPackTaxRateField: this._store.createField("editedGoodsPackTaxRate", "", [
+                new EnteringPriceValidator(),
+                new PriceValidator(),
+                new MaximalLengthValidator(6),
+            ]),
+            editedGoodsPackCreationDateField: this._store.createField("editedGoodsPackCreationDate", "", [
+                new DateValidator(),
+            ]),
+            editedGoodsPackExpirationDateField: this._store.createField("editedGoodsPackExpirationDate", "", [
+                new DateValidator(),
+            ]),
+            editedGoodsPackCalcError: this._store.createFormHasErrorsSelector([
+                "editedGoodsPackAmountField",
+                "editedGoodsPackUnitPriceField",
+                "editedGoodsPackTaxRateField",
+            ]),
+            editedGoodsPackSeriesField: this._store.createField("editedGoodsPackSeries", "", [new MaximalLengthValidator(50)]),
+            editedGoodsPackCost: {
+                dependsOn: [
+                    "editedGoodsPackAmountField",
+                    "editedGoodsPackUnitPriceField",
+                    "editedGoodsPackTaxRateField",
+                    "editedGoodsPackCalcError",
+                ],
+                get: (state: Pick<StockSelectors,
+                    "editedGoodsPackAmountField" |
+                    "editedGoodsPackUnitPriceField" |
+                    "editedGoodsPackTaxRateField" |
+                    "editedGoodsPackCalcError"
+                    >) => {
+                    if (state.editedGoodsPackCalcError) {
+                        return null
+                    }
+                    const amount = +state.editedGoodsPackAmountField.value
+                    const price = +state.editedGoodsPackUnitPriceField.value
+                    const taxRate = state.editedGoodsPackTaxRateField.value ? +state.editedGoodsPackTaxRateField.value : 0
+                    return MathUtils.round(price * amount * (1 + taxRate / 100), 2)
+                },
+                value: null
+            },
+            editedGoodsPackFormMode: {
+                dependsOn: ["rightPanelType"],
+                get: (state:Pick<EmployeeAppState, "rightPanelType">) => {
+                    switch (state.rightPanelType) {
+                        case RightPanelType.AddGoodsPack:
+                            return "create"
+                        case RightPanelType.EditGoodsPack:
+                            return "edit"
+                        default:
+                            return "none"
+                    }
+                },
+                value: "none",
+            },
+            editedGoodsPackFormHasErrors: this._store.createFormHasErrorsSelector(
+                ["editedGoodsPackAmountField", "editedGoodsPackUnitPriceField", "editedGoodsPackTaxRateField"],
+                         ["editedGoodsPackSalesType"]
+            )
         }
     }
 }
@@ -228,6 +317,18 @@ export type StockState = {
     editedShipDocCounterAgent: CounterAgent | null
     editedShipDocNumber: string
     editedShipDocDate: string
+
+    editedShipDocGoods: GoodsPackWithPrice[]
+
+    editedGoodsPackId: number | undefined
+    editedGoodsPackSalesType: SalesUnit | null
+    editedGoodsPackAmount: string
+    editedGoodsPackUnitPrice: string
+    editedGoodsPackTaxRate: string
+    editedGoodsPackProducer: GoodsProducer | null
+    editedGoodsPackSeries: string,
+    editedGoodsPackCreationDate: string
+    editedGoodsPackExpirationDate: string
 }
 
 export type StockSelectors = {
@@ -256,4 +357,15 @@ export type StockSelectors = {
     editedShipDocFormMode: ConfigureType,
     editedShipDocType: ShipingType | null,
     editedShipDocFormHasErrors: boolean,
+
+    editedGoodsPackAmountField: Field
+    editedGoodsPackUnitPriceField: Field
+    editedGoodsPackCalcError: boolean
+    editedGoodsPackCost: number | null
+    editedGoodsPackTaxRateField: Field
+    editedGoodsPackSeriesField: Field
+    editedGoodsPackCreationDateField: Field,
+    editedGoodsPackExpirationDateField: Field,
+    editedGoodsPackFormMode: ConfigureType,
+    editedGoodsPackFormHasErrors: boolean,
 }

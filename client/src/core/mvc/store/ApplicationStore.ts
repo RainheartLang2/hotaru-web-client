@@ -83,15 +83,15 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         return this.readableState
     }
 
-    protected createField(originalProperty: keyof(StateType & SelectorsType),
-                                    defaultValue: string = "",
+    protected createField<Type = string>(originalProperty: keyof(StateType & SelectorsType),
+                                    defaultValue?: Type,
                                     validators: FieldValidator[] = [],
                                     validationActive: boolean = true,
-    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
+    ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field<Type>> {
 
         return {
             dependsOn: [originalProperty],
-            get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field) => {
+            get: (args: Pick<StateType & SelectorsType, any>, prevValue?: Field<Type>) => {
                 const originalValue = args[originalProperty]
                 const validationResult = this.validateField(originalValue, validators)
                 return {
@@ -102,7 +102,7 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
                 }
             },
             value: {
-                value: defaultValue,
+                value: defaultValue ? defaultValue : "",
                 errors: [],
                 validators,
                 validationActive,
@@ -348,12 +348,12 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
     protected createFriend(): ApplicationStoreFriend<StateType, SelectorsType> {
         const store = this
         return new class implements ApplicationStoreFriend<StateType, SelectorsType> {
-            public createField(originalProperty: keyof(StateType & SelectorsType),
-                                        defaultValue: string = "",
+            public createField<Type = string>(originalProperty: keyof(StateType & SelectorsType),
+                                        defaultValue?: Type,
                                         validators: FieldValidator[] = [],
                                         validationActive: boolean = true,
-            ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field> {
-                return store.createField(originalProperty, defaultValue, validators, validationActive)
+            ): Selector<(StateType & SelectorsType), Pick<(StateType & SelectorsType), any>, Field<Type>> {
+                return store.createField<Type>(originalProperty, defaultValue, validators, validationActive)
             }
 
             public createFormHasErrorsSelector(fieldsKeys: (keyof SelectorsType)[],
