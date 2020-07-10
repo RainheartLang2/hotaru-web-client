@@ -11,13 +11,16 @@ import createLooseObject = CommonUtils.createLooseObject;
 
 var styles = require("./styles.css")
 
-export default class MinorList<ItemType,
-    StateType extends DefaultStateType,
-    SelectorsType, StoreType extends ApplicationStore<StateType, SelectorsType>>
+export default abstract class MinorListBase<ItemType, Props extends MinorListProperties<ItemType>>
+    extends React.Component<Props, MinorListState<ItemType>> {
 
-    extends React.Component<Properties<ItemType, StateType, SelectorsType, StoreType>, State<ItemType>> {
+    static defaultProps = {
+        addButton: true,
+        addTooltipLabel: "",
+        onAddButtonClick: () => {},
+    }
 
-    constructor(props: Properties<ItemType, StateType, SelectorsType, StoreType>) {
+    constructor(props: Props) {
         super(props)
         this.state = {
             items: [],
@@ -30,6 +33,7 @@ export default class MinorList<ItemType,
                 <div className={styles.listTitle}>
                     {this.props.label}
                 </div>
+                {this.props.addButton &&
                 <div>
                     <CustomContentButton
                         onClick={() => this.props.onAddButtonClick()}
@@ -38,6 +42,8 @@ export default class MinorList<ItemType,
                         <AddIcon/>
                     </CustomContentButton>
                 </div>
+                }
+
             </div>
             <div className={styles.petsListContent}>
                 <List>
@@ -52,28 +58,16 @@ export default class MinorList<ItemType,
             </div>
         </div>)
     }
-
-    componentDidMount(): void {
-        this.props.controller.subscribe(this, createLooseObject([[this.props.itemsListProperty, "items"]]))
-    }
-
-    componentWillUnmount(): void {
-        this.props.controller.unsubscribe(this)
-    }
 }
 
-type Properties<ItemType,
-    StateType extends DefaultStateType,
-    SelectorsType, StoreType extends ApplicationStore<StateType, SelectorsType>> = {
-
-    controller: ApplicationController<StateType, SelectorsType, StoreType>
-    itemsListProperty: keyof (StateType & SelectorsType)
+export type MinorListProperties<ItemType> = {
     label: ReactNode
     renderItem: (item: ItemType) => ReactNode
+    addButton: boolean,
     onAddButtonClick: Function,
     addTooltipLabel: NonNullable<ReactNode>
 }
 
-type State<ItemType> = {
+type MinorListState<ItemType> = {
     items: ItemType[]
 }

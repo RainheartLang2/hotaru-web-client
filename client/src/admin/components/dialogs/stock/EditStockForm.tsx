@@ -14,6 +14,7 @@ import ConnectedAutoCompleteField from "../../../../core/components/connectedAut
 import {Clinic} from "../../../../common/beans/Clinic";
 import {Employee} from "../../../../common/beans/Employee";
 import {NameUtils} from "../../../../core/utils/NameUtils";
+import MinorList from "../../../../common/components/list/MinorList";
 
 var styles = require("./styles.css")
 
@@ -76,8 +77,6 @@ export default class EditStockForm extends React.Component<Properties, State> {
                                     getKey={stockType => stockType ? StockType.stockTypeToNumber(stockType) : 0}
                                 />
                             </div>
-                        </div>
-                        <div className={styles.column}>
                             <div className={styles.row}>
                                 <ConnectedAutoCompleteField<Clinic, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     label={<Message messageKey={"dialog.stock.clinic.field.label"}/>}
@@ -97,6 +96,8 @@ export default class EditStockForm extends React.Component<Properties, State> {
                                     selectedItemProperty={"editedStockEmployee"}
                                 />
                             </div>
+                        </div>
+                        <div className={styles.column}>
                         </div>
                     </div>
                     <DialogFooter

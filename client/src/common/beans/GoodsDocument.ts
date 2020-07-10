@@ -2,6 +2,7 @@ import Identifiable from "../../core/entities/Identifiable";
 import {DocumentState} from "./enums/DocumentState";
 import GoodsPackWithPrice from "./GoodsPackWithPrice";
 import {ShipingType} from "./enums/ShipingType";
+import CustomContainer from "../../core/beans/CustomContainer";
 
 export default class GoodsDocument extends Identifiable {
    public documentState: DocumentState
@@ -10,7 +11,7 @@ export default class GoodsDocument extends Identifiable {
    public stockId: number
    public counterAgentId: number
    public num: string
-   public goods: GoodsPackWithPrice[]
+   public goods: CustomContainer<GoodsPackWithPrice>
 
    constructor(bean: GoodsDocumentBean) {
       super(bean.id)
@@ -32,5 +33,5 @@ export type GoodsDocumentBean = {
    stockId: number
    counterAgentId: number
    num: string
-   goods: GoodsPackWithPrice[]
+   goods: CustomContainer<GoodsPackWithPrice>
 }

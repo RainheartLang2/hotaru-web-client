@@ -11,7 +11,7 @@ import Stock from "../../../../common/beans/Storage";
 import CounterAgent from "../../../../common/beans/CounterAgent";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
 import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
-import MinorList from "../../../../common/components/list/MinorList";
+import ConnectedMinorList from "../../../../common/components/list/connected/ConnectedMinorList";
 import GoodsPackWithPrice from "../../../../common/beans/GoodsPackWithPrice";
 import {ReactNode} from "react";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -111,7 +111,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                             </div>
                         </div>
                         <div className={styles.column}>
-                            <MinorList<GoodsPackWithPrice, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                            <ConnectedMinorList<GoodsPackWithPrice, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                 controller={this.props.controller}
                                 itemsListProperty={"editedShipDocGoods"}
                                 label={<Message messageKey={"dialog.goods.document.goodsList.label"}/>}
@@ -124,7 +124,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                     <DialogFooter
                         controller={this.props.controller}
                         submitDisabled={this.state.hasErrors}
-                        onSubmitClick={() => {}}
+                        onSubmitClick={() => this.props.controller.goodsDocumentActions.submitCreateIncomeDocument()}
                         onCancelClick={() => this.props.controller.closeCurrentDialog()}
                     />
                 </DialogContent>

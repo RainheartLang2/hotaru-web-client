@@ -4,10 +4,13 @@ import {DialogType} from "../../state/enum/DialogType";
 import {DateUtils} from "../../../core/utils/DateUtils";
 import {RightPanelType} from "../../state/enum/RightPanelType";
 import GoodsPackWithPrice from "../../../common/beans/GoodsPackWithPrice";
-import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
-import editGoodsProducer = RemoteMethods.editGoodsProducer;
-import {MathUtils} from "../../../core/utils/MathUtils";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
+import GoodsDocument from "../../../common/beans/GoodsDocument";
+import {DocumentState} from "../../../common/beans/enums/DocumentState";
+import {ShipingType} from "../../../common/beans/enums/ShipingType";
+import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
+import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
+import CustomContainer from "../../../core/beans/CustomContainer";
 
 export default class GoodsDocumentActions {
     private controller: EmployeeAppController
@@ -34,6 +37,32 @@ export default class GoodsDocumentActions {
                     })
                 })
             })
+        })
+    }
+
+    public submitCreateIncomeDocument(callback: Function = () => {}): void {
+        const state = this.controller.state
+        const document = new GoodsDocument({
+            documentState: DocumentState.Saved,
+            shipingType: ShipingType.Income,
+            date: new Date(state.editedShipDocDate),
+            stockId: state.editedShipDocStock!.id!,
+            counterAgentId: state.editedShipDocCounterAgent!.id!,
+            num: state.editedShipDocNumber,
+            goods: new CustomContainer<GoodsPackWithPrice>(state.editedShipDocGoods),
+        })
+
+        fetchUserZoneRpc({
+            method: RemoteMethods.addGoodsDocument,
+            params: [document, false],
+            successCallback: result => {
+                document.id = +result
+                this.controller.setState({
+                    goodsDocuments: [...state.goodsDocuments, document]
+                })
+                callback()
+                this.controller.closeCurrentDialog()
+            },
         })
     }
 

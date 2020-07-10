@@ -26,6 +26,7 @@ import PriceValidator from "../../../core/mvc/validators/PriceValidator";
 import {RightPanelType} from "../enum/RightPanelType";
 import {MathUtils} from "../../../core/utils/MathUtils";
 import MeasureUnit from "../../../common/beans/MeasureUnit";
+import GoodsDocument from "../../../common/beans/GoodsDocument";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -66,6 +67,8 @@ export default class StockNode {
             editedAgentCorAccount: "",
             editedAgentGyroAccount: "",
             editedAgentNote: "",
+
+            goodsDocuments: [],
 
             editedShipmentDocumentId: undefined,
             editedShipDocStock: null,
@@ -329,6 +332,8 @@ export type StockState = {
     editedAgentCorAccount: string,
     editedAgentGyroAccount: string,
     editedAgentNote: string,
+
+    goodsDocuments: GoodsDocument[]
 
     editedShipmentDocumentId: number | undefined
     editedShipDocStock: Stock | null
