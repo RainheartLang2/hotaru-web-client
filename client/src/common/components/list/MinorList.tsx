@@ -20,39 +20,40 @@ export default abstract class MinorListBase<ItemType, Props extends MinorListPro
         addTooltipLabel: "",
         onAddButtonClick: () => {},
         disabled: false,
-    }
-
-    constructor(props: Props) {
-        super(props)
-        this.state = {
-            items: [],
-        }
+        additionalHeaderComponent: null,
     }
 
     render() {
         return (<div className={styles.list}>
             <DisablingMoire active={this.props.disabled}/>
             <div className={styles.listHeader}>
-                <div className={styles.listTitle}>
-                    {this.props.label}
+                <div className={styles.listTitleRow}>
+                    <div className={styles.listTitle}>
+                        {this.props.label}
+                    </div>
+                    {this.props.addButton &&
+                    <div>
+                        <CustomContentButton
+                            onClick={() => this.props.onAddButtonClick()}
+                            tooltipContent={this.props.addTooltipLabel}
+                        >
+                            <AddIcon/>
+                        </CustomContentButton>
+                    </div>
+                    }
                 </div>
-                {this.props.addButton &&
+                {this.props.additionalHeaderComponent
+                &&
                 <div>
-                    <CustomContentButton
-                        onClick={() => this.props.onAddButtonClick()}
-                        tooltipContent={this.props.addTooltipLabel}
-                    >
-                        <AddIcon/>
-                    </CustomContentButton>
+                    {this.props.additionalHeaderComponent}
                 </div>
                 }
-
             </div>
-            <div className={styles.petsListContent}>
+            <div className={styles.listContent}>
                 <List>
                     {this.state.items.map(item => {
                         return (
-                            <ListItem className={styles.petItem}>
+                            <ListItem className={styles.item}>
                                 {this.props.renderItem(item)}
                             </ListItem>
                         )
@@ -70,6 +71,7 @@ export type MinorListProperties<ItemType> = {
     onAddButtonClick: Function,
     addTooltipLabel: NonNullable<ReactNode>
     disabled: boolean,
+    additionalHeaderComponent: ReactNode | null
 }
 
 type MinorListState<ItemType> = {

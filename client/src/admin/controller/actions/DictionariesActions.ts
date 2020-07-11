@@ -69,8 +69,8 @@ export default class DictionariesActions {
         CommonActionsFunctions.loadList(this.controller, method, resultKey, callback, context, parseResponse)
     }
 
-    public loadMeasureUnits(params: any[] = [], callback: Function = () => {}): void {
-        this.loadList(RemoteMethods.getAllMeasure, "measureList", callback)
+    public loadMeasureUnits(params: any[] = [], callback: Function = () => {}, context?: EmployeeStateContext): void {
+        this.loadList(RemoteMethods.getAllMeasure, "measureList", callback, context)
     }
 
     public loadVisitResult(callback: Function = () => {}): void {

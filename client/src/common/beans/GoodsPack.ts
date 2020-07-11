@@ -7,8 +7,8 @@ export default class GoodsPack extends Identifiable {
     public incomeDocumentId?: number
     public amount: number
     public series: string
-    public creationDate: Date
-    public expirationDate: Date
+    public creationDate?: Date
+    public expirationDate?: Date
 
     constructor(bean: GoodsPackBean) {
         super(bean.id)
@@ -18,8 +18,8 @@ export default class GoodsPack extends Identifiable {
         this.incomeDocumentId = bean.incomeDocumentId
         this.amount = bean.amount
         this.series = bean.series
-        this.creationDate = new Date(bean.creationDate)
-        this.expirationDate = new Date(bean.expirationDate)
+        this.creationDate = bean.creationDate ? new Date(bean.creationDate) : undefined
+        this.expirationDate = bean.expirationDate ? new Date(bean.expirationDate) : undefined
     }
 }
 
@@ -31,6 +31,6 @@ export type GoodsPackBean = {
     incomeDocumentId?: number
     amount: number
     series: string
-    creationDate: Date
-    expirationDate: Date
+    creationDate?: Date
+    expirationDate?: Date
 }

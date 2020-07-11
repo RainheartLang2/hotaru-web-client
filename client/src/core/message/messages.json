@@ -213,6 +213,7 @@
       "dialog.stock.type.field.label": "Тип",
       "dialog.stock.clinic.field.label": "Клиника",
       "dialog.stock.responsible.field.label": "Ответственное лицо",
+      "dialog.stock.goods.list.label": "Товары на складе",
 
       "dialog.agent.create.label": "Создание нового контрагента",
       "dialog.agent.edit.label": "Редактирование контрагента",
@@ -261,6 +262,8 @@
       "panel.goodsPack.creationDate.field.label": "Дата создания",
       "panel.goodsPack.expirationDate.field.label": "Срок годности",
 
+      "list.goods.series.label": "Серия",
+      "list.goods.date.label": "Годен до",
       "dialog.clinic.create.label": "Создание новой клиники",
       "dialog.clinic.edit.label": "Редактирование клиники",
       "dialog.clinic.logo.dropzone.note": "Загрузите логотип клиники",

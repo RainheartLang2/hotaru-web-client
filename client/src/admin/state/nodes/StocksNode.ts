@@ -28,6 +28,7 @@ import {MathUtils} from "../../../core/utils/MathUtils";
 import MeasureUnit from "../../../common/beans/MeasureUnit";
 import GoodsDocument from "../../../common/beans/GoodsDocument";
 import {DocumentState} from "../../../common/beans/enums/DocumentState";
+import GoodsPack from "../../../common/beans/GoodsPack";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -53,6 +54,7 @@ export default class StockNode {
             editedStockType: StockType.getDefaultType(),
             editedStockClinic: null,
             editedStockEmployee: null,
+            editedStockGoods: [],
 
             counterAgentsList: [],
             personTypes: personTypesMap,
@@ -317,6 +319,7 @@ export type StockState = {
     editedStockType: StockType,
     editedStockClinic: Clinic | null,
     editedStockEmployee: Employee | null,
+    editedStockGoods: GoodsPack[],
 
     counterAgentsList: CounterAgent[],
     personTypes: Map<number, PersonType>

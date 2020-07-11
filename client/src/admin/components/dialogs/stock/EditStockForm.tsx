@@ -15,6 +15,10 @@ import {Clinic} from "../../../../common/beans/Clinic";
 import {Employee} from "../../../../common/beans/Employee";
 import {NameUtils} from "../../../../core/utils/NameUtils";
 import MinorList from "../../../../common/components/list/MinorList";
+import GoodsList from "../../../../common/components/goodsList/GoodsList";
+import GoodsPack from "../../../../common/beans/GoodsPack";
+import SalesUnit from "../../../../common/beans/SalesUnit";
+import MeasureUnit from "../../../../common/beans/MeasureUnit";
 
 var styles = require("./styles.css")
 
@@ -24,6 +28,9 @@ export default class EditStockForm extends React.Component<Properties, State> {
         this.state = {
             mode: "none",
             hasErrors: false,
+            goods: [],
+            goodsTypes: new Map(),
+            measureUnits: new Map(),
         }
     }
 
@@ -51,6 +58,7 @@ export default class EditStockForm extends React.Component<Properties, State> {
     }
 
     render() {
+        console.log(this.state.goods)
         return (
             <>
                 <DialogTitle>
@@ -98,6 +106,12 @@ export default class EditStockForm extends React.Component<Properties, State> {
                             </div>
                         </div>
                         <div className={styles.column}>
+                            <GoodsList
+                                label={<Message messageKey={"dialog.stock.goods.list.label"}/>}
+                                goods={this.state.goods}
+                                goodsTypes={this.state.goodsTypes}
+                                measureUnits={this.state.measureUnits}
+                            />
                         </div>
                     </div>
                     <DialogFooter
@@ -114,7 +128,10 @@ export default class EditStockForm extends React.Component<Properties, State> {
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             stockDialogMode: "mode",
-            stockFormHasErrors: "hasErrors"
+            stockFormHasErrors: "hasErrors",
+            editedStockGoods: "goods",
+            goodsSalesUnitById: "goodsTypes",
+            measureListById: "measureUnits",
         })
     }
 
@@ -130,4 +147,7 @@ type Properties = {
 type State = {
     mode: ConfigureType,
     hasErrors: boolean,
+    goods: GoodsPack[],
+    goodsTypes: Map<number, SalesUnit>,
+    measureUnits: Map<number, MeasureUnit>,
 }

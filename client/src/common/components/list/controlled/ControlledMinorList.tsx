@@ -7,6 +7,12 @@ export default class ControlledMinorList<ItemType> extends MinorList<ItemType, P
             items: props.itemsList,
         }
     }
+
+    componentWillReceiveProps(nextProps: Readonly<Properties<ItemType>>, nextContext: any): void {
+        this.setState({
+            items: nextProps.itemsList,
+        })
+    }
 }
 
 type Properties<ItemType> = MinorListProperties<ItemType> & {

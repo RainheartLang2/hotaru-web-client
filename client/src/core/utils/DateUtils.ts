@@ -72,8 +72,10 @@ export namespace DateUtils {
             .replace("dd", addLeadingZeros(date.getDate(), 2))
     }
 
-    export function standardFormatDate(date: Date) {
-        return formatDate(date, "yyyy-MM-dd")
+    export function standardFormatDate(date?: Date): string {
+        return date
+                ? formatDate(date, "yyyy-MM-dd")
+                : ""
     }
 
     export function isDateValid(date: Date): boolean {

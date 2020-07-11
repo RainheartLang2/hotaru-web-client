@@ -81,6 +81,11 @@ export default class SalesUnitNode {
                 get: (state: Pick<EmployeeAppState, "salesUnitList">) => state.salesUnitList.filter(unit => unit.getSalesType() == SalesType.Goods),
                 value: [],
             },
+            goodsSalesUnitById: {
+                dependsOn: ["goodsSalesUnitList"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "goodsSalesUnitList">) => CollectionUtils.mapIdentifiableArray(state.goodsSalesUnitList),
+                value: new Map(),
+            },
         }
     }
 }
@@ -98,7 +103,7 @@ export type SalesUnitState = {
 export type SalesUnitSelectors = {
     salesUnitListById: Map<number, SalesUnit>
     goodsSalesUnitList: SalesUnit[],
-
+    goodsSalesUnitById: Map<number, SalesUnit>,
     addedSalesUnitNameField: Field,
     addedSalesUnitPriceField: Field,
     addedSalesUnitFieldsHasError: boolean,

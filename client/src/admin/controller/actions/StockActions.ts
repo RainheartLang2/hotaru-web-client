@@ -6,7 +6,8 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import {DialogType} from "../../state/enum/DialogType";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
-import {DateUtils} from "../../../core/utils/DateUtils";
+import getAllGoodsByStock = RemoteMethods.getAllGoodsByStock;
+import GoodsPack, {GoodsPackBean} from "../../../common/beans/GoodsPack";
 
 export default class StockActions {
 
@@ -30,6 +31,36 @@ export default class StockActions {
         })
     }
 
+    public loadGoodsPacksForCurrentStock(stockId: number, callback: Function = () => {}, context? :EmployeeStateContext) {
+        fetchUserZoneRpc({
+            method: getAllGoodsByStock,
+            params: [stockId],
+            successCallback: result => {
+                const goods = result as GoodsPackBean[]
+                console.log(result)
+                this.controller.setState({
+                    editedStockGoods: goods.map(item => new GoodsPack(item))
+                }, context)
+                console.log(this.controller.state.editedStockGoods)
+                callback()
+            }
+        })
+    }
+
+    private loadStockData(stockId?: number, callback: Function = () => {}, context?: EmployeeStateContext) {
+        if (stockId) {
+            this.loadGoodsPacksForCurrentStock(stockId, () => {
+                this.controller.salesUnitActions.loadList(() => {
+                    this.controller.dictionariesActions.loadMeasureUnits([], () => {
+                        callback()
+                    }, context)
+                }, context)
+            }, context)
+        } else {
+            callback()
+        }
+    }
+
     public openCreateDialog(callback: Function = () => {}, context?: EmployeeStateContext) {
         this.controller.openDialog(DialogType.CreateStock, setLoading => {
             this.controller.setState({
@@ -47,15 +78,17 @@ export default class StockActions {
 
     public openEditDialog(stock: Stock, callback: Function = () => {}, context?: EmployeeStateContext) {
         this.controller.openDialog(DialogType.EditStock, setLoading => {
-            this.controller.setState({
-                editedStockId: stock.id,
-                editedStockName: stock.name,
-                editedStockType: stock.stockType,
-                editedStockClinic: this.controller.clinicActions.getClinicById(stock.clinicId),
-                editedStockEmployee: this.controller.employeeActions.getEmployeeById(stock.responsiblePersonId)
+            this.loadStockData(stock.id!, () => {
+                this.controller.setState({
+                    editedStockId: stock.id,
+                    editedStockName: stock.name,
+                    editedStockType: stock.stockType,
+                    editedStockClinic: this.controller.clinicActions.getClinicById(stock.clinicId),
+                    editedStockEmployee: this.controller.employeeActions.getEmployeeById(stock.responsiblePersonId)
+                }, context)
+                setLoading(context)
+                callback()
             }, context)
-            setLoading(context)
-            callback()
         }, context)
     }
 
