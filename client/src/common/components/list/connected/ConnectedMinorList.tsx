@@ -4,8 +4,6 @@ import ApplicationController from "../../../../core/mvc/controllers/ApplicationC
 import MinorList, {MinorListProperties} from "../MinorList";
 import createLooseObject = CommonUtils.createLooseObject;
 
-var styles = require("./styles.css")
-
 export default class ConnectedMinorListBase<ItemType,
     StateType extends DefaultStateType,
     SelectorsType, StoreType extends ApplicationStore<StateType, SelectorsType>>

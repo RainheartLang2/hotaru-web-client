@@ -8,6 +8,7 @@ import ApplicationStore, {DefaultStateType} from "../../../core/mvc/store/Applic
 import CustomContentButton from "../../../core/components/iconButton/CustomContentButton";
 import {CommonUtils} from "../../../core/utils/CommonUtils";
 import createLooseObject = CommonUtils.createLooseObject;
+import DisablingMoire from "../../../core/components/disablingMoire/DisablingMoire";
 
 var styles = require("./styles.css")
 
@@ -18,6 +19,7 @@ export default abstract class MinorListBase<ItemType, Props extends MinorListPro
         addButton: true,
         addTooltipLabel: "",
         onAddButtonClick: () => {},
+        disabled: false,
     }
 
     constructor(props: Props) {
@@ -29,6 +31,7 @@ export default abstract class MinorListBase<ItemType, Props extends MinorListPro
 
     render() {
         return (<div className={styles.list}>
+            <DisablingMoire active={this.props.disabled}/>
             <div className={styles.listHeader}>
                 <div className={styles.listTitle}>
                     {this.props.label}
@@ -66,6 +69,7 @@ export type MinorListProperties<ItemType> = {
     addButton: boolean,
     onAddButtonClick: Function,
     addTooltipLabel: NonNullable<ReactNode>
+    disabled: boolean,
 }
 
 type MinorListState<ItemType> = {

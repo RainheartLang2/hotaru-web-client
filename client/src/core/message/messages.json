@@ -30,6 +30,8 @@
       "common.employee.name": "Имя",
       "common.wholeDayLong": "Весь день",
 
+      "common.button.executeDocument": "Исполнить",
+
       "common.required.field.tooltip": "Поле обязательно для заполнения",
 
       "common.monday.short": "пн",
@@ -226,7 +228,11 @@
       "dialog.agent.gyroAccount.field.label": "Расчётный счёт",
       "dialog.agent.note.field.label": "Заметки",
 
-      "dialog.goods.document.income.label": "Создание приходной наклодной",
+      "dialog.goods.document.income.label": "Приходная накладная",
+      "dialog.goods.document.saved.label": "Документ сохранён",
+      "dialog.goods.document.executed.label": "Документ исполнен",
+      "dialog.goods.document.canceled.label": "Документ отменён",
+
       "dialog.goods.document.field.stock.label": "Склад",
       "dialog.goods.document.field.agent.label": "Контрагент",
       "dialog.goods.document.field.series.label": "Серия",

@@ -156,9 +156,10 @@ export namespace RemoteMethods {
     export const deleteCounterAgent = new RemoteMethod(counterAgentService, deleteAction)
 
     export const getAllGoodsDocuments = new RemoteMethod(goodsDocumentService, getAllAction)
-    export const addGoodsDocument = new RemoteMethod(goodsDocumentService, editAction)
+    export const addGoodsDocument = new RemoteMethod(goodsDocumentService, addAction)
     export const editGoodsDocument = new RemoteMethod(goodsDocumentService, editAction)
     export const deleteGoodsDocument = new RemoteMethod(goodsDocumentService, deleteAction)
+    export const cancelGoodsDocument = new RemoteMethod(goodsDocumentService, new ServerAppAction("cancel"))
 
     export const getUserProfile = new RemoteMethod(userProfileService, getProfile)
 

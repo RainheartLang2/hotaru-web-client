@@ -1,25 +1,28 @@
 import * as React from "react";
+import {ReactNode} from "react";
 import EmployeeAppController from "../../../controller/EmployeeAppController";
-import {ConfigureType} from "../../../../core/types/ConfigureType";
-import {DialogContent, DialogTitle, ListItem, ListItemText} from "@material-ui/core";
+import {DialogContent, DialogTitle, ListItemText} from "@material-ui/core";
 import {Message} from "../../../../core/components/Message";
 import {ShipingType} from "../../../../common/beans/enums/ShipingType";
 import ConnectedAutoCompleteField from "../../../../core/components/connectedAutoComplete/ConnectedAutoCompleteField";
-import {EmployeeAppSelectors, EmployeeAppState} from "../../../state/EmployeeApplicationStore";
-import EmployeeApplicationStore from "../../../state/EmployeeApplicationStore";
+import EmployeeApplicationStore, {
+    EmployeeAppSelectors,
+    EmployeeAppState
+} from "../../../state/EmployeeApplicationStore";
 import Stock from "../../../../common/beans/Storage";
 import CounterAgent from "../../../../common/beans/CounterAgent";
 import ConnectedTextField from "../../../../core/components/conntectedTextField/ConnectedTextField";
-import DialogFooter from "../../../../core/components/dialogFooter/DialogFooter";
 import ConnectedMinorList from "../../../../common/components/list/connected/ConnectedMinorList";
 import GoodsPackWithPrice from "../../../../common/beans/GoodsPackWithPrice";
-import {ReactNode} from "react";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import CustomContentButton from "../../../../core/components/iconButton/CustomContentButton";
 import DeleteIcon from '@material-ui/icons/DeleteSharp';
 import EditIcon from '@material-ui/icons/EditSharp';
 
 import {MathUtils} from "../../../../core/utils/MathUtils";
+import DocumentDialogFooter from "../../../../core/components/dialogFooter/DocumentDialogFooter";
+import {DocumentState} from "../../../../common/beans/enums/DocumentState";
+import MessageResource from "../../../../core/message/MessageResource";
 
 var styles = require("../../../commonStyles.css")
 
@@ -27,9 +30,9 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
     constructor(props: Properties) {
         super(props)
         this.state = {
-            mode: "none",
             hasErrors: false,
             type: null,
+            documentState: null,
         }
     }
 
@@ -67,12 +70,43 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
         </>)
     }
 
+    private onSubmitButton() {
+        if (this.state.documentState == null) {
+            this.props.controller.goodsDocumentActions.submitCreateIncomeDocument(false)
+        } else if (this.state.documentState == DocumentState.Saved) {
+            this.props.controller.goodsDocumentActions.submitEditIncomeDocument(false)
+        }
+    }
+
+    private onExecuteButton() {
+        if (this.state.documentState == null) {
+            this.props.controller.goodsDocumentActions.submitCreateIncomeDocument(true)
+        } else if (this.state.documentState == DocumentState.Saved) {
+            this.props.controller.goodsDocumentActions.submitEditIncomeDocument(true)
+        }
+    }
+
+    private getDocumentStateText(): string {
+        switch (this.state.documentState) {
+            case null: return ""
+            case DocumentState.Saved: return MessageResource.getMessage("dialog.goods.document.saved.label")
+            case DocumentState.Executed: return MessageResource.getMessage("dialog.goods.document.executed.label")
+            case DocumentState.Canceled: return MessageResource.getMessage("dialog.goods.document.canceled.label")
+            default: throw new Error("unknown document state " + this.state.documentState)
+        }
+    }
+
     render() {
+        const formDisabled = this.state.documentState == DocumentState.Executed
+            || this.state.documentState == DocumentState.Canceled
         return (
             <>
                 <DialogTitle>
-                    Создание приходной накладной
+                    <Message messageKey={"dialog.goods.document.income.label"}/>
                 </DialogTitle>
+                <div className={styles.dialogSubTitle}>
+                    {this.getDocumentStateText()}
+                </div>
                 <DialogContent>
                     <div className={styles.dialogContent}>
                         <div className={styles.column}>
@@ -83,6 +117,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     itemToString={stock => stock.name!}
                                     selectedItemProperty={"editedShipDocStock"}
                                     itemsProperty={"stocksList"}
+                                    disabled={formDisabled}
                                 />
                             </div>
                             <div className={styles.row}>
@@ -92,6 +127,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     itemToString={agent => agent.name!}
                                     selectedItemProperty={"editedShipDocCounterAgent"}
                                     itemsProperty={"counterAgentsList"}
+                                    disabled={formDisabled}
                                 />
                             </div>
                             <div className={styles.row}>
@@ -99,6 +135,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     controller={this.props.controller}
                                     fieldKey={{editedShipDocNumber: "editedShipDocNumberField"}}
                                     label={<Message messageKey={"dialog.goods.document.field.series.label"}/>}
+                                    disabled={formDisabled}
                                 />
                             </div>
                             <div className={styles.row}>
@@ -107,6 +144,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     fieldKey={{editedShipDocDate: "editedShipDocDateField"}}
                                     label={<Message messageKey={"dialog.goods.document.field.date.label"}/>}
                                     type={"date"}
+                                    disabled={formDisabled}
                                 />
                             </div>
                         </div>
@@ -118,14 +156,20 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                 renderItem={item => this.renderGoodsListItem(item)}
                                 onAddButtonClick={() => this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()}
                                 addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
+                                disabled={formDisabled}
                             />
                         </div>
                     </div>
-                    <DialogFooter
+                    <DocumentDialogFooter
                         controller={this.props.controller}
                         submitDisabled={this.state.hasErrors}
-                        onSubmitClick={() => this.props.controller.goodsDocumentActions.submitCreateIncomeDocument()}
-                        onCancelClick={() => this.props.controller.closeCurrentDialog()}
+                        showSaveButton={this.state.documentState == null || this.state.documentState == DocumentState.Saved}
+                        showExecuteButton={this.state.documentState == DocumentState.Saved}
+                        showCancelButton={this.state.documentState == DocumentState.Saved}
+                        onSubmitClick={() => this.onSubmitButton()}
+                        onExecuteClick={() => this.onExecuteButton()}
+                        onCancelClick={() => this.props.controller.goodsDocumentActions.submitCancelDocument()}
+                        onBackClick={() => this.props.controller.closeCurrentDialog()}
                     />
                 </DialogContent>
             </>
@@ -135,8 +179,8 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
     componentDidMount(): void {
         this.props.controller.subscribe(this, {
             editedShipDocType: "type",
-            editedShipDocFormMode: "mode",
             editedShipDocFormHasErrors: "hasErrors",
+            editedShipDocState: "documentState",
         })
     }
 }
@@ -147,6 +191,6 @@ type Properties = {
 
 type State = {
     type: ShipingType | null,
-    mode: ConfigureType,
+    documentState: DocumentState | null,
     hasErrors: boolean
 }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {ButtonComponent} from "../../components";
 import {CircularProgress, PropTypes} from "@material-ui/core";
-import {MouseEventHandler} from "react";
+import {MouseEventHandler, ReactNode} from "react";
 import ApplicationStore, {DefaultStateType} from "../../mvc/store/ApplicationStore";
 import ApplicationController from "../../mvc/controllers/ApplicationController";
 import {CommonUtils} from "../../utils/CommonUtils";
@@ -10,6 +10,10 @@ var styles = require("./styles.css");
 
 export default class CustomButton<GlobalState extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<GlobalState, DerivationType>>
     extends React.Component<Properties<GlobalState, DerivationType, StoreType>, State> {
+
+    static defaultProps = {
+        icon: "",
+    }
 
     constructor(props: Properties<GlobalState, DerivationType, StoreType>) {
         super(props)
@@ -42,7 +46,15 @@ export default class CustomButton<GlobalState extends DefaultStateType, Derivati
             </div>
 
             <div className={this.isLoading() ? styles.labelLoading : ""}>
-                {this.props.children}
+                <div className={styles.buttonContent}>
+                    {!!this.props.icon &&
+                        <div className={styles.iconArea}>
+                            {this.props.icon}
+                        </div>
+                    }
+                    {this.props.children}
+                </div>
+
             </div>
         </ButtonComponent>)
     }
@@ -69,6 +81,7 @@ type Properties<GlobalState extends DefaultStateType, DerivationType, StoreType 
     size?: 'small' | 'medium' | 'large'
     variant?: 'text' | 'outlined' | 'contained'
     loadingProperty?: keyof (GlobalState & DerivationType)
+    icon: ReactNode
 }
 
 type State = {

@@ -21,16 +21,18 @@ export default class GoodsDocumentActions {
 
 
     public openCreateIncomeDocDialog(stock: Stock, callback: Function = () => {}): void {
-        this.controller.openDialog(DialogType.CreateGoodsIncome, setLoading => {
+        this.controller.openDialog(DialogType.EditGoodsIncome, setLoading => {
             this.controller.stockActions.loadList(() => {
                 this.controller.counterAgentActions.loadList(() => {
                     this.controller.salesUnitActions.loadList(() => {
                         this.controller.setState({
                             editedShipmentDocumentId: undefined,
+                            editedShipDocState: null,
                             editedShipDocStock: stock,
                             editedShipDocCounterAgent: null,
                             editedShipDocNumber: "",
-                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate())
+                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate()),
+                            editedShipDocGoods: [],
                         })
                         setLoading()
                         callback()
@@ -40,10 +42,11 @@ export default class GoodsDocumentActions {
         })
     }
 
-    public submitCreateIncomeDocument(callback: Function = () => {}): void {
+    public buildDocumentByField(actualDocumentState: DocumentState): GoodsDocument {
         const state = this.controller.state
-        const document = new GoodsDocument({
-            documentState: DocumentState.Saved,
+        return  new GoodsDocument({
+            id: state.editedShipmentDocumentId,
+            documentState: actualDocumentState,
             shipingType: ShipingType.Income,
             date: new Date(state.editedShipDocDate),
             stockId: state.editedShipDocStock!.id!,
@@ -51,18 +54,65 @@ export default class GoodsDocumentActions {
             num: state.editedShipDocNumber,
             goods: new CustomContainer<GoodsPackWithPrice>(state.editedShipDocGoods),
         })
+    }
+
+    public submitCreateIncomeDocument(execute: boolean, callback: Function = () => {}): void {
+        const actualDocumentState = execute ? DocumentState.Executed : DocumentState.Saved
+        const document = this.buildDocumentByField(actualDocumentState)
 
         fetchUserZoneRpc({
             method: RemoteMethods.addGoodsDocument,
-            params: [document, false],
+            params: [document, execute],
             successCallback: result => {
                 document.id = +result
                 this.controller.setState({
-                    goodsDocuments: [...state.goodsDocuments, document]
+                    goodsDocuments: [...this.controller.state.goodsDocuments, document],
+                    editedShipDocState: actualDocumentState,
+                    editedShipmentDocumentId: document.id
+                })
+                console.log(this.controller.state.editedShipmentDocumentId)
+                callback()
+            },
+        })
+    }
+
+    public submitEditIncomeDocument(execute: boolean, callback: Function = () => {}): void {
+        const actualDocumentState = execute ? DocumentState.Executed : DocumentState.Saved
+        const document = this.buildDocumentByField(actualDocumentState)
+
+        fetchUserZoneRpc({
+            method: RemoteMethods.editGoodsDocument,
+            params: [document, execute],
+            successCallback: result => {
+                this.controller.setState({
+                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, document),
+                    editedShipDocState: actualDocumentState,
                 })
                 callback()
-                this.controller.closeCurrentDialog()
             },
+        })
+    }
+
+    public getDocumentById(id: number) {
+        const result = this.controller.state.goodsDocumentsById.get(id)
+        if (!result) {
+            throw new Error("no document for id " + id)
+        }
+        return result
+    }
+
+    public submitCancelDocument(callback: Function = () => {}): void {
+        const document = this.buildDocumentByField(DocumentState.Canceled)
+        fetchUserZoneRpc({
+            method: RemoteMethods.cancelGoodsDocument,
+            params: [document.id],
+            successCallback: result => {
+                this.controller.setState({
+                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, document),
+                    editedShipDocState: DocumentState.Canceled,
+                })
+                callback()
+            }
         })
     }
 
@@ -124,8 +174,7 @@ export default class GoodsDocumentActions {
     }
 
     public getCurrentStockId(): number {
-        if (this.controller.state.dialogType == DialogType.CreateGoodsIncome
-            || this.controller.state.dialogType == DialogType.EditGoodsIncome) {
+        if (this.controller.state.dialogType == DialogType.EditGoodsIncome) {
             return this.controller.state.editedShipDocStock!.id!
         }
         throw new Error("no stock specified in current state")

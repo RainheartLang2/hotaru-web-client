@@ -5,6 +5,15 @@
     padding: 0px 5px;
 }
 
+.dialogSubTitle {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    padding-left: 25px;
+    font-weight: bold;
+    color: #216cbd;
+}
+
 .column {
     width: 450px;
     display: flex;

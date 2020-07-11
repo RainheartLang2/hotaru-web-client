@@ -1,3 +1,4 @@
+
 .labelLoading {
     visibility: hidden;
 }
@@ -5,4 +6,14 @@
 .loaderWrapper {
     position: absolute;
     top: 3px;
+}
+
+.buttonContent {
+    display: flex;
+    justify-content: flex-start;
+}
+.iconArea {
+    height: 24px;
+    margin-right: 7px;
+    margin-top: -2px;
 }

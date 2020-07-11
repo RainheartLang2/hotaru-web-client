@@ -27,6 +27,7 @@ import {RightPanelType} from "../enum/RightPanelType";
 import {MathUtils} from "../../../core/utils/MathUtils";
 import MeasureUnit from "../../../common/beans/MeasureUnit";
 import GoodsDocument from "../../../common/beans/GoodsDocument";
+import {DocumentState} from "../../../common/beans/enums/DocumentState";
 
 export default class StockNode {
     private _store: ApplicationStoreFriend<EmployeeAppState, EmployeeAppSelectors>
@@ -71,6 +72,7 @@ export default class StockNode {
             goodsDocuments: [],
 
             editedShipmentDocumentId: undefined,
+            editedShipDocState: null,
             editedShipDocStock: null,
             editedShipDocCounterAgent: null,
             editedShipDocNumber: "",
@@ -187,29 +189,20 @@ export default class StockNode {
                 "editedAgentPhoneField",
                 "editedAgentEmailField",
             ]),
+            goodsDocumentsById: {
+                dependsOn: ["goodsDocuments"],
+                get: (state: Pick<StockState, "goodsDocuments">) =>
+                    CollectionUtils.mapIdentifiableArray(state.goodsDocuments),
+                value: new Map(),
+            },
             editedShipDocNumberField: this._store.createField("editedShipDocNumber"),
             editedShipDocDateField: this._store.createField("editedShipDocDate", "", [
                 new DateValidator()
             ]),
-            editedShipDocFormMode: {
-                dependsOn: ["dialogType"],
-                get: (state: Pick<EmployeeAppState, "dialogType">) => {
-                    switch (state.dialogType) {
-                        case DialogType.CreateGoodsIncome:
-                            return "create"
-                        case DialogType.EditGoodsIncome:
-                            return "edit"
-                        default:
-                            return "none"
-                    }
-                },
-                value: "none",
-            },
             editedShipDocType: {
                 dependsOn: ["dialogType"],
                 get: (state:Pick<EmployeeAppState, "dialogType">) => {
                     switch (state.dialogType) {
-                        case DialogType.CreateGoodsIncome:
                         case DialogType.EditGoodsIncome:
                             return ShipingType.Income
                         default:
@@ -218,7 +211,14 @@ export default class StockNode {
                 },
                 value: null,
             },
-            editedShipDocFormHasErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
+            editedShipDocFormHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
+            editedShipDocFormHasErrors: {
+                dependsOn: ["editedShipDocFormHasStandardErrors",
+                    "editedShipDocGoods"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedShipDocFormHasStandardErrors" | "editedShipDocGoods">) =>
+                    state.editedShipDocFormHasStandardErrors || state.editedShipDocGoods.length == 0,
+                value: false,
+            },
             editedShipDocGoodsById: {
                 dependsOn: ["editedShipDocGoods"],
                 get: (state: Pick<StockState, "editedShipDocGoods">) => CollectionUtils.mapIdentifiableArray(state.editedShipDocGoods),
@@ -336,6 +336,7 @@ export type StockState = {
     goodsDocuments: GoodsDocument[]
 
     editedShipmentDocumentId: number | undefined
+    editedShipDocState: DocumentState | null
     editedShipDocStock: Stock | null
     editedShipDocCounterAgent: CounterAgent | null
     editedShipDocNumber: string
@@ -375,10 +376,12 @@ export type StockSelectors = {
     counterAgentDialogMode: ConfigureType,
     counterAgentFormHasErrors: boolean,
 
+    goodsDocumentsById: Map<number, GoodsDocument>
+
     editedShipDocNumberField: Field,
     editedShipDocDateField: Field,
-    editedShipDocFormMode: ConfigureType,
     editedShipDocType: ShipingType | null,
+    editedShipDocFormHasStandardErrors: boolean,
     editedShipDocFormHasErrors: boolean,
 
     editedShipDocGoodsById: Map<number, GoodsPackWithPrice>

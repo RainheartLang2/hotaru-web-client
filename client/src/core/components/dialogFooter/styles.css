@@ -1,3 +1,7 @@
+.list {
+    position: relative;
+}
+
 .footer {
     display: flex;
     justify-content: flex-end;
