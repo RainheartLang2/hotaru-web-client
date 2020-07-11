@@ -11,6 +11,7 @@ import {ShipingType} from "../../../common/beans/enums/ShipingType";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import CustomContainer from "../../../core/beans/CustomContainer";
+import GoodsPack from "../../../common/beans/GoodsPack";
 
 export default class GoodsDocumentActions {
     private controller: EmployeeAppController
@@ -19,27 +20,67 @@ export default class GoodsDocumentActions {
         this.controller = controller;
     }
 
-
-    public openCreateIncomeDocDialog(stock: Stock, callback: Function = () => {}): void {
-        this.controller.openDialog(DialogType.EditGoodsIncome, setLoading => {
-            this.controller.stockActions.loadList(() => {
-                this.controller.counterAgentActions.loadList(() => {
-                    this.controller.salesUnitActions.loadList(() => {
-                        this.controller.setState({
-                            editedShipmentDocumentId: undefined,
-                            editedShipDocState: null,
-                            editedShipDocStock: stock,
-                            editedShipDocCounterAgent: null,
-                            editedShipDocNumber: "",
-                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate()),
-                            editedShipDocGoods: [],
-                        })
-                        setLoading()
+    private loadGoodsDocDialogData(callback: Function = () => {}): void {
+        this.controller.stockActions.loadList(() => {
+            this.controller.counterAgentActions.loadList(() => {
+                this.controller.salesUnitActions.loadList(() => {
+                    this.controller.dictionariesActions.loadMeasureUnits([], () => {
                         callback()
                     })
                 })
             })
         })
+    }
+
+    private finishGoodsDocDialogOpening(stock: Stock, type: ShipingType) {
+        this.controller.setState({
+            editedShipmentDocumentId: undefined,
+            editedShipDocType: type,
+            editedShipDocState: null,
+            editedShipDocStock: stock,
+            editedShipDocCounterAgent: null,
+            editedShipDocNumber: "",
+            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate()),
+            editedShipDocGoods: [],
+        })
+    }
+
+    public openCreateIncomeGoodsDocDialog(stock: Stock, callback: Function = () => {}): void {
+        this.controller.openDialog(DialogType.EditGoodsIncome, setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                this.finishGoodsDocDialogOpening(stock, ShipingType.Income)
+                setLoading()
+                callback()
+            })
+        })
+    }
+
+    public openCreateOutcomeGoodsDocDialog(stock: Stock, callback: Function =() => {}): void {
+        this.controller.openDialog(DialogType.EditGoodsOutcome, setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                this.controller.stockActions.loadGoodsPacksForCurrentStock(stock.id!, () => {
+                    this.finishGoodsDocDialogOpening(stock, ShipingType.Outcome)
+                    setLoading()
+                    callback()
+                })
+            })
+        })
+    }
+
+    public addDocPacksBySelection(items: GoodsPack[], callback: Function = () => {}): void {
+        const map: GoodsPackWithPrice[] = items.map(goodsPack => {
+            const result = new GoodsPackWithPrice(goodsPack.toBean(), 0, 0)
+            result.id = 1 + CollectionUtils.getMaxByPredicate(this.controller.state.editedShipDocGoods, item => item.id ? item.id : 0)
+            result.amount = 0
+            return result
+        })
+        this.controller.setState({
+            editedShipDocGoods: this.controller.state.editedShipDocGoods.concat(map)
+        })
+    }
+
+    public setGoodsPackAmount(item: GoodsPackWithPrice, amount: number): void {
+        item.amount = amount
     }
 
     public buildDocumentByField(actualDocumentState: DocumentState): GoodsDocument {
@@ -70,7 +111,6 @@ export default class GoodsDocumentActions {
                     editedShipDocState: actualDocumentState,
                     editedShipmentDocumentId: document.id
                 })
-                console.log(this.controller.state.editedShipmentDocumentId)
                 callback()
             },
         })
@@ -174,7 +214,8 @@ export default class GoodsDocumentActions {
     }
 
     public getCurrentStockId(): number {
-        if (this.controller.state.dialogType == DialogType.EditGoodsIncome) {
+        if (this.controller.state.dialogType == DialogType.EditGoodsIncome
+            || this.controller.state.dialogType == DialogType.EditGoodsOutcome) {
             return this.controller.state.editedShipDocStock!.id!
         }
         throw new Error("no stock specified in current state")

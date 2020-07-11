@@ -60,20 +60,20 @@ export default class CustomButton<GlobalState extends DefaultStateType, Derivati
     }
 
     componentDidMount(): void {
-        if (this.props.loadingProperty) {
+        if (this.props.loadingProperty && this.props.controller) {
             this.props.controller.subscribe(this, CommonUtils.createLooseObject([[this.props.loadingProperty, "isLoading"]]))
         }
     }
 
     componentWillUnmount(): void {
-        if (this.props.loadingProperty) {
+        if (this.props.loadingProperty && this.props.controller) {
             this.props.controller.unsubscribe(this)
         }
     }
 }
 
 type Properties<GlobalState extends DefaultStateType, DerivationType, StoreType extends ApplicationStore<GlobalState, DerivationType>> = {
-    controller: ApplicationController<GlobalState, DerivationType, StoreType>
+    controller?: ApplicationController<GlobalState, DerivationType, StoreType>
     color?: PropTypes.Color
     disabled?: boolean
     onClick?: MouseEventHandler

@@ -26,6 +26,8 @@
       "common.button.back": "Назад",
       "common.button.save": "Сохранить",
       "common.button.delete": "Удалить",
+      "common.button.close": "Закрыть",
+      "common.button.select": "Выбрать",
       "common.label.actions": "Действия",
       "common.employee.name": "Имя",
       "common.wholeDayLong": "Весь день",
@@ -230,6 +232,7 @@
       "dialog.agent.note.field.label": "Заметки",
 
       "dialog.goods.document.income.label": "Приходная накладная",
+      "dialog.goods.document.outcome.label": "Расходная накладная",
       "dialog.goods.document.saved.label": "Документ сохранён",
       "dialog.goods.document.executed.label": "Документ исполнен",
       "dialog.goods.document.canceled.label": "Документ отменён",
@@ -240,7 +243,7 @@
       "dialog.goods.document.field.date.label": "Дата документа",
       "dialog.goods.document.goodsList.label": "Товары",
       "dialog.goods.document.goodsList.add.label": "Добавить товар",
-      "dialog.goods.document.goodsList.name.template": "${0}, ${1}(${2}), цена за ${2} - ${3}, общая стоимость - ${4}",
+      "dialog.goods.document.goodsList.income.subname.template": "${0}${1} по цене ${2}, общая стоимость - ${3}",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

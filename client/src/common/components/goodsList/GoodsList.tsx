@@ -11,6 +11,7 @@ import {CollectionUtils} from "../../../core/utils/CollectionUtils";
 import MessageResource from "../../../core/message/MessageResource";
 import {ToggleButtonGroup} from "@material-ui/lab";
 import ToggleButton from "@material-ui/lab/ToggleButton";
+import {SalesUtils} from "../../../core/utils/SalesUtils";
 
 var styles = require("./styles.css")
 
@@ -21,17 +22,6 @@ export default class GoodsList extends React.Component<Properties, State> {
         this.state = {
             groupType: GroupType.ByType
         }
-    }
-    private getSeriesText(item: GoodsPack): string {
-        return item.series
-                    ? MessageResource.getMessage("list.goods.series.label") + " " + item.series + " "
-                    : ""
-    }
-
-    private getExpirationText(item: GoodsPack): string {
-        return item.expirationDate
-                    ? MessageResource.getMessage("list.goods.date.label") + " " + DateUtils.standardFormatDate(item.expirationDate)
-                    : ""
     }
 
     private getTabs(): ReactNode {
@@ -67,7 +57,7 @@ export default class GoodsList extends React.Component<Properties, State> {
                     const measureUnit = this.props.measureUnits.get(salesUnit.measureUnitId)!
                     return (<>
                         <ListItemText primary={salesUnit.name}
-                                      secondary={this.getSeriesText(item) + this.getExpirationText(item)}
+                                      secondary={SalesUtils.formatSeriesAndExpirationDate(item)}
                         />
                         <ListItemSecondaryAction>
                             {item.amount + " " + measureUnit.name}

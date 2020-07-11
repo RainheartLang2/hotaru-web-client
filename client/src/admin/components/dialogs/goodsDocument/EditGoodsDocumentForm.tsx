@@ -23,8 +23,17 @@ import {MathUtils} from "../../../../core/utils/MathUtils";
 import DocumentDialogFooter from "../../../../core/components/dialogFooter/DocumentDialogFooter";
 import {DocumentState} from "../../../../common/beans/enums/DocumentState";
 import MessageResource from "../../../../core/message/MessageResource";
+import ValidatedTextField from "../../../../core/components/validatedTextField/ValidatedTextField";
+import SalesUnit from "../../../../common/beans/SalesUnit";
+import MeasureUnit from "../../../../common/beans/MeasureUnit";
+import {SalesUtils} from "../../../../core/utils/SalesUtils";
+import Selector from "../../../../core/components/selector/Selector";
+import GoodsPack from "../../../../common/beans/GoodsPack";
+import DigitsOnlyValidator from "../../../../core/mvc/validators/DigitsOnlyValidator";
+import MaximalLengthValidator from "../../../../core/mvc/validators/MaximalLengthValidator";
 
 var styles = require("../../../commonStyles.css")
+var specificStyles = require("./styles.css")
 
 export default class EditGoodsDocumentForm extends React.Component<Properties, State> {
     constructor(props: Properties) {
@@ -33,14 +42,25 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
             hasErrors: false,
             type: null,
             documentState: null,
+            stockGoods: [],
         }
     }
 
     private renderGoodsPackName(item: GoodsPackWithPrice): ReactNode {
         const salesUnit = this.props.controller.salesUnitActions.getUnitById(item.goodsTypeId)
         const measureUnit = this.props.controller.dictionariesActions.getMeasureUnitById(salesUnit.measureUnitId)
-        return (<Message messageKey={"dialog.goods.document.goodsList.name.template"}
-                         args={[salesUnit.name,
+        return (<>
+                <ListItemText primary={salesUnit.name + " (" + measureUnit.name + ")"}
+                              secondary={this.state.type == ShipingType.Income
+                                            ? this.renderIncomeGoodsPackSubName(item, salesUnit, measureUnit)
+                                            : this.renderOutcomeGoodsPackSubName(item)}
+                />
+            </>)
+    }
+
+    private renderIncomeGoodsPackSubName(item: GoodsPackWithPrice, salesUnit: SalesUnit, measureUnit: MeasureUnit): ReactNode {
+        return (<Message messageKey={"dialog.goods.document.goodsList.income.subname.template"}
+                         args={[
                                 item.amount.toString(),
                                 measureUnit.name!,
                                 item.price.toString(),
@@ -48,17 +68,45 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                 ]}/>)
     }
 
+    private renderOutcomeGoodsPackSubName(item: GoodsPackWithPrice): ReactNode {
+        return SalesUtils.formatSeriesAndExpirationDate(item)
+    }
+
+    private getPackNameForSelector(item: GoodsPack): string {
+        const salesUnit = this.props.controller.salesUnitActions.getUnitById(item.goodsTypeId)
+        const measureUnit = this.props.controller.dictionariesActions.getMeasureUnitById(salesUnit.measureUnitId)
+        return this.getPackName(salesUnit, measureUnit) + " " + SalesUtils.formatSeriesAndExpirationDate(item)
+    }
+
+    private getPackName(salesUnit: SalesUnit, measureUnit: MeasureUnit) {
+        return salesUnit.name + " (" + measureUnit.name + ")"
+    }
+
     private renderGoodsListItem(item: GoodsPackWithPrice): ReactNode {
+        const editable = this.state.type == ShipingType.Income
+        const editAmount = this.state.type == ShipingType.Outcome
         return (<>
-            <ListItemText primary={this.renderGoodsPackName(item)}/>
+            {this.renderGoodsPackName(item)}
             <ListItemSecondaryAction>
                 <div className={styles.actions}>
-                    <CustomContentButton
-                        onClick={() => this.props.controller.goodsDocumentActions.openEditGoodsPackRightPanel(item)}
-                        tooltipContent={<Message messageKey={"common.button.edit"}/>}
-                    >
-                        <EditIcon/>
-                    </CustomContentButton>
+                    {editable &&
+                        <CustomContentButton
+                            onClick={() => this.props.controller.goodsDocumentActions.openEditGoodsPackRightPanel(item)}
+                            tooltipContent={<Message messageKey={"common.button.edit"}/>}
+                        >
+                            <EditIcon/>
+                        </CustomContentButton>
+                    }
+                    {editAmount &&
+                        <div className={specificStyles.amountField}>
+                            <ValidatedTextField
+                                validators={[new DigitsOnlyValidator(), new MaximalLengthValidator(15)]}
+                                onValidBlur={event => {this.props.controller.goodsDocumentActions.setGoodsPackAmount(item, +event.target.value)}}
+                                defaultValue={item.amount}
+                                variant={"outlined"}
+                            />
+                        </div>
+                    }
                     <CustomContentButton
                         onClick={() => this.props.controller.goodsDocumentActions.deleteGoodsPackForDocument(item.id!)}
                         tooltipContent={<Message messageKey={"common.button.delete"}/>}
@@ -96,13 +144,21 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
         }
     }
 
+    private getLabelKey(): string {
+        if (this.state.type == ShipingType.Income) {
+            return "dialog.goods.document.income.label"
+        } else {
+            return "dialog.goods.document.outcome.label"
+        }
+    }
+
     render() {
         const formDisabled = this.state.documentState == DocumentState.Executed
             || this.state.documentState == DocumentState.Canceled
         return (
             <>
                 <DialogTitle>
-                    <Message messageKey={"dialog.goods.document.income.label"}/>
+                    <Message messageKey={this.getLabelKey()}/>
                 </DialogTitle>
                 <div className={styles.dialogSubTitle}>
                     {this.getDocumentStateText()}
@@ -154,9 +210,26 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                 itemsListProperty={"editedShipDocGoods"}
                                 label={<Message messageKey={"dialog.goods.document.goodsList.label"}/>}
                                 renderItem={item => this.renderGoodsListItem(item)}
-                                onAddButtonClick={() => this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()}
+                                onAddButtonClick={() => {
+                                    if (this.state.type == ShipingType.Income) {
+                                        this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()
+                                    }
+                                }}
                                 addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
                                 disabled={formDisabled}
+                                wrapAddButton={addButton => {
+                                    return this.state.type == ShipingType.Income
+                                        ? addButton
+                                        : (<Selector<GoodsPack>
+                                            items={this.state.stockGoods}
+                                            itemToString={pack => this.getPackNameForSelector(pack)}
+                                            label={"Товары на складе"}
+                                            disabled={false}
+                                            onSelectButtonClick={items => this.props.controller.goodsDocumentActions.addDocPacksBySelection(items)}
+                                        >
+                                            {addButton}
+                                        </Selector>)
+                                }}
                             />
                         </div>
                     </div>
@@ -181,6 +254,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
             editedShipDocType: "type",
             editedShipDocFormHasErrors: "hasErrors",
             editedShipDocState: "documentState",
+            editedStockGoods: "stockGoods",
         })
     }
 }
@@ -192,5 +266,6 @@ type Properties = {
 type State = {
     type: ShipingType | null,
     documentState: DocumentState | null,
-    hasErrors: boolean
+    stockGoods: GoodsPack[],
+    hasErrors: boolean,
 }

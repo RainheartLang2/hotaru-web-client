@@ -37,11 +37,9 @@ export default class StockActions {
             params: [stockId],
             successCallback: result => {
                 const goods = result as GoodsPackBean[]
-                console.log(result)
                 this.controller.setState({
                     editedStockGoods: goods.map(item => new GoodsPack(item))
                 }, context)
-                console.log(this.controller.state.editedStockGoods)
                 callback()
             }
         })

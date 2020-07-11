@@ -21,6 +21,7 @@ export default abstract class MinorListBase<ItemType, Props extends MinorListPro
         onAddButtonClick: () => {},
         disabled: false,
         additionalHeaderComponent: null,
+        wrapAddButton: (addButton: ReactNode) => addButton
     }
 
     render() {
@@ -32,14 +33,16 @@ export default abstract class MinorListBase<ItemType, Props extends MinorListPro
                         {this.props.label}
                     </div>
                     {this.props.addButton &&
-                    <div>
-                        <CustomContentButton
-                            onClick={() => this.props.onAddButtonClick()}
-                            tooltipContent={this.props.addTooltipLabel}
-                        >
-                            <AddIcon/>
-                        </CustomContentButton>
-                    </div>
+                     this.props.wrapAddButton(
+                         <div>
+                             <CustomContentButton
+                                 onClick={() => this.props.onAddButtonClick()}
+                                 tooltipContent={this.props.addTooltipLabel}
+                             >
+                                 <AddIcon/>
+                             </CustomContentButton>
+                         </div>
+                     )
                     }
                 </div>
                 {this.props.additionalHeaderComponent
@@ -70,6 +73,7 @@ export type MinorListProperties<ItemType> = {
     addButton: boolean,
     onAddButtonClick: Function,
     addTooltipLabel: NonNullable<ReactNode>
+    wrapAddButton: (addButton: ReactNode) => ReactNode
     disabled: boolean,
     additionalHeaderComponent: ReactNode | null
 }

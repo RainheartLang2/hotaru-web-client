@@ -1,0 +1,12 @@
+.form {
+    display: flex;
+    cursor: pointer;
+}
+
+.checkBox {
+    margin-right: 8px;
+}
+
+.label {
+    line-height: 42px;
+}

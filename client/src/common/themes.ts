@@ -76,6 +76,16 @@ export const vetTheme: Theme = createMuiTheme({
                 paddingBottom: "10.5px",
             }
         },
+        MuiFilledInput: {
+            input: {
+                paddingTop: "0px",
+                paddingBottom: "0px",
+            },
+            inputMarginDense: {
+                paddingTop: "6px",
+                paddingBottom: "6px",
+            }
+        },
         MuiInputBase: {
             root: {
                 "&:hover": {

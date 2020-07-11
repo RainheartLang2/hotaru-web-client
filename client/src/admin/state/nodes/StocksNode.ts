@@ -75,6 +75,7 @@ export default class StockNode {
 
             editedShipmentDocumentId: undefined,
             editedShipDocState: null,
+            editedShipDocType: null,
             editedShipDocStock: null,
             editedShipDocCounterAgent: null,
             editedShipDocNumber: "",
@@ -207,6 +208,8 @@ export default class StockNode {
                     switch (state.dialogType) {
                         case DialogType.EditGoodsIncome:
                             return ShipingType.Income
+                        case DialogType.EditGoodsOutcome:
+                            return ShipingType.Outcome
                         default:
                             return null
                     }
@@ -254,6 +257,13 @@ export default class StockNode {
                 "editedGoodsPackTaxRateField",
             ]),
             editedGoodsPackSeriesField: this._store.createField("editedGoodsPackSeries", "", [new MaximalLengthValidator(50)]),
+            editedShipDocNotAddedStockGoods: {
+                dependsOn: ["editedShipDocGoods", "editedStockGoods"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedShipDocGoods" | "editedStockGoods">) => {
+                    return state.editedShipDocGoods
+                },
+                value: [],
+            },
             editedGoodsPackCost: {
                 dependsOn: [
                     "editedGoodsPackAmountField",
@@ -339,6 +349,7 @@ export type StockState = {
     goodsDocuments: GoodsDocument[]
 
     editedShipmentDocumentId: number | undefined
+    editedShipDocType: ShipingType | null,
     editedShipDocState: DocumentState | null
     editedShipDocStock: Stock | null
     editedShipDocCounterAgent: CounterAgent | null
@@ -386,6 +397,7 @@ export type StockSelectors = {
     editedShipDocType: ShipingType | null,
     editedShipDocFormHasStandardErrors: boolean,
     editedShipDocFormHasErrors: boolean,
+    editedShipDocNotAddedStockGoods: GoodsPack[],
 
     editedShipDocGoodsById: Map<number, GoodsPackWithPrice>
 

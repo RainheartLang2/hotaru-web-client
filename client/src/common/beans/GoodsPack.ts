@@ -21,6 +21,20 @@ export default class GoodsPack extends Identifiable {
         this.creationDate = bean.creationDate ? new Date(bean.creationDate) : undefined
         this.expirationDate = bean.expirationDate ? new Date(bean.expirationDate) : undefined
     }
+
+    public toBean(): GoodsPackBean {
+        return {
+            id: this.id,
+            stockId: this.stockId,
+            goodsTypeId: this.goodsTypeId,
+            goodsProducerId: this.goodsProducerId,
+            incomeDocumentId: this.incomeDocumentId,
+            amount: this.amount,
+            series: this.series,
+            creationDate: this.creationDate,
+            expirationDate: this.expirationDate,
+        }
+    }
 }
 
 export type GoodsPackBean = {

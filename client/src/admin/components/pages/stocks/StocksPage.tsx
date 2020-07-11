@@ -30,11 +30,11 @@ export default class StocksPage extends React.Component<Properties, State> {
         const createDocumentMenuItems: DropDownMenuItem<Stock>[] = [
             {
                 label: <Message messageKey={"page.stocks.createDocument.income.button.label"} />,
-                onClick: stock => documentsActions.openCreateIncomeDocDialog(stock),
+                onClick: stock => documentsActions.openCreateIncomeGoodsDocDialog(stock),
             },
             {
                 label: <Message messageKey={"page.stocks.createDocument.outcome.button.label"} />,
-                onClick: () => {},
+                onClick: stock => documentsActions.openCreateOutcomeGoodsDocDialog(stock),
             },
             {
                 label: <Message messageKey={"page.stocks.createDocument.inventory.button.label"} />,
