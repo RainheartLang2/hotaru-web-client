@@ -74,6 +74,12 @@ export default class ValidatedTextField extends React.Component<Properties, Stat
             </CustomTooltip>
         )
     }
+
+    componentWillReceiveProps(nextProps: Readonly<Properties>, nextContext: any): void {
+        if (nextProps.value != null && nextProps.value != undefined) {
+            this.setState({value: nextProps.value as string})
+        }
+    }
 }
 
 type Properties = TextFieldProps & {

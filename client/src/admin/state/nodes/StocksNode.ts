@@ -258,9 +258,9 @@ export default class StockNode {
             ]),
             editedGoodsPackSeriesField: this._store.createField("editedGoodsPackSeries", "", [new MaximalLengthValidator(50)]),
             editedShipDocNotAddedStockGoods: {
-                dependsOn: ["editedShipDocGoods", "editedStockGoods"],
-                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedShipDocGoods" | "editedStockGoods">) => {
-                    return state.editedShipDocGoods
+                dependsOn: ["editedShipDocGoodsById", "editedStockGoods"],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedShipDocGoodsById" | "editedStockGoods">) => {
+                    return state.editedStockGoods.filter(item => !state.editedShipDocGoodsById.get(item.id!))
                 },
                 value: [],
             },
@@ -316,7 +316,12 @@ export default class StockNode {
             editedGoodsPackFormHasErrors: this._store.createFormHasErrorsSelector(
                 ["editedGoodsPackAmountField", "editedGoodsPackUnitPriceField", "editedGoodsPackTaxRateField"],
                          ["editedGoodsPackSalesType"]
-            )
+            ),
+            editedStockGoodsById: {
+                dependsOn: ["editedStockGoods"],
+                get: (state: Pick<StockState, "editedStockGoods">) => CollectionUtils.mapIdentifiableArray(state.editedStockGoods),
+                value: new Map(),
+            },
         }
     }
 }
@@ -375,6 +380,7 @@ export type StockSelectors = {
     editedStockUsersForSelectedClinic: Employee[],
     stockDialogMode: ConfigureType,
     stockFormHasErrors: boolean,
+    editedStockGoodsById: Map<number, GoodsPack>,
 
     counterAgentsById: Map<number, CounterAgent>
     editedAgentNameField: Field,

@@ -43,6 +43,11 @@ export default class Selector<ItemType> extends React.Component<Properties<ItemT
     private close(): void {
         if (this.popover) {
             this.popover.close()
+            this.setState({
+                selectedItems: [],
+                filter: "",
+            })
+            this.props.onClose()
         }
     }
 
@@ -110,7 +115,6 @@ export default class Selector<ItemType> extends React.Component<Properties<ItemT
                     </div>
                 </div>
             </div>
-
         )
     }
 
@@ -122,7 +126,9 @@ export default class Selector<ItemType> extends React.Component<Properties<ItemT
                 disabled={this.props.disabled}
                 anchorOrigin={this.props.anchorOrigin}
                 transformOrigin={this.props.transformOrigin}
-                onClose={this.props.onClose}
+                onClose={() => {
+                    this.close()
+                }}
                 >
                     {this.props.children}
                 </CustomPopover>

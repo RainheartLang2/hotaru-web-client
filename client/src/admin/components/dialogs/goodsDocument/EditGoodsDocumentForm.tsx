@@ -42,7 +42,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
             hasErrors: false,
             type: null,
             documentState: null,
-            stockGoods: [],
+            stockGoodsForSelector: [],
         }
     }
 
@@ -102,7 +102,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                             <ValidatedTextField
                                 validators={[new DigitsOnlyValidator(), new MaximalLengthValidator(15)]}
                                 onValidBlur={event => {this.props.controller.goodsDocumentActions.setGoodsPackAmount(item, +event.target.value)}}
-                                defaultValue={item.amount}
+                                value={item.amount}
                                 variant={"outlined"}
                             />
                         </div>
@@ -221,7 +221,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     return this.state.type == ShipingType.Income
                                         ? addButton
                                         : (<Selector<GoodsPack>
-                                            items={this.state.stockGoods}
+                                            items={this.state.stockGoodsForSelector}
                                             itemToString={pack => this.getPackNameForSelector(pack)}
                                             label={"Товары на складе"}
                                             disabled={false}
@@ -254,7 +254,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
             editedShipDocType: "type",
             editedShipDocFormHasErrors: "hasErrors",
             editedShipDocState: "documentState",
-            editedStockGoods: "stockGoods",
+            editedShipDocNotAddedStockGoods: "stockGoodsForSelector",
         })
     }
 }
@@ -266,6 +266,6 @@ type Properties = {
 type State = {
     type: ShipingType | null,
     documentState: DocumentState | null,
-    stockGoods: GoodsPack[],
+    stockGoodsForSelector: GoodsPack[],
     hasErrors: boolean,
 }

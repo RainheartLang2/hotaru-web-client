@@ -70,17 +70,26 @@ export default class GoodsDocumentActions {
     public addDocPacksBySelection(items: GoodsPack[], callback: Function = () => {}): void {
         const map: GoodsPackWithPrice[] = items.map(goodsPack => {
             const result = new GoodsPackWithPrice(goodsPack.toBean(), 0, 0)
-            result.id = 1 + CollectionUtils.getMaxByPredicate(this.controller.state.editedShipDocGoods, item => item.id ? item.id : 0)
             result.amount = 0
             return result
         })
         this.controller.setState({
-            editedShipDocGoods: this.controller.state.editedShipDocGoods.concat(map)
+            editedShipDocGoods: this.controller.state.editedShipDocGoods.concat(map),
         })
+        callback()
     }
 
     public setGoodsPackAmount(item: GoodsPackWithPrice, amount: number): void {
-        item.amount = amount
+        const goodsPackFromStock = this.controller.state.editedStockGoodsById.get(item.id!)
+        if (!goodsPackFromStock) {
+            throw new Error("no goodsPack on current stock for id " + item.id)
+        }
+        item.amount = Math.min(goodsPackFromStock.amount, amount)
+        console.log(item)
+        this.controller.setState({
+            editedShipDocGoods: CollectionUtils.updateIdentifiableArray(this.controller.state.editedShipDocGoods, item)
+        })
+        console.log(this.controller.state.editedShipDocGoods)
     }
 
     public buildDocumentByField(actualDocumentState: DocumentState): GoodsDocument {
@@ -88,7 +97,7 @@ export default class GoodsDocumentActions {
         return  new GoodsDocument({
             id: state.editedShipmentDocumentId,
             documentState: actualDocumentState,
-            shipingType: ShipingType.Income,
+            shipingType: state.editedShipDocType!,
             date: new Date(state.editedShipDocDate),
             stockId: state.editedShipDocStock!.id!,
             counterAgentId: state.editedShipDocCounterAgent!.id!,
