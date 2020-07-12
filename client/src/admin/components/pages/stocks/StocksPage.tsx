@@ -38,7 +38,7 @@ export default class StocksPage extends React.Component<Properties, State> {
             },
             {
                 label: <Message messageKey={"page.stocks.createDocument.inventory.button.label"} />,
-                onClick: () => {},
+                onClick: stock => documentsActions.openCreateInventoryGoodsDocDialog(stock),
             }
         ]
         return (

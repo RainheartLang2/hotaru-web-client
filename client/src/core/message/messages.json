@@ -233,6 +233,7 @@
 
       "dialog.goods.document.income.label": "Приходная накладная",
       "dialog.goods.document.outcome.label": "Расходная накладная",
+      "dialog.goods.document.inventory.label": "Инвентаризация",
       "dialog.goods.document.saved.label": "Документ сохранён",
       "dialog.goods.document.executed.label": "Документ исполнен",
       "dialog.goods.document.canceled.label": "Документ отменён",
@@ -244,6 +245,9 @@
       "dialog.goods.document.goodsList.label": "Товары",
       "dialog.goods.document.goodsList.add.label": "Добавить товар",
       "dialog.goods.document.goodsList.income.subname.template": "${0}${1} по цене ${2}, общая стоимость - ${3}",
+      "dialog.goods.document.goodsList.onStock": "Доступное кол-во: ${0}",
+      "dialog.goods.document.goodsList.outcome.editable": "Списываемое кол-во",
+      "dialog.goods.document.goodsList.inventory.editable": "кол-во по факту",
 
       "panel.pet.title": "Редактирование данных о питомце",
       "panel.pet.field.name.label": "Кличка",

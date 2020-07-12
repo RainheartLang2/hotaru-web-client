@@ -84,7 +84,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
 
     private renderGoodsListItem(item: GoodsPackWithPrice): ReactNode {
         const editable = this.state.type == ShipingType.Income
-        const editAmount = this.state.type == ShipingType.Outcome
+        const editAmount = this.state.type == ShipingType.Outcome || this.state.type == ShipingType.Inventory
         return (<>
             {this.renderGoodsPackName(item)}
             <ListItemSecondaryAction>
@@ -98,13 +98,23 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                         </CustomContentButton>
                     }
                     {editAmount &&
-                        <div className={specificStyles.amountField}>
-                            <ValidatedTextField
-                                validators={[new DigitsOnlyValidator(), new MaximalLengthValidator(15)]}
-                                onValidBlur={event => {this.props.controller.goodsDocumentActions.setGoodsPackAmount(item, +event.target.value)}}
-                                value={item.amount}
-                                variant={"outlined"}
-                            />
+                        <div className={specificStyles.amountArea}>
+                            <div className={specificStyles.amountOnStock}>
+                                <Message messageKey={"dialog.goods.document.goodsList.onStock"}
+                                         args={[this.props.controller.stockActions.getCurrentStockGoodsPackAmount(item.id!).toString()]}
+                                />
+                            </div>
+                            <div className={specificStyles.amountField}>
+                                <ValidatedTextField
+                                    label={<Message messageKey={this.state.type == ShipingType.Outcome
+                                        ? "dialog.goods.document.goodsList.outcome.editable"
+                                        : "dialog.goods.document.goodsList.inventory.editable"}/>}
+                                    validators={[new DigitsOnlyValidator(), new MaximalLengthValidator(15)]}
+                                    onValidBlur={event => {this.props.controller.goodsDocumentActions.setGoodsPackAmount(item, +event.target.value)}}
+                                    value={item.amount}
+                                    variant={"outlined"}
+                                />
+                            </div>
                         </div>
                     }
                     <CustomContentButton
@@ -147,8 +157,12 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
     private getLabelKey(): string {
         if (this.state.type == ShipingType.Income) {
             return "dialog.goods.document.income.label"
-        } else {
+        } else if (this.state.type == ShipingType.Outcome) {
             return "dialog.goods.document.outcome.label"
+        } else if (this.state.type == ShipingType.Inventory) {
+            return "dialog.goods.document.inventory.label"
+        } else {
+            return "dialog.goods.document.income.label"
         }
     }
 
@@ -176,24 +190,28 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     disabled={formDisabled}
                                 />
                             </div>
-                            <div className={styles.row}>
-                                <ConnectedAutoCompleteField<CounterAgent, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                                    label={<Message messageKey={"dialog.goods.document.field.agent.label"}/>}
-                                    controller={this.props.controller}
-                                    itemToString={agent => agent.name!}
-                                    selectedItemProperty={"editedShipDocCounterAgent"}
-                                    itemsProperty={"counterAgentsList"}
-                                    disabled={formDisabled}
-                                />
-                            </div>
-                            <div className={styles.row}>
-                                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                                    controller={this.props.controller}
-                                    fieldKey={{editedShipDocNumber: "editedShipDocNumberField"}}
-                                    label={<Message messageKey={"dialog.goods.document.field.series.label"}/>}
-                                    disabled={formDisabled}
-                                />
-                            </div>
+                            {this.state.type != ShipingType.Inventory &&
+                                <div className={styles.row}>
+                                    <ConnectedAutoCompleteField<CounterAgent, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                        label={<Message messageKey={"dialog.goods.document.field.agent.label"}/>}
+                                        controller={this.props.controller}
+                                        itemToString={agent => agent.name!}
+                                        selectedItemProperty={"editedShipDocCounterAgent"}
+                                        itemsProperty={"counterAgentsList"}
+                                        disabled={formDisabled}
+                                    />
+                                </div>
+                            }
+                            {this.state.type != ShipingType.Inventory &&
+                                <div className={styles.row}>
+                                    <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
+                                        controller={this.props.controller}
+                                        fieldKey={{editedShipDocNumber: "editedShipDocNumberField"}}
+                                        label={<Message messageKey={"dialog.goods.document.field.series.label"}/>}
+                                        disabled={formDisabled}
+                                    />
+                                </div>
+                            }
                             <div className={styles.row}>
                                 <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
                                     controller={this.props.controller}

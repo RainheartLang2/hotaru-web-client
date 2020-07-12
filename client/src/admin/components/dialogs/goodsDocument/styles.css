@@ -1,3 +1,12 @@
+.amountArea {
+    display: flex;
+}
+
+.amountOnStock {
+    line-height: 40px;
+    margin-right: 10px;
+}
+
 .amountField {
     width: 100px;
 }

@@ -45,6 +45,14 @@ export default class StockActions {
         })
     }
 
+    public getCurrentStockGoodsPackAmount(packId: number): number {
+        const result = this.controller.state.editedStockGoodsById.get(packId)
+        if (!result) {
+            throw new Error("no goodsPack for id " + packId)
+        }
+        return result.amount
+    }
+
     private loadStockData(stockId?: number, callback: Function = () => {}, context?: EmployeeStateContext) {
         if (stockId) {
             this.loadGoodsPacksForCurrentStock(stockId, () => {

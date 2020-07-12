@@ -12,6 +12,7 @@ import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import CustomContainer from "../../../core/beans/CustomContainer";
 import GoodsPack from "../../../common/beans/GoodsPack";
+import {DocumentUtils} from "../../../core/utils/DocumentUtils";
 
 export default class GoodsDocumentActions {
     private controller: EmployeeAppController
@@ -55,11 +56,23 @@ export default class GoodsDocumentActions {
         })
     }
 
-    public openCreateOutcomeGoodsDocDialog(stock: Stock, callback: Function =() => {}): void {
+    public openCreateOutcomeGoodsDocDialog(stock: Stock, callback: Function = () => {}): void {
         this.controller.openDialog(DialogType.EditGoodsOutcome, setLoading => {
             this.loadGoodsDocDialogData(() => {
                 this.controller.stockActions.loadGoodsPacksForCurrentStock(stock.id!, () => {
                     this.finishGoodsDocDialogOpening(stock, ShipingType.Outcome)
+                    setLoading()
+                    callback()
+                })
+            })
+        })
+    }
+
+    public openCreateInventoryGoodsDocDialog(stock: Stock, callback: Function = () => {}): void {
+        this.controller.openDialog(DialogType.EditGoodsInventory, setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                this.controller.stockActions.loadGoodsPacksForCurrentStock(stock.id!, () => {
+                    this.finishGoodsDocDialogOpening(stock, ShipingType.Inventory)
                     setLoading()
                     callback()
                 })
@@ -80,12 +93,19 @@ export default class GoodsDocumentActions {
     }
 
     public setGoodsPackAmount(item: GoodsPackWithPrice, amount: number): void {
-        const goodsPackFromStock = this.controller.state.editedStockGoodsById.get(item.id!)
-        if (!goodsPackFromStock) {
-            throw new Error("no goodsPack on current stock for id " + item.id)
+        const documentType = this.controller.state.editedShipDocType
+        if (documentType == ShipingType.Outcome) {
+            const goodsPackFromStock = this.controller.state.editedStockGoodsById.get(item.id!)
+            if (!goodsPackFromStock) {
+                throw new Error("no goodsPack on current stock for id " + item.id)
+            }
+            item.amount = Math.min(goodsPackFromStock.amount, amount)
+        } else if (documentType == ShipingType.Inventory) {
+            item.amount = amount
+        } else {
+            throw new Error("unknown document type " + documentType)
         }
-        item.amount = Math.min(goodsPackFromStock.amount, amount)
-        console.log(item)
+
         this.controller.setState({
             editedShipDocGoods: CollectionUtils.updateIdentifiableArray(this.controller.state.editedShipDocGoods, item)
         })
@@ -94,13 +114,16 @@ export default class GoodsDocumentActions {
 
     public buildDocumentByField(actualDocumentState: DocumentState): GoodsDocument {
         const state = this.controller.state
+        const counterAgentId = DocumentUtils.documentTypeHasCounterAgent(state.editedShipDocType!)
+                                    ? state.editedShipDocCounterAgent!.id!
+                                    : null
         return  new GoodsDocument({
             id: state.editedShipmentDocumentId,
             documentState: actualDocumentState,
             shipingType: state.editedShipDocType!,
             date: new Date(state.editedShipDocDate),
             stockId: state.editedShipDocStock!.id!,
-            counterAgentId: state.editedShipDocCounterAgent!.id!,
+            counterAgentId: counterAgentId,
             num: state.editedShipDocNumber,
             goods: new CustomContainer<GoodsPackWithPrice>(state.editedShipDocGoods),
         })
@@ -224,7 +247,8 @@ export default class GoodsDocumentActions {
 
     public getCurrentStockId(): number {
         if (this.controller.state.dialogType == DialogType.EditGoodsIncome
-            || this.controller.state.dialogType == DialogType.EditGoodsOutcome) {
+            || this.controller.state.dialogType == DialogType.EditGoodsOutcome
+            || this.controller.state.dialogType == DialogType.EditGoodsInventory) {
             return this.controller.state.editedShipDocStock!.id!
         }
         throw new Error("no stock specified in current state")

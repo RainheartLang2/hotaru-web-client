@@ -62,7 +62,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                         && (<EditStockForm controller={this.props.controller}/>)}
                         {(this.isRenderDialog(DialogType.CreateCounterAgent) || this.isRenderDialog(DialogType.EditCounterAgent))
                         && (<EditCounterAgentForm controller={this.props.controller}/>)}
-                        {(this.isRenderDialog(DialogType.EditGoodsIncome) || this.isRenderDialog(DialogType.EditGoodsOutcome))
+                        {(this.isRenderDialog(DialogType.EditGoodsIncome) || this.isRenderDialog(DialogType.EditGoodsOutcome)
+                            || this.isRenderDialog(DialogType.EditGoodsInventory))
                         && (<EditGoodsDocumentForm controller={this.props.controller}/>)}
                     </div>
                 </Dialog>

@@ -217,11 +217,29 @@ export default class StockNode {
                 value: null,
             },
             editedShipDocFormHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
+            editedInventoryDocHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocStock"]),
+            editedStockDocHasStandardErrors: {
+                dependsOn: [
+                    "editedShipDocFormHasStandardErrors",
+                    "editedInventoryDocHasStandardErrors",
+                    "editedShipDocType",
+                ],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
+                    "editedShipDocFormHasStandardErrors" |
+                    "editedInventoryDocHasStandardErrors" |
+                    "editedShipDocType"
+                    >) => state.editedShipDocType == ShipingType.Inventory
+                                ? state.editedInventoryDocHasStandardErrors
+                                : state.editedShipDocFormHasStandardErrors,
+                value: false,
+            },
             editedShipDocFormHasErrors: {
-                dependsOn: ["editedShipDocFormHasStandardErrors",
-                    "editedShipDocGoods"],
-                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedShipDocFormHasStandardErrors" | "editedShipDocGoods">) =>
-                    state.editedShipDocFormHasStandardErrors || state.editedShipDocGoods.length == 0,
+                dependsOn: [
+                    "editedStockDocHasStandardErrors",
+                    "editedShipDocGoods",
+                ],
+                get: (state: Pick<EmployeeAppState & EmployeeAppSelectors, "editedStockDocHasStandardErrors" | "editedShipDocGoods">) =>
+                    state.editedStockDocHasStandardErrors || state.editedShipDocGoods.length == 0,
                 value: false,
             },
             editedShipDocGoodsById: {
@@ -402,6 +420,8 @@ export type StockSelectors = {
     editedShipDocDateField: Field,
     editedShipDocType: ShipingType | null,
     editedShipDocFormHasStandardErrors: boolean,
+    editedInventoryDocHasStandardErrors: boolean,
+    editedStockDocHasStandardErrors: boolean,
     editedShipDocFormHasErrors: boolean,
     editedShipDocNotAddedStockGoods: GoodsPack[],
 
