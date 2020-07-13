@@ -3,7 +3,7 @@ import CustomPopover from "../customPopover/CustomPopover";
 import {ReactNode} from "react";
 import {MenuItem, PopoverOrigin} from "@material-ui/core";
 
-export default class DropDownMenu<OnClickData> extends React.Component<Properties<OnClickData>, State> {
+export default class DropDownMenu<OnClickData = void> extends React.Component<Properties<OnClickData>, State> {
 
     private popover: CustomPopover | null = null
 
@@ -79,7 +79,7 @@ type State = {
 
 }
 
-export type DropDownMenuItem<OnClickData> = {
+export type DropDownMenuItem<OnClickData = void> = {
     label: ReactNode
     onClick: (data: OnClickData) => void
 }

@@ -11,6 +11,7 @@ import CustomTableCell from "../../../../core/components/tableCell/CustomTableCe
 import {ShipingType} from "../../../../common/beans/enums/ShipingType";
 import {DateUtils} from "../../../../core/utils/DateUtils";
 import {DocumentState} from "../../../../common/beans/enums/DocumentState";
+import DropDownMenu, {DropDownMenuItem} from "../../../../core/components/dropDownMenu/DropDownMenu";
 
 var styles = require("../../../commonStyles.css")
 
@@ -59,11 +60,37 @@ export default class AccountingDocumentsPage extends React.Component<Properties,
     }
 
     render() {
+        const documentsActions = this.props.controller.goodsDocumentActions
+        const createDocumentMenuItems: DropDownMenuItem[] = [
+            {
+                label: <Message messageKey={"page.stocks.createDocument.income.button.label"} />,
+                onClick: () => documentsActions.openCreateGoodsDocDialog(ShipingType.Income),
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.outcome.button.label"} />,
+                onClick: () => documentsActions.openCreateGoodsDocDialog(ShipingType.Outcome),
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.inventory.button.label"} />,
+                onClick: () => documentsActions.openCreateGoodsDocDialog(ShipingType.Inventory),
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.transfer.button.label"}/>,
+                onClick: () => documentsActions.openCreateGoodsDocDialog(ShipingType.Transfer)
+            },
+        ]
         return (<>
             <PageHeader label={(<Message messageKey={"page.accountingDocuments.title"}/>)}
-                        hasButton={false}
-                        buttonOnClick={() => {
-                        }}/>
+                        hasButton={true}
+                        buttonOnClick={() => {}}
+                        wrapAddButton={addButton =>
+                            <DropDownMenu
+                                items={createDocumentMenuItems}
+                                onclickArgument={undefined}>
+                                {addButton}
+                            </DropDownMenu>
+                        }
+            />
             <TableCmp>
                 <TableBodyCmp>
                     {this.state.documents.map(document => {
@@ -76,8 +103,7 @@ export default class AccountingDocumentsPage extends React.Component<Properties,
                                 <CustomTableCell>
                                     <Link
                                         color="primary"
-                                        onClick={() => {
-                                        }}
+                                        onClick={() => this.props.controller.goodsDocumentActions.openEditGoodsDocDialog(document)}
                                     >
                                         {this.renderDocumentName(document)}
                                     </Link>

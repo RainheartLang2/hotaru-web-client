@@ -188,6 +188,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                     selectedItemProperty={"editedShipDocStock"}
                                     itemsProperty={"stocksList"}
                                     disabled={formDisabled}
+                                    onChange={value => this.props.controller.goodsDocumentActions.changeCurrentStock(value)}
                                 />
                             </div>
                             {this.state.type != ShipingType.Inventory &&
@@ -233,7 +234,7 @@ export default class EditGoodsDocumentForm extends React.Component<Properties, S
                                         this.props.controller.goodsDocumentActions.openCreateGoodsPackRightPanel()
                                     }
                                 }}
-                                addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
+                                addTooltipLabel={<Message messageKey={"dialog.goods.document.goodsList.add.label"}/>}
                                 disabled={formDisabled}
                                 wrapAddButton={addButton => {
                                     return this.state.type == ShipingType.Income

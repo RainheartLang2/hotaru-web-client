@@ -172,6 +172,7 @@
       "page.stocks.createDocument.inventory.button.label": "Инвентаризация",
       "page.stocks.createDocument.sendGoods.button.label": "Отправить товары на другой склад",
       "page.stocks.createDocument.makeOrder.button.label": "Сделать заказ с другого склада",
+      "page.stocks.createDocument.transfer.button.label": "Перемещение товара между складами",
 
       "page.accountingDocuments.title": "Список документов",
       "page.accountingDocument.number.label": " №${0}",

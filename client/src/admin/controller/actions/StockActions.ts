@@ -37,6 +37,7 @@ export default class StockActions {
             params: [stockId],
             successCallback: result => {
                 const goods = result as GoodsPackBean[]
+                console.log(goods)
                 this.controller.setState({
                     editedStockGoods: goods.map(item => new GoodsPack(item))
                 }, context)
@@ -150,5 +151,13 @@ export default class StockActions {
                 })
             }
         })
+    }
+
+    public getStockById(id: number) {
+        const result = this.controller.state.stocksById.get(id)
+        if (!result) {
+            throw new Error("no stock for id " + id)
+        }
+        return result
     }
 }

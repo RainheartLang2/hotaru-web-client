@@ -171,7 +171,7 @@ export default class EditGoodsTransferDocumentForm extends React.Component<Prope
                                     itemsProperty={"stocksList"}
                                     disabled={formDisabled}
                                     onChange={value => {
-                                        this.props.controller.goodsDocumentActions.changeSourceStock(value)
+                                        this.props.controller.goodsDocumentActions.changeCurrentStock(value)
                                     }}
                                 />
                             </div>
@@ -194,15 +194,6 @@ export default class EditGoodsTransferDocumentForm extends React.Component<Prope
                                     disabled={formDisabled}
                                 />
                             </div>
-                            <div className={styles.row}>
-                                <ConnectedTextField<EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
-                                    controller={this.props.controller}
-                                    fieldKey={{editedShipDocDate: "editedShipDocDateField"}}
-                                    label={<Message messageKey={"dialog.goods.document.field.date.label"}/>}
-                                    type={"date"}
-                                    disabled={formDisabled}
-                                />
-                            </div>
                         </div>
                         <div className={styles.column}>
                             <ConnectedMinorList<GoodsPackWithPrice, EmployeeAppState, EmployeeAppSelectors, EmployeeApplicationStore>
@@ -211,7 +202,7 @@ export default class EditGoodsTransferDocumentForm extends React.Component<Prope
                                 label={<Message messageKey={"dialog.goods.document.goodsList.label"}/>}
                                 renderItem={item => this.renderGoodsListItem(item)}
                                 onAddButtonClick={() => {}}
-                                addTooltipLabel={"dialog.goods.document.goodsList.add.label"}
+                                addTooltipLabel={<Message messageKey={"dialog.goods.document.goodsList.add.label"}/>}
                                 disabled={formDisabled}
                                 wrapAddButton={addButton => <Selector<GoodsPack>
                                             items={this.state.stockGoodsForSelector}

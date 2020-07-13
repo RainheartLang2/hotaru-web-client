@@ -131,4 +131,12 @@ export default class CounterAgentsActions {
             }
         })
     }
+
+    public getAgentById(id: number) {
+        const result = this.controller.state.counterAgentsById.get(id)
+        if (!result) {
+            throw new Error("no agent for id " + id)
+        }
+        return result
+    }
 }

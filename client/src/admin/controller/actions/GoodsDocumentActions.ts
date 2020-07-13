@@ -48,7 +48,7 @@ export default class GoodsDocumentActions {
         })
     }
 
-    private finishGoodsDocDialogOpening(stock: Stock, type: ShipingType) {
+    private finishGoodsDocDialogOpening(stock: Stock | null, type: ShipingType) {
         this.controller.setState({
             editedShipmentDocumentId: undefined,
             editedShipDocType: type,
@@ -124,7 +124,56 @@ export default class GoodsDocumentActions {
         })
     }
 
-    public changeSourceStock(stock: Stock | null): void {
+    private getDialogTypeByDocument(documentType: ShipingType): DialogType {
+        switch (documentType) {
+            case ShipingType.Income: return DialogType.EditGoodsIncome
+            case ShipingType.Outcome: return DialogType.EditGoodsOutcome
+            case ShipingType.Inventory: return DialogType.EditGoodsInventory
+            case ShipingType.Transfer: return DialogType.EditGoodsTransfer
+            default: return DialogType.None
+        }
+    }
+
+    public openCreateGoodsDocDialog(documentType: ShipingType, callback = () => {}): void {
+        this.controller.openDialog(this.getDialogTypeByDocument(documentType), setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                this.finishGoodsDocDialogOpening(null, documentType)
+                setLoading()
+                callback()
+            })
+        })
+    }
+
+    public openEditGoodsDocDialog(document: GoodsDocument, callback = () => {}): void {
+        this.controller.openDialog(this.getDialogTypeByDocument(document.shipingType), setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                this.controller.stockActions.loadGoodsPacksForCurrentStock(document.stockId, () => {
+                    const stock = this.controller.stockActions.getStockById(document.stockId)
+                    const destinationStock = document.destinationStockId
+                        ? this.controller.stockActions.getStockById(document.destinationStockId)
+                        : null
+                    const counterAgent = document.counterAgentId
+                        ? this.controller.counterAgentActions.getAgentById(document.counterAgentId)
+                        : null
+                    this.controller.setState({
+                        editedShipmentDocumentId: document.id,
+                        editedShipDocType: document.shipingType,
+                        editedShipDocState: document.documentState,
+                        editedShipDocStock: stock,
+                        editedShipDocCounterAgent: counterAgent,
+                        editedShipDocNumber: document.num,
+                        editedShipDocDate: DateUtils.standardFormatDate(document.date),
+                        editedShipDocGoods: document.goods.list,
+                        editedShipDocDestinationStock: destinationStock,
+                    })
+                    callback()
+                    setLoading()
+                })
+            })
+        })
+    }
+
+    public changeCurrentStock(stock: Stock | null): void {
         if (!!stock) {
             this.controller.stockActions.loadGoodsPacksForCurrentStock(stock.id!)
         } else {
