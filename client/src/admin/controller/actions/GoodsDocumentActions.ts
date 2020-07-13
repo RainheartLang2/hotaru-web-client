@@ -5,14 +5,14 @@ import {DateUtils} from "../../../core/utils/DateUtils";
 import {RightPanelType} from "../../state/enum/RightPanelType";
 import GoodsPackWithPrice from "../../../common/beans/GoodsPackWithPrice";
 import {CollectionUtils} from "../../../core/utils/CollectionUtils";
-import GoodsDocument from "../../../common/beans/GoodsDocument";
-import {DocumentState} from "../../../common/beans/enums/DocumentState";
+import GoodsDocument, {GoodsDocumentBean} from "../../../common/beans/GoodsDocument";
 import {ShipingType} from "../../../common/beans/enums/ShipingType";
 import {fetchUserZoneRpc} from "../../../core/utils/HttpUtils";
 import {RemoteMethods} from "../../../common/backApplication/RemoteMethods";
 import CustomContainer from "../../../core/beans/CustomContainer";
 import GoodsPack from "../../../common/beans/GoodsPack";
 import {DocumentUtils} from "../../../core/utils/DocumentUtils";
+import {CallbackUtils} from "../../../core/utils/CallbackUtils";
 
 export default class GoodsDocumentActions {
     private controller: EmployeeAppController
@@ -43,6 +43,7 @@ export default class GoodsDocumentActions {
             editedShipDocNumber: "",
             editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate()),
             editedShipDocGoods: [],
+            editedShipDocDestinationStock: null,
         })
     }
 
@@ -80,6 +81,44 @@ export default class GoodsDocumentActions {
         })
     }
 
+    public openTransferGoodsDockDialog(sourceStock: Stock | null, destinationStock: Stock | null, callback: Function = () => {}): void {
+        this.controller.openDialog(DialogType.EditGoodsTransfer, setLoading => {
+            this.loadGoodsDocDialogData(() => {
+                CallbackUtils.callIf(
+                    !!sourceStock,
+                    callback => {
+                        this.controller.stockActions.loadGoodsPacksForCurrentStock(sourceStock!.id!, callback)
+                    },
+                    () => {
+                        this.controller.setState({
+                            editedShipmentDocumentId: undefined,
+                            editedShipDocType: ShipingType.Transfer,
+                            editedShipDocState: null,
+                            editedShipDocStock: sourceStock,
+                            editedShipDocCounterAgent: null,
+                            editedShipDocNumber: "",
+                            editedShipDocDate: DateUtils.standardFormatDate(DateUtils.getCurrentDate()),
+                            editedShipDocGoods: [],
+                            editedShipDocDestinationStock: destinationStock,
+                        })
+                        setLoading()
+                        callback()
+                    }
+                )
+            })
+        })
+    }
+
+    public changeSourceStock(stock: Stock | null): void {
+        if (!!stock) {
+            this.controller.stockActions.loadGoodsPacksForCurrentStock(stock.id!)
+        } else {
+            this.controller.setState({
+                editedStockGoods: [],
+            })
+        }
+    }
+
     public addDocPacksBySelection(items: GoodsPack[], callback: Function = () => {}): void {
         const map: GoodsPackWithPrice[] = items.map(goodsPack => {
             const result = new GoodsPackWithPrice(goodsPack.toBean(), 0, 0)
@@ -93,8 +132,10 @@ export default class GoodsDocumentActions {
     }
 
     public setGoodsPackAmount(item: GoodsPackWithPrice, amount: number): void {
+        console.log("setGoodsPackAmount")
+        console.log(amount)
         const documentType = this.controller.state.editedShipDocType
-        if (documentType == ShipingType.Outcome) {
+        if (documentType == ShipingType.Outcome || documentType == ShipingType.Transfer) {
             const goodsPackFromStock = this.controller.state.editedStockGoodsById.get(item.id!)
             if (!goodsPackFromStock) {
                 throw new Error("no goodsPack on current stock for id " + item.id)
@@ -112,17 +153,21 @@ export default class GoodsDocumentActions {
         console.log(this.controller.state.editedShipDocGoods)
     }
 
-    public buildDocumentByField(actualDocumentState: DocumentState): GoodsDocument {
+    public buildDocumentByField(): GoodsDocument {
         const state = this.controller.state
         const counterAgentId = DocumentUtils.documentTypeHasCounterAgent(state.editedShipDocType!)
                                     ? state.editedShipDocCounterAgent!.id!
                                     : null
+        const destinationStockId = state.editedShipDocType == ShipingType.Transfer
+                                    ? state.editedShipDocDestinationStock!.id!
+                                    : null
         return  new GoodsDocument({
             id: state.editedShipmentDocumentId,
-            documentState: actualDocumentState,
+            documentState: state.editedShipDocState!,
             shipingType: state.editedShipDocType!,
             date: new Date(state.editedShipDocDate),
             stockId: state.editedShipDocStock!.id!,
+            destinationStockId: destinationStockId,
             counterAgentId: counterAgentId,
             num: state.editedShipDocNumber,
             goods: new CustomContainer<GoodsPackWithPrice>(state.editedShipDocGoods),
@@ -130,18 +175,17 @@ export default class GoodsDocumentActions {
     }
 
     public submitCreateIncomeDocument(execute: boolean, callback: Function = () => {}): void {
-        const actualDocumentState = execute ? DocumentState.Executed : DocumentState.Saved
-        const document = this.buildDocumentByField(actualDocumentState)
+        const document = this.buildDocumentByField()
 
         fetchUserZoneRpc({
             method: RemoteMethods.addGoodsDocument,
             params: [document, execute],
             successCallback: result => {
-                document.id = +result
+                const responseDocument = new GoodsDocument(result as GoodsDocumentBean)
                 this.controller.setState({
-                    goodsDocuments: [...this.controller.state.goodsDocuments, document],
-                    editedShipDocState: actualDocumentState,
-                    editedShipmentDocumentId: document.id
+                    goodsDocuments: [...this.controller.state.goodsDocuments, responseDocument],
+                    editedShipDocState: responseDocument.documentState,
+                    editedShipmentDocumentId: responseDocument.id,
                 })
                 callback()
             },
@@ -149,16 +193,15 @@ export default class GoodsDocumentActions {
     }
 
     public submitEditIncomeDocument(execute: boolean, callback: Function = () => {}): void {
-        const actualDocumentState = execute ? DocumentState.Executed : DocumentState.Saved
-        const document = this.buildDocumentByField(actualDocumentState)
-
+        const document = this.buildDocumentByField()
         fetchUserZoneRpc({
             method: RemoteMethods.editGoodsDocument,
             params: [document, execute],
             successCallback: result => {
+                const responseDocument = new GoodsDocument(result as GoodsDocumentBean)
                 this.controller.setState({
-                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, document),
-                    editedShipDocState: actualDocumentState,
+                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, responseDocument),
+                    editedShipDocState: responseDocument.documentState,
                 })
                 callback()
             },
@@ -174,14 +217,14 @@ export default class GoodsDocumentActions {
     }
 
     public submitCancelDocument(callback: Function = () => {}): void {
-        const document = this.buildDocumentByField(DocumentState.Canceled)
         fetchUserZoneRpc({
             method: RemoteMethods.cancelGoodsDocument,
-            params: [document.id],
+            params: [this.controller.state.editedShipmentDocumentId],
             successCallback: result => {
+                const responseDocument = new GoodsDocument(result as GoodsDocumentBean)
                 this.controller.setState({
-                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, document),
-                    editedShipDocState: DocumentState.Canceled,
+                    goodsDocuments: CollectionUtils.updateIdentifiableArray(this.controller.state.goodsDocuments, responseDocument),
+                    editedShipDocState: responseDocument.documentState,
                 })
                 callback()
             }
@@ -248,7 +291,9 @@ export default class GoodsDocumentActions {
     public getCurrentStockId(): number {
         if (this.controller.state.dialogType == DialogType.EditGoodsIncome
             || this.controller.state.dialogType == DialogType.EditGoodsOutcome
-            || this.controller.state.dialogType == DialogType.EditGoodsInventory) {
+            || this.controller.state.dialogType == DialogType.EditGoodsInventory
+            || this.controller.state.dialogType == DialogType.EditGoodsTransfer
+        ) {
             return this.controller.state.editedShipDocStock!.id!
         }
         throw new Error("no stock specified in current state")

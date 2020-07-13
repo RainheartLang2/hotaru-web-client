@@ -164,6 +164,8 @@
       "page.stocks.createDocument.income.button.label": "Приходная накладная",
       "page.stocks.createDocument.outcome.button.label": "Расходная накладная",
       "page.stocks.createDocument.inventory.button.label": "Инвентаризация",
+      "page.stocks.createDocument.sendGoods.button.label": "Отправить товары на другой склад",
+      "page.stocks.createDocument.makeOrder.button.label": "Сделать заказ с другого склада",
 
       "page.counterAgent.title": "Список контрагентов",
 
@@ -234,11 +236,19 @@
       "dialog.goods.document.income.label": "Приходная накладная",
       "dialog.goods.document.outcome.label": "Расходная накладная",
       "dialog.goods.document.inventory.label": "Инвентаризация",
+      "dialog.goods.document.transfer.label": "Перемещение товара между складами",
       "dialog.goods.document.saved.label": "Документ сохранён",
+      "dialog.goods.transfer.sent.label": "Товар отправлен",
+      "dialog.goods.transfer.accepted.label": "Товар принят",
+      "dialog.goods.transfer.send.button.label": "Товар отправлен",
+      "dialog.goods.transfer.accept.button.label": "Товар принят",
+
       "dialog.goods.document.executed.label": "Документ исполнен",
       "dialog.goods.document.canceled.label": "Документ отменён",
 
       "dialog.goods.document.field.stock.label": "Склад",
+      "dialog.goods.document.field.sourceStock.label": "Отправитель",
+      "dialog.goods.document.field.destinationStock.label": "Получатель",
       "dialog.goods.document.field.agent.label": "Контрагент",
       "dialog.goods.document.field.series.label": "Серия",
       "dialog.goods.document.field.date.label": "Дата документа",

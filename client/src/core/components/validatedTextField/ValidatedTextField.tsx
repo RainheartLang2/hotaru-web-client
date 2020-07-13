@@ -16,7 +16,9 @@ export default class ValidatedTextField extends React.Component<Properties, Stat
         this.state = {
             valid: true,
             showError: false,
-            value: props.defaultValue ? props.defaultValue as string : "",
+            value: props.defaultValue
+                ? props.defaultValue as string
+                : (props.value ? props.value as string : ""),
             errorMessage: "",
         }
     }

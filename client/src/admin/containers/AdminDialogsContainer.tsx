@@ -11,6 +11,7 @@ import EditStockForm from "../components/dialogs/stock/EditStockForm";
 import EditCounterAgentForm from "../components/dialogs/counterAgent/EditCounterAgentForm";
 import EditGoodsDocumentForm from "../components/dialogs/goodsDocument/EditGoodsDocumentForm";
 import LoadingMoire from "../../core/components/loadingMoire/LoadingMoire";
+import EditGoodsTransferDocumentForm from "../components/dialogs/goodsDocument/EditGoodsTransferDocumentForm";
 
 var styles = require("./styles.css")
 
@@ -65,6 +66,8 @@ export default class AdminDialogsContainer extends React.Component<Properties, S
                         {(this.isRenderDialog(DialogType.EditGoodsIncome) || this.isRenderDialog(DialogType.EditGoodsOutcome)
                             || this.isRenderDialog(DialogType.EditGoodsInventory))
                         && (<EditGoodsDocumentForm controller={this.props.controller}/>)}
+                        {(this.isRenderDialog(DialogType.EditGoodsTransfer))
+                        && (<EditGoodsTransferDocumentForm controller={this.props.controller}/>)}
                     </div>
                 </Dialog>
             </>

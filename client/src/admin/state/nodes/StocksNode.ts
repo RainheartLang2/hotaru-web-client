@@ -77,6 +77,7 @@ export default class StockNode {
             editedShipDocState: null,
             editedShipDocType: null,
             editedShipDocStock: null,
+            editedShipDocDestinationStock: null,
             editedShipDocCounterAgent: null,
             editedShipDocNumber: "",
             editedShipDocDate: "",
@@ -218,19 +219,32 @@ export default class StockNode {
             },
             editedShipDocFormHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocCounterAgent", "editedShipDocStock"]),
             editedInventoryDocHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocStock"]),
+            editedTransferDocHasStandardErrors: this._store.createFormHasErrorsSelector([], ["editedShipDocStock", "editedShipDocDestinationStock"]),
             editedStockDocHasStandardErrors: {
                 dependsOn: [
                     "editedShipDocFormHasStandardErrors",
                     "editedInventoryDocHasStandardErrors",
+                    "editedTransferDocHasStandardErrors",
                     "editedShipDocType",
                 ],
                 get: (state: Pick<EmployeeAppState & EmployeeAppSelectors,
                     "editedShipDocFormHasStandardErrors" |
                     "editedInventoryDocHasStandardErrors" |
+                    "editedTransferDocHasStandardErrors" |
                     "editedShipDocType"
-                    >) => state.editedShipDocType == ShipingType.Inventory
-                                ? state.editedInventoryDocHasStandardErrors
-                                : state.editedShipDocFormHasStandardErrors,
+                    >) => {
+                        switch (state.editedShipDocType) {
+                            case ShipingType.Income:
+                            case ShipingType.Outcome:
+                                return state.editedShipDocFormHasStandardErrors
+                            case ShipingType.Inventory:
+                                return state.editedInventoryDocHasStandardErrors
+                            case ShipingType.Transfer:
+                                return state.editedTransferDocHasStandardErrors
+                            default:
+                                return false
+                        }
+                },
                 value: false,
             },
             editedShipDocFormHasErrors: {
@@ -375,6 +389,7 @@ export type StockState = {
     editedShipDocType: ShipingType | null,
     editedShipDocState: DocumentState | null
     editedShipDocStock: Stock | null
+    editedShipDocDestinationStock: Stock | null
     editedShipDocCounterAgent: CounterAgent | null
     editedShipDocNumber: string
     editedShipDocDate: string
@@ -421,6 +436,7 @@ export type StockSelectors = {
     editedShipDocType: ShipingType | null,
     editedShipDocFormHasStandardErrors: boolean,
     editedInventoryDocHasStandardErrors: boolean,
+    editedTransferDocHasStandardErrors: boolean,
     editedStockDocHasStandardErrors: boolean,
     editedShipDocFormHasErrors: boolean,
     editedShipDocNotAddedStockGoods: GoodsPack[],

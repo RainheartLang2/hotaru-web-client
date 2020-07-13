@@ -7,6 +7,7 @@ import CustomButton from "../customButton/CustomButton";
 import CancelIcon from "@material-ui/icons/CancelPresentationSharp";
 import SaveIcon from "@material-ui/icons/SaveSharp"
 import ExecuteIcon from "@material-ui/icons/CheckSharp"
+import {ReactNode} from "react";
 
 var styles = require("./styles.css");
 
@@ -14,6 +15,10 @@ export default class DocumentDialogFooter<StateType extends DefaultStateType,
     SelectorsType,
     StoreType extends ApplicationStore<StateType, SelectorsType>>
     extends React.Component<Properties<StateType, SelectorsType, StoreType>> {
+
+    static defaultProps = {
+        executeButtonLabel: <Message messageKey={"common.button.executeDocument"}/>
+    }
 
     render() {
         return (
@@ -30,7 +35,7 @@ export default class DocumentDialogFooter<StateType extends DefaultStateType,
                                 onClick={() => this.props.onExecuteClick()}
                                 icon={<ExecuteIcon/>}
                             >
-                                <Message messageKey={"common.button.executeDocument"}/>
+                                {this.props.executeButtonLabel}
                             </CustomButton>
                         </div>
                     }
@@ -87,6 +92,7 @@ type Properties<StateType extends DefaultStateType, SelectorsType, StoreType ext
     submitDisabled: boolean,
     showSaveButton: boolean,
     showExecuteButton: boolean,
+    executeButtonLabel: ReactNode,
     showCancelButton: boolean,
     onSubmitClick: () => void,
     onExecuteClick: () => void,

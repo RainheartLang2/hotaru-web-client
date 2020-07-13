@@ -39,7 +39,15 @@ export default class StocksPage extends React.Component<Properties, State> {
             {
                 label: <Message messageKey={"page.stocks.createDocument.inventory.button.label"} />,
                 onClick: stock => documentsActions.openCreateInventoryGoodsDocDialog(stock),
-            }
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.sendGoods.button.label"}/>,
+                onClick: stock => documentsActions.openTransferGoodsDockDialog(stock, null)
+            },
+            {
+                label: <Message messageKey={"page.stocks.createDocument.makeOrder.button.label"}/>,
+                onClick: stock => documentsActions.openTransferGoodsDockDialog(null, stock)
+            },
         ]
         return (
             <>

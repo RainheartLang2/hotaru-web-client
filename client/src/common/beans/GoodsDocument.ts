@@ -9,6 +9,7 @@ export default class GoodsDocument extends Identifiable {
    public shipingType: ShipingType
    public date: Date
    public stockId: number
+   public destinationStockId: number | null
    public counterAgentId: number | null
    public num: string
    public goods: CustomContainer<GoodsPackWithPrice>
@@ -19,6 +20,7 @@ export default class GoodsDocument extends Identifiable {
       this.shipingType = bean.shipingType
       this.date = new Date(bean.date)
       this.stockId = bean.stockId
+      this.destinationStockId = bean.destinationStockId
       this.counterAgentId = bean.counterAgentId
       this.num = bean.num
       this.goods = bean.goods
@@ -31,6 +33,7 @@ export type GoodsDocumentBean = {
    shipingType: ShipingType
    date: Date
    stockId: number
+   destinationStockId: number | null
    counterAgentId: number | null
    num: string
    goods: CustomContainer<GoodsPackWithPrice>
