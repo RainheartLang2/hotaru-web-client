@@ -197,7 +197,6 @@ export default abstract class ApplicationStore<StateType extends DefaultStateTyp
         const state = CommonUtils.createLooseObject(keysArray
                                                     .filter(key => this.readableState[key] != undefined)
                                                     .map(key => [aliasInfo[key], this.readableState[key]]))
-        console.log(state)
         subscriber.setState(state)
     }
 

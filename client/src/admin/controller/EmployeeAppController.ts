@@ -426,6 +426,19 @@ export default class EmployeeAppController extends ApplicationController<Employe
         })
     }
 
+    public openAccountingDocumentsPage(callback: Function = () => {}): void {
+        this.openPage(PageType.AccountingDocuments, setPageLoad => {
+            this.goodsDocumentActions.loadGoodsDocuments(() => {
+                this.employeeActions.loadUsersList(() => {
+                    this.stockActions.loadList(() => {
+                        setPageLoad()
+                        callback()
+                    })
+                })
+            })
+        })
+    }
+
     public openCounterAgentsPage(callback: Function = () => {}): void {
         this.openPage(PageType.CounterAgents, setPageLoad => {
             this.counterAgentActions.loadList(() => {

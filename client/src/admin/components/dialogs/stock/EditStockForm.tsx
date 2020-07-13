@@ -58,7 +58,6 @@ export default class EditStockForm extends React.Component<Properties, State> {
     }
 
     render() {
-        console.log(this.state.goods)
         return (
             <>
                 <DialogTitle>

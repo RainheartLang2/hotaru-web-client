@@ -22,6 +22,7 @@ import SalesUnitPage from "./salesUnit/SalesUnitPage";
 import StocksPage from "./stocks/StocksPage";
 import CounterAgentsPage from "./counterAgents/CounterAgentsPage";
 import GoodsProducersPage from "./goodsProducer/GoodsProducersPage";
+import AccountingDocumentsPage from "./accountingDocuments/AccountingDocumentsPage";
 
 export default class AdminPagesContainer extends CheckingStateComponent<Properties, State> {
     constructor(props: Properties) {
@@ -59,6 +60,7 @@ export default class AdminPagesContainer extends CheckingStateComponent<Properti
             {this.isRenderPage(PageType.Sales) && (<SalesUnitPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.Stocks) && (<StocksPage controller={this.props.controller}/>)}
             {this.isRenderPage(PageType.CounterAgents) && (<CounterAgentsPage controller={this.props.controller}/>)}
+            {this.isRenderPage(PageType.AccountingDocuments) && (<AccountingDocumentsPage controller={this.props.controller}/>)}
         </>)
     }
 

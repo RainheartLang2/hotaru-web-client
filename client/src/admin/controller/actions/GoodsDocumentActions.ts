@@ -13,12 +13,27 @@ import CustomContainer from "../../../core/beans/CustomContainer";
 import GoodsPack from "../../../common/beans/GoodsPack";
 import {DocumentUtils} from "../../../core/utils/DocumentUtils";
 import {CallbackUtils} from "../../../core/utils/CallbackUtils";
+import getAllGoodsDocuments = RemoteMethods.getAllGoodsDocuments;
 
 export default class GoodsDocumentActions {
     private controller: EmployeeAppController
 
     constructor(controller: EmployeeAppController) {
         this.controller = controller;
+    }
+
+    public loadGoodsDocuments(callback: Function = () => {}): void {
+        fetchUserZoneRpc({
+            method: getAllGoodsDocuments,
+            params: [],
+            successCallback: result => {
+                const goodsDocuments = result as GoodsDocumentBean[]
+                this.controller.setState({
+                    goodsDocuments: goodsDocuments.map(bean => new GoodsDocument(bean))
+                })
+                callback()
+            }
+        })
     }
 
     private loadGoodsDocDialogData(callback: Function = () => {}): void {
@@ -132,8 +147,6 @@ export default class GoodsDocumentActions {
     }
 
     public setGoodsPackAmount(item: GoodsPackWithPrice, amount: number): void {
-        console.log("setGoodsPackAmount")
-        console.log(amount)
         const documentType = this.controller.state.editedShipDocType
         if (documentType == ShipingType.Outcome || documentType == ShipingType.Transfer) {
             const goodsPackFromStock = this.controller.state.editedStockGoodsById.get(item.id!)
@@ -150,7 +163,6 @@ export default class GoodsDocumentActions {
         this.controller.setState({
             editedShipDocGoods: CollectionUtils.updateIdentifiableArray(this.controller.state.editedShipDocGoods, item)
         })
-        console.log(this.controller.state.editedShipDocGoods)
     }
 
     public buildDocumentByField(): GoodsDocument {

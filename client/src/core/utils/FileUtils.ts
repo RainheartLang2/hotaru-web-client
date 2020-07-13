@@ -10,6 +10,5 @@ export namespace FileUtils {
         reader.onerror = function (error) {
             console.log('Error: ', error)
         }
-        console.log(reader.result)
     }
 }

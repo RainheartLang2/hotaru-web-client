@@ -178,6 +178,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Sales:
             case PageType.Stocks:
             case PageType.CounterAgents:
+            case PageType.AccountingDocuments:
                 return NavigationMenuItemType.Accounting
 
             default: return NavigationMenuItemType.None
@@ -208,6 +209,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Sales:
             case PageType.Stocks:
             case PageType.CounterAgents:
+            case PageType.AccountingDocuments:
                 return SecondLevelNavigationMenuType.Accounting
 
             default: return SecondLevelNavigationMenuType.None
@@ -235,6 +237,7 @@ export default class EmployeeApplicationStore extends ApplicationStore<EmployeeA
             case PageType.Sales: return AccountingMenuItemType.Sales
             case PageType.Stocks: return AccountingMenuItemType.Stocks
             case PageType.CounterAgents: return AccountingMenuItemType.CounterAgents
+            case PageType.AccountingDocuments: return AccountingMenuItemType.Documents
 
             default: return DictionaryMenuItemType.None
         }

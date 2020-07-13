@@ -26,6 +26,11 @@ export default class AccountingLeftMenu extends React.Component<Properties, Stat
                 onClick: () => this.props.controller.openStocksPage()
             },
             {
+                key: AccountingMenuItemType.Documents,
+                label: <Message messageKey={"second.navigation.accounting.documents.label"}/>,
+                onClick: () => this.props.controller.openAccountingDocumentsPage()
+            },
+            {
                 key: AccountingMenuItemType.CounterAgents,
                 label: <Message messageKey={"second.navigation.accounting.counterAgents.label"}/>,
                 onClick: () => this.props.controller.openCounterAgentsPage()

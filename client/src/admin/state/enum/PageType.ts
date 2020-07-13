@@ -18,5 +18,6 @@ export enum PageType {
     Sales,
     Stocks,
     CounterAgents,
+    AccountingDocuments,
     None,
 }

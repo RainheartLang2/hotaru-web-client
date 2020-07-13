@@ -63,6 +63,11 @@
       "common.sex.select.male": "М",
       "common.sex.select.female": "Ж",
 
+      "common.accounting.document.income.label": "Приходная накладная",
+      "common.accounting.document.outcome.label": "Расходная накладная",
+      "common.accounting.document.inventory.label": "Инвентаризация",
+      "common.accounting.document.transfer.label": "Перемещение товара между складами",
+
       "common.weekly": "Еженедельно",
 
       "plannedCall.state.assigned.name": "Активен",
@@ -123,6 +128,7 @@
       "second.navigation.accounting.sales.label": "Товары и услуги",
       "second.navigation.accounting.categories.label": "Группы товаров и услуг",
       "second.navigation.accounting.stocks.label": "Склады",
+      "second.navigation.accounting.documents.label": "Документы",
       "second.navigation.accounting.counterAgents.label": "Контр-агенты",
 
       "dayScheduleDeviation.clinic.global.label": "Для всех клиник",
@@ -167,6 +173,8 @@
       "page.stocks.createDocument.sendGoods.button.label": "Отправить товары на другой склад",
       "page.stocks.createDocument.makeOrder.button.label": "Сделать заказ с другого склада",
 
+      "page.accountingDocuments.title": "Список документов",
+      "page.accountingDocument.number.label": " №${0}",
       "page.counterAgent.title": "Список контрагентов",
 
       "page.salesCategories.title": "Список групп товаров и услуг",
